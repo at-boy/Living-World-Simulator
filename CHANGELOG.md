@@ -1,12 +1,14 @@
 # Changelog
 
-## v0.1.0
+## v0.1.1
+
+### Fixed
+- Self-contained Makefile using `.venv/bin/*`
+- Completed `pyproject.toml`
+- Improved installation workflow
 
 ### Added
-- Initial project structure
-- Core world classes
-- Managers
-- Systems package
-- Repository abstraction
-- Makefile
-- Example
+- MIT License
+- `.gitignore`
+- Release checklist
+- Architecture decision records

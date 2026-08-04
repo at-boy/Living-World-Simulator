@@ -1,5 +1,3 @@
 # ADR-0002
 
-Decision: Simulation owns facts. LLMs interpret facts.
-
-Status: Accepted.
+Accepted: The simulation owns facts; AI interprets them.

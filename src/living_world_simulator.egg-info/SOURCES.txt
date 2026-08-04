@@ -1,3 +1,4 @@
+LICENSE
 README.md
 pyproject.toml
 src/living_world/__init__.py
