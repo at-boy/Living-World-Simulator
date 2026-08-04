@@ -1,7 +1,7 @@
 Metadata-Version: 2.4
 Name: living-world-simulator
 Version: 0.1.1
-Summary: Event-driven simulation engine for persistent worlds.
+Summary: Event-driven simulation engine.
 Requires-Python: >=3.11
 License-File: LICENSE
 Requires-Dist: fastapi

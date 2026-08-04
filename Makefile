@@ -1,35 +1,36 @@
-VENV := .venv
-PYTHON := $(VENV)/bin/python
-PIP := $(VENV)/bin/pip
-PYTEST := $(VENV)/bin/pytest
-RUFF := $(VENV)/bin/ruff
-BLACK := $(VENV)/bin/black
-UVICORN := $(VENV)/bin/uvicorn
+VENV=.venv
+PY=$(VENV)/bin/python
+PIP=$(VENV)/bin/pip
+RUFF=$(VENV)/bin/ruff
+BLACK=$(VENV)/bin/black
+PYTEST=$(VENV)/bin/pytest
+UVICORN=$(VENV)/bin/uvicorn
 
 install:
 	python3 -m venv $(VENV)
-	$(PYTHON) -m pip install --upgrade pip setuptools wheel
+	$(PY) -m pip install --upgrade pip setuptools wheel
 	$(PIP) install -e ".[dev]"
 
-test:
-	$(PYTEST)
+fix:
+	$(RUFF) check --fix src tests
+	$(BLACK) src tests
 
 lint:
 	$(RUFF) check src tests
 
-format:
-	$(BLACK) src tests
+format-check:
+	$(BLACK) --check src tests
 
-check: lint test
+test:
+	PYTHONPATH=src $(PYTEST)
+
+check: lint format-check test
 
 example:
-	$(PYTHON) examples/001_create_world.py
+	PYTHONPATH=src $(PY) examples/001_create_world.py
 
 serve:
-	$(UVICORN) living_world.api.server:app --reload
+	PYTHONPATH=src $(UVICORN) living_world.api.server:app --reload
 
 clean:
 	rm -rf .venv .pytest_cache .ruff_cache .mypy_cache build dist *.egg-info
-
-release: check
-	@echo "Release checks passed."

@@ -1,26 +1,26 @@
 [build-system]
-requires = ["setuptools>=69", "wheel"]
-build-backend = "setuptools.build_meta"
+requires=["setuptools>=69","wheel"]
+build-backend="setuptools.build_meta"
 
 [project]
-name = "living-world-simulator"
-version = "0.1.1"
-description = "Event-driven simulation engine for persistent worlds."
-requires-python = ">=3.11"
-dependencies = [
-    "fastapi",
-]
+name="living-world-simulator"
+version="0.1.1"
+description="Event-driven simulation engine."
+requires-python=">=3.11"
+dependencies=["fastapi"]
 
 [project.optional-dependencies]
-dev = [
-    "pytest",
-    "ruff",
-    "black",
-    "uvicorn",
-]
+dev=["pytest","ruff","black","uvicorn"]
+
+[tool.setuptools]
+package-dir={""="src"}
+
+[tool.setuptools.packages.find]
+where=["src"]
+
+[tool.ruff]
+line-length=88
 
 [tool.black]
 line-length = 88
-
-[tool.ruff]
-line-length = 88
+target-version = ["py311"]

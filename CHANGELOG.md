@@ -3,12 +3,11 @@
 ## v0.1.1
 
 ### Fixed
-- Self-contained Makefile using `.venv/bin/*`
-- Completed `pyproject.toml`
-- Improved installation workflow
+- Self-contained Makefile
+- Complete packaging metadata
+- Repository layout cleaned up
 
 ### Added
-- MIT License
-- `.gitignore`
 - Release checklist
-- Architecture decision records
+- MIT license
+- Runnable example

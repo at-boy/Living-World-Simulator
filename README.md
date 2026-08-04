@@ -1,12 +1,12 @@
-# Living World Simulator (LWS)
+# Living World Simulator
 
-An event-driven simulation engine for persistent worlds.
+Event-driven simulation engine for persistent worlds.
 
-## Quick start
+## Quick Start
 
 ```bash
 make install
+make fix
 make check
 make example
-make serve
 ```
