@@ -178,3 +178,18 @@ store the runtime quantities they currently possess.
 
 This provides the foundation for future systems such as production,
 consumption, transfer, decay and trade.
+
+## Commit 0021
+
+### Generic Resource Operations
+
+The engine now provides a reusable `ResourceSystem` responsible for
+modifying resource quantities.
+
+Rather than allowing every simulation system to manipulate resource
+dictionaries directly, common operations such as adding, removing and
+transferring resources are centralized behind a single API.
+
+Future simulation systems such as logging, farming, mining and trading
+can build upon these generic operations without duplicating resource
+manipulation logic.

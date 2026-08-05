@@ -68,6 +68,12 @@ examples:
 	@echo "006_resources.py"
 	@echo "=================================================="
 	@PYTHONPATH=src .venv/bin/python examples/006_resources.py
+	@echo
+
+	@echo "=================================================="
+	@echo "007_resource_operations.py"
+	@echo "=================================================="
+	@PYTHONPATH=src .venv/bin/python examples/007_resource_operations.py
 
 serve:
 	PYTHONPATH=src $(UVICORN) living_world.api.server:app --reload

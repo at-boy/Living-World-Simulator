@@ -125,6 +125,15 @@ Each system is responsible for a single aspect of simulation behavior.
 Some systems provide generic simulation mechanisms rather than
 domain-specific behavior.
 
+Current generic systems include:
+
+- `ProgressSystem`, which advances bounded progress values over time.
+- `ResourceSystem`, which provides generic operations for manipulating
+  resource quantities stored by entities.
+
+The engine assigns no semantic meaning to these mechanisms. Higher-level
+systems interpret them according to their own requirements.
+
 For example, the `ProgressSystem` advances a generic `progress` value by
 `progress_rate` every simulation tick. Optional inclusive
 `progress_min` and `progress_max` attributes constrain progression.

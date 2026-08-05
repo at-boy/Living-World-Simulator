@@ -4,6 +4,24 @@
 
 ### Added
 
+- Generic `ResourceSystem` for manipulating entity resource quantities.
+- Resource operations:
+  - get
+  - set
+  - add
+  - remove
+  - transfer
+- Executable example demonstrating resource operations.
+
+### Changed
+
+- Resource manipulation is now centralized rather than performed directly
+  by simulation systems.
+
+## v0.2.2 (Unreleased)
+
+### Added
+
 - Entities can now store structured resource quantities.
 - Example demonstrating entity resources.
 
