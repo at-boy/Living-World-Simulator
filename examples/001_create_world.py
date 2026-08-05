@@ -1,7 +1,7 @@
 from living_world.core.definition import Definition
-from living_world.core.relationship import Relationship
 from living_world.managers.definition_manager import DefinitionManager
 from living_world.managers.entity_manager import EntityManager
+from living_world.managers.relationship_manager import RelationshipManager
 from living_world.state.world_state import WorldState
 
 state = WorldState()
@@ -19,6 +19,11 @@ entities = EntityManager(
     definitions,
 )
 
+relationships = RelationshipManager(
+    state,
+    entities,
+)
+
 village = entities.create(
     definition_key="location",
     name="Village",
@@ -29,8 +34,7 @@ forest = entities.create(
     name="Forest",
 )
 
-state.relationships["relationship_000001"] = Relationship(
-    id="relationship_000001",
+relationships.create(
     kind="road",
     source_id=village.id,
     target_id=forest.id,

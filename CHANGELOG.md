@@ -4,6 +4,21 @@
 
 ### Added
 
+- Relationship lifecycle managed by `RelationshipManager.create()`.
+- Automatic relationship identifier generation.
+- Relationship validation during creation.
+- RelationshipManager test coverage.
+
+### Changed
+
+- Runtime relationships are now created exclusively through `RelationshipManager`.
+- Examples no longer mutate `WorldState` directly.
+- Managers are now the exclusive mutation boundary of the simulation runtime.
+
+## v0.1.3 (Unreleased)
+
+### Added
+
 - Entity lifecycle managed by `EntityManager.create()`.
 - Dependency injection between `EntityManager` and `DefinitionManager`.
 - Automatic entity ID generation.

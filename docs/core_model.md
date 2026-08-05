@@ -43,3 +43,20 @@ The manager is responsible for:
 - registering the entity in `WorldState`.
 
 Production code should not instantiate runtime entities directly. Tests and migration tooling may do so when appropriate.
+
+## Relationship Lifecycle
+
+Runtime relationships are created exclusively through
+`RelationshipManager.create()`.
+
+The manager is responsible for:
+
+- validating source and target entities,
+- generating a unique identifier,
+- creating the runtime relationship,
+- registering the relationship in `WorldState`.
+
+Together, `EntityManager` and `RelationshipManager` form the mutation
+boundary of the simulation runtime.
+
+Simulation systems should mutate the world only through managers.

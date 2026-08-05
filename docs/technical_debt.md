@@ -39,22 +39,6 @@ represents a location.
 
 ------------------------------------------------------------------------
 
-## RelationshipManager
-
-**Status:** Planned
-
-The initial skeleton exists.
-
-The production implementation should:
-
--   Own relationship lifecycle.
--   Validate endpoints.
--   Generate IDs.
--   Support querying by source, target, and relationship kind.
--   Become the foundation for world navigation.
-
-------------------------------------------------------------------------
-
 ## EventManager
 
 **Status:** Planned
@@ -127,6 +111,16 @@ As additional examples are added, the build should execute all examples to ensur
 ### Entity lifecycle
 
 `EntityManager` now owns runtime entity creation, identifier generation, and registration within `WorldState`.
+
+------------------------------------------------------------------------
+
+### Relationship lifecycle
+
+`RelationshipManager` now owns runtime relationship creation,
+validation and registration.
+
+Examples and production code no longer mutate
+`WorldState.relationships` directly.
 
 ------------------------------------------------------------------------
 

@@ -65,6 +65,7 @@ Runtime connection between two Entities.
 **Purpose**
 
 Represents the current objective state of the simulation.
+Runtime state should only be mutated through managers.
 
 **Owns**
 
@@ -94,3 +95,22 @@ Registry of available definitions.
 Owns the lifecycle of runtime entities.
 
 Responsible for creating, validating, registering and removing entities.
+
+## RelationshipManager
+
+**Purpose**
+
+Owns the lifecycle of runtime relationships.
+
+**Responsibilities**
+
+- create relationships
+- validate endpoints
+- assign identifiers
+- register relationships
+- remove relationships
+
+**Collaborates With**
+
+- EntityManager
+- WorldState
