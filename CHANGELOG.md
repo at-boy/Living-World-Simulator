@@ -1,13 +1,16 @@
 # Changelog
 
-## v0.1.1
-
-### Fixed
-- Self-contained Makefile
-- Complete packaging metadata
-- Repository layout cleaned up
+## v0.1.2
 
 ### Added
-- Release checklist
-- MIT license
-- Runnable example
+- ADR-0001: World is a Property Graph
+- ADR-0002: Simulation Owns Truth
+- ADR-0003: Core Runtime Model
+- docs/core_model.md
+- Definition class
+- DefinitionManager skeleton
+- Relationship class
+- RelationshipManager skeleton
+
+### Changed
+- Architecture documentation aligned with property graph model.

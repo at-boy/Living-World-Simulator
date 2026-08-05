@@ -1,3 +1,12 @@
 # ADR-0002
 
-Accepted: The simulation owns facts; AI interprets them.
+## Decision
+
+The simulation owns all authoritative state.
+
+LLMs never create canonical facts.
+They reason over facts supplied by the engine.
+
+## Status
+
+Accepted.
