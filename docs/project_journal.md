@@ -90,3 +90,16 @@ tick.
 
 This marks the transition from a static runtime to an evolving
 simulation.
+
+## Commit 0015
+
+### Public Engine API
+
+This commit introduced `SimulationEngine`, the primary entry point for
+applications using the Living World engine.
+
+The engine composes the runtime and exposes a simplified API while
+keeping simulation behavior inside simulation systems.
+
+With this commit the core runtime architecture reached its first stable
+public interface.

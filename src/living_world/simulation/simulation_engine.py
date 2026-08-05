@@ -1,0 +1,69 @@
+from living_world.managers.definition_manager import DefinitionManager
+from living_world.managers.entity_manager import EntityManager
+from living_world.managers.event_manager import EventManager
+from living_world.managers.relationship_manager import RelationshipManager
+from living_world.simulation.simulation_scheduler import SimulationScheduler
+from living_world.state.world_state import WorldState
+from living_world.systems.simulation_system import SimulationSystem
+
+
+class SimulationEngine:
+    """High-level façade over the Living World runtime."""
+
+    def __init__(self) -> None:
+        self._state = WorldState()
+
+        self._definitions = DefinitionManager()
+
+        self._entities = EntityManager(
+            self._state,
+            self._definitions,
+        )
+
+        self._relationships = RelationshipManager(
+            self._state,
+            self._entities,
+        )
+
+        self._events = EventManager(
+            self._state,
+        )
+
+        self._scheduler = SimulationScheduler(
+            self._state,
+        )
+
+    @property
+    def state(self) -> WorldState:
+        return self._state
+
+    @property
+    def definitions(self) -> DefinitionManager:
+        return self._definitions
+
+    @property
+    def entities(self) -> EntityManager:
+        return self._entities
+
+    @property
+    def relationships(self) -> RelationshipManager:
+        return self._relationships
+
+    @property
+    def events(self) -> EventManager:
+        return self._events
+
+    def register_system(
+        self,
+        system: SimulationSystem,
+    ) -> None:
+        self._scheduler.register(system)
+
+    def step(self) -> None:
+        self._scheduler.step()
+
+    def run(
+        self,
+        steps: int,
+    ) -> None:
+        self._scheduler.run(steps)

@@ -186,3 +186,25 @@ The system understands progress as a generic concept rather than any
 specific domain such as construction or farming.
 
 Other systems interpret the meaning of progress.
+
+## SimulationEngine
+
+**Purpose**
+
+High-level façade over the Living World runtime.
+
+**Responsibilities**
+
+- compose runtime components
+- register simulation systems
+- advance the simulation
+- expose the public engine API
+
+**Does Not Own**
+
+- simulation behavior
+- entity state
+- relationship logic
+- event history
+
+Simulation behavior remains implemented by simulation systems.

@@ -93,3 +93,23 @@ Systems mutate the world exclusively through managers.
 
 The scheduler is responsible only for executing systems and advancing
 the simulation tick.
+
+## Simulation Engine
+
+`SimulationEngine` is the primary entry point for applications using the
+Living World engine.
+
+The engine composes the runtime by constructing:
+
+- WorldState
+- DefinitionManager
+- EntityManager
+- RelationshipManager
+- EventManager
+- SimulationScheduler
+
+The engine exposes a simplified API for running simulations while
+preserving the existing responsibilities of managers and systems.
+
+Simulation behavior remains implemented by simulation systems rather than
+the engine itself.

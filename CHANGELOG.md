@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.1.5 (Unreleased)
+
+### Added
+
+- `SimulationEngine` façade for composing the runtime.
+- Engine-level system registration.
+- Engine-level simulation execution.
+- SimulationEngine test coverage.
+- Public API example (`004_engine.py`).
+
+### Changed
+
+- Runtime components can now be accessed through `SimulationEngine`.
+
 ## v0.1.4 (Unreleased)
 
 ### Added

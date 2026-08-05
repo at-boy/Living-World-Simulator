@@ -108,10 +108,12 @@ As additional examples are added, the build should execute all examples to ensur
 
 ### Example runner
 
-`make example` currently executes only the first example.
+Replace `make example` with `make examples`.
 
-Replace it with `make examples` that discovers and executes every example
-in the `examples/` directory.
+The command should automatically discover and execute every example in
+the `examples/` directory in numeric order.
+
+Examples should function as executable documentation and smoke tests.
 
 
 ------------------------------------------------------------------------
