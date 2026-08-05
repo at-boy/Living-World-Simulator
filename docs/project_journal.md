@@ -103,3 +103,18 @@ keeping simulation behavior inside simulation systems.
 
 With this commit the core runtime architecture reached its first stable
 public interface.
+
+## Commit 0016
+
+### Engineering the Engine
+
+This commit documents how the Living World engine is developed.
+
+The development workflow, architectural decision process and engineering
+principles are now documented alongside the codebase.
+
+Existing ADRs were standardized into a consistent format and naming
+scheme.
+
+This establishes the project's long-term engineering conventions before
+continuing implementation of new simulation capabilities.

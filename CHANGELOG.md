@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.2.1 (Unreleased)
+
+### Added
+
+- Development workflow documentation.
+- Standardized Architecture Decision Record format.
+
+### Changed
+
+- Architecture Decision Records now follow a consistent naming convention
+  and structure.
+- Development practices are formally documented.
+
 ## v0.1.5 (Unreleased)
 
 ### Added
