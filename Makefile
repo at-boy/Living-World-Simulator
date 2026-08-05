@@ -1,3 +1,5 @@
+.PHONY: all fix check examples clean
+
 VENV=.venv
 PY=$(VENV)/bin/python
 PIP=$(VENV)/bin/pip
@@ -5,6 +7,8 @@ RUFF=$(VENV)/bin/ruff
 BLACK=$(VENV)/bin/black
 PYTEST=$(VENV)/bin/pytest
 UVICORN=$(VENV)/bin/uvicorn
+
+all: fix check examples
 
 install:
 	python3 -m venv $(VENV)
@@ -26,8 +30,32 @@ test:
 
 check: lint format-check test
 
-example:
-	PYTHONPATH=src $(PY) examples/001_create_world.py
+examples:
+	@echo "Running Living World examples..."
+	@echo
+
+	@echo "=================================================="
+	@echo "001_create_world.py"
+	@echo "=================================================="
+	@PYTHONPATH=src .venv/bin/python examples/001_create_world.py
+	@echo
+
+	@echo "=================================================="
+	@echo "002_definitions.py"
+	@echo "=================================================="
+	@PYTHONPATH=src .venv/bin/python examples/002_definitions.py
+	@echo
+
+	@echo "=================================================="
+	@echo "003_scheduler.py"
+	@echo "=================================================="
+	@PYTHONPATH=src .venv/bin/python examples/003_scheduler.py
+	@echo
+
+	@echo "=================================================="
+	@echo "004_engine.py"
+	@echo "=================================================="
+	@PYTHONPATH=src .venv/bin/python examples/004_engine.py
 
 serve:
 	PYTHONPATH=src $(UVICORN) living_world.api.server:app --reload

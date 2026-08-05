@@ -118,3 +118,20 @@ scheme.
 
 This establishes the project's long-term engineering conventions before
 continuing implementation of new simulation capabilities.
+
+## Commit 0017
+
+### Improving the Developer Experience
+
+This commit focused on the project's development workflow rather than the
+simulation engine itself.
+
+The default `make` target now performs the complete validation pipeline,
+including formatting, static analysis, unit tests and execution of all
+examples.
+
+Examples are now treated as executable documentation, ensuring the
+public API remains validated alongside the implementation.
+
+Developer tooling was expanded with a snapshot helper to simplify
+sharing repository snapshots during architectural reviews.

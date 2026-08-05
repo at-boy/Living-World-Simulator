@@ -96,8 +96,7 @@ Implement the capability.
 
 Validate:
 
-- make fix
-- make check
+- `make`
 
 ---
 
@@ -110,10 +109,7 @@ Add:
 
 Validate:
 
-- make fix
-- make check
-
-Run relevant examples.
+- `make`
 
 ---
 
@@ -129,6 +125,10 @@ Documentation includes:
 - project journal
 
 Architectural capabilities also receive an ADR.
+
+Validate:
+
+- `make`
 
 ---
 
@@ -168,6 +168,18 @@ Every manager receives dedicated unit tests.
 Every simulation component receives dedicated unit tests.
 
 Examples serve as executable documentation.
+
+---
+
+## Executable Documentation
+
+Examples are maintained as executable documentation.
+
+Every example must execute successfully as part of the normal development
+workflow.
+
+The `make` target executes all examples after formatting and testing,
+providing an additional validation step for the public API.
 
 ---
 

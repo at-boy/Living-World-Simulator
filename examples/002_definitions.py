@@ -5,13 +5,16 @@ manager = DefinitionManager()
 
 manager.register(
     Definition(
-        key="bridge",
-        attributes={
-            "completion": 0,
-            "durability": 100,
-        },
-        systems=("construction", "maintenance"),
-    )
+    key="bridge",
+    initial_attributes={
+        "completion": 0,
+        "durability": 100,
+    },
+    systems=(
+        "construction",
+        "maintenance",
+    ),
+  )
 )
 
 bridge = manager.get("bridge")

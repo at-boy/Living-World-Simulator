@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.2.2 (Unreleased)
+
+### Added
+
+- `make` now performs the complete development validation workflow.
+- `make examples` executes every example in a defined order.
+- Snapshot creation helper (`tools/create_snapshot.sh`).
+
+### Changed
+
+- Examples are now treated as executable documentation.
+- Development workflow documentation updated to reflect the new tooling.
+
 ## v0.2.1 (Unreleased)
 
 ### Added
