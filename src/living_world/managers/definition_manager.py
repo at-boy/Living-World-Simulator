@@ -2,7 +2,7 @@ from living_world.core.definition import Definition
 
 
 class DefinitionManager:
-    """Owns loaded definitions, not their storage."""
+    """Registry of loaded definitions."""
 
     def __init__(self) -> None:
         self._definitions: dict[str, Definition] = {}

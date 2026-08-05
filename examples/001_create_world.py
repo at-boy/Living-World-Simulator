@@ -1,33 +1,39 @@
-from living_world.core.entity import Entity
+from living_world.core.definition import Definition
 from living_world.core.relationship import Relationship
+from living_world.managers.definition_manager import DefinitionManager
 from living_world.managers.entity_manager import EntityManager
 from living_world.state.world_state import WorldState
 
 state = WorldState()
 
-entities = EntityManager(state)
+definitions = DefinitionManager()
 
-entities.add(
-    Entity(
-        id="entity_000001",
-        definition_key="location",
-        name="Village",
+definitions.register(
+    Definition(
+        key="location",
     )
 )
 
-entities.add(
-    Entity(
-        id="entity_000002",
-        definition_key="location",
-        name="Forest",
-    )
+entities = EntityManager(
+    state,
+    definitions,
+)
+
+village = entities.create(
+    definition_key="location",
+    name="Village",
+)
+
+forest = entities.create(
+    definition_key="location",
+    name="Forest",
 )
 
 state.relationships["relationship_000001"] = Relationship(
     id="relationship_000001",
     kind="road",
-    source_id="entity_000001",
-    target_id="entity_000002",
+    source_id=village.id,
+    target_id=forest.id,
 )
 
 print("Tick:", state.tick)

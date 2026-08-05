@@ -1,19 +1,34 @@
-from living_world.core.entity import Entity
+from living_world.core.definition import Definition
+from living_world.managers.definition_manager import DefinitionManager
 from living_world.managers.entity_manager import EntityManager
 from living_world.state.world_state import WorldState
 
 
-def test_add_entity():
+def test_create_entity():
     state = WorldState()
 
-    manager = EntityManager(state)
+    definitions = DefinitionManager()
 
-    manager.add(
-        Entity(
-            id="entity_1",
-            definition_key="location",
-            name="Village",
+    definitions.register(
+        Definition(
+            key="location",
         )
     )
 
-    assert "entity_1" in state.entities
+    manager = EntityManager(
+        state,
+        definitions,
+    )
+
+    entity = manager.create(
+        definition_key="location",
+        name="Village",
+    )
+
+    assert entity.id == "entity_000001"
+
+    assert entity.definition_key == "location"
+
+    assert entity.name == "Village"
+
+    assert manager.exists(entity.id)

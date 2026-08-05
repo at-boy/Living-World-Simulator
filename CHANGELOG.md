@@ -2,6 +2,21 @@
 
 ## v0.1.3 (Unreleased)
 
+### Added
+
+- Entity lifecycle managed by `EntityManager.create()`.
+- Dependency injection between `EntityManager` and `DefinitionManager`.
+- Automatic entity ID generation.
+- Initial attribute application from definitions.
+
+### Changed
+
+- `Definition.attributes` renamed to `Definition.initial_attributes`.
+- Examples now demonstrate entity lifecycle through `EntityManager`.
+- Tests updated to validate entity creation instead of direct insertion.
+
+## v0.1.3 (Unreleased)
+
 ### Changed
 
 - Replaced Location with Entity.

@@ -39,24 +39,6 @@ represents a location.
 
 ------------------------------------------------------------------------
 
-## EntityManager
-
-**Status:** Planned
-
-Implement the first production manager responsible for the complete
-lifecycle of entities.
-
-Responsibilities include:
-
--   ID generation
--   Entity creation from definitions
--   Lookup
--   Removal
--   Validation
--   WorldState mutation
-
-------------------------------------------------------------------------
-
 ## RelationshipManager
 
 **Status:** Planned
@@ -137,6 +119,14 @@ As additional examples are added, the build should execute all examples to ensur
 - `make examples` (or an equivalent target) executes every example.
 - Each example reports PASS/FAIL.
 - The build stops if any example fails.
+
+------------------------------------------------------------------------
+
+## Resolved
+
+### Entity lifecycle
+
+`EntityManager` now owns runtime entity creation, identifier generation, and registration within `WorldState`.
 
 ------------------------------------------------------------------------
 
