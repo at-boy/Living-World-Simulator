@@ -150,3 +150,18 @@ introducing domain-specific systems.
 Dedicated tests verify progression with and without bounds, while the
 examples now demonstrate bounded progression through the public
 SimulationEngine API.
+
+## Commit 0019
+
+### Resource Definitions
+
+The engine now maintains a registry of resource definitions.
+
+Resources are introduced as part of the simulation vocabulary rather
+than as standalone runtime objects. Runtime entities will later reference
+registered resource definitions through namespaced attributes such as
+`resource.water` and `resource.wood`.
+
+This mirrors the existing separation between entity definitions and
+runtime entities and establishes the foundation for future resource
+systems.

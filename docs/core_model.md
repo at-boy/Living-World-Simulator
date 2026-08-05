@@ -19,6 +19,21 @@ Everything that happens is an Event.
 
 These are the only concepts understood by the simulation engine.
 
+## Runtime Registries
+
+The simulation distinguishes between runtime objects and registries.
+
+Registries define the vocabulary available to the simulation while runtime
+objects represent the current world state.
+
+Current registries include:
+
+- DefinitionManager
+- ResourceDefinitionManager
+
+Additional registries may be introduced in the future as the simulation
+grows.
+
 ## Design Principles
 
 - The engine understands structure, not meaning.

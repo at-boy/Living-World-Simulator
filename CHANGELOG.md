@@ -4,6 +4,18 @@
 
 ### Added
 
+- Resource definitions and `ResourceDefinitionManager`.
+- Resource registry exposed through `SimulationEngine`.
+- Executable example demonstrating resource registration.
+
+### Changed
+
+- The engine now maintains a vocabulary of known resource types.
+
+## v0.2.2 (Unreleased)
+
+### Added
+
 - Generic bounded progress support through `progress_min` and
   `progress_max`.
 - Dedicated ProgressSystem test suite.

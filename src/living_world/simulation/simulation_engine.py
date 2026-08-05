@@ -2,6 +2,7 @@ from living_world.managers.definition_manager import DefinitionManager
 from living_world.managers.entity_manager import EntityManager
 from living_world.managers.event_manager import EventManager
 from living_world.managers.relationship_manager import RelationshipManager
+from living_world.managers.resource_definition_manager import ResourceDefinitionManager
 from living_world.simulation.simulation_scheduler import SimulationScheduler
 from living_world.state.world_state import WorldState
 from living_world.systems.simulation_system import SimulationSystem
@@ -14,6 +15,8 @@ class SimulationEngine:
         self._state = WorldState()
 
         self._definitions = DefinitionManager()
+
+        self._resource_definitions = ResourceDefinitionManager()
 
         self._entities = EntityManager(
             self._state,
@@ -67,3 +70,9 @@ class SimulationEngine:
         steps: int,
     ) -> None:
         self._scheduler.run(steps)
+
+    @property
+    def resource_definitions(
+        self,
+    ) -> ResourceDefinitionManager:
+        return self._resource_definitions
