@@ -1,8 +1,9 @@
-from living_world.state.world_state import WorldState
+from abc import ABC, abstractmethod
 
 
-class SimulationSystem:
-    """Base class for simulation systems."""
+class SimulationSystem(ABC):
+    """Base class for all simulation systems."""
 
-    def update(self, state: WorldState) -> None:
-        raise NotImplementedError
+    @abstractmethod
+    def update(self) -> None:
+        """Execute one simulation tick."""

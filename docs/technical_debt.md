@@ -106,7 +106,19 @@ As additional examples are added, the build should execute all examples to ensur
 
 ------------------------------------------------------------------------
 
+### Example runner
+
+`make example` currently executes only the first example.
+
+Replace it with `make examples` that discovers and executes every example
+in the `examples/` directory.
+
+
+------------------------------------------------------------------------
+
 ## Resolved
+
+------------------------------------------------------------------------
 
 ### Entity lifecycle
 

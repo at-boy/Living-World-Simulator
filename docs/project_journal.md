@@ -75,3 +75,18 @@ This completed the four fundamental runtime concepts:
 
 The next milestone is executing simulation systems on top of this
 runtime.
+
+## Commit 0014
+
+### The World Begins to Evolve
+
+This commit introduced deterministic execution of simulation systems.
+
+The first production system, `ProgressSystem`, demonstrates state
+changing over time.
+
+A scheduler now executes registered systems and advances the simulation
+tick.
+
+This marks the transition from a static runtime to an evolving
+simulation.

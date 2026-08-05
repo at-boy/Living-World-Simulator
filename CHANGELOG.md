@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.1.4 (Unreleased)
+
+### Added
+
+- `SimulationScheduler` for deterministic execution of simulation systems.
+- Abstract `SimulationSystem` base class.
+- Initial `ProgressSystem`.
+- Scheduler test coverage.
+- Scheduler example demonstrating world evolution.
+
+### Changed
+
+- Simulation tick now advances through the scheduler.
+
 ## v0.1.3 (Unreleased)
 
 ### Added

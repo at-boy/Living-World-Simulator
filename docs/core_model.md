@@ -78,3 +78,18 @@ foundation for future systems such as:
 - beliefs
 - debugging
 - simulation replay
+
+## Simulation
+
+Simulation behavior is implemented through `SimulationSystem`
+implementations.
+
+Systems execute in deterministic registration order through the
+`SimulationScheduler`.
+
+Each system is responsible for a single aspect of simulation behavior.
+
+Systems mutate the world exclusively through managers.
+
+The scheduler is responsible only for executing systems and advancing
+the simulation tick.

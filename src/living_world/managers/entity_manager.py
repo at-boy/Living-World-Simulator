@@ -71,3 +71,6 @@ class EntityManager:
 
             if entity_id not in self._state.entities:
                 return entity_id
+
+    def all(self) -> tuple[Entity, ...]:
+        return tuple(self._state.entities.values())

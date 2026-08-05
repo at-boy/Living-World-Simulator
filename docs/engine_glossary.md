@@ -148,3 +148,41 @@ Records immutable world history.
 - assign identifiers
 - timestamp events
 - retrieve recorded history
+
+## SimulationScheduler
+
+**Purpose**
+
+Executes simulation systems in deterministic order.
+
+**Responsibilities**
+
+- register systems
+- execute systems
+- advance simulation ticks
+
+---
+
+## SimulationSystem
+
+**Purpose**
+
+Encapsulates one aspect of simulation behavior.
+
+**Responsibilities**
+
+- update world state
+- use managers for mutations
+
+---
+
+## ProgressSystem
+
+**Purpose**
+
+Advance progress values over time.
+
+The system understands progress as a generic concept rather than any
+specific domain such as construction or farming.
+
+Other systems interpret the meaning of progress.
