@@ -4,6 +4,19 @@
 
 ### Added
 
+- Generic bounded progress support through `progress_min` and
+  `progress_max`.
+- Dedicated ProgressSystem test suite.
+
+### Changed
+
+- Progress is now clamped to optional inclusive bounds.
+- Progress examples demonstrate bounded progression.
+
+## v0.2.2 (Unreleased)
+
+### Added
+
 - `make` now performs the complete development validation workflow.
 - `make examples` executes every example in a defined order.
 - Snapshot creation helper (`tools/create_snapshot.sh`).

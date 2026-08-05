@@ -89,6 +89,16 @@ Systems execute in deterministic registration order through the
 
 Each system is responsible for a single aspect of simulation behavior.
 
+Some systems provide generic simulation mechanisms rather than
+domain-specific behavior.
+
+For example, the `ProgressSystem` advances a generic `progress` value by
+`progress_rate` every simulation tick. Optional inclusive
+`progress_min` and `progress_max` attributes constrain progression.
+
+The engine assigns no semantic meaning to progress values. Higher-level
+systems interpret progress according to their own requirements.
+
 Systems mutate the world exclusively through managers.
 
 The scheduler is responsible only for executing systems and advancing

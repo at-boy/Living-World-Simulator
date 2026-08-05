@@ -24,8 +24,9 @@ field = entities.create(
     definition_key="field",
     name="Wheat Field",
     attributes={
-        "progress": 0,
-        "progress_rate": 5,
+        "progress": 95,
+        "progress_rate": 3,
+        "progress_max": 100,
     },
 )
 
@@ -42,7 +43,9 @@ print("Simulation")
 for _ in range(10):
     print(
         f"Tick {state.tick}: "
-        f"progress={field.attributes['progress']}"
+        f"progress={field.attributes['progress']} "
+        f"progress_rate={field.attributes['progress_rate']} "
+        f"progress_max={field.attributes['progress_max']}"
     )
 
     scheduler.step()

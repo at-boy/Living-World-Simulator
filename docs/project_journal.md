@@ -135,3 +135,18 @@ public API remains validated alongside the implementation.
 
 Developer tooling was expanded with a snapshot helper to simplify
 sharing repository snapshots during architectural reviews.
+
+## Commit 0018
+
+### Generic Bounded Progress
+
+The generic ProgressSystem now supports optional inclusive lower and
+upper bounds.
+
+This allows a single reusable mechanism to represent many different
+processes including construction, growth, decay and healing without
+introducing domain-specific systems.
+
+Dedicated tests verify progression with and without bounds, while the
+examples now demonstrate bounded progression through the public
+SimulationEngine API.
