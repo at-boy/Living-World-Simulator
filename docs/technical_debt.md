@@ -20,24 +20,6 @@ part of the same pull request.
 
 # High Priority
 
-## Replace GraphManager with RelationshipManager
-
-**Status:** Open
-
-The engine architecture now models the world as a property graph.
-
-Travel, ownership, membership, social ties, and all other connections
-are represented by `Relationship` objects.
-
-`GraphManager` and its location-specific APIs should be removed and
-replaced by `RelationshipManager`.
-
-### Resolved when
-
--   `GraphManager` no longer exists.
--   World navigation uses travel relationships.
--   All examples use the new model.
-
 ------------------------------------------------------------------------
 
 ## Replace Location with Entity
@@ -77,7 +59,7 @@ Responsibilities include:
 
 ## RelationshipManager
 
-**Status:** In Progress
+**Status:** Planned
 
 The initial skeleton exists.
 
@@ -110,6 +92,51 @@ Managers communicate with repositories instead of directly interacting
 with persistence.
 
 SQLite will become the first repository implementation.
+
+------------------------------------------------------------------------
+
+# Medium Priority
+
+------------------------------------------------------------------------
+
+## Relationship lifecycle bypasses RelationshipManager
+
+**Status:** Open
+
+The current example writes relationships directly into
+WorldState.
+
+This temporarily violates ADR-0004
+(Managers are the only code allowed to mutate WorldState).
+
+This debt will be removed when RelationshipManager owns
+relationship creation.
+
+### Resolved when
+
+- Example uses RelationshipManager.
+- Systems use RelationshipManager.
+- No production code mutates world_state.relationships directly.
+
+------------------------------------------------------------------------
+
+# Low Priority
+
+------------------------------------------------------------------------
+
+## Example runner only executes the first example
+
+**Status:** Open
+
+`make example` currently runs only `examples/001_create_world.py`.
+
+As additional examples are added, the build should execute all examples to ensure they remain runnable.
+
+### Resolved when
+
+- `make examples` (or an equivalent target) executes every example.
+- Each example reports PASS/FAIL.
+- The build stops if any example fails.
 
 ------------------------------------------------------------------------
 

@@ -2,13 +2,14 @@ from dataclasses import dataclass, field
 
 
 @dataclass(slots=True)
-class Relationship:
-    """Connects two entities in the world."""
+class Entity:
+    """A runtime object in the simulation."""
 
     id: str
-    kind: str
-    source_id: str
-    target_id: str
+    definition_key: str
+    name: str
+
     attributes: dict[str, object] = field(default_factory=dict)
+
     created_tick: int = 0
     destroyed_tick: int | None = None

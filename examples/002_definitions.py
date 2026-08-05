@@ -5,8 +5,8 @@ manager = DefinitionManager()
 
 manager.register(
     Definition(
-        name="bridge",
-        properties={
+        key="bridge",
+        attributes={
             "completion": 0,
             "durability": 100,
         },

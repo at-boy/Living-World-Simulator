@@ -2,6 +2,14 @@
 
 The Living World Simulator is a property graph simulation engine.
 
+Everything that exists is an Entity.
+
+Everything that connects Entities is a Relationship.
+
+Everything that changes the world is a System.
+
+Everything that happens is an Event.
+
 ## Runtime Objects
 
 - Entity

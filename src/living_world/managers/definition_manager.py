@@ -8,10 +8,10 @@ class DefinitionManager:
         self._definitions: dict[str, Definition] = {}
 
     def register(self, definition: Definition) -> None:
-        self._definitions[definition.name] = definition
+        self._definitions[definition.key] = definition
 
-    def get(self, name: str) -> Definition:
-        return self._definitions[name]
+    def get(self, key: str) -> Definition:
+        return self._definitions[key]
 
-    def exists(self, name: str) -> bool:
-        return name in self._definitions
+    def exists(self, key: str) -> bool:
+        return key in self._definitions

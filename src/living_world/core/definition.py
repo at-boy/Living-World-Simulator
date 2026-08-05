@@ -9,6 +9,6 @@ class Definition:
     A repository may later load them from YAML without changing the engine API.
     """
 
-    name: str
-    properties: dict[str, object] = field(default_factory=dict)
+    key: str
+    attributes: dict[str, object] = field(default_factory=dict)
     systems: tuple[str, ...] = ()

@@ -1,15 +1,50 @@
-from living_world.managers.graph_manager import GraphManager
+from living_world.core.entity import Entity
+from living_world.core.relationship import Relationship
+from living_world.managers.entity_manager import EntityManager
 from living_world.state.world_state import WorldState
-from living_world.world.connection import Connection
-from living_world.world.location import Location
 
-state=WorldState()
-graph=GraphManager(state)
+state = WorldState()
 
-graph.add_location(Location("loc_000001","Village"))
-graph.add_location(Location("loc_000002","Forest"))
-graph.connect(Connection("loc_000001","loc_000002"))
+entities = EntityManager(state)
 
-print("Tick:",state.tick)
-print("Locations:",list(state.locations))
-print("Connections:",len(state.connections))
+entities.add(
+    Entity(
+        id="entity_000001",
+        definition_key="location",
+        name="Village",
+    )
+)
+
+entities.add(
+    Entity(
+        id="entity_000002",
+        definition_key="location",
+        name="Forest",
+    )
+)
+
+state.relationships["relationship_000001"] = Relationship(
+    id="relationship_000001",
+    kind="road",
+    source_id="entity_000001",
+    target_id="entity_000002",
+)
+
+print("Tick:", state.tick)
+
+print("Entities")
+
+for entity in state.entities.values():
+    print(entity.id, entity.name)
+
+print()
+
+print("Relationships")
+
+for relationship in state.relationships.values():
+    print(
+        relationship.kind,
+        relationship.source_id,
+        "->",
+        relationship.target_id,
+    )

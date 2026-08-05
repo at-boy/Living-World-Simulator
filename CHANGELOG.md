@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.1.3 (Unreleased)
+
+### Changed
+
+- Replaced Location with Entity.
+- Replaced Connection with Relationship.
+- WorldState now stores entities and relationships.
+- Introduced EntityManager.
+
+### Removed
+
+- GraphManager
+- Location
+- Connection
+
 ## v0.1.2
 
 ### Added
