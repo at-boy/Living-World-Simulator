@@ -4,6 +4,21 @@
 
 ### Added
 
+- Immutable `Event` runtime object.
+- `EventManager` for recording world history.
+- Event identifier generation.
+- Event timestamps based on simulation ticks.
+- EventManager test coverage.
+
+### Changed
+
+- `WorldState` now stores events by identifier.
+- Examples demonstrate recording world history.
+
+## v0.1.3 (Unreleased)
+
+### Added
+
 - Relationship lifecycle managed by `RelationshipManager.create()`.
 - Automatic relationship identifier generation.
 - Relationship validation during creation.

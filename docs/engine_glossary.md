@@ -114,3 +114,37 @@ Owns the lifecycle of runtime relationships.
 
 - EntityManager
 - WorldState
+
+## Event
+
+**Purpose**
+
+Immutable record of something that happened in the world.
+
+**Owns**
+
+- identifier
+- tick
+- event kind
+- subject reference
+- event attributes
+
+**Does Not Own**
+
+- mutable state
+- simulation logic
+
+---
+
+## EventManager
+
+**Purpose**
+
+Records immutable world history.
+
+**Responsibilities**
+
+- record events
+- assign identifiers
+- timestamp events
+- retrieve recorded history

@@ -56,3 +56,22 @@ This completed the core lifecycle architecture of the runtime.
 
 The next milestone is recording world history through an
 `EventManager`.
+
+## Commit 0013
+
+### World History
+
+The engine gained immutable world history through `Event` and
+`EventManager`.
+
+Unlike entities and relationships, events are append-only records.
+
+This completed the four fundamental runtime concepts:
+
+- Definition
+- Entity
+- Relationship
+- Event
+
+The next milestone is executing simulation systems on top of this
+runtime.

@@ -124,6 +124,15 @@ Examples and production code no longer mutate
 
 ------------------------------------------------------------------------
 
+### World history
+
+The runtime now records immutable history through `EventManager`.
+
+The engine has a dedicated history mechanism that future systems can
+build upon.
+
+------------------------------------------------------------------------
+
 # Notes
 
 Technical debt should decrease over time.

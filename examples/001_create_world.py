@@ -3,6 +3,7 @@ from living_world.managers.definition_manager import DefinitionManager
 from living_world.managers.entity_manager import EntityManager
 from living_world.managers.relationship_manager import RelationshipManager
 from living_world.state.world_state import WorldState
+from living_world.managers.event_manager import EventManager
 
 state = WorldState()
 
@@ -24,9 +25,16 @@ relationships = RelationshipManager(
     entities,
 )
 
+events = EventManager(state)
+
 village = entities.create(
     definition_key="location",
     name="Village",
+)
+
+events.record(
+    kind="location_created",
+    subject_id=village.id,
 )
 
 forest = entities.create(
@@ -34,10 +42,20 @@ forest = entities.create(
     name="Forest",
 )
 
-relationships.create(
+events.record(
+    kind="location_created",
+    subject_id=forest.id,
+)
+
+road = relationships.create(
     kind="road",
     source_id=village.id,
     target_id=forest.id,
+)
+
+events.record(
+    kind="road_created",
+    subject_id=road.id,
 )
 
 print("Tick:", state.tick)
@@ -57,4 +75,15 @@ for relationship in state.relationships.values():
         relationship.source_id,
         "->",
         relationship.target_id,
+    )
+
+print()
+
+print("Events")
+
+for event in state.events.values():
+    print(
+        event.tick,
+        event.kind,
+        event.subject_id,
     )

@@ -60,3 +60,21 @@ Together, `EntityManager` and `RelationshipManager` form the mutation
 boundary of the simulation runtime.
 
 Simulation systems should mutate the world only through managers.
+
+## World History
+
+The simulation records immutable history through `Event` objects.
+
+Events are created exclusively through `EventManager.record()`.
+
+Unlike entities and relationships, events are append-only and are never
+modified or removed.
+
+History represents objective facts about the world and forms the
+foundation for future systems such as:
+
+- NPC memory
+- observations
+- beliefs
+- debugging
+- simulation replay
