@@ -59,6 +59,24 @@ The manager is responsible for:
 
 Production code should not instantiate runtime entities directly. Tests and migration tooling may do so when appropriate.
 
+### Entity Resources
+
+Entities may optionally contain a structured `resources` attribute.
+
+The attribute maps resource identifiers to quantities owned by the
+entity.
+
+Example:
+
+```python
+{
+    "resources": {
+        "wood": 120,
+        "water": 35,
+    }
+}
+```
+
 ## Relationship Lifecycle
 
 Runtime relationships are created exclusively through

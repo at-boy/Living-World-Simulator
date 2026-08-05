@@ -165,3 +165,16 @@ registered resource definitions through namespaced attributes such as
 This mirrors the existing separation between entity definitions and
 runtime entities and establishes the foundation for future resource
 systems.
+
+## Commit 0020
+
+### Entity Resources
+
+Entities can now hold structured resource quantities through the
+`resources` attribute.
+
+Resource definitions establish the simulation vocabulary while entities
+store the runtime quantities they currently possess.
+
+This provides the foundation for future systems such as production,
+consumption, transfer, decay and trade.

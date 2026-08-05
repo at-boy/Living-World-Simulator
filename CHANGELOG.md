@@ -4,6 +4,18 @@
 
 ### Added
 
+- Entities can now store structured resource quantities.
+- Example demonstrating entity resources.
+
+### Changed
+
+- Resource quantities are represented as a nested `resources`
+  attribute rather than individual flat attributes.
+
+## v0.2.2 (Unreleased)
+
+### Added
+
 - Resource definitions and `ResourceDefinitionManager`.
 - Resource registry exposed through `SimulationEngine`.
 - Executable example demonstrating resource registration.

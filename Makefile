@@ -59,9 +59,15 @@ examples:
 	@echo
 
 	@echo "=================================================="
-	@echo "005_resources.py"
+	@echo "005_resource_definitions.py"
 	@echo "=================================================="
-	@PYTHONPATH=src .venv/bin/python examples/005_resources.py
+	@PYTHONPATH=src .venv/bin/python examples/005_resource_definitions.py
+	@echo
+
+	@echo "=================================================="
+	@echo "006_resources.py"
+	@echo "=================================================="
+	@PYTHONPATH=src .venv/bin/python examples/006_resources.py
 
 serve:
 	PYTHONPATH=src $(UVICORN) living_world.api.server:app --reload
