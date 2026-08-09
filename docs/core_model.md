@@ -51,6 +51,8 @@ grows.
 curated, provider-neutral perception request to a local model client, then
 constructs the authoritative observation identity, tick and evidence itself.
 Provider failure or invalid output falls back to deterministic perception.
+`OllamaPerceptionClient` and `LlamaCppPerceptionClient` are loopback-only HTTP
+adapters for that protocol; neither is allowed to use a cloud endpoint.
 
 ## Entity Lifecycle
 

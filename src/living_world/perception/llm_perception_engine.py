@@ -9,6 +9,7 @@ from living_world.perception.deterministic_perception_engine import (
 from living_world.perception.llm_perception_client import (
     LLMPerceptionClient,
     LLMPerceptionClientError,
+    LLMPerceptionInvalidResponseError,
     LLMPerceptionRequest,
     LLMPerceptionResponse,
 )
@@ -35,6 +36,8 @@ class LLMPerceptionEngine:
 
         try:
             response = self._client.perceive(request)
+        except LLMPerceptionInvalidResponseError:
+            return self._fallback(context, failure="invalid_response")
         except LLMPerceptionClientError:
             return self._fallback(context, failure="provider_error")
 
@@ -136,7 +139,17 @@ class LLMPerceptionEngine:
         if value.startswith("entity_"):
             return value in description
 
-        return bool(re.search(rf"(?<![0-9.]){re.escape(value)}(?![0-9.])", description))
+        if value.replace(".", "", 1).isdigit():
+            return bool(
+                re.search(rf"(?<![0-9.]){re.escape(value)}(?![0-9.])", description)
+            )
+
+        if value.replace("_", "").isalnum():
+            return bool(
+                re.search(rf"(?<![A-Za-z0-9_]){re.escape(value)}(?![A-Za-z0-9_])", description)
+            )
+
+        return value in description
 
 
 class LLMPerceptionFallbackError(RuntimeError):

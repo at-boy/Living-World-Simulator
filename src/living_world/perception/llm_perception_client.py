@@ -10,6 +10,10 @@ class LLMPerceptionClientError(Exception):
     """Raised when a configured local perception provider cannot respond."""
 
 
+class LLMPerceptionInvalidResponseError(LLMPerceptionClientError):
+    """Raised when a provider response cannot satisfy the perception contract."""
+
+
 @dataclass(frozen=True)
 class LLMPerceptionRequest:
     """Curated engine-side input for a perception model.

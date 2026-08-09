@@ -9,6 +9,18 @@ engineering milestones and lessons learned.
 
 # 2026-08-05
 
+## Commit 0027 — Local LLM Perception Clients
+
+The provider-neutral LLM perception boundary now has concrete local HTTP
+adapters for Ollama and llama.cpp. Both are deliberately loopback-only and use
+structured JSON responses, so the model may contribute only a description and
+confidence. No cloud endpoint or API-key path was added.
+
+Qwen3-4B Q4_K_M is documented as the development default. Manual examples use
+real local servers, while automated tests use injected fake transports. This
+keeps normal validation deterministic, fast and independent of a downloaded
+model.
+
 ## Commit 0026 — LLM Perception Boundary
 
 This commit adds the first LLM-facing perception infrastructure without making

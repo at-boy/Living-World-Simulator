@@ -2,13 +2,10 @@
 
 ## Purpose
 
-Living World uses only locally hosted language-model providers. Future provider
-adapters will call either an Ollama or llama.cpp HTTP server through the
-`LLMPerceptionClient` protocol. The simulation itself does not start, manage,
-or download models.
-
-The current `LLMPerceptionEngine` is provider-neutral. It has no HTTP client
-yet, so this document prepares a local runtime for the later adapter commit.
+Living World uses only locally hosted language-model providers. The
+`OllamaPerceptionClient` and `LlamaCppPerceptionClient` call their respective
+loopback HTTP servers through the common `LLMPerceptionClient` protocol. The
+simulation itself does not start, manage, or download models.
 
 ## Safety Boundary
 
@@ -23,11 +20,11 @@ when the provider is unavailable or returns invalid or unsafe content.
 
 ## Ollama
 
-Install Ollama using its platform-specific instructions, then download a model
-appropriate for the local machine:
+Install Ollama using its platform-specific instructions, then download the
+recommended Qwen3 4B GGUF quantization:
 
 ```bash
-ollama pull <model-name>
+ollama pull hf.co/Qwen/Qwen3-4B-GGUF:Q4_K_M
 ollama serve
 ```
 
@@ -36,21 +33,34 @@ the running model server with a non-streaming request:
 
 ```bash
 curl http://localhost:11434/api/generate \
-  -d '{"model":"<model-name>","prompt":"Reply with OK.","stream":false}'
+  -d '{"model":"hf.co/Qwen/Qwen3-4B-GGUF:Q4_K_M","prompt":"Reply with OK.","stream":false}'
 ```
 
-The future Ollama adapter will use this local endpoint only. See the official
+Run the real integration example from the repository root:
+
+```bash
+PYTHONPATH=src .venv/bin/python examples/manual/ollama_perception.py
+```
+
+`OllamaPerceptionClient` defaults to `http://127.0.0.1:11434` and rejects
+non-loopback URLs. It sends `think: false` so Qwen3 returns the required JSON
+in the response field rather than its separate thinking field. See the official
 [Ollama API introduction](https://docs.ollama.com/api/introduction) and
 [generate endpoint](https://docs.ollama.com/api/generate) for current install
 and request details.
 
 ## llama.cpp
 
-Build or install `llama-server`, obtain a compatible local GGUF model file,
-then start the HTTP server on loopback:
+Build or install `llama-server`, then have it download and serve the same
+recommended Qwen3 quantization on loopback:
 
 ```bash
-llama-server -m /absolute/path/to/model.gguf --host 127.0.0.1 --port 8080
+llama-server \
+  -hf Qwen/Qwen3-4B-GGUF:Q4_K_M \
+  --alias qwen3-4b-q4-k-m \
+  --jinja \
+  --host 127.0.0.1 \
+  --port 8080
 ```
 
 Verify the OpenAI-compatible server endpoint:
@@ -59,13 +69,27 @@ Verify the OpenAI-compatible server endpoint:
 curl http://127.0.0.1:8080/v1/models
 ```
 
-llama.cpp exposes OpenAI-compatible completion and chat-completion routes;
-future adapters should use its documented structured JSON response support.
-See the official [llama.cpp server documentation](https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md).
+Run the real integration example from the repository root:
 
-## Adapter Configuration (Future)
+```bash
+PYTHONPATH=src .venv/bin/python examples/manual/llama_cpp_perception.py
+```
 
-The first concrete local-provider commit should add explicit configuration for:
+`LlamaCppPerceptionClient` defaults to `http://127.0.0.1:8080` and rejects
+non-loopback URLs. llama.cpp exposes OpenAI-compatible chat-completion routes
+and structured JSON response support. See the official
+[llama.cpp server documentation](https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md).
+
+## Recommended Model
+
+The official [Qwen3-4B GGUF release](https://huggingface.co/Qwen/Qwen3-4B-GGUF)
+provides `Q4_K_M`; it is approximately 2.5 GB. This is the development default
+used in the manual examples. It is a practical starting point, but its output
+remains non-authoritative and is always validated by `LLMPerceptionEngine`.
+
+## Client Configuration
+
+Both clients accept explicit configuration for:
 
 - provider (`ollama` or `llama_cpp`);
 - loopback base URL;
@@ -73,6 +97,6 @@ The first concrete local-provider commit should add explicit configuration for:
 - request timeout;
 - generation limits and deterministic sampling settings.
 
-No cloud endpoint, API key, or remote default should be introduced. Tests must
-continue to use fake `LLMPerceptionClient` implementations; an optional manual
-smoke test may call a locally running server.
+No cloud endpoint, API key, or remote default is supported. Tests use fake HTTP
+transports and do not require a model server; the manual examples are optional
+smoke tests for a locally running server.

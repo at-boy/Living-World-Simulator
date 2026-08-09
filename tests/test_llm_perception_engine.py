@@ -4,6 +4,7 @@ from living_world.core.entity import Entity
 from living_world.core.observation import Observation
 from living_world.perception.llm_perception_client import (
     LLMPerceptionClientError,
+    LLMPerceptionInvalidResponseError,
     LLMPerceptionRequest,
     LLMPerceptionResponse,
 )
@@ -32,6 +33,13 @@ class FailingLLMPerceptionClient:
 
     def perceive(self, request: LLMPerceptionRequest) -> LLMPerceptionResponse:
         raise LLMPerceptionClientError("The local model is unavailable.")
+
+
+class InvalidResponseLLMPerceptionClient:
+    provider_name = "stub"
+
+    def perceive(self, request: LLMPerceptionRequest) -> LLMPerceptionResponse:
+        raise LLMPerceptionInvalidResponseError("Response was not valid JSON.")
 
 
 class StubFallbackEngine:
@@ -164,6 +172,21 @@ def test_invalid_or_unsafe_provider_response_uses_fallback(
     }
 
 
+def test_allows_npc_readable_words_that_match_attribute_names() -> None:
+    client = StubLLMPerceptionClient(
+        LLMPerceptionResponse(
+            description="The Old Oak appears to have plenty of wood.",
+            confidence=0.8,
+        )
+    )
+    engine = LLMPerceptionEngine(client, fallback_engine=StubFallbackEngine())
+
+    observation = engine.perceive(make_context())
+
+    assert observation.description == "The Old Oak appears to have plenty of wood."
+    assert observation.metadata["fallback_used"] is False
+
+
 def test_provider_failure_uses_fallback_without_leaking_error_details() -> None:
     engine = LLMPerceptionEngine(
         FailingLLMPerceptionClient(),
@@ -180,6 +203,17 @@ def test_provider_failure_uses_fallback_without_leaking_error_details() -> None:
         "failure": "provider_error",
     }
     assert "unavailable" not in str(observation.metadata)
+
+
+def test_invalid_provider_response_uses_invalid_response_fallback_category() -> None:
+    engine = LLMPerceptionEngine(
+        InvalidResponseLLMPerceptionClient(),
+        fallback_engine=StubFallbackEngine(),
+    )
+
+    observation = engine.perceive(make_context())
+
+    assert observation.metadata["failure"] == "invalid_response"
 
 
 def test_provider_failure_uses_deterministic_fallback_by_default() -> None:

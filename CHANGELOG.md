@@ -8,11 +8,16 @@
 - Deterministic fallback for unavailable, invalid or unsafe local LLM output.
 - Executable LLM perception example using a fake local client.
 - Local Ollama and llama.cpp setup documentation.
+- Loopback-only `OllamaPerceptionClient` and `LlamaCppPerceptionClient` HTTP
+  adapters.
+- Manual real-server examples using Qwen3-4B Q4_K_M.
 
 ### Changed
 
 - LLM perception results are validated before becoming NPC-readable
   observations; model output cannot set simulation identity, tick or evidence.
+- Local provider calls use structured JSON responses and no cloud endpoint or
+  API key configuration.
 
 ## v0.2.2 (Unreleased)
 
