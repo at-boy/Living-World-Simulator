@@ -7,6 +7,7 @@ and make the example runner reliably validate all executable documentation.
 
 ## Context Needed
 
+- Create: `docs/subagent_execution_plan/01_baseline_and_technical_debt-report.md`.
 - Edit: `Makefile`, `docs/technical_debt.md`, `docs/core_model.md`,
   `docs/engine_glossary.md`, `CHANGELOG.md`, `docs/project_journal.md`.
 - Create: `tests/test_examples_runner.py` only if the example runner needs a
@@ -38,10 +39,16 @@ and make the example runner reliably validate all executable documentation.
 - Existing entity and relationship manager tests still pass.
 - `make` passes under the local Python 3.13.5 runtime.
 
+## Orchestrator Report
+
+Create `docs/subagent_execution_plan/01_baseline_and_technical_debt-report.md`.
+Report the audit evidence for every debt item reviewed, runner validation,
+changed files, validation results, and any repository-wide blocker.
+
 ## Boundary
 
-- Touch only the listed files and a single narrowly-scoped runner test if
-  necessary.
+- Touch only the listed files, the approved report artifact, and a single
+  narrowly-scoped runner test if necessary.
 - Ignore repository persistence, YAML loading, settlement behavior, NPC
   cognition, and LLM code.
 - Adhere to `docs/development_rules.md`, `docs/development_workflow.md`, and

@@ -7,6 +7,7 @@ only holder-scoped cognitive interpretations, never engine truth.
 
 ## Context Needed
 
+- Create: `docs/subagent_execution_plan/09_npc_retrieval_context_boundary-report.md`.
 - Create: `src/living_world/cognition/retrieval.py`,
   `src/living_world/cognition/information_boundary.py`,
   `tests/test_cognitive_retrieval.py`, `tests/test_npc_information_boundary.py`.
@@ -62,9 +63,16 @@ class NPCContext:
 - Context rejects raw skill numbers, `WorldState`, and raw entity attributes.
 - `make` passes.
 
+## Orchestrator Report
+
+Create `docs/subagent_execution_plan/09_npc_retrieval_context_boundary-report.md`.
+Report retrieval ordering/limits, holder isolation, explicit non-leakage test
+evidence, changed public interfaces, and validation results.
+
 ## Boundary
 
 - Touch only stated cognition modules/tests/docs.
+- The approved report artifact is also allowed.
 - Do not change perception engines: they are engine-side translators that may
   retain protected evidence.
 - This task is the mandatory enforcement point for all rules in

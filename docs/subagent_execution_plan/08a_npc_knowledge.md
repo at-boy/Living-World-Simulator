@@ -7,6 +7,7 @@ the difference between what an NPC has heard and what the simulation knows.
 
 ## Context Needed
 
+- Create: `docs/subagent_execution_plan/08a_npc_knowledge-report.md`.
 - Create: `src/living_world/core/knowledge.py`,
   `src/living_world/managers/knowledge_manager.py`,
   `tests/test_knowledge.py`, `tests/test_knowledge_manager.py`, and
@@ -76,9 +77,16 @@ class KnowledgeManager:
   cannot enter `statement` or `source_description`.
 - Engine wiring, the example, and `make` pass.
 
+## Orchestrator Report
+
+Create `docs/subagent_execution_plan/08a_npc_knowledge-report.md`. Report the
+implemented distinction between knowledge, memory, belief, and experience;
+source-attribution safeguards; boundary evidence; and validation results.
+
 ## Boundary
 
 - Touch only the listed knowledge/state/engine/export/example/test/docs files.
+- The approved report artifact is also allowed.
 - Do not alter retrieval or prompt context in this task; Task 09 consumes this
   completed interface.
 - Adhere to `docs/architectural_direction.md` and

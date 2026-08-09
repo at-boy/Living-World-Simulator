@@ -7,6 +7,7 @@ minimal deterministic systems required for later settlement simulation.
 
 ## Context Needed
 
+- Create: `docs/subagent_execution_plan/05_organizations_and_settlements-report.md`.
 - Create: `src/living_world/systems/organization_system.py`,
   `src/living_world/systems/settlement_system.py`,
   `tests/test_organization_system.py`, `tests/test_settlement_system.py`,
@@ -43,8 +44,14 @@ class SettlementSystem(SimulationSystem):
 - Material changes create immutable events.
 - The example uses only public engine/manager APIs and `make` passes.
 
+## Orchestrator Report
+
+Create `docs/subagent_execution_plan/05_organizations_and_settlements-report.md`.
+Report graph conventions, manager-only mutation evidence, event behavior,
+example result, and validation results.
+
 ## Boundary
 
 - Touch only stated organization/settlement systems, tests, examples, engine
-  registration, fixtures, and docs.
+  registration, fixtures, and docs, plus the approved report artifact.
 - Do not implement construction, roads, housing, economy, or NPC behavior.

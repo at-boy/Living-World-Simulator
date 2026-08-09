@@ -7,6 +7,7 @@ data cannot cross from observations into NPC cognition.
 
 ## Context Needed
 
+- Create: `docs/subagent_execution_plan/09a_perception_boundary_enforcement-report.md`.
 - Create: `src/living_world/perception/npc_perception_boundary.py`,
   `tests/test_npc_perception_boundary.py`.
 - Edit: `src/living_world/perception/deterministic_perception_engine.py`,
@@ -68,9 +69,16 @@ class DefaultNPCPerceptionBoundary:
   request and has no path into the latter.
 - All existing perception tests, context tests, and `make` pass.
 
+## Orchestrator Report
+
+Create `docs/subagent_execution_plan/09a_perception_boundary_enforcement-report.md`.
+Report unsafe-output cases tested, fallback behavior, evidence-retention versus
+context-exclusion proof, and validation results.
+
 ## Boundary
 
 - Touch only the listed perception/context/test/documentation files.
+- The approved report artifact is also allowed.
 - Do not change the domain meaning of observations, beliefs, memories, or
   actions; this task enforces the translation boundary only.
 - Follow the explicit distinction in `npc_information_boundary.md`: the

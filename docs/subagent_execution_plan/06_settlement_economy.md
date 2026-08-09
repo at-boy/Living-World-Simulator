@@ -7,6 +7,7 @@ generic progress, resources, entities, relationships, and events.
 
 ## Context Needed
 
+- Create: `docs/subagent_execution_plan/06_settlement_economy-report.md`.
 - Create: `src/living_world/systems/construction_system.py`,
   `src/living_world/systems/housing_system.py`,
   `src/living_world/systems/production_system.py`,
@@ -46,8 +47,14 @@ class TradeSystem(SimulationSystem):
 - Repeated runs with the same state and order are deterministic.
 - `make` passes including the settlement example.
 
+## Orchestrator Report
+
+Create `docs/subagent_execution_plan/06_settlement_economy-report.md`. Report
+resource/progress invariants, deterministic behavior, manager/event evidence,
+example result, and validation results.
+
 ## Boundary
 
 - Touch only stated systems, their tests/example/fixtures, engine registration,
-  resource-system extension, and docs.
+  resource-system extension, and docs, plus the approved report artifact.
 - Do not add NPC cognition or let systems directly modify state dictionaries.

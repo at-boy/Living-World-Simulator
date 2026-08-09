@@ -7,6 +7,7 @@ systems over generic entities, relationships, resources, and events.
 
 ## Context Needed
 
+- Create: `docs/subagent_execution_plan/04_world_simulation_foundations-report.md`.
 - Create: `src/living_world/systems/weather_system.py`,
   `src/living_world/systems/population_system.py`,
   `tests/test_weather_system.py`, `tests/test_population_system.py`,
@@ -46,8 +47,15 @@ class PopulationSystem(SimulationSystem):
 - Example exercises regions, terrain, weather, and population through public
   APIs; `make` passes.
 
+## Orchestrator Report
+
+Create `docs/subagent_execution_plan/04_world_simulation_foundations-report.md`.
+Report entity/relationship conventions, deterministic-system behavior, event
+evidence, example output, and validation results.
+
 ## Boundary
 
 - Touch only the files listed above plus directly required fixtures/docs.
+- The approved report artifact is also allowed.
 - Do not add a `Region`, `Terrain`, `Weather`, or `Population` runtime class.
 - Ignore settlement, economy, and cognition features.

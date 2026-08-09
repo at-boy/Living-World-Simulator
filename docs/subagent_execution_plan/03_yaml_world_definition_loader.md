@@ -7,6 +7,7 @@ entities are created, without treating YAML as a serialized world state.
 
 ## Context Needed
 
+- Create: `docs/subagent_execution_plan/03_yaml_world_definition_loader-report.md`.
 - Create: `src/living_world/definitions/yaml_loader.py`,
   `src/living_world/definitions/__init__.py`, `tests/test_yaml_loader.py`,
   `examples/012_yaml_world.py`.
@@ -45,9 +46,15 @@ class YAMLWorldDefinitionLoader:
 - The example creates runtime entities only through `EntityManager`.
 - `make` includes the new example and passes.
 
+## Orchestrator Report
+
+Create `docs/subagent_execution_plan/03_yaml_world_definition_loader-report.md`.
+Report the accepted YAML schema, atomicity/error-case evidence, public API,
+example result, and validation results.
+
 ## Boundary
 
 - Touch only the listed loader, definition, engine, test, example,
-  configuration, and documentation files.
+  configuration, and documentation files, plus the approved report artifact.
 - Ignore domain systems and do not load a complete `WorldState` from YAML.
 - Adhere to the architectural flow: YAML definition -> loader -> world state.

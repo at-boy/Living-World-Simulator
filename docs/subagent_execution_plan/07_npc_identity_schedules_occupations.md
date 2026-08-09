@@ -7,6 +7,7 @@ generic entities, ready for cognition but without yet introducing LLMs.
 
 ## Context Needed
 
+- Create: `docs/subagent_execution_plan/07_npc_identity_schedules_occupations-report.md`.
 - Create: `src/living_world/npc/identity.py`, `src/living_world/npc/schedule.py`,
   `src/living_world/systems/schedule_system.py`, `tests/test_npc_identity.py`,
   `tests/test_schedule_system.py`, `examples/016_npc_schedules.py`.
@@ -49,8 +50,14 @@ class ScheduleSystem(SimulationSystem):
 - NPC identity never requires an internal ID in presentation data.
 - Example and `make` pass.
 
+## Orchestrator Report
+
+Create `docs/subagent_execution_plan/07_npc_identity_schedules_occupations-report.md`.
+Report validated NPC data conventions, schedule determinism, information-boundary
+considerations, example result, and validation results.
+
 ## Boundary
 
 - Touch only stated NPC/schedule files, fixtures, registration, tests, example,
-  and docs.
+  and docs, plus the approved report artifact.
 - Do not implement perception, memory, retrieval, or LLM reasoning yet.

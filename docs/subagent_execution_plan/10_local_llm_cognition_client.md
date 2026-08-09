@@ -7,6 +7,7 @@ reasoning proposals, with no authority or raw-world-data access.
 
 ## Context Needed
 
+- Create: `docs/subagent_execution_plan/10_local_llm_cognition_client-report.md`.
 - Create: `src/living_world/cognition/npc_cognition_client.py`,
   `src/living_world/cognition/local_llm_cognition_format.py`,
   `src/living_world/cognition/ollama_cognition_client.py`,
@@ -61,9 +62,16 @@ class NPCCognitionClient(Protocol):
 - Non-loopback URLs are rejected.
 - Valid structured response round-trips without side effects.
 
+## Orchestrator Report
+
+Create `docs/subagent_execution_plan/10_local_llm_cognition_client-report.md`.
+Report provider request/response contracts, loopback enforcement, prompt-boundary
+evidence, error handling, and validation results.
+
 ## Boundary
 
 - Touch only stated cognition-client modules/tests and local-LLM docs.
+- The approved report artifact is also allowed.
 - Do not modify existing perception clients or action application code.
 - Adhere to the distinction between the perception LLM (engine subsystem) and
   cognition LLM (NPC reasoning endpoint).

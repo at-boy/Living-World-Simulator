@@ -7,6 +7,7 @@ conclusions still require the standard simulation action gateway.
 
 ## Context Needed
 
+- Create: `docs/subagent_execution_plan/13_council_meetings-report.md`.
 - Create: `src/living_world/cognition/council.py`, `tests/test_council.py`,
   `examples/020_council_meeting.py`.
 - Edit: `src/living_world/cognition/__init__.py`,
@@ -48,8 +49,15 @@ class CouncilService:
 - Round limits and action-resolution order are deterministic; example and
   `make` pass.
 
+## Orchestrator Report
+
+Create `docs/subagent_execution_plan/13_council_meetings-report.md`. Report
+membership-eligibility checks, agenda/context filtering, consensus-versus-action
+validation evidence, and validation results.
+
 ## Boundary
 
 - Touch only stated council files, integration, tests, example, and docs.
+- The approved report artifact is also allowed.
 - Do not create a special `Council` world primitive or direct state mutation.
 - Preserve all conversation and action-boundary guarantees.

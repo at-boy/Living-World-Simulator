@@ -7,6 +7,7 @@ manager-owned lifecycle APIs and immutable historical records.
 
 ## Context Needed
 
+- Create: `docs/subagent_execution_plan/02_repository_layer-report.md`.
 - Create: `src/living_world/repositories/sqlite_repository.py`,
   `tests/test_sqlite_repository.py`.
 - Edit: `src/living_world/repositories/graph_repository.py`,
@@ -48,10 +49,16 @@ class SQLiteRepository:
 - Invalid paths and malformed persisted data fail with explicit repository
   errors, never partial world mutation.
 
+## Orchestrator Report
+
+Create `docs/subagent_execution_plan/02_repository_layer-report.md`. Report
+the persistence schema/serialization decision, migration compatibility,
+round-trip evidence, changed public interfaces, and validation results.
+
 ## Boundary
 
 - Touch only repository, state, manager, engine, stated tests, and stated
-  docs.
+  docs, plus the approved report artifact.
 - Do not add domain-specific tables for regions, settlements, or NPCs; they
   are represented through generic records and later task-owned data.
 - Adhere to manager-owned mutation and immutable-history rules.

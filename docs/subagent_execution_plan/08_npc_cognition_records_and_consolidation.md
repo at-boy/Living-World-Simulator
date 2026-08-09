@@ -7,6 +7,7 @@ that creates NPC interpretations without converting them into world truth.
 
 ## Context Needed
 
+- Create: `docs/subagent_execution_plan/08_npc_cognition_records_and_consolidation-report.md`.
 - Create: `src/living_world/core/memory.py`,
   `src/living_world/core/npc_relationship.py`,
   `src/living_world/managers/memory_manager.py`,
@@ -57,10 +58,16 @@ class CognitiveConsolidator(Protocol):
 - Existing observation, belief, and experience tests remain green; example and
   `make` pass.
 
+## Orchestrator Report
+
+Create `docs/subagent_execution_plan/08_npc_cognition_records_and_consolidation-report.md`.
+Report the cognitive-model distinctions, consolidation eligibility/idempotence
+evidence, provenance handling, boundary audit, and validation results.
+
 ## Boundary
 
 - Touch only listed cognitive record/manager/consolidation files and stated
-  integration/docs.
+  integration/docs, plus the approved report artifact.
 - Generic `Relationship` stays authoritative graph infrastructure; do not turn
   it into NPC knowledge.
 - Adhere to the cognitive distinctions and sleep policy in architectural docs.

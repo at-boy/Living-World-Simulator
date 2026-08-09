@@ -7,6 +7,7 @@ private cognition private and all proposed actions non-authoritative.
 
 ## Context Needed
 
+- Create: `docs/subagent_execution_plan/12_npc_conversations-report.md`.
 - Create: `src/living_world/cognition/conversation.py`,
   `tests/test_conversation.py`, `examples/019_npc_conversations.py`.
 - Edit: `src/living_world/cognition/__init__.py`,
@@ -51,8 +52,15 @@ class ConversationService:
 - Invalid/rejected proposals cause no world mutation.
 - Turn ordering and `max_turns` are deterministic; example and `make` pass.
 
+## Orchestrator Report
+
+Create `docs/subagent_execution_plan/12_npc_conversations-report.md`. Report
+turn-context filtering, recipient-observation recording, private-cognition
+isolation, action-resolution evidence, and validation results.
+
 ## Boundary
 
 - Touch only stated conversation files, integration, tests, example, and docs.
+- The approved report artifact is also allowed.
 - Do not implement council policy here.
 - Adhere to the information boundary for every turn, not merely initial context.

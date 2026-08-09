@@ -7,6 +7,7 @@ simulation-owned validation and manager-owned application for every action.
 
 ## Context Needed
 
+- Create: `docs/subagent_execution_plan/11_npc_cognition_protocol_action_gateway-report.md`.
 - Create: `src/living_world/cognition/decision_engine.py`,
   `src/living_world/cognition/action_resolution.py`,
   `tests/test_decision_engine.py`, `tests/test_action_resolution.py`,
@@ -45,8 +46,15 @@ class NPCActionHandler(Protocol):
 - LLM output cannot claim success or set an authoritative result.
 - `make` passes.
 
+## Orchestrator Report
+
+Create `docs/subagent_execution_plan/11_npc_cognition_protocol_action_gateway-report.md`.
+Report proposal validation, rejected-action non-mutation evidence, accepted
+handler/event evidence, public interfaces, and validation results.
+
 ## Boundary
 
 - Touch only stated cognition/action/engine files, tests, and docs.
+- The approved report artifact is also allowed.
 - Do not add domain action behavior; later domain modules register handlers.
 - Strictly preserve “LLMs reason and propose; simulation validates and applies.”

@@ -7,6 +7,7 @@ and metadata, and perform the final quality and information-boundary audit.
 
 ## Context Needed
 
+- Create: `docs/subagent_execution_plan/14_v05_release_closeout-report.md`.
 - Edit: `VERSION`, `pyproject.toml`, `CHANGELOG.md`, `README.md`,
   `docs/backlog.md`, `docs/technical_debt.md`, `docs/core_model.md`,
   `docs/engine_glossary.md`, `docs/architectural_direction.md`,
@@ -37,9 +38,16 @@ and metadata, and perform the final quality and information-boundary audit.
   leakage.
 - Review the complete diff and release checklist before tagging.
 
+## Orchestrator Report
+
+Create `docs/subagent_execution_plan/14_v05_release_closeout-report.md`.
+Report release-version evidence, full validation results, boundary-audit
+findings, documentation/backlog/debt reconciliation, and any release blocker.
+
 ## Boundary
 
 - Documentation/configuration/release metadata only.
+- The approved report artifact is also allowed.
 - Do not “fix forward” implementation defects during release closeout.
 - Adhere to every development rule, particularly changelog, journal, backlog,
   and final `make` requirements.
