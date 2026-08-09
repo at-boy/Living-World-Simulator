@@ -146,7 +146,9 @@ class LLMPerceptionEngine:
 
         if value.replace("_", "").isalnum():
             return bool(
-                re.search(rf"(?<![A-Za-z0-9_]){re.escape(value)}(?![A-Za-z0-9_])", description)
+                re.search(
+                    rf"(?<![A-Za-z0-9_]){re.escape(value)}(?![A-Za-z0-9_])", description
+                )
             )
 
         return value in description
