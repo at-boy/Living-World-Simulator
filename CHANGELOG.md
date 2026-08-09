@@ -4,6 +4,10 @@
 
 ### Added
 
+- Strict, duplicate-key-safe YAML definition vocabulary loading through
+  `SimulationEngine.load_definitions()`.
+- Atomic batch definition registration and an executable YAML world-definition
+  example.
 - `GraphRepository` persistence boundary and versioned `SQLiteRepository`.
 - SQLite round-trip support for entities, relationships, events, observations,
   beliefs, experiences, and immutable history.

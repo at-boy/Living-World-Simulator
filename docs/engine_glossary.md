@@ -112,6 +112,28 @@ snapshot.
 
 Registry of available definitions.
 
+`register_many()` validates an entire batch before changing the registry, which
+allows `SimulationEngine.load_definitions(path)` to register YAML vocabulary
+atomically.
+
+---
+
+## WorldDefinitionLoader
+
+**Purpose**
+
+Read validated definition vocabulary before runtime entities are created.
+
+**Does Not Own**
+
+- `WorldState`
+- runtime entity identities
+- ticks, events, or NPC cognitive records
+
+`YAMLWorldDefinitionLoader` accepts only a top-level `definitions` list. Each
+item has a `key`, optional `initial_attributes` mapping, and optional `systems`
+list. Unknown schema fields and duplicate YAML keys are rejected.
+
 ---
 
 ## EntityManager

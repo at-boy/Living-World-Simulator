@@ -1,3 +1,7 @@
+from pathlib import Path
+
+from living_world.core.definition import Definition
+from living_world.definitions.yaml_loader import YAMLWorldDefinitionLoader
 from living_world.managers.belief_manager import BeliefManager
 from living_world.managers.definition_manager import DefinitionManager
 from living_world.managers.entity_manager import EntityManager
@@ -92,6 +96,13 @@ class SimulationEngine:
         system: SimulationSystem,
     ) -> None:
         self._scheduler.register(system)
+
+    def load_definitions(self, path: Path) -> tuple[Definition, ...]:
+        """Load and atomically register definition vocabulary from YAML."""
+
+        definitions = YAMLWorldDefinitionLoader().load(path)
+        self._definitions.register_many(definitions)
+        return definitions
 
     def step(self) -> None:
         self._scheduler.step()

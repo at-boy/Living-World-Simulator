@@ -33,6 +33,13 @@ Current registries include:
 - DefinitionManager
 - ResourceDefinitionManager
 
+World-definition YAML is an input format for Definition vocabulary, not a
+serialized `WorldState`. `SimulationEngine.load_definitions(path)` validates a
+strict document containing only ordered definitions, their initial attributes,
+and participating systems, then registers the complete set atomically. YAML
+cannot introduce runtime entity identifiers, ticks, events, or NPC cognitive
+records. Runtime entities remain exclusively owned by `EntityManager.create()`.
+
 Additional registries may be introduced in the future as the simulation
 grows.
 

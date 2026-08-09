@@ -7,7 +7,7 @@ name="living-world-simulator"
 version="0.2.3"
 description="Event-driven simulation engine."
 requires-python=">=3.11"
-dependencies=["fastapi"]
+dependencies=["fastapi", "PyYAML"]
 
 [project.optional-dependencies]
 dev=["pytest","ruff","black","uvicorn"]

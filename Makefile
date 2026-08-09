@@ -7,6 +7,7 @@ RUFF=$(VENV)/bin/ruff
 BLACK=$(VENV)/bin/black
 PYTEST=$(VENV)/bin/pytest
 UVICORN=$(VENV)/bin/uvicorn
+# Every numbered top-level example, including 012_yaml_world.py, is executable documentation.
 EXAMPLES=$(sort $(wildcard examples/[0-9][0-9][0-9]_*.py))
 
 all: fix check examples

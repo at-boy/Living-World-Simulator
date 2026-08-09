@@ -297,3 +297,16 @@ The important guardrail is that an NPC LLM must never become a second source of 
 This milestone therefore preserves the intended boundary while also making it explicit for future retrieval, cognition and LLM features. The project now records the need for NPC-only context filtering, boundary enforcement, and retrieval over cognitively valid information rather than engine truth.
 
 This is a documentation and architecture-hardening milestone rather than a broad NPC feature release: it keeps the discipline that the simulation remains authoritative and the NPC remains a participant within a filtered, interpreted model of the world.
+
+## Commit 0026 — YAML Definition Vocabulary Loading
+
+The engine now loads a strictly validated YAML definition vocabulary before
+runtime entities are created. The document accepts only an ordered
+`definitions` list containing definition keys, initial attributes, and system
+names; it is explicitly not a serialized `WorldState` format.
+
+The loader rejects duplicate YAML keys, invalid attribute shapes, unknown
+schema fields, and definition-key collisions before the registry changes.
+`SimulationEngine.load_definitions()` stages the validated tuple and commits it
+through `DefinitionManager.register_many()`, preserving atomic registration.
+Runtime instances continue to be created only by `EntityManager.create()`.
