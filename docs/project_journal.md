@@ -223,3 +223,15 @@ An experience is an NPC-specific record of learning gained through lived interac
 The model uses an `ExperienceHistoryEntry` pattern analogous to the existing belief history implementation so that the record remains append-only and traceable over time. Belief records were extended to optionally reference supporting experiences without collapsing the belief into the experience itself.
 
 This design keeps the engine's authority separate from the NPC's knowledge. Raw simulation state remains engine truth, while experience records remain filtered, NPC-facing cognitive content suitable for later retrieval, context assembly and the future NPC Cognition Protocol.
+
+## Commit 0025 — NPC Information Boundary and Cognitive Guardrails
+
+This commit formalizes the architectural rule that the engine owns authoritative world truth while NPCs only receive what they can reasonably perceive, interpret, remember, or retrieve.
+
+The project had already been moving in this direction through the perception and experience models, and the key gap was not in the implementation but in the documentation and roadmap discipline. The architecture and NPC information boundary documents already correctly described the separation, but the project needed the rule recorded as an active engineering commitment for future work.
+
+The important guardrail is that an NPC LLM must never become a second source of truth. It may reason from filtered observations, memories, beliefs and experiences, but it must not receive raw simulation attributes, internal identifiers, hidden engine values, or direct access to `WorldState` as if that were NPC knowledge.
+
+This milestone therefore preserves the intended boundary while also making it explicit for future retrieval, cognition and LLM features. The project now records the need for NPC-only context filtering, boundary enforcement, and retrieval over cognitively valid information rather than engine truth.
+
+This is a documentation and architecture-hardening milestone rather than a broad NPC feature release: it keeps the discipline that the simulation remains authoritative and the NPC remains a participant within a filtered, interpreted model of the world.

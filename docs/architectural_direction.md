@@ -58,3 +58,7 @@ Important principles:
 -   Cognitive Consolidation occurs during NPC sleep and processes the
     previous day's cognitive material.
 -   LLMs reason and propose; the simulation remains authoritative.
+-   NPC-facing LLMs receive only filtered perception, memory, belief,
+    experience and retrieval results. They do not receive raw world
+    attributes, hidden engine identifiers, or direct access to simulation
+    truth by default.

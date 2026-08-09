@@ -53,8 +53,10 @@ deliberately postponed until the appropriate milestone.
 - Council meetings
 - NPC conversations
 - NPC Cognition Protocol
-- Experience generation from repeated observations
+- NPC information boundary enforcement
 - Retrieval and context assembly for NPC cognition
+- NPC-only context filtering for perception and memory retrieval
+- LLM reasoning without direct world-truth authority
 
 ---
 

@@ -4,6 +4,19 @@
 
 ### Added
 
+- Explicit NPC information-boundary guardrails to keep engine truth separate from NPC-visible cognition.
+- Documentation clarifying that perception is a translation layer and that LLM reasoning remains downstream of NPC-accessible knowledge.
+- Backlog and journal tracking for future NPC retrieval, context assembly, and boundary enforcement work.
+
+### Changed
+
+- The cognitive architecture now explicitly treats raw world state as authoritative simulation data rather than NPC knowledge.
+- The project roadmap reflects the need to preserve the NPC information boundary while implementing future cognition features.
+
+## v0.2.2 (Unreleased)
+
+### Added
+
 - Immutable `Experience` runtime objects representing lived interaction and accumulated learning.
 - `ExperienceHistoryEntry` for append-only experience change tracking.
 - `ExperienceManager` for recording and retrieving NPC experiences.
