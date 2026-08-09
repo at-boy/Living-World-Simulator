@@ -3,13 +3,14 @@
 set -euo pipefail
 
 VERSION="$(cat VERSION)"
+DATE="$(date +%+4Y%m%d%H%M%S)"
 
-OUTPUT="living_world-${VERSION}.zip"
+OUTPUT="living_world-${VERSION}-${DATE}.zip"
 
 echo "Creating ${OUTPUT}..."
 
 zip -r "${OUTPUT}" . \
-    -x "*/.git/*" \
+    -x ".git/*" \
     -x "*/__pycache__/*" \
     -x "*.pyc" \
     -x ".venv/*" \
