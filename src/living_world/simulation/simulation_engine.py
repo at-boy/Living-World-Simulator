@@ -6,6 +6,7 @@ from living_world.managers.experience_manager import ExperienceManager
 from living_world.managers.observation_manager import ObservationManager
 from living_world.managers.relationship_manager import RelationshipManager
 from living_world.managers.resource_definition_manager import ResourceDefinitionManager
+from living_world.repositories.graph_repository import GraphRepository
 from living_world.simulation.simulation_scheduler import SimulationScheduler
 from living_world.state.world_state import WorldState
 from living_world.systems.simulation_system import SimulationSystem
@@ -14,8 +15,9 @@ from living_world.systems.simulation_system import SimulationSystem
 class SimulationEngine:
     """High-level façade over the Living World runtime."""
 
-    def __init__(self) -> None:
-        self._state = WorldState()
+    def __init__(self, repository: GraphRepository | None = None) -> None:
+        self._repository = repository
+        self._state = WorldState() if repository is None else repository.load_world()
 
         self._definitions = DefinitionManager()
 
@@ -99,6 +101,14 @@ class SimulationEngine:
         steps: int,
     ) -> None:
         self._scheduler.run(steps)
+
+    def save_world(self) -> None:
+        """Persist the current state when this engine was composed with a repository."""
+
+        if self._repository is None:
+            return
+
+        self._repository.save_world(self._state)
 
     @property
     def resource_definitions(

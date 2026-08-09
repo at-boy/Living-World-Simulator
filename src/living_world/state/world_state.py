@@ -10,6 +10,8 @@ from living_world.core.relationship import Relationship
 
 @dataclass(slots=True)
 class WorldState:
+    """In-memory runtime snapshot owned and mutated through lifecycle managers."""
+
     tick: int = 0
 
     entities: dict[str, Entity] = field(default_factory=dict)

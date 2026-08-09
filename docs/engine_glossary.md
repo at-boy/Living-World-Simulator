@@ -83,6 +83,29 @@ Runtime state should only be mutated through managers.
 
 ---
 
+## GraphRepository
+
+**Purpose**
+
+Persistence boundary for complete `WorldState` snapshots.
+
+**Responsibilities**
+
+- load a validated world snapshot
+- atomically save a complete world snapshot
+- keep storage-specific objects outside the runtime model
+
+---
+
+## SQLiteRepository
+
+**Purpose**
+
+SQLite implementation of `GraphRepository` using a versioned generic-record
+snapshot.
+
+---
+
 ## DefinitionManager
 
 **Purpose**
@@ -202,6 +225,7 @@ High-level façade over the Living World runtime.
 - register simulation systems
 - advance the simulation
 - expose the public engine API
+- load and save an optional repository snapshot
 
 **Does Not Own**
 

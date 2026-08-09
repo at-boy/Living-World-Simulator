@@ -54,6 +54,18 @@ Provider failure or invalid output falls back to deterministic perception.
 `OllamaPerceptionClient` and `LlamaCppPerceptionClient` are loopback-only HTTP
 adapters for that protocol; neither is allowed to use a cloud endpoint.
 
+## Persistence
+
+`GraphRepository` persists complete `WorldState` snapshots. The built-in
+`SQLiteRepository` stores a versioned JSON representation in an atomic SQLite
+transaction; its schema contains generic record collections only. Loading
+constructs fresh domain records, so database rows and mutable SQLite objects
+are never exposed to runtime callers.
+
+`SimulationEngine(repository)` loads through the repository during composition.
+Call `save_world()` to persist the current snapshot. Omitting a repository
+retains the existing in-memory engine behavior.
+
 ## Entity Lifecycle
 
 Runtime entities are created exclusively through `EntityManager.create()`.

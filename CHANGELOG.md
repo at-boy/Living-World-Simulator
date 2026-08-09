@@ -4,6 +4,10 @@
 
 ### Added
 
+- `GraphRepository` persistence boundary and versioned `SQLiteRepository`.
+- SQLite round-trip support for entities, relationships, events, observations,
+  beliefs, experiences, and immutable history.
+- Optional repository composition and explicit `SimulationEngine.save_world()`.
 - Provider-neutral `LLMPerceptionEngine` and `LLMPerceptionClient` boundary.
 - Deterministic fallback for unavailable, invalid or unsafe local LLM output.
 - Executable LLM perception example using a fake local client.

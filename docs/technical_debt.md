@@ -22,17 +22,6 @@ part of the same pull request.
 
 ------------------------------------------------------------------------
 
-## Repository Layer
-
-**Status:** Planned
-
-Managers communicate with repositories instead of directly interacting
-with persistence.
-
-SQLite will become the first repository implementation.
-
-------------------------------------------------------------------------
-
 ## Resolved
 
 ------------------------------------------------------------------------
@@ -59,6 +48,15 @@ The runtime now records immutable history through `EventManager`.
 
 The engine has a dedicated history mechanism that future systems can
 build upon.
+
+------------------------------------------------------------------------
+
+### Repository layer
+
+`GraphRepository` now defines complete-world persistence and
+`SQLiteRepository` provides a versioned, atomic SQLite snapshot implementation.
+`SimulationEngine` composes an optional repository without changing manager
+lifecycle APIs or its no-argument in-memory behavior.
 
 ------------------------------------------------------------------------
 

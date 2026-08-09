@@ -7,6 +7,19 @@ engineering milestones and lessons learned.
 
 ---
 
+# 2026-08-10
+
+## Repository Layer
+
+The runtime now persists generic `WorldState` snapshots through the
+`GraphRepository` boundary. `SQLiteRepository` uses a versioned JSON payload
+inside an atomic SQLite transaction, preserving all core records and immutable
+history without adding domain-specific tables. `SimulationEngine` optionally
+loads this snapshot at composition time and exposes explicit saving while its
+default in-memory construction remains unchanged.
+
+---
+
 # 2026-08-09
 
 ## v0.2.3 Baseline Audit and Executable Documentation
