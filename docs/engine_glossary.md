@@ -39,6 +39,9 @@ Runtime instance created from a Definition.
 - simulation logic
 - history
 
+Locations are entities whose definitions describe locations. They do not have a
+separate runtime class or collection.
+
 ---
 
 ## Relationship
@@ -208,3 +211,14 @@ High-level façade over the Living World runtime.
 - event history
 
 Simulation behavior remains implemented by simulation systems.
+
+---
+
+## Executable Example
+
+**Purpose**
+
+Documents and smoke-tests the public runtime API.
+
+Numbered top-level examples are discovered by `make examples`, run in lexical
+order, and report PASS or FAIL. A failure stops the command.

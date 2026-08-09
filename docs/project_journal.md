@@ -7,6 +7,23 @@ engineering milestones and lessons learned.
 
 ---
 
+# 2026-08-09
+
+## v0.2.3 Baseline Audit and Executable Documentation
+
+The v0.2.3 baseline audit confirmed that locations are ordinary entities,
+created through `EntityManager`, with no `Location` runtime class or
+location-specific collection. It also confirmed that `RelationshipManager` is
+the sole production mutation boundary for relationships, and that immutable
+history is recorded through `EventManager`.
+
+`make examples` now discovers numbered top-level examples automatically in
+lexical order. Each execution reports PASS or FAIL, and the command stops at
+the first failed example. This keeps every example usable as executable
+documentation during the standard validation workflow.
+
+---
+
 # 2026-08-05
 
 ## Commit 0027 — Local LLM Perception Clients

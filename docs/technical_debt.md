@@ -22,34 +22,6 @@ part of the same pull request.
 
 ------------------------------------------------------------------------
 
-## Replace Location with Entity
-
-**Status:** Open
-
-Locations are no longer a special engine concept.
-
-A location should simply be an `Entity` whose definition/archetype
-represents a location.
-
-### Resolved when
-
--   `Location` class is removed.
--   Examples create location entities through `EntityManager`.
--   Systems operate on entities rather than location-specific classes.
-
-------------------------------------------------------------------------
-
-## EventManager
-
-**Status:** Planned
-
-Implement immutable historical event recording.
-
-The EventManager should expose a `record()` API rather than direct list
-manipulation.
-
-------------------------------------------------------------------------
-
 ## Repository Layer
 
 **Status:** Planned
@@ -58,63 +30,6 @@ Managers communicate with repositories instead of directly interacting
 with persistence.
 
 SQLite will become the first repository implementation.
-
-------------------------------------------------------------------------
-
-# Medium Priority
-
-------------------------------------------------------------------------
-
-## Relationship lifecycle bypasses RelationshipManager
-
-**Status:** Open
-
-The current example writes relationships directly into
-WorldState.
-
-This temporarily violates ADR-0004
-(Managers are the only code allowed to mutate WorldState).
-
-This debt will be removed when RelationshipManager owns
-relationship creation.
-
-### Resolved when
-
-- Example uses RelationshipManager.
-- Systems use RelationshipManager.
-- No production code mutates world_state.relationships directly.
-
-------------------------------------------------------------------------
-
-# Low Priority
-
-------------------------------------------------------------------------
-
-## Example runner only executes the first example
-
-**Status:** Open
-
-`make example` currently runs only `examples/001_create_world.py`.
-
-As additional examples are added, the build should execute all examples to ensure they remain runnable.
-
-### Resolved when
-
-- `make examples` (or an equivalent target) executes every example.
-- Each example reports PASS/FAIL.
-- The build stops if any example fails.
-
-------------------------------------------------------------------------
-
-### Example runner
-
-Replace `make example` with `make examples`.
-
-The command should automatically discover and execute every example in
-the `examples/` directory in numeric order.
-
-Examples should function as executable documentation and smoke tests.
-
 
 ------------------------------------------------------------------------
 
@@ -144,6 +59,22 @@ The runtime now records immutable history through `EventManager`.
 
 The engine has a dedicated history mechanism that future systems can
 build upon.
+
+------------------------------------------------------------------------
+
+### Baseline audit (v0.2.3)
+
+`Location` has been removed; `examples/001_create_world.py` creates its
+location entities through `EntityManager`, and no location-specific runtime
+collection remains.
+
+`RelationshipManager` is the sole production mutation boundary for
+relationship creation and registration in `WorldState.relationships`; the
+example uses that manager.
+
+`make examples` automatically discovers top-level files named
+`[0-9][0-9][0-9]_*.py`, executes them in lexical order, reports PASS or FAIL
+for each file, and stops on the first failure.
 
 ------------------------------------------------------------------------
 

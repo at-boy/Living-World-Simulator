@@ -18,6 +18,8 @@
   observations; model output cannot set simulation identity, tick or evidence.
 - Local provider calls use structured JSON responses and no cloud endpoint or
   API key configuration.
+- `make examples` now discovers numbered top-level examples automatically,
+  reports PASS or FAIL for each, and stops on the first failure.
 
 ## v0.2.2 (Unreleased)
 

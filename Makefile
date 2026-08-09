@@ -7,6 +7,7 @@ RUFF=$(VENV)/bin/ruff
 BLACK=$(VENV)/bin/black
 PYTEST=$(VENV)/bin/pytest
 UVICORN=$(VENV)/bin/uvicorn
+EXAMPLES=$(sort $(wildcard examples/[0-9][0-9][0-9]_*.py))
 
 all: fix check examples
 
@@ -31,73 +32,17 @@ test:
 check: lint format-check test
 
 examples:
-	@echo "Running Living World examples..."
-	@echo
-
-	@echo "=================================================="
-	@echo "001_create_world.py"
-	@echo "=================================================="
-	@PYTHONPATH=src .venv/bin/python examples/001_create_world.py
-	@echo
-
-	@echo "=================================================="
-	@echo "002_definitions.py"
-	@echo "=================================================="
-	@PYTHONPATH=src .venv/bin/python examples/002_definitions.py
-	@echo
-
-	@echo "=================================================="
-	@echo "003_scheduler.py"
-	@echo "=================================================="
-	@PYTHONPATH=src .venv/bin/python examples/003_scheduler.py
-	@echo
-
-	@echo "=================================================="
-	@echo "004_engine.py"
-	@echo "=================================================="
-	@PYTHONPATH=src .venv/bin/python examples/004_engine.py
-	@echo
-
-	@echo "=================================================="
-	@echo "005_resource_definitions.py"
-	@echo "=================================================="
-	@PYTHONPATH=src .venv/bin/python examples/005_resource_definitions.py
-	@echo
-
-	@echo "=================================================="
-	@echo "006_resources.py"
-	@echo "=================================================="
-	@PYTHONPATH=src .venv/bin/python examples/006_resources.py
-	@echo
-
-	@echo "=================================================="
-	@echo "007_resource_operations.py"
-	@echo "=================================================="
-	@PYTHONPATH=src .venv/bin/python examples/007_resource_operations.py
-	@echo
-
-	@echo "=================================================="
-	@echo "008_observations.py"
-	@echo "=================================================="
-	@PYTHONPATH=src .venv/bin/python examples/008_observations.py
-	@echo
-
-	@echo "=================================================="
-	@echo "009_beliefs.py"
-	@echo "=================================================="
-	@PYTHONPATH=src .venv/bin/python examples/009_beliefs.py
-	@echo
-
-	@echo "=================================================="
-	@echo "010_experiences.py"
-	@echo "=================================================="
-	@PYTHONPATH=src .venv/bin/python examples/010_experiences.py
-	@echo
-
-	@echo "=================================================="
-	@echo "011_llm_perception.py"
-	@echo "=================================================="
-	@PYTHONPATH=src .venv/bin/python examples/011_llm_perception.py
+	@set -e; \
+	for example in $(EXAMPLES); do \
+		printf 'Running %s\n' "$$example"; \
+		if PYTHONPATH=src $(PY) "$$example"; then \
+			printf 'PASS %s\n\n' "$$example"; \
+		else \
+			status=$$?; \
+			printf 'FAIL %s\n' "$$example" >&2; \
+			exit $$status; \
+		fi; \
+	done
 
 serve:
 	PYTHONPATH=src $(UVICORN) living_world.api.server:app --reload

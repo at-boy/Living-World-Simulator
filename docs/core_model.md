@@ -186,3 +186,13 @@ preserving the existing responsibilities of managers and systems.
 
 Simulation behavior remains implemented by simulation systems rather than
 the engine itself.
+
+## Executable Documentation
+
+Examples are executable documentation for the public runtime API. `make
+examples` discovers numbered top-level files in `examples/`, executes them in
+lexical order, reports the outcome for each file, and stops at the first
+failure.
+
+Locations are represented by ordinary `Entity` instances whose definitions
+describe a location; there is no location-specific runtime type or registry.
