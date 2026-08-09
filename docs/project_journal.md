@@ -9,6 +9,26 @@ engineering milestones and lessons learned.
 
 # 2026-08-05
 
+## Commit 0026 — LLM Perception Boundary
+
+This commit adds the first LLM-facing perception infrastructure without making
+a language model part of the authoritative simulation.
+
+`LLMPerceptionEngine` works through a small provider-neutral client protocol.
+The client receives a curated request and may return only a human-readable
+description and confidence. The engine retains ownership of observation
+identity, tick, observer, subject, evidence and metadata. This prevents a
+model response from becoming a source of simulation authority.
+
+Unavailable providers, malformed responses and output that exposes internal
+identifiers or exact numeric engine values automatically use the existing
+deterministic perception engine. If that fallback also fails, the engine raises
+an explicit error rather than inventing an observation.
+
+The project is committed to locally hosted model servers. Setup guidance now
+documents the expected Ollama and llama.cpp HTTP-server workflows, while
+concrete HTTP adapters remain a later, separately testable capability.
+
 ## Commit 0010
 
 ### Property Graph

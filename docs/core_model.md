@@ -47,6 +47,11 @@ grows.
 - Repositories own persistence.
 - LLMs interpret truth but never own truth.
 
+`LLMPerceptionEngine` is one such interpretation boundary. It submits only a
+curated, provider-neutral perception request to a local model client, then
+constructs the authoritative observation identity, tick and evidence itself.
+Provider failure or invalid output falls back to deterministic perception.
+
 ## Entity Lifecycle
 
 Runtime entities are created exclusively through `EntityManager.create()`.

@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.2.3 (Unreleased)
+
+### Added
+
+- Provider-neutral `LLMPerceptionEngine` and `LLMPerceptionClient` boundary.
+- Deterministic fallback for unavailable, invalid or unsafe local LLM output.
+- Executable LLM perception example using a fake local client.
+- Local Ollama and llama.cpp setup documentation.
+
+### Changed
+
+- LLM perception results are validated before becoming NPC-readable
+  observations; model output cannot set simulation identity, tick or evidence.
+
 ## v0.2.2 (Unreleased)
 
 ### Added

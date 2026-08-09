@@ -92,6 +92,12 @@ examples:
 	@echo "010_experiences.py"
 	@echo "=================================================="
 	@PYTHONPATH=src .venv/bin/python examples/010_experiences.py
+	@echo
+
+	@echo "=================================================="
+	@echo "011_llm_perception.py"
+	@echo "=================================================="
+	@PYTHONPATH=src .venv/bin/python examples/011_llm_perception.py
 
 serve:
 	PYTHONPATH=src $(UVICORN) living_world.api.server:app --reload
