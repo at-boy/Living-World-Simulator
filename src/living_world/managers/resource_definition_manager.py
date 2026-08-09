@@ -24,3 +24,8 @@ class ResourceDefinitionManager:
         key: str,
     ) -> bool:
         return key in self._definitions
+
+    def all(self) -> tuple[ResourceDefinition, ...]:
+        """Return a read-only snapshot of registered resource definitions."""
+
+        return tuple(self._definitions.values())

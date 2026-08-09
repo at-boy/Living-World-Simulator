@@ -310,3 +310,15 @@ schema fields, and definition-key collisions before the registry changes.
 `SimulationEngine.load_definitions()` stages the validated tuple and commits it
 through `DefinitionManager.register_many()`, preserving atomic registration.
 Runtime instances continue to be created only by `EntityManager.create()`.
+
+## Commit 0027 — Privileged HTTP World Inspection
+
+The engine now has a deliberately narrow HTTP observability boundary for
+privileged external operators. `create_app(engine)` serves GET-only snapshots
+of authoritative state, including raw entity attributes and resource values,
+without adding mutation, action, or simulation-step routes.
+
+The inspection view returns detached JSON-safe values in deterministic record
+identifier order. It remains explicitly separate from `NPCContextAssembler`
+and every NPC-facing cognition boundary: authoritative data may be inspected
+by an operator, but it does not become NPC knowledge.

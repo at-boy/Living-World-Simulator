@@ -30,6 +30,6 @@ class DefinitionManager:
         return key in self._definitions
 
     def all(self) -> tuple[Definition, ...]:
-        """Return definitions in their registration order."""
+        """Return a read-only snapshot in registration order."""
 
         return tuple(self._definitions.values())

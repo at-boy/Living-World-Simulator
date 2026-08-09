@@ -1,8 +1,69 @@
-from fastapi import FastAPI
+from collections.abc import Mapping
 
-app = FastAPI(title="Living World Simulator")
+from fastapi import FastAPI, HTTPException
+
+from living_world.api.inspection import EngineWorldInspector
+from living_world.simulation.simulation_engine import SimulationEngine
 
 
-@app.get("/health")
-def health():
-    return {"status": "ok", "version": "0.2.3"}
+def create_app(engine: SimulationEngine) -> FastAPI:
+    """Create the privileged, read-only engine inspection application."""
+
+    inspector = EngineWorldInspector(engine)
+    application = FastAPI(title="Living World Simulator")
+
+    @application.get("/health")
+    async def health() -> dict[str, str]:
+        return {"status": "ok", "version": "0.2.3"}
+
+    @application.get("/world/tick")
+    async def world_tick() -> dict[str, int]:
+        return {"tick": inspector.tick()}
+
+    @application.get("/world")
+    async def world_summary() -> Mapping[str, object]:
+        return inspector.world_summary()
+
+    @application.get("/world/entities")
+    async def entities() -> tuple[Mapping[str, object], ...]:
+        return inspector.entities()
+
+    @application.get("/world/entities/{entity_id}")
+    async def entity(entity_id: str) -> Mapping[str, object]:
+        snapshot = inspector.entity(entity_id)
+        if snapshot is None:
+            raise HTTPException(status_code=404, detail="Entity not found.")
+        return snapshot
+
+    @application.get("/world/definitions")
+    async def definitions() -> tuple[Mapping[str, object], ...]:
+        return inspector.definitions()
+
+    @application.get("/world/resources")
+    async def resources() -> tuple[Mapping[str, object], ...]:
+        return inspector.resources()
+
+    @application.get("/world/relationships")
+    async def relationships() -> tuple[Mapping[str, object], ...]:
+        return inspector.relationships()
+
+    @application.get("/world/events")
+    async def events() -> tuple[Mapping[str, object], ...]:
+        return inspector.events()
+
+    @application.get("/world/observations")
+    async def observations() -> tuple[Mapping[str, object], ...]:
+        return inspector.observations()
+
+    @application.get("/world/beliefs")
+    async def beliefs() -> tuple[Mapping[str, object], ...]:
+        return inspector.beliefs()
+
+    @application.get("/world/experiences")
+    async def experiences() -> tuple[Mapping[str, object], ...]:
+        return inspector.experiences()
+
+    return application
+
+
+app = create_app(SimulationEngine())

@@ -4,6 +4,11 @@
 
 ### Added
 
+- GET-only privileged HTTP world-inspection API with detached, deterministically
+  ordered snapshots of authoritative runtime and registry state.
+- `create_app(engine)` for inspected engine composition and a world-inspection
+  executable example.
+
 - Strict, duplicate-key-safe YAML definition vocabulary loading through
   `SimulationEngine.load_definitions()`.
 - Atomic batch definition registration and an executable YAML world-definition

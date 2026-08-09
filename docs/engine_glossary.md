@@ -83,6 +83,26 @@ Runtime state should only be mutated through managers.
 
 ---
 
+## WorldInspector
+
+**Purpose**
+
+Read-only privileged observability view over authoritative engine state.
+
+**Responsibilities**
+
+- return detached JSON-safe snapshots
+- order collections by record identifier
+- expose engine truth only to external operators
+
+**Does Not Own**
+
+- world mutation
+- simulation stepping
+- NPC-readable knowledge
+
+---
+
 ## GraphRepository
 
 **Purpose**

@@ -190,6 +190,19 @@ the simulation tick.
 `SimulationEngine` is the primary entry point for applications using the
 Living World engine.
 
+## Privileged World Inspection
+
+The HTTP inspection API exposes detached, JSON-safe snapshots of authoritative
+engine state for privileged external operators. `create_app(engine)` provides
+GET-only `/world` inspection routes for the current tick, entities,
+definitions, resources, relationships, events, observations, beliefs, and
+experiences. Collection snapshots are ordered by record identifier.
+
+Inspection is observability, not an action or simulation interface: it has no
+mutation or stepping endpoints. Its raw values are deliberately outside the
+NPC information boundary and must never be supplied to NPC context assembly,
+cognitive retrieval, or cognition clients.
+
 The engine composes the runtime by constructing:
 
 - WorldState
