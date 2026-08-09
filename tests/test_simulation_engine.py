@@ -1,4 +1,5 @@
 from living_world.simulation.simulation_engine import SimulationEngine
+from living_world.state.world_state import WorldState
 from living_world.systems.simulation_system import SimulationSystem
 
 
@@ -6,7 +7,7 @@ class CountingSystem(SimulationSystem):
     def __init__(self) -> None:
         self.calls = 0
 
-    def update(self) -> None:
+    def step(self, state: WorldState) -> None:
         self.calls += 1
 
 

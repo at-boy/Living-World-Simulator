@@ -1,11 +1,12 @@
 from living_world.core.entity import Entity
+from living_world.state.world_state import WorldState
 from living_world.systems.simulation_system import SimulationSystem
 
 
 class ResourceSystem(SimulationSystem):
     """Provides generic resource quantity operations."""
 
-    def update(self) -> None:
+    def step(self, state: WorldState) -> None:
         """
         Resource operations are invoked explicitly by other systems.
 

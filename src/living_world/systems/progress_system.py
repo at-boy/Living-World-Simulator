@@ -1,4 +1,5 @@
 from living_world.managers.entity_manager import EntityManager
+from living_world.state.world_state import WorldState
 from living_world.systems.simulation_system import SimulationSystem
 
 
@@ -23,7 +24,7 @@ class ProgressSystem(SimulationSystem):
 
         return value
 
-    def update(self) -> None:
+    def step(self, state: WorldState) -> None:
         for entity in self._entities.all():
             attributes = entity.attributes
 
@@ -62,4 +63,8 @@ class ProgressSystem(SimulationSystem):
                     progress,
                 )
 
-            attributes["progress"] = progress
+            self._entities.set_attribute(
+                entity_id=entity.id,
+                key="progress",
+                value=progress,
+            )

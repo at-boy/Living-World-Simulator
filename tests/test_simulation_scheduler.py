@@ -7,7 +7,7 @@ class CountingSystem(SimulationSystem):
     def __init__(self) -> None:
         self.calls = 0
 
-    def update(self) -> None:
+    def step(self, state: WorldState) -> None:
         self.calls += 1
 
 

@@ -239,8 +239,43 @@ Encapsulates one aspect of simulation behavior.
 
 **Responsibilities**
 
-- update world state
+- implement `step(state)` to update world state
 - use managers for mutations
+
+---
+
+## WeatherSystem
+
+**Purpose**
+
+Cycle the `weather` attribute for definitions that opt into `weather` through
+`Definition.systems`.
+
+**Configuration**
+
+- non-empty string `weather_cycle`
+- optional integer `weather_index`
+
+The system records `weather_changed` when the displayed weather changes.
+
+---
+
+## PopulationSystem
+
+**Purpose**
+
+Advance bounded integer population values for definitions that opt into
+`population` through `Definition.systems`.
+
+**Configuration**
+
+- required integer `population`
+- optional integer `population_change` (default `0`)
+- optional integer `population_min` (default `0`)
+- optional integer `population_max`
+
+The system records `population_changed` only when the resulting population is
+different.
 
 ---
 

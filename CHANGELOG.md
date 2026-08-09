@@ -4,6 +4,11 @@
 
 ### Added
 
+- Deterministic `WeatherSystem` and `PopulationSystem` implementations for
+  definition-opt-in entities, including bounded population updates and
+  immutable material-change events.
+- Executable region and terrain world-simulation example.
+
 - GET-only privileged HTTP world-inspection API with detached, deterministically
   ordered snapshots of authoritative runtime and registry state.
 - `create_app(engine)` for inspected engine composition and a world-inspection

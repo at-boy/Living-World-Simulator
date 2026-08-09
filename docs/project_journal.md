@@ -9,6 +9,16 @@ engineering milestones and lessons learned.
 
 # 2026-08-10
 
+## Deterministic World Simulation Foundations
+
+Weather and population are now deterministic systems over ordinary entities
+rather than new region, terrain, weather, or population runtime types.
+Definitions opt in through `systems`; a weather participant supplies a cycle,
+while a population participant supplies bounded integer attributes. Regions
+and terrain use normal `contains` or `adjacent` relationships, preserving the
+property-graph model. Material changes are retained as immutable events, and
+the scheduler invokes every system as `step(state)` in registration order.
+
 ## Repository Layer
 
 The runtime now persists generic `WorldState` snapshots through the

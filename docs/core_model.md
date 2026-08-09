@@ -120,7 +120,9 @@ The manager is responsible for:
 Together, `EntityManager` and `RelationshipManager` form the mutation
 boundary of the simulation runtime.
 
-Simulation systems should mutate the world only through managers.
+Simulation systems should mutate the world only through managers or explicitly
+provided system APIs. `EntityManager.set_attribute()` owns ordinary entity
+attribute mutation; systems must not write to `WorldState` collections.
 
 ## World History
 
@@ -169,6 +171,18 @@ Current generic systems include:
 - `ProgressSystem`, which advances bounded progress values over time.
 - `ResourceSystem`, which provides generic operations for manipulating
   resource quantities stored by entities.
+- `WeatherSystem`, which cycles the `weather` of definitions opting in with
+  `systems: [weather]` using a non-empty `weather_cycle` sequence and optional
+  integer `weather_index`.
+- `PopulationSystem`, which applies integer `population_change` to integer
+  `population` for definitions opting in with `systems: [population]`, then
+  clamps it to optional `population_min` and `population_max` bounds.
+
+Regions and terrain are ordinary entities. A `contains` relationship may link
+a region to terrain it contains, while `adjacent` may link peer entities. These
+relationship kinds are conventions, not engine primitives. Weather and
+population events are recorded as `weather_changed` and `population_changed`
+when their user-meaningful values change.
 
 The engine assigns no semantic meaning to these mechanisms. Higher-level
 systems interpret them according to their own requirements.
@@ -182,8 +196,8 @@ systems interpret progress according to their own requirements.
 
 Systems mutate the world exclusively through managers.
 
-The scheduler is responsible only for executing systems and advancing
-the simulation tick.
+The scheduler is responsible only for calling `step(state)` in registration
+order and advancing the simulation tick.
 
 ## Simulation Engine
 

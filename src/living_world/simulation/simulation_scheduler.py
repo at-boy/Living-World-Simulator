@@ -21,7 +21,7 @@ class SimulationScheduler:
         """Execute one simulation tick."""
 
         for system in self._systems:
-            system.update()
+            system.step(self._state)
 
         self._state.tick += 1
 

@@ -13,7 +13,9 @@ from living_world.managers.resource_definition_manager import ResourceDefinition
 from living_world.repositories.graph_repository import GraphRepository
 from living_world.simulation.simulation_scheduler import SimulationScheduler
 from living_world.state.world_state import WorldState
+from living_world.systems.population_system import PopulationSystem
 from living_world.systems.simulation_system import SimulationSystem
+from living_world.systems.weather_system import WeatherSystem
 
 
 class SimulationEngine:
@@ -55,6 +57,21 @@ class SimulationEngine:
 
         self._scheduler = SimulationScheduler(
             self._state,
+        )
+
+        self.register_system(
+            WeatherSystem(
+                self._definitions,
+                self._entities,
+                self._events,
+            )
+        )
+        self.register_system(
+            PopulationSystem(
+                self._definitions,
+                self._entities,
+                self._events,
+            )
         )
 
     @property

@@ -64,6 +64,25 @@ class EntityManager:
     def remove(self, entity_id: str) -> None:
         self._state.entities.pop(entity_id, None)
 
+    def set_attribute(
+        self,
+        *,
+        entity_id: str,
+        key: str,
+        value: object,
+    ) -> None:
+        """Set a runtime entity attribute through the entity lifecycle boundary."""
+
+        entity = self.get(entity_id)
+
+        if entity is None:
+            raise ValueError(f"Unknown entity '{entity_id}'.")
+
+        if not key.strip():
+            raise ValueError("Entity attribute key cannot be empty.")
+
+        entity.attributes[key] = deepcopy(value)
+
     def _generate_id(self) -> str:
         while True:
             entity_id = f"entity_{self._next_entity_id:06d}"
