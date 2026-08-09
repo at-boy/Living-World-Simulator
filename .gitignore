@@ -7,3 +7,4 @@ __pycache__/
 build/
 dist/
 *.db
+docs/subagent_execution_plan/*-correction-request.md
