@@ -1,3 +1,4 @@
+from living_world.managers.belief_manager import BeliefManager
 from living_world.managers.definition_manager import DefinitionManager
 from living_world.managers.entity_manager import EntityManager
 from living_world.managers.event_manager import EventManager
@@ -37,6 +38,10 @@ class SimulationEngine:
             self._state,
         )
 
+        self._beliefs = BeliefManager(
+            self._state,
+        )
+
         self._scheduler = SimulationScheduler(
             self._state,
         )
@@ -66,6 +71,10 @@ class SimulationEngine:
         self,
     ) -> ObservationManager:
         return self._observations
+
+    @property
+    def beliefs(self) -> BeliefManager:
+        return self._beliefs
 
     def register_system(
         self,

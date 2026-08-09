@@ -16,6 +16,7 @@ Everything that happens is an Event.
 - Relationship
 - Event
 - Observation
+- Belief
 - System
 
 These are the only concepts understood by the simulation engine.
@@ -119,6 +120,10 @@ as:
 - beliefs
 - debugging
 - simulation replay
+
+A belief is an NPC-specific interpretation derived from observations,
+memories, and lived experience. It is intentionally distinct from the
+objective simulator truth represented in events and entity state.
 
 ## Simulation
 

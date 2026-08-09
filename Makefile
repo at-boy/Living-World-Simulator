@@ -80,6 +80,12 @@ examples:
 	@echo "008_observations.py"
 	@echo "=================================================="
 	@PYTHONPATH=src .venv/bin/python examples/008_observations.py
+	@echo
+
+	@echo "=================================================="
+	@echo "009_beliefs.py"
+	@echo "=================================================="
+	@PYTHONPATH=src .venv/bin/python examples/009_beliefs.py
 
 serve:
 	PYTHONPATH=src $(UVICORN) living_world.api.server:app --reload
