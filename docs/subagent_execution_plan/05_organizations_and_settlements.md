@@ -11,7 +11,7 @@ minimal deterministic systems required for later settlement simulation.
 - Create: `src/living_world/systems/organization_system.py`,
   `src/living_world/systems/settlement_system.py`,
   `tests/test_organization_system.py`, `tests/test_settlement_system.py`,
-  `examples/014_settlement_foundations.py`.
+  `examples/015_settlement_foundations.py`.
 - Edit: `src/living_world/simulation/simulation_engine.py`, relevant YAML
   example definitions, and `Makefile`.
 - Edit docs: `docs/core_model.md`, `docs/engine_glossary.md`, `CHANGELOG.md`,

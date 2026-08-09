@@ -15,7 +15,7 @@ that creates NPC interpretations without converting them into world truth.
   `src/living_world/cognition/consolidation.py`,
   `tests/test_memory.py`, `tests/test_memory_manager.py`,
   `tests/test_npc_relationship.py`, `tests/test_consolidation.py`,
-  `examples/017_npc_cognition.py`.
+  `examples/018_npc_cognition.py`.
 - Edit: `core/belief.py`, `core/experience.py`, `state/world_state.py`,
   `simulation/simulation_engine.py`, `cognition/__init__.py`, `Makefile`, and
   standard docs/ADR.

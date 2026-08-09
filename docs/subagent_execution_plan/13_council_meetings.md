@@ -9,7 +9,7 @@ conclusions still require the standard simulation action gateway.
 
 - Create: `docs/subagent_execution_plan/13_council_meetings-report.md`.
 - Create: `src/living_world/cognition/council.py`, `tests/test_council.py`,
-  `examples/020_council_meeting.py`.
+  `examples/021_council_meeting.py`.
 - Edit: `src/living_world/cognition/__init__.py`,
   `src/living_world/simulation/simulation_engine.py`, `Makefile`, and standard
   docs.

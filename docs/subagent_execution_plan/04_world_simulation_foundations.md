@@ -11,7 +11,7 @@ systems over generic entities, relationships, resources, and events.
 - Create: `src/living_world/systems/weather_system.py`,
   `src/living_world/systems/population_system.py`,
   `tests/test_weather_system.py`, `tests/test_population_system.py`,
-  `examples/013_world_simulation.py`.
+  `examples/014_world_simulation.py`.
 - Edit: `src/living_world/systems/simulation_system.py`,
   `src/living_world/simulation/simulation_engine.py`, and YAML fixtures under
   `examples/` as needed.

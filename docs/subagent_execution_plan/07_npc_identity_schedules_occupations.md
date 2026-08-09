@@ -10,7 +10,7 @@ generic entities, ready for cognition but without yet introducing LLMs.
 - Create: `docs/subagent_execution_plan/07_npc_identity_schedules_occupations-report.md`.
 - Create: `src/living_world/npc/identity.py`, `src/living_world/npc/schedule.py`,
   `src/living_world/systems/schedule_system.py`, `tests/test_npc_identity.py`,
-  `tests/test_schedule_system.py`, `examples/016_npc_schedules.py`.
+  `tests/test_schedule_system.py`, `examples/017_npc_schedules.py`.
 - Edit: `src/living_world/npc/__init__.py`, `src/living_world/simulation/simulation_engine.py`,
   YAML definitions/examples, `Makefile`, and standard docs.
 - Know: an NPC is an `Entity`; occupations and schedules are domain data, not

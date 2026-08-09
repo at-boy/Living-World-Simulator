@@ -11,7 +11,7 @@ the difference between what an NPC has heard and what the simulation knows.
 - Create: `src/living_world/core/knowledge.py`,
   `src/living_world/managers/knowledge_manager.py`,
   `tests/test_knowledge.py`, `tests/test_knowledge_manager.py`, and
-  `examples/018_npc_knowledge.py`.
+  `examples/019_npc_knowledge.py`.
 - Edit: `src/living_world/state/world_state.py`,
   `src/living_world/simulation/simulation_engine.py`,
   `src/living_world/cognition/__init__.py`, `Makefile`,

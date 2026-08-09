@@ -14,7 +14,7 @@ generic progress, resources, entities, relationships, and events.
   `src/living_world/systems/trade_system.py`.
 - Create tests: `tests/test_construction_system.py`, `tests/test_housing_system.py`,
   `tests/test_production_system.py`, `tests/test_trade_system.py`.
-- Create: `examples/015_settlement_economy.py`.
+- Create: `examples/016_settlement_economy.py`.
 - Edit: `src/living_world/systems/resource_system.py`, engine registration,
   YAML example definitions, `Makefile`, and standard docs.
 - Know: `ProgressSystem`, `ResourceSystem`, `RelationshipManager`,

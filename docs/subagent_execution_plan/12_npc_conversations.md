@@ -9,7 +9,7 @@ private cognition private and all proposed actions non-authoritative.
 
 - Create: `docs/subagent_execution_plan/12_npc_conversations-report.md`.
 - Create: `src/living_world/cognition/conversation.py`,
-  `tests/test_conversation.py`, `examples/019_npc_conversations.py`.
+  `tests/test_conversation.py`, `examples/020_npc_conversations.py`.
 - Edit: `src/living_world/cognition/__init__.py`,
   `src/living_world/simulation/simulation_engine.py`, `Makefile`, and standard
   docs.
