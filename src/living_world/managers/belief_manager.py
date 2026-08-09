@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from living_world.core.belief import Belief, BeliefHistoryEntry, BeliefStatus
+from living_world.core.experience import Experience
 from living_world.state.world_state import WorldState
 
 
@@ -25,6 +26,7 @@ class BeliefManager:
         status: BeliefStatus | str,
         supporting_observations: tuple[str, ...] | None = None,
         supporting_memories: tuple[str, ...] | None = None,
+        supporting_experiences: tuple[str, ...] | None = None,
         metadata: dict[str, object] | None = None,
     ) -> Belief:
         """Record a new immutable belief."""
@@ -40,11 +42,44 @@ class BeliefManager:
             status=status,
             supporting_observations=supporting_observations or (),
             supporting_memories=supporting_memories or (),
+            supporting_experiences=supporting_experiences or (),
             metadata=metadata or {},
         )
 
         self.add(belief)
         return belief
+
+    def record_from_experience(
+        self,
+        *,
+        experience: Experience,
+        proposition: str,
+        confidence: float,
+        importance: float,
+        status: BeliefStatus | str,
+        supporting_observations: tuple[str, ...] | None = None,
+        supporting_memories: tuple[str, ...] | None = None,
+        metadata: dict[str, object] | None = None,
+    ) -> Belief:
+        """Create a belief from a lived experience while retaining the source link."""
+
+        return self.record(
+            holder_id=experience.holder_id,
+            subject_id=experience.subject_id,
+            proposition=proposition,
+            confidence=confidence,
+            importance=importance,
+            status=status,
+            supporting_observations=supporting_observations
+            or experience.supporting_observations,
+            supporting_memories=supporting_memories or experience.supporting_memories,
+            supporting_experiences=(experience.id,),
+            metadata={
+                **(metadata or {}),
+                "source": "experience",
+                "experience_id": experience.id,
+            },
+        )
 
     def get(self, belief_id: str) -> Belief | None:
         return self._state.beliefs.get(belief_id)
@@ -81,6 +116,16 @@ class BeliefManager:
             belief
             for belief in self._state.beliefs.values()
             if memory_id in belief.supporting_memories
+        )
+
+    def beliefs_supporting_experience(
+        self,
+        experience_id: str,
+    ) -> tuple[Belief, ...]:
+        return tuple(
+            belief
+            for belief in self._state.beliefs.values()
+            if experience_id in belief.supporting_experiences
         )
 
     def history_for(self, belief_id: str) -> tuple[BeliefHistoryEntry, ...]:

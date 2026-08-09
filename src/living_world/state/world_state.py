@@ -3,6 +3,7 @@ from dataclasses import dataclass, field
 from living_world.core.belief import Belief
 from living_world.core.entity import Entity
 from living_world.core.event import Event
+from living_world.core.experience import Experience
 from living_world.core.observation import Observation
 from living_world.core.relationship import Relationship
 
@@ -20,3 +21,5 @@ class WorldState:
     observations: dict[str, Observation] = field(default_factory=dict)
 
     beliefs: dict[str, Belief] = field(default_factory=dict)
+
+    experiences: dict[str, Experience] = field(default_factory=dict)

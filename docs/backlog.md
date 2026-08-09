@@ -34,10 +34,14 @@ deliberately postponed until the appropriate milestone.
 
 - NPC identity
 - Memory
+- Experience
+- Belief
 - Relationships
 - Knowledge
 - Schedules
 - Occupations
+- Cognitive consolidation
+- Experience-to-belief candidate generation
 
 ---
 
@@ -48,6 +52,9 @@ deliberately postponed until the appropriate milestone.
 - Decision engine
 - Council meetings
 - NPC conversations
+- NPC Cognition Protocol
+- Experience generation from repeated observations
+- Retrieval and context assembly for NPC cognition
 
 ---
 
@@ -73,6 +80,8 @@ These are intentionally out of scope for the current milestone.
 - Player influence on history
 - World inspector UI
 - Web administration interface
+- Experience validation and confidence weighting
+- Long-term memory decay and retrieval ranking
 
 ---
 

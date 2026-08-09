@@ -213,3 +213,13 @@ The resulting observation contains a human-readable description representing the
 This distinction is important for the future LLM-based perception system. An NPC should not receive raw simulation attributes such as `wood = 120` simply because those values exist in the world. Instead, a future `LLMPerceptionEngine` can use objective world state and the observer's capabilities to produce a perception appropriate to that observer.
 
 Commit 0022 therefore establishes the foundation for the later cognitive architecture involving observations, memories, beliefs, and experiences. Observation is the perception of an encounter; later cognitive systems will determine what, if anything, should be retained and given longer-term significance.
+
+## Commit 0024 — Experience and Cognitive Consolidation
+
+This commit introduces `Experience` as a distinct first-class cognitive concept rather than a synonym for memory or belief.
+
+An experience is an NPC-specific record of learning gained through lived interaction. It can be created manually or generated from repeated observations as part of a future cognitive consolidation flow. The distinction matters: an observation is a perception, a memory is retained information, a belief is an interpretation, and an experience is the accumulated learning that emerges from repeated or significant lived encounters.
+
+The model uses an `ExperienceHistoryEntry` pattern analogous to the existing belief history implementation so that the record remains append-only and traceable over time. Belief records were extended to optionally reference supporting experiences without collapsing the belief into the experience itself.
+
+This design keeps the engine's authority separate from the NPC's knowledge. Raw simulation state remains engine truth, while experience records remain filtered, NPC-facing cognitive content suitable for later retrieval, context assembly and the future NPC Cognition Protocol.

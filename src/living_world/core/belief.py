@@ -42,6 +42,7 @@ class Belief:
     status: BeliefStatus
     supporting_observations: tuple[str, ...] = ()
     supporting_memories: tuple[str, ...] = ()
+    supporting_experiences: tuple[str, ...] = ()
     metadata: Mapping[str, object] = field(default_factory=dict)
     history: tuple[BeliefHistoryEntry, ...] = ()
 
@@ -95,6 +96,11 @@ class Belief:
         )
         object.__setattr__(
             self,
+            "supporting_experiences",
+            tuple(self.supporting_experiences),
+        )
+        object.__setattr__(
+            self,
             "metadata",
             MappingProxyType(dict(self.metadata)),
         )
@@ -143,6 +149,7 @@ class Belief:
             status=updated_status,
             supporting_observations=self.supporting_observations,
             supporting_memories=self.supporting_memories,
+            supporting_experiences=self.supporting_experiences,
             metadata=self.metadata,
             history=self.history + (entry,),
         )
@@ -186,6 +193,7 @@ class Belief:
             status=updated_status,
             supporting_observations=self.supporting_observations,
             supporting_memories=self.supporting_memories,
+            supporting_experiences=self.supporting_experiences,
             metadata=self.metadata,
             history=self.history + (entry,),
         )
@@ -223,6 +231,7 @@ class Belief:
             status=BeliefStatus.ACTIVE,
             supporting_observations=self.supporting_observations,
             supporting_memories=self.supporting_memories,
+            supporting_experiences=self.supporting_experiences,
             metadata=self.metadata,
             history=self.history + (entry,),
         )
@@ -258,6 +267,7 @@ class Belief:
             status=BeliefStatus.DISPROVEN,
             supporting_observations=self.supporting_observations,
             supporting_memories=self.supporting_memories,
+            supporting_experiences=self.supporting_experiences,
             metadata=self.metadata,
             history=self.history + (entry,),
         )
@@ -300,6 +310,7 @@ class Belief:
             status=BeliefStatus.IMPORTANT,
             supporting_observations=self.supporting_observations,
             supporting_memories=self.supporting_memories,
+            supporting_experiences=self.supporting_experiences,
             metadata=self.metadata,
             history=self.history + (entry,),
         )
@@ -347,6 +358,7 @@ class Belief:
             status=BeliefStatus.CORE,
             supporting_observations=self.supporting_observations,
             supporting_memories=self.supporting_memories,
+            supporting_experiences=self.supporting_experiences,
             metadata=self.metadata,
             history=self.history + (entry,),
         )

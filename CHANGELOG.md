@@ -4,6 +4,22 @@
 
 ### Added
 
+- Immutable `Experience` runtime objects representing lived interaction and accumulated learning.
+- `ExperienceHistoryEntry` for append-only experience change tracking.
+- `ExperienceManager` for recording and retrieving NPC experiences.
+- `Experience` support in `WorldState` and `SimulationEngine`.
+- `generate_from_observations()` and `consolidate_repeated_observations()` helpers for creating experiences from repeated observation patterns.
+- Example demonstrating experience generation from repeated observations.
+
+### Changed
+
+- Beliefs can now reference supporting experiences without losing their distinct identity.
+- The cognitive architecture now explicitly distinguishes observation, memory, belief, and experience.
+
+## v0.2.2 (Unreleased)
+
+### Added
+
 - Immutable `Observation` runtime objects.
 - `ObservationManager` for observation lifecycle and recording.
 - Observation storage to `WorldState`.
