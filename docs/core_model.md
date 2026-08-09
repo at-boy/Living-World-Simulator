@@ -15,6 +15,7 @@ Everything that happens is an Event.
 - Entity
 - Relationship
 - Event
+- Observation
 - System
 
 These are the only concepts understood by the simulation engine.
@@ -103,11 +104,18 @@ Events are created exclusively through `EventManager.record()`.
 Unlike entities and relationships, events are append-only and are never
 modified or removed.
 
-History represents objective facts about the world and forms the
-foundation for future systems such as:
+Observations are immutable records of an entity's perception of another
+entity or the world. They are not events, although an event may result in
+an observation. Observations are recorded through `ObservationManager`.
+The observation description represents the perceiver's interpretation,
+while internal evidence may retain objective simulator data for debugging
+and provenance without exposing that data as the NPC-facing perception.
+
+History represents objective facts about the world and recorded
+perceptions of the world, forming the foundation for future systems such
+as:
 
 - NPC memory
-- observations
 - beliefs
 - debugging
 - simulation replay
@@ -158,6 +166,7 @@ The engine composes the runtime by constructing:
 - EntityManager
 - RelationshipManager
 - EventManager
+- ObservationManager
 - SimulationScheduler
 
 The engine exposes a simplified API for running simulations while

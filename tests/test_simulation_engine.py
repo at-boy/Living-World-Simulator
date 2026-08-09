@@ -36,3 +36,17 @@ def test_engine_run() -> None:
     assert engine.state.tick == 5
 
     assert system.calls == 5
+
+
+def test_engine_exposes_observation_manager() -> None:
+    engine = SimulationEngine()
+
+    observation = engine.observations.record(
+        observer="entity_000001",
+        subject="entity_000002",
+        description="The tree appears healthy.",
+        confidence=0.8,
+    )
+
+    assert observation.id == "observation_000001"
+    assert engine.observations.get(observation.id) is observation

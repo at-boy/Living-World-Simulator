@@ -1,6 +1,7 @@
 from living_world.managers.definition_manager import DefinitionManager
 from living_world.managers.entity_manager import EntityManager
 from living_world.managers.event_manager import EventManager
+from living_world.managers.observation_manager import ObservationManager
 from living_world.managers.relationship_manager import RelationshipManager
 from living_world.managers.resource_definition_manager import ResourceDefinitionManager
 from living_world.simulation.simulation_scheduler import SimulationScheduler
@@ -32,6 +33,10 @@ class SimulationEngine:
             self._state,
         )
 
+        self._observations = ObservationManager(
+            self._state,
+        )
+
         self._scheduler = SimulationScheduler(
             self._state,
         )
@@ -55,6 +60,12 @@ class SimulationEngine:
     @property
     def events(self) -> EventManager:
         return self._events
+
+    @property
+    def observations(
+        self,
+    ) -> ObservationManager:
+        return self._observations
 
     def register_system(
         self,

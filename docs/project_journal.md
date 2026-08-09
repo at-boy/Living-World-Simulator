@@ -193,3 +193,23 @@ transferring resources are centralized behind a single API.
 Future simulation systems such as logging, farming, mining and trading
 can build upon these generic operations without duplicating resource
 manipulation logic.
+
+## Commit 0022 — Observation and Perception
+
+Commit 0022 introduces Observation as a first-class runtime concept and establishes the first version of the perception layer.
+
+An `Observation` is an immutable record of what an observer perceived about a subject at a particular simulation tick. It is deliberately distinct from an `Event`: an event records something that happened in the world, while an observation records what an observer perceived.
+
+Observations are recorded through `ObservationManager` and retained in `WorldState`. The manager owns observation identity and lifecycle, preserving the same separation of responsibilities used by the other runtime managers.
+
+A new perception layer was introduced through `PerceptionContext` and the `PerceptionEngine` protocol. `PerceptionContext` provides the information available to a perception engine, including the observer, subject, capabilities, relationships, world state, and simulation tick.
+
+The first concrete implementation is `DeterministicPerceptionEngine`. It demonstrates an important principle for the future NPC cognition architecture: perception is not simply reading an entity's attributes.
+
+The same objective world state can produce different observations depending on the capabilities of the observer. For example, an NPC with little knowledge of woodcraft may perceive an oak simply as a tree, while a more experienced observer may perceive it as mature, healthy, and suitable for harvesting.
+
+The resulting observation contains a human-readable description representing the observer's perception. Internal evidence retains the objective information used to produce that perception. This creates an explicit boundary between world truth and NPC-facing perception.
+
+This distinction is important for the future LLM-based perception system. An NPC should not receive raw simulation attributes such as `wood = 120` simply because those values exist in the world. Instead, a future `LLMPerceptionEngine` can use objective world state and the observer's capabilities to produce a perception appropriate to that observer.
+
+Commit 0022 therefore establishes the foundation for the later cognitive architecture involving observations, memories, beliefs, and experiences. Observation is the perception of an encounter; later cognitive systems will determine what, if anything, should be retained and given longer-term significance.

@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 
 from living_world.core.entity import Entity
 from living_world.core.event import Event
+from living_world.core.observation import Observation
 from living_world.core.relationship import Relationship
 
 
@@ -14,3 +15,5 @@ class WorldState:
     relationships: dict[str, Relationship] = field(default_factory=dict)
 
     events: dict[str, Event] = field(default_factory=dict)
+
+    observations: dict[str, Observation] = field(default_factory=dict)

@@ -4,6 +4,23 @@
 
 ### Added
 
+- Immutable `Observation` runtime objects.
+- `ObservationManager` for observation lifecycle and recording.
+- Observation storage to `WorldState`.
+- `PerceptionContext` for supplying observer, subject, capabilities, relationships, world state, and tick to perception engines.
+- The `PerceptionEngine` protocol.
+- `DeterministicPerceptionEngine` as the first concrete perception implementation.
+- Capability-dependent perception so the same world state can produce different observations for different observers.
+- Internal evidence to observations so objective world data used during perception can be retained for debugging and future systems without being exposed directly in the NPC-facing description.
+- Observation runtime integration through `SimulationEngine`.
+- `examples/008_observations.py`.
+- Comprehensive tests for observation recording and deterministic perception.
+
+
+## v0.2.2 (Unreleased)
+
+### Added
+
 - Generic `ResourceSystem` for manipulating entity resource quantities.
 - Resource operations:
   - get
