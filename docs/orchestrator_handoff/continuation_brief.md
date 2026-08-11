@@ -150,7 +150,10 @@ task without expanding Task 13j silently.
 ## Next work
 
 Wait for user authorization before starting Task 14. Review its specification
-and current release state before delegation. Do not start post-v0.5
+and current release state before delegation. After Task 14 is committed, Task
+14a is the documented execution-plan reorganization: archive Tasks 01–14a,
+place Tasks 15/15a under v0.6, create milestone overviews, and repair all
+references without starting v0.6 implementation. Do not start post-v0.5
 implementation from the settlement-evolution roadmap until the user explicitly
 selects and authorizes a milestone; first decompose that milestone into
 isolated numbered plans and saved prompts.

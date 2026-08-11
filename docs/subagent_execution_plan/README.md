@@ -64,11 +64,12 @@ NPC interpretation until a simulation-owned handler validates an action.
 31. [13m Cognition-shaped council scenario](13m_cognition_shaped_council_scenario.md)
 32. [13a HTTP inspection coverage for v0.4–v0.5](13a_http_inspection_coverage.md)
 33. [14 v0.5 release closeout](14_v05_release_closeout.md)
+34. [14a Milestone plan reorganization](14a_milestone_plan_reorganization.md)
 
 ## Deferred post-v0.5 task candidates
 
 These are documented design candidates, not active v0.5 work. They require a
-separate milestone decision and must not delay Task 14.
+separate milestone decision and must not delay Task 14 or Task 14a.
 
 1. [15 Read-only World Inspector UI architecture and vertical slice](15_world_inspector_ui.md)
 2. [15a Spatial world-layout inspection contract and visualization](15a_spatial_world_inspection.md)

@@ -57,7 +57,9 @@ remain a proposal until validated and executed by the action gateway.
 Tasks 13h through 13m and Task 13a are implemented, reviewed, validated,
 reported, and committed. HTTP inspection usage is documented. The remaining
 v0.5 work is Task 14 release closeout. **Do not start or delegate Task 14 until
-the user explicitly authorizes it.** A proposed post-v0.5 settlement-evolution
+the user explicitly authorizes it.** Task 14a is the documented post-closeout
+execution-plan reorganization and must not begin before Task 14 is committed.
+A proposed post-v0.5 settlement-evolution
 roadmap is documented, but it is not authorized implementation work and must
 not expand release closeout. Its backlog items are assigned to milestones, and
 the milestone-plus-task branch workflow begins only after the v0.6 vertical
