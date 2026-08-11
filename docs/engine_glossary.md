@@ -597,3 +597,7 @@ Documents and smoke-tests the public runtime API.
 
 Numbered top-level examples are discovered by `make examples`, run in lexical
 order, and report PASS or FAIL. A failure stops the command.
+# Council
+
+An engine-coordinated bounded discussion, not a persistent governance object or
+source of authority.

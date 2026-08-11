@@ -125,3 +125,7 @@ the roadmap.
 
 Until then, this document exists to prevent feature creep while ensuring
 good ideas are never lost.
+# Council implementation note
+
+The v0.5 council coordination layer is bounded and non-authoritative. Rules for
+institutional quorums, legitimacy, factions, and secession remain future work.

@@ -387,3 +387,8 @@ failure.
 
 Locations are represented by ordinary `Entity` instances whose definitions
 describe a location; there is no location-specific runtime type or registry.
+# Councils
+
+A council is an ephemeral agenda-driven composition of meeting coordination.
+Eligible members may attend or decline; only a strict attendee-majority proposal
+is offered to the normal simulation action gateway.

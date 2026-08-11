@@ -7,7 +7,7 @@ from dataclasses import dataclass
 
 from living_world.cognition.action_resolution import ActionResolution, NPCActionResolver
 from living_world.cognition.decision_engine import DecisionEngine
-from living_world.cognition.npc_cognition_client import ActionOption
+from living_world.cognition.npc_cognition_client import ActionOption, ActionRequest
 from living_world.cognition.npc_context import NPCContextAssembler
 from living_world.managers.observation_manager import ObservationManager
 
@@ -25,11 +25,25 @@ class ConversationTurn:
 
 
 @dataclass(frozen=True, slots=True)
+class ConversationProposal:
+    """A visible-speaker action proposal collected without resolution."""
+
+    speaker_label: str
+    action_request: ActionRequest
+
+    def __post_init__(self) -> None:
+        _require_prose(self.speaker_label, "speaker_label")
+        if not isinstance(self.action_request, ActionRequest):
+            raise TypeError("action_request must be an ActionRequest.")
+
+
+@dataclass(frozen=True, slots=True)
 class ConversationResult:
     """Visible dialogue and authoritative results of any separate proposals."""
 
     turns: tuple[ConversationTurn, ...]
     resolutions: tuple[ActionResolution, ...]
+    proposals: tuple[ConversationProposal, ...] = ()
 
     def __post_init__(self) -> None:
         if not isinstance(self.turns, tuple) or not all(
@@ -40,6 +54,10 @@ class ConversationResult:
             isinstance(resolution, ActionResolution) for resolution in self.resolutions
         ):
             raise TypeError("resolutions must be a tuple of ActionResolution values.")
+        if not isinstance(self.proposals, tuple) or not all(
+            isinstance(proposal, ConversationProposal) for proposal in self.proposals
+        ):
+            raise TypeError("proposals must be a tuple of ConversationProposal values.")
 
 
 class ConversationService:
@@ -76,6 +94,7 @@ class ConversationService:
         max_turns: int,
         called_speaker_ids: tuple[str, ...] = (),
         participant_self_knowledge: Mapping[str, tuple[str, ...]] | None = None,
+        collect_proposals: bool = False,
     ) -> ConversationResult:
         """Conduct at most ``max_turns`` deterministic, visible dialogue turns."""
 
@@ -91,10 +110,13 @@ class ConversationService:
             participant_ids=participant_ids,
             value=participant_self_knowledge,
         )
+        if not isinstance(collect_proposals, bool):
+            raise TypeError("collect_proposals must be a bool.")
 
         history: list[str] = [topic_preamble]
         turns: list[ConversationTurn] = []
         resolutions: list[ActionResolution] = []
+        proposals: list[ConversationProposal] = []
         for speaker_id in speaker_ids:
             context = self._context_assembler.assemble(
                 holder_id=speaker_id,
@@ -122,13 +144,25 @@ class ConversationService:
                     )
                 )
             if decision.action_request is not None:
-                resolutions.append(
-                    self._action_resolver.resolve(
-                        actor_id=speaker_id,
-                        request=decision.action_request,
+                if collect_proposals:
+                    proposals.append(
+                        ConversationProposal(
+                            speaker_label=context.identity,
+                            action_request=decision.action_request,
+                        )
                     )
-                )
-        return ConversationResult(turns=tuple(turns), resolutions=tuple(resolutions))
+                else:
+                    resolutions.append(
+                        self._action_resolver.resolve(
+                            actor_id=speaker_id,
+                            request=decision.action_request,
+                        )
+                    )
+        return ConversationResult(
+            turns=tuple(turns),
+            resolutions=tuple(resolutions),
+            proposals=tuple(proposals),
+        )
 
     def has_known_entity(self, entity_id: str) -> bool:
         """Return whether an engine-side participant identifier is known."""

@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Add bounded, agenda-driven NPC council coordination with membership checks,
+  attendance delegation, and action-gateway majority proposals.
+
 ## v0.2.3 (Unreleased)
 
 ### Added

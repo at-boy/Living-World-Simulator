@@ -9,6 +9,7 @@ from living_world.cognition.consolidation import (
     SleepCognitiveConsolidator,
 )
 from living_world.cognition.conversation import ConversationResult, ConversationService
+from living_world.cognition.council import CouncilCall, CouncilResult, CouncilService
 from living_world.cognition.meeting import MeetingRequest, MeetingService
 from living_world.cognition.npc_cognition_client import ActionRequest
 from living_world.core.definition import Definition
@@ -279,6 +280,18 @@ class SimulationEngine:
         if not isinstance(service, MeetingService):
             raise TypeError("service must be a MeetingService.")
         return service.conduct(request)
+
+    def convene_npc_council(
+        self,
+        *,
+        service: CouncilService,
+        call: CouncilCall,
+    ) -> CouncilResult:
+        """Delegate one bounded council to its explicit coordination service."""
+
+        if not isinstance(service, CouncilService):
+            raise TypeError("service must be a CouncilService.")
+        return service.convene(call=call)
 
     def step(self) -> None:
         self._scheduler.step()

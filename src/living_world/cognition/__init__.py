@@ -11,9 +11,17 @@ from living_world.cognition.consolidation import (
     SleepCognitiveConsolidator,
 )
 from living_world.cognition.conversation import (
+    ConversationProposal,
     ConversationResult,
     ConversationService,
     ConversationTurn,
+)
+from living_world.cognition.council import (
+    CouncilAgenda,
+    CouncilAttendance,
+    CouncilCall,
+    CouncilResult,
+    CouncilService,
 )
 from living_world.cognition.decision_engine import DecisionEngine
 from living_world.cognition.information_boundary import NPCInformationBoundary
@@ -46,9 +54,15 @@ __all__ = [
     "CognitiveConsolidationSystem",
     "CognitiveConsolidator",
     "CognitiveRetriever",
+    "ConversationProposal",
     "ConversationResult",
     "ConversationService",
     "ConversationTurn",
+    "CouncilAgenda",
+    "CouncilAttendance",
+    "CouncilCall",
+    "CouncilResult",
+    "CouncilService",
     "DecisionEngine",
     "DeterministicCognitiveRetriever",
     "Knowledge",

@@ -21,6 +21,7 @@ class MeetingRequest:
     participant_self_knowledge: Mapping[str, tuple[str, ...]] = field(
         default_factory=lambda: MappingProxyType({})
     )
+    collect_proposals: bool = False
 
     def __post_init__(self) -> None:
         _require_identifier(self.requester_id, "requester_id")
@@ -39,6 +40,8 @@ class MeetingRequest:
             "participant_self_knowledge",
             _frozen_self_knowledge(self.participant_self_knowledge),
         )
+        if not isinstance(self.collect_proposals, bool):
+            raise TypeError("collect_proposals must be a bool.")
 
 
 class MeetingService:
@@ -62,6 +65,7 @@ class MeetingService:
             max_turns=request.max_turns,
             called_speaker_ids=request.called_speaker_ids,
             participant_self_knowledge=request.participant_self_knowledge,
+            collect_proposals=request.collect_proposals,
         )
 
     def _validate_membership(self, request: MeetingRequest) -> None:

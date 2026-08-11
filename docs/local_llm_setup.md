@@ -49,6 +49,12 @@ Run the real integration example from the repository root:
 PYTHONPATH=src .venv/bin/python examples/manual/ollama_perception.py
 ```
 
+The opt-in five-NPC council demonstration uses the same loopback server:
+
+```bash
+PYTHONPATH=src .venv/bin/python examples/manual/ollama_council_meeting.py
+```
+
 `OllamaPerceptionClient` defaults to `http://127.0.0.1:11434` and rejects
 non-loopback URLs. It sends `think: false` so Qwen3 returns the required JSON
 in the response field rather than its separate thinking field. See the official
@@ -82,6 +88,12 @@ Run the real integration example from the repository root:
 PYTHONPATH=src .venv/bin/python examples/manual/llama_cpp_perception.py
 ```
 
+The corresponding five-NPC council demonstration is:
+
+```bash
+PYTHONPATH=src .venv/bin/python examples/manual/llama_cpp_council_meeting.py
+```
+
 `LlamaCppPerceptionClient` defaults to `http://127.0.0.1:8080` and rejects
 non-loopback URLs. llama.cpp exposes OpenAI-compatible chat-completion routes
 and structured JSON response support. See the official
@@ -107,6 +119,11 @@ Both clients accept explicit configuration for:
 No cloud endpoint, API key, or remote default is supported. Tests use fake HTTP
 transports and do not require a model server; the manual examples are optional
 smoke tests for a locally running server.
+
+The council demonstrations are deliberately opt-in and are not part of `make`.
+They show five differentiated, attendance-friendly perspectives; a real model
+may nevertheless decline, abstain, or fail to return schema-valid JSON. Such a
+response is non-authoritative and does not change the world.
 
 ## NPC Cognition Configuration
 

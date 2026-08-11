@@ -16,6 +16,9 @@ coordination rather than owning a second dialogue scheduler.
   `examples/manual/ollama_council_meeting.py`, and
   `examples/manual/llama_cpp_council_meeting.py`.
 - Edit: `src/living_world/cognition/__init__.py`,
+  `src/living_world/cognition/conversation.py`,
+  `src/living_world/cognition/meeting.py`, `tests/test_conversation.py`,
+  `tests/test_meeting.py`,
   `src/living_world/simulation/simulation_engine.py`, `docs/local_llm_setup.md`,
   `CHANGELOG.md`, `docs/project_journal.md`, `docs/backlog.md`,
   `docs/core_model.md`, `docs/engine_glossary.md`, and an ADR.
@@ -34,6 +37,7 @@ class CouncilAgenda:
 @dataclass(frozen=True, slots=True)
 class CouncilCall:
     caller_id: str
+    organization_id: str
     invited_participant_ids: tuple[str, ...]
     agenda: CouncilAgenda
     max_rounds: int
@@ -52,6 +56,8 @@ class CouncilAttendance:
 class CouncilResult:
     attendance: tuple[CouncilAttendance, ...]
     conversation: ConversationResult
+    majority_proposal: ActionRequest | None
+    resolutions: tuple[ActionResolution, ...]
 
 class CouncilService:
     def convene(self, *, call: CouncilCall) -> CouncilResult: ...
@@ -81,10 +87,18 @@ class CouncilService:
   bounded social conclusion only; it does not itself mutate the world, alter a
   relationship, or make an agenda action succeed.
 - The council records an attendee-majority conclusion only when an explicit
-  vote/proposal outcome is available from the meeting's bounded dialogue. It
-  is still an untrusted NPC conclusion. An agenda action is applied only if
-  the ordinary simulation action handler separately validates and accepts it;
-  a majority can never grant simulation authority.
+  vote/proposal outcome is available from the meeting's bounded dialogue. Each
+  attendee's first valid agenda `ActionRequest` is one vote; candidates are
+  grouped by action key, target label, and arguments (not rationale). A
+  candidate needs strictly more than half of attending NPC votes; ties,
+  abstentions, and no majority yield no proposal. Decliners delegate to that
+  winner only after it exists and do not lower the attendee-majority threshold.
+- Council dialogue collects proposals without applying them. At most one
+  majority proposal is then submitted once to the ordinary resolver with the
+  engine-side caller as action sponsor. An accepted handler may mutate; no
+  majority can bypass validation, and no majority/failed resolution changes
+  state. The caller-as-sponsor convention is limited to this v0.5 coordination
+  layer and is not institutional authority.
 - The service delegates to `MeetingService` using an explicit, deterministic
   call schedule and safe per-participant self-knowledge. It does not
   reimplement invitation, context, observation, or turn logic.

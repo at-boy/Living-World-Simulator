@@ -482,3 +482,7 @@ that visible perception into memory. Any proposed action remains an untrusted
 proposal sent through the existing engine-owned action gateway, so conversations
 add no default domain action, event, relationship, belief, experience, or
 council policy.
+# Council coordination
+
+Council discussion now composes meeting coordination and the ordinary action
+gateway. It is not an authoritative governance system.
