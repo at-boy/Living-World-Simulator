@@ -35,7 +35,7 @@ this prompt if they conflict.
 - Every implementation task must have a plan file, a saved subagent prompt
   ending in `-prombt.md` (the established project spelling), and an
   orchestrator report ending in `-report.md`, all in
-  `docs/subagent_execution_plan/`.
+  the applicable milestone directory under `docs/subagent_execution_plan/`.
 - Do not write implementation code yourself unless the user specifically asks.
   Your normal role is planning, dispatching, reviewing, correcting, and
   committing.
@@ -54,17 +54,13 @@ remain a proposal until validated and executed by the action gateway.
 
 ## Immediate state
 
-Tasks 13h through 13m and Task 13a are implemented, reviewed, validated,
-reported, and committed. HTTP inspection usage is documented. The remaining
-v0.5 work is Task 14 release closeout. **Do not start or delegate Task 14 until
-the user explicitly authorizes it.** Task 14a is the documented post-closeout
-execution-plan reorganization and must not begin before Task 14 is committed.
-A proposed post-v0.5 settlement-evolution
-roadmap is documented, but it is not authorized implementation work and must
-not expand release closeout. Its backlog items are assigned to milestones, and
-the milestone-plus-task branch workflow begins only after the v0.6 vertical
-slice is accepted. The completed work and current validation baseline are in
-`docs/orchestrator_handoff/continuation_brief.md`.
+The v0.5 release closeout is complete. Its Task 01–14 planning history is
+archived by milestone, and Tasks 15/15a are documented v0.6 observability
+candidates. A proposed post-v0.5 settlement-evolution roadmap is documented,
+but it is not authorized implementation work. Its backlog items are assigned
+to milestones, and the milestone-plus-task branch workflow begins only after
+the v0.6 vertical slice is accepted. The completed work and current validation
+baseline are in `docs/orchestrator_handoff/continuation_brief.md`.
 
 When the user asks to continue, begin with the earliest approved task after
 rechecking the current worktree and its plan/prompt.

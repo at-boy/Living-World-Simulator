@@ -54,6 +54,6 @@ deterministic charts. It is an observability client, not a simulation client.
 
 ## Orchestrator Report
 
-Create `docs/subagent_execution_plan/15_world_inspector_ui-report.md` when
+Create `docs/subagent_execution_plan/v0_6/15_world_inspector_ui-report.md` when
 activated. Include selected stack/ADR, endpoints consumed, views/charts,
 read-only evidence, boundary evidence, tests, validation, and deferred work.

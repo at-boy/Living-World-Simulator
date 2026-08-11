@@ -2,14 +2,13 @@
 
 ## Project position
 
-- The repository started this effort at version `v0.2.3` and is progressing
-  toward `v0.5 – AI Layer`.
-- `VERSION` intentionally remains `v0.2.3` until the release-closeout task
-  (Task 14). Do not bump it during ordinary feature tasks.
-- `CHANGELOG.md` receives feature entries as tasks are completed; final release
-  versioning is owned by Task 14.
-- The implementation work through Task 13m is committed. The latest relevant
-  commit is `4d8025f Add cognition shaped council scenario`.
+- The repository started this effort at version `v0.2.3` and completed
+  `v0.5 – AI Layer` in Task 14.
+- The authoritative release surfaces now consistently report `0.5.0` after the
+  focused Task 14b correction and Task 14 closeout.
+- The complete Task 01–14 execution history is archived under
+  `docs/subagent_execution_plan/initial_v0_2_3_to_v0_5/`; the root README is
+  the cross-milestone index.
 
 At the completion of Task 13m, validation was:
 
@@ -67,7 +66,8 @@ through a manual-only retrieval adapter.
 Task 13a HTTP-inspection coverage is implemented, reviewed, validated,
 reported, and committed. A separate practical guide at
 `docs/http_inspection_api.md` documents startup, integration, routes, and the
-privileged information boundary. Task 14 release closeout has not been started.
+privileged information boundary. Task 14 release closeout and its Task 14b
+version-consistency prerequisite are complete.
 
 The user has also requested a post-v0.5 path toward launching an unattended
 founding-settlement simulation that may grow into a town and beyond. The
@@ -149,15 +149,9 @@ task without expanding Task 13j silently.
 
 ## Next work
 
-Wait for user authorization before starting Task 14. Review its specification
-and current release state before delegation. Task 14's initial audit found all
-v0.5 capability claims complete but identified inconsistent hard-coded release
-versions outside its documentation-only boundary. Task 14b is the focused
-version-consistency correction; resume and complete Task 14 after it lands.
-After Task 14 is committed, Task 14a is the documented execution-plan
-reorganization: archive Tasks 01–14b,
-place Tasks 15/15a under v0.6, create milestone overviews, and repair all
-references without starting v0.6 implementation. Do not start post-v0.5
-implementation from the settlement-evolution roadmap until the user explicitly
-selects and authorizes a milestone; first decompose that milestone into
-isolated numbered plans and saved prompts.
+Task 14a reorganizes the completed initial-program history and the existing
+v0.6 observability candidates into milestone-owned directories. After it is
+reviewed and committed, do not start post-v0.5 implementation until the user
+explicitly selects and authorizes a milestone. First decompose the authorized
+milestone into isolated numbered plans and saved prompts. Tasks 15 and 15a are
+documented candidates, not automatically authorized implementation.

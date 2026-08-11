@@ -236,8 +236,8 @@ The first such integration branch is `milestone/v0.7`; its implementation
 tasks use short-lived branches created from it. This transition is a workflow
 decision, not permission to begin v0.7.
 
-Before v0.6 implementation planning begins, Task 14a reorganizes the historical
-execution-plan artifacts after Task 14 closes v0.5. Tasks 01–14b and Task 14a
-become the `initial_v0_2_3_to_v0_5/` archive; Task 15 and 15a move into `v0_6/`; milestone
+Task 14a reorganized the historical execution-plan artifacts after Task 14
+closed v0.5. Tasks 01–14b and Task 14a form the
+`initial_v0_2_3_to_v0_5/` archive; Tasks 15 and 15a are in `v0_6/`. Milestone
 overview files and the root cross-milestone index establish the layout used by
 later milestone and task branches.

@@ -51,6 +51,6 @@ Inspector UI with click-through inspection.
 
 ## Orchestrator Report
 
-Create `docs/subagent_execution_plan/15a_spatial_world_inspection-report.md`
+Create `docs/subagent_execution_plan/v0_6/15a_spatial_world_inspection-report.md`
 when activated. Include the ADR decision, schema, persistence/API/UI evidence,
 boundary audit, validation, and remaining mapping limitations.
