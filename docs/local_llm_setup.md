@@ -4,8 +4,10 @@
 
 Living World uses only locally hosted language-model providers. The
 `OllamaPerceptionClient` and `LlamaCppPerceptionClient` call their respective
-loopback HTTP servers through the common `LLMPerceptionClient` protocol. The
-simulation itself does not start, manage, or download models.
+loopback HTTP servers through the common `LLMPerceptionClient` protocol.
+`OllamaCognitionClient` and `LlamaCppCognitionClient` use the same loopback
+transport for untrusted, structured NPC reasoning proposals. The simulation
+itself does not start, manage, or download models.
 
 ## Safety Boundary
 
@@ -16,7 +18,12 @@ receive `WorldState`, internal entity identifiers, or a simulation mutation
 interface.
 
 The engine validates provider output and falls back to deterministic perception
-when the provider is unavailable or returns invalid or unsafe content.
+when the provider is unavailable or returns invalid or unsafe content. A
+cognition client receives only `NPCContext` prose and offered action labels. It
+cannot receive `WorldState`, identifiers, raw attributes, evidence, metadata,
+or raw capability values. Its response is only a speech/action proposal; it
+does not execute an action or report authoritative success. The action gateway
+performs later engine validation and application.
 
 ## Ollama
 
@@ -100,3 +107,17 @@ Both clients accept explicit configuration for:
 No cloud endpoint, API key, or remote default is supported. Tests use fake HTTP
 transports and do not require a model server; the manual examples are optional
 smoke tests for a locally running server.
+
+## NPC Cognition Configuration
+
+The cognition clients use the same provider addresses and model names as their
+perception counterparts: `OllamaCognitionClient` defaults to
+`http://127.0.0.1:11434`, while `LlamaCppCognitionClient` defaults to
+`http://127.0.0.1:8080`. Both reject non-loopback URLs.
+
+They send a JSON request containing the filtered NPC identity, qualitative
+self-knowledge, current perceptions, retrieved cognitive prose, and the action
+keys/target labels offered for that decision. They require a JSON response with
+`spoken_text` and `action_request`; an action request may be `null`, and any
+proposal must use an offered key and target label. Invalid provider/network
+responses raise a cognition-client error and remain non-authoritative.

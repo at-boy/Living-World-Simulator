@@ -4,6 +4,12 @@
 
 ### Added
 
+- Loopback-only Ollama and llama.cpp NPC cognition clients that return strictly
+  validated, untrusted speech and action proposals from filtered `NPCContext`.
+- Structured cognition request/response validation that restricts model action
+  keys and target labels to vocabulary offered by the engine, without granting
+  model-side action authority.
+
 - Mandatory `NPCPerceptionBoundary` validation for deterministic and local-LLM
   perception outputs, including nested protected-value, internal-ID, raw
   attribute, hidden-state, metadata, and engine-object protections.

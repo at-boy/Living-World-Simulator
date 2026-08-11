@@ -45,6 +45,44 @@ class NPCCognitionClient(Protocol):
     @property
     def provider_name(self) -> str: ...
     def decide(self, context: NPCContext, actions: tuple[ActionOption, ...]) -> NPCDecision: ...
+
+class OllamaCognitionClient:
+    def __init__(
+        self,
+        *,
+        model: str,
+        base_url: str = "http://127.0.0.1:11434",
+        timeout_seconds: float = 30.0,
+        transport: JsonHttpTransport | None = None,
+    ) -> None: ...
+    @property
+    def provider_name(self) -> str: ...
+    def decide(self, context: NPCContext, actions: tuple[ActionOption, ...]) -> NPCDecision: ...
+
+class LlamaCppCognitionClient:
+    def __init__(
+        self,
+        *,
+        model: str,
+        base_url: str = "http://127.0.0.1:8080",
+        timeout_seconds: float = 30.0,
+        transport: JsonHttpTransport | None = None,
+    ) -> None: ...
+    @property
+    def provider_name(self) -> str: ...
+    def decide(self, context: NPCContext, actions: tuple[ActionOption, ...]) -> NPCDecision: ...
+
+class NPCCognitionClientError(Exception): ...
+class NPCCognitionInvalidResponseError(NPCCognitionClientError): ...
+
+def serialize_decision_request(
+    context: NPCContext,
+    actions: tuple[ActionOption, ...],
+) -> str: ...
+def parse_decision_response(
+    content: object,
+    actions: tuple[ActionOption, ...],
+) -> NPCDecision: ...
 ```
 
 - Ollama and llama.cpp clients are loopback HTTP adapters only and return
@@ -53,6 +91,24 @@ class NPCCognitionClient(Protocol):
 - The serializer accepts only `NPCContext` plus offered `ActionOption`s.
 - Client output is untrusted and contains no claim of action success.
 - Action keys and target labels are proposal vocabulary, never engine IDs.
+- All client-facing `ActionOption`, `ActionRequest`, and `NPCDecision` text
+  rejects conventional internal record IDs (for example `entity_000001`,
+  `observation_000001`, and `memory_000001`). This is a format-level safeguard
+  because cognition clients deliberately have no `WorldState` from which to
+  resolve arbitrary engine IDs.
+- All public value objects validate non-empty visible strings; action target
+  labels and `ActionOption.target_labels` are tuples of unique non-empty
+  strings, and `ActionRequest.arguments` is a defensively copied read-only
+  mapping of non-empty string keys and values. `NPCDecision` must contain at
+  least one of spoken text or an action request.
+- `serialize_decision_request()` accepts exactly the safe `NPCContext` fields
+  and offered action vocabulary. It includes neither runtime objects nor
+  internal IDs, raw attributes, evidence, metadata, or raw numerical
+  capabilities. `parse_decision_response()` accepts either `null` or an action
+  object, rejects extra/malformed fields, and rejects an action key or target
+  label not offered in its `actions` argument. It performs proposal-vocabulary
+  validation only; Task 11 remains the sole engine authority for action
+  validation/application.
 
 ## Test Criteria
 

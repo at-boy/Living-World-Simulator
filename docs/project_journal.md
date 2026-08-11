@@ -429,3 +429,17 @@ keeps engine objects, mappings, internal identifiers, and exact values copied
 from entity attributes out of future LLM input while retaining ordinary
 qualitative NPC language. Perception engines remain separate translators;
 their mandatory description filtering is the next dedicated boundary task.
+
+## Local NPC Cognition Clients
+
+Local Ollama and llama.cpp adapters can now receive a completed `NPCContext`
+and a caller-provided action vocabulary. Their JSON prompt contains only the
+NPC-readable projections produced by the existing context boundary; no engine
+state, raw attributes, evidence, metadata, provenance, internal identifiers,
+or numerical capabilities crosses into the model request.
+
+Provider output is an untrusted `NPCDecision`: optional spoken text and an
+optional action request. Parsing is strict and permits only offered action keys
+and target labels. This is deliberately vocabulary validation, not action
+validation or execution. The forthcoming action gateway remains the only owner
+of simulation authority.
