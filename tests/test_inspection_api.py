@@ -1,11 +1,14 @@
 import asyncio
 import json
+import tomllib
 from collections.abc import Mapping
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI
 
+from living_world import __version__
 from living_world.api.inspection import EngineWorldInspector, WorldInspector
 from living_world.api.server import create_app
 from living_world.cognition.npc_context import NPCContextAssembler
@@ -265,7 +268,7 @@ def make_client() -> tuple[SimulationEngine, ASGIClient]:
 def test_inspection_endpoints_return_authoritative_snapshots_in_id_order() -> None:
     _, client = make_client()
 
-    assert client.get("/health").json() == {"status": "ok", "version": "0.2.3"}
+    assert client.get("/health").json() == {"status": "ok", "version": __version__}
     assert client.get("/world/tick").json() == {"tick": 0}
     assert client.get("/world").json() == {
         "tick": 0,
@@ -281,7 +284,6 @@ def test_inspection_endpoints_return_authoritative_snapshots_in_id_order() -> No
         "definition_count": 2,
         "resource_definition_count": 2,
     }
-
     assert [record["id"] for record in client.get("/world/entities").json()] == [
         "entity_000001",
         "entity_000002",
@@ -351,6 +353,22 @@ def test_inspection_endpoints_return_authoritative_snapshots_in_id_order() -> No
     experience = client.get("/world/experiences").json()[0]
     assert experience["supporting_memories"] == []
     assert experience["history"] == []
+
+
+def test_release_version_surfaces_are_consistent() -> None:
+    repository_root = Path(__file__).resolve().parents[1]
+    version_file = (repository_root / "VERSION").read_text(encoding="utf-8").strip()
+    with (repository_root / "pyproject.toml").open("rb") as metadata_file:
+        project_version = tomllib.load(metadata_file)["project"]["version"]
+    _, client = make_client()
+
+    assert version_file == "0.5.0"
+    assert project_version == version_file
+    assert __version__ == version_file
+    assert client.get("/health").json() == {
+        "status": "ok",
+        "version": version_file,
+    }
 
 
 def test_cognitive_history_is_holder_scoped_ordered_and_handles_empty_holders() -> None:

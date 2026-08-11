@@ -2,6 +2,7 @@ from collections.abc import Mapping
 
 from fastapi import FastAPI, HTTPException
 
+from living_world import __version__
 from living_world.api.inspection import EngineWorldInspector
 from living_world.simulation.simulation_engine import SimulationEngine
 
@@ -14,7 +15,7 @@ def create_app(engine: SimulationEngine) -> FastAPI:
 
     @application.get("/health")
     async def health() -> dict[str, str]:
-        return {"status": "ok", "version": "0.2.3"}
+        return {"status": "ok", "version": __version__}
 
     @application.get("/world/tick")
     async def world_tick() -> dict[str, int]:

@@ -4,7 +4,7 @@ build-backend="setuptools.build_meta"
 
 [project]
 name="living-world-simulator"
-version="0.2.3"
+version="0.5.0"
 description="Event-driven simulation engine."
 requires-python=">=3.11"
 dependencies=["fastapi", "PyYAML"]

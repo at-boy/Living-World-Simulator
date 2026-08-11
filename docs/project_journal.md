@@ -7,6 +7,17 @@ engineering milestones and lessons learned.
 
 ---
 
+# 2026-08-12
+
+## Release Version Consistency
+
+The v0.5 release correction makes `living_world.__version__` the single runtime
+version export consumed by the HTTP health endpoint. Release metadata remains
+explicit in `VERSION` and `pyproject.toml`; a regression test now proves those
+two files, the runtime export, and `/health` all agree on `0.5.0`. This removes
+the version-consistency blocker without performing the remaining release
+closeout or changing simulation behavior.
+
 # 2026-08-11
 
 ## Manual Council Scenario and Safe Request Trace

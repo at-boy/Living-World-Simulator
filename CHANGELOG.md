@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Synchronize release metadata, the public runtime version, and the HTTP health
+  response at `0.5.0`, with one runtime version export and a consistency test.
 - Extend the privileged GET-only inspection API across persisted NPC
   presentation and cognitive records, including deterministic holder-scoped
   history and summary counts, without persisting ephemeral coordination results.
