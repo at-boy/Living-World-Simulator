@@ -9,6 +9,15 @@ engineering milestones and lessons learned.
 
 # 2026-08-10
 
+## Organization and Settlement Foundations
+
+Organizations and settlements are ordinary property-graph entities rather
+than bespoke runtime types. `member_of`, `owns`, and `located_in` document the
+direction of their graph edges. Deterministic systems summarize only valid,
+unambiguous graph structure through `EntityManager` and record material
+changes through immutable events, leaving construction and economy to later
+systems.
+
 ## Deterministic World Simulation Foundations
 
 Weather and population are now deterministic systems over ordinary entities

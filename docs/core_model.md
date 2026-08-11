@@ -177,12 +177,25 @@ Current generic systems include:
 - `PopulationSystem`, which applies integer `population_change` to integer
   `population` for definitions opting in with `systems: [population]`, then
   clamps it to optional `population_min` and `population_max` bounds.
+- `OrganizationSystem`, which derives an opt-in organization's unique
+  `member_count` from incoming `member_of` relationships.
+- `SettlementSystem`, which derives an opt-in settlement's `is_located` and
+  `owner_count` from one outgoing `located_in` relationship and incoming
+  `owns` relationships.
 
 Regions and terrain are ordinary entities. A `contains` relationship may link
 a region to terrain it contains, while `adjacent` may link peer entities. These
 relationship kinds are conventions, not engine primitives. Weather and
 population events are recorded as `weather_changed` and `population_changed`
 when their user-meaningful values change.
+
+Organizations and settlements are likewise ordinary entities. The
+`member_of` convention points from a member to an organization; `owns` points
+from an owner to a settlement; and `located_in` points from a settlement to
+its location. The organization and settlement systems ignore malformed or
+ambiguous graph patterns. Material summary changes are recorded as
+`organization_membership_changed`, `settlement_location_changed`, or
+`settlement_ownership_changed` events.
 
 The engine assigns no semantic meaning to these mechanisms. Higher-level
 systems interpret them according to their own requirements.

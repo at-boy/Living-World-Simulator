@@ -61,6 +61,15 @@ Runtime connection between two Entities.
 - entity state
 - simulation logic
 
+### Organization and settlement graph conventions
+
+- `member_of`: source member to target organization
+- `owns`: source owner to target settlement
+- `located_in`: source settlement to target location
+
+These are domain conventions interpreted by systems, not relationship runtime
+types or bespoke domain objects.
+
 ---
 
 ## WorldState

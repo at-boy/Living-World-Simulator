@@ -4,6 +4,11 @@
 
 ### Added
 
+- Property-graph organization and settlement foundations using `member_of`,
+  `owns`, and `located_in` relationship conventions.
+- Deterministic organization membership and settlement location/ownership
+  summary systems with immutable material-change events.
+- Executable organization and settlement foundations example.
 - Deterministic `WeatherSystem` and `PopulationSystem` implementations for
   definition-opt-in entities, including bounded population updates and
   immutable material-change events.
