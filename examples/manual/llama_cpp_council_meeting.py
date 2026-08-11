@@ -66,9 +66,34 @@ def _run(client: LlamaCppCognitionClient) -> None:
             },
         )
     )
-    for turn in result.conversation.turns:
-        print(f"{turn.speaker_label}: {turn.utterance}")
-    print(f"Majority proposal: {result.majority_proposal}")
+    print("Attendance")
+    for attendance in result.attendance:
+        status = "attending" if attendance.attending else "not attending"
+        delegation = (
+            "; delegates to majority" if attendance.delegates_to_majority else ""
+        )
+        print(f"- {attendance.participant_label}: {status}{delegation}")
+
+    print("\nDebate")
+    if result.conversation.turns:
+        for turn in result.conversation.turns:
+            print(f"{turn.speaker_label}: {turn.utterance}")
+    else:
+        print("No invitee attended, so no debate was held.")
+
+    print("\nVotes / proposals")
+    if result.conversation.proposals:
+        for proposal in result.conversation.proposals:
+            request = proposal.action_request
+            print(
+                f"- {proposal.speaker_label}: {request.action_key} ({request.rationale})"
+            )
+    else:
+        print("No agenda proposal was cast.")
+
+    print(f"\nMajority proposal: {result.majority_proposal}")
+    if result.resolutions:
+        print(f"Gateway resolution: {result.resolutions[0]}")
 
 
 if __name__ == "__main__":

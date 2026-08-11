@@ -125,6 +125,12 @@ They show five differentiated, attendance-friendly perspectives; a real model
 may nevertheless decline, abstain, or fail to return schema-valid JSON. Such a
 response is non-authoritative and does not change the world.
 
+Each manual council example prints attendance, visible debate turns, collected
+agenda votes/proposals, the majority proposal, and any resulting gateway
+resolution. If every invitee declines or returns an unusable response, it
+prints that no debate was held; `Majority proposal: None` then means no strict
+majority was available, not that the model changed the world.
+
 ## NPC Cognition Configuration
 
 The cognition clients use the same provider addresses and model names as their
