@@ -76,8 +76,17 @@ These are intentionally out of scope for the current milestone.
 - Emergent quests
 - Dynamic rumours
 - Player influence on history
-- World inspector UI
-- Web administration interface
+- **Read-only World Inspector UI** backed exclusively by the HTTP inspection
+  API, with world/entity detail views, deterministic time-series/statistical
+  graphs, event/history views, and relationship graphs. It must remain an
+  operator observability client, never a simulation, NPC, or LLM API.
+- **Spatial World Inspector visualization** showing areas, settlements,
+  buildings, and other placed world elements with click-through inspection.
+  This requires a canonical engine-owned spatial layout/placement contract
+  before a map renderer is implemented; no UI should infer coordinates from
+  arbitrary attributes.
+- Web administration interface, separately authorized from the read-only
+  inspector and subject to explicit command/action authorization design.
 - Experience validation and confidence weighting
 - Long-term memory decay and retrieval ranking
 

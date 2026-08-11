@@ -52,6 +52,14 @@ NPC interpretation until a simulation-owned handler validates an action.
 19. [13a HTTP inspection coverage for v0.4–v0.5](13a_http_inspection_coverage.md)
 20. [14 v0.5 release closeout](14_v05_release_closeout.md)
 
+## Deferred post-v0.5 task candidates
+
+These are documented design candidates, not active v0.5 work. They require a
+separate milestone decision and must not delay Task 14.
+
+1. [15 Read-only World Inspector UI architecture and vertical slice](15_world_inspector_ui.md)
+2. [15a Spatial world-layout inspection contract and visualization](15a_spatial_world_inspection.md)
+
 ## Delivery rule for every task
 
 The assigned subagent writes or updates its specified tests and examples,
