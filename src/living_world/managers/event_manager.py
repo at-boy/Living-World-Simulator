@@ -1,5 +1,3 @@
-from copy import deepcopy
-
 from living_world.core.event import Event
 from living_world.state.world_state import WorldState
 
@@ -31,7 +29,7 @@ class EventManager:
             tick=self._state.tick,
             kind=kind,
             subject_id=subject_id,
-            attributes=deepcopy(attributes or {}),
+            attributes=attributes or {},
         )
 
         self.add(event)

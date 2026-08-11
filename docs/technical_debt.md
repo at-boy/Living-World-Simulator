@@ -44,7 +44,9 @@ Examples and production code no longer mutate
 
 ### World history
 
-The runtime now records immutable history through `EventManager`.
+The runtime now records recursively immutable history through `EventManager`.
+Event attributes are detached from callers and recursively frozen, so recorded
+history cannot be changed through nested mappings or collections.
 
 The engine has a dedicated history mechanism that future systems can
 build upon.

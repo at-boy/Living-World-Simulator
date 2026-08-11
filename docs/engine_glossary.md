@@ -204,7 +204,7 @@ Immutable record of something that happened in the world.
 - tick
 - event kind
 - subject reference
-- event attributes
+- recursively immutable event attributes
 
 **Does Not Own**
 

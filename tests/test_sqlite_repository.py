@@ -52,6 +52,17 @@ def test_loaded_history_records_remain_immutable(tmp_path: Path) -> None:
         )
         attributes["distance"] = 5
     with pytest.raises(TypeError):
+        journey = cast(
+            MutableMapping[str, object], loaded.events["event-1"].attributes["journey"]
+        )
+        journey["distance"] = 5
+    with pytest.raises(TypeError):
+        stages = cast(
+            MutableMapping[str, object],
+            loaded.events["event-1"].attributes["journey"],
+        )["stages"]
+        stages[0] = "changed"
+    with pytest.raises(TypeError):
         evidence = cast(
             MutableMapping[str, object], loaded.observations["observation-1"].evidence
         )
@@ -166,7 +177,10 @@ def _world_state() -> WorldState:
                 tick=3,
                 kind="journey_completed",
                 subject_id="entity-1",
-                attributes={"distance": 4},
+                attributes={
+                    "distance": 4,
+                    "journey": {"stages": [{"name": "departure"}]},
+                },
             )
         },
         observations={

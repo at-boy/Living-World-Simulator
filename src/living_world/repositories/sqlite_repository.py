@@ -6,7 +6,6 @@ import json
 import sqlite3
 from collections.abc import Callable, Mapping
 from pathlib import Path
-from types import MappingProxyType
 from typing import TypeVar
 
 from living_world.core.belief import Belief, BeliefHistoryEntry, BeliefStatus
@@ -166,8 +165,27 @@ def _serialize_event(event: Event) -> dict[str, object]:
         "tick": event.tick,
         "kind": event.kind,
         "subject_id": event.subject_id,
-        "attributes": dict(event.attributes),
+        "attributes": _event_attributes_as_json(event.attributes),
     }
+
+
+def _event_attributes_as_json(attributes: Mapping[str, object]) -> dict[str, object]:
+    return {key: _event_value_as_json(value) for key, value in attributes.items()}
+
+
+def _event_value_as_json(value: object) -> object:
+    if isinstance(value, Mapping):
+        return _event_attributes_as_json(value)
+    if isinstance(value, tuple):
+        return [_event_value_as_json(item) for item in value]
+    if isinstance(value, frozenset):
+        values = [_event_value_as_json(item) for item in value]
+        return sorted(values, key=_event_value_sort_key)
+    return value
+
+
+def _event_value_sort_key(value: object) -> str:
+    return json.dumps(value, sort_keys=True, separators=(",", ":"))
 
 
 def _serialize_observation(observation: Observation) -> dict[str, object]:
@@ -294,7 +312,7 @@ def _deserialize_event(value: Mapping[str, object]) -> Event:
         tick=_integer(value["tick"]),
         kind=_string(value["kind"]),
         subject_id=_optional_string(value["subject_id"]),
-        attributes=MappingProxyType(dict(_mapping(value["attributes"]))),
+        attributes=_mapping(value["attributes"]),
     )
 
 

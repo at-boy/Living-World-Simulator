@@ -37,6 +37,8 @@
 
 ### Changed
 
+- Event attribute trees are now recursively immutable and detached from caller
+  input, including after SQLite persistence round trips.
 - LLM perception results are validated before becoming NPC-readable
   observations; model output cannot set simulation identity, tick or evidence.
 - Local provider calls use structured JSON responses and no cloud endpoint or

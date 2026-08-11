@@ -9,6 +9,13 @@ engineering milestones and lessons learned.
 
 # 2026-08-10
 
+## Immutable Event Attributes
+
+Events now freeze their entire attribute tree at construction time. Nested
+mappings, sequences, and sets become read-only mappings, tuples, and
+frozensets respectively, and SQLite serialization converts that frozen tree to
+JSON-safe data before reconstructing the same immutable event contract on load.
+
 ## Organization and Settlement Foundations
 
 Organizations and settlements are ordinary property-graph entities rather

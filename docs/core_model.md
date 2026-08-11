@@ -131,7 +131,8 @@ The simulation records immutable history through `Event` objects.
 Events are created exclusively through `EventManager.record()`.
 
 Unlike entities and relationships, events are append-only and are never
-modified or removed.
+modified or removed. Event attribute trees are recursively immutable: mappings
+are read-only, sequences are tuples, and sets are frozensets.
 
 Observations are immutable records of an entity's perception of another
 entity or the world. They are not events, although an event may result in
