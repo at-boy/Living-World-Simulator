@@ -12,6 +12,9 @@ Before taking any action, read these documents in full:
 5. `docs/development_rules.md`
 6. `docs/npc_information_boundary.md`
 7. `docs/technical_debt.md`
+8. `docs/post_v05_settlement_evolution_roadmap.md`
+9. `docs/development_workflow.md`
+10. `docs/subagent_execution_plan/v0_6.md`
 
 Then inspect `git status --short`, the recent commit history, and the next
 planned task. Treat the repository and those documents as authoritative over
@@ -54,13 +57,17 @@ remain a proposal until validated and executed by the action gateway.
 
 ## Immediate state
 
-The v0.5 release closeout is complete. Its Task 01–14 planning history is
-archived by milestone, and Tasks 15/15a are documented v0.6 observability
-candidates. A proposed post-v0.5 settlement-evolution roadmap is documented,
-but it is not authorized implementation work. Its backlog items are assigned
-to milestones, and the milestone-plus-task branch workflow begins only after
-the v0.6 vertical slice is accepted. The completed work and current validation
-baseline are in `docs/orchestrator_handoff/continuation_brief.md`.
+The v0.5 release closeout and Task 14a milestone reorganization are complete.
+The Task 01–14, Task 14b, and Task 14a planning history is archived by
+milestone. Tasks 15/15a are documented v0.6 observability candidates. The
+post-v0.5 settlement-evolution roadmap is documented, but no post-v0.5
+milestone or implementation task is currently authorized. Its backlog items
+are assigned to milestones, and the milestone-plus-task branch workflow begins
+only after the v0.6 vertical slice is accepted. The completed work and current
+validation baseline are in
+`docs/orchestrator_handoff/continuation_brief.md`.
 
-When the user asks to continue, begin with the earliest approved task after
-rechecking the current worktree and its plan/prompt.
+When the user asks to continue, identify exactly what milestone or planning
+work they authorized, then recheck the current worktree and relevant milestone
+documents. Do not infer authorization for Task 15, Task 15a, or another v0.6
+implementation merely because its plan or roadmap entry exists.

@@ -6,16 +6,19 @@
   `v0.5 – AI Layer` in Task 14.
 - The authoritative release surfaces now consistently report `0.5.0` after the
   focused Task 14b correction and Task 14 closeout.
-- The complete Task 01–14 execution history is archived under
+- The complete Task 01–14, Task 14b, and Task 14a execution history is archived
+  under
   `docs/subagent_execution_plan/initial_v0_2_3_to_v0_5/`; the root README is
   the cross-milestone index.
+- Task 14a completed the milestone reorganization in commit `6dbf0ef`. The
+  worktree was clean after that commit.
 
-At the completion of Task 13m, validation was:
+Current validation at the completion of Task 14a was:
 
 | Command | Result |
 | --- | --- |
-| `make` | Passed: Ruff, Black, 389 pytest tests, numbered examples 001–022 |
-| `make examples` | Passed: numbered examples 001–022 |
+| `make` | Passed: Ruff, Black, 393 pytest tests, numbered examples 001–023 |
+| `make examples` | Passed: numbered examples 001–023 |
 | `git diff --check` | Passed |
 
 Always rerun suitable validation on the current worktree; these figures are a
@@ -76,7 +79,8 @@ proposed milestone sequence is documented in
 and objective graphs, deliberately partial off-map homelands/markets, needs,
 work execution, development stages, population continuity, governance, and
 regional growth. These are roadmap candidates, not authorized implementation
-tasks, and must not expand Task 14.
+tasks. Their milestone placement records intent and dependency order rather
+than authorization.
 
 Every future idea currently in `docs/backlog.md` is assigned to a roadmap
 milestone or supporting track. After the v0.6 unattended founders scenario
@@ -149,9 +153,9 @@ task without expanding Task 13j silently.
 
 ## Next work
 
-Task 14a reorganizes the completed initial-program history and the existing
-v0.6 observability candidates into milestone-owned directories. After it is
-reviewed and committed, do not start post-v0.5 implementation until the user
-explicitly selects and authorizes a milestone. First decompose the authorized
-milestone into isolated numbered plans and saved prompts. Tasks 15 and 15a are
-documented candidates, not automatically authorized implementation.
+Task 14a is complete and committed. No post-v0.5 implementation task or
+milestone is currently authorized. Wait for the user to select and authorize
+the next milestone or planning task. Before implementation, decompose the
+authorized milestone into isolated numbered plans and saved prompts in its
+milestone directory. Tasks 15 and 15a are documented v0.6 observability
+candidates, not automatically authorized implementation.
