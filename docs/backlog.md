@@ -51,9 +51,9 @@ this completed scope.
 - Council meetings
 - NPC conversations are implemented as bounded, visible recipient observations
   with holder-scoped context and the existing action gateway.
-- NPC meeting coordination: an NPC can request bounded dialogue with one or
-  more NPCs, while the simulation may call eligible participants to speak in a
-  deterministic order without exposing invitation or participant IDs to LLMs.
+- NPC meeting coordination is implemented as bounded, requester-initiated
+  dialogue. The simulation may call eligible participants in a deterministic
+  engine-only order without exposing invitation or participant IDs to LLMs.
 - NPC Cognition Protocol
 - NPC information boundary enforcement
 - NPC-only context filtering for perception and memory retrieval

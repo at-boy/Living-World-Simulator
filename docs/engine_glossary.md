@@ -233,6 +233,26 @@ Conduct bounded, deterministic visible dialogue between known NPC entities.
 
 ---
 
+## MeetingService
+
+**Purpose**
+
+Coordinate a bounded, requester-initiated multi-party conversation without
+creating social or governance state.
+
+**Responsibilities**
+
+- validate requester/invitee membership and requester-first participant order
+- delegate a bounded optional call schedule to `ConversationService`
+- pass only each speaker's own boundary-validated qualitative perspective
+
+**Does Not Own**
+
+- meeting persistence, invitation delivery, consent, availability, attendance,
+  relationships, events, voting, or policy
+
+---
+
 ## Relationship
 
 **Purpose**

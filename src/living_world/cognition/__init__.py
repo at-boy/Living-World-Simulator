@@ -18,6 +18,7 @@ from living_world.cognition.conversation import (
 from living_world.cognition.decision_engine import DecisionEngine
 from living_world.cognition.information_boundary import NPCInformationBoundary
 from living_world.cognition.llama_cpp_cognition_client import LlamaCppCognitionClient
+from living_world.cognition.meeting import MeetingRequest, MeetingService
 from living_world.cognition.npc_cognition_client import (
     ActionOption,
     ActionRequest,
@@ -53,6 +54,8 @@ __all__ = [
     "Knowledge",
     "KnowledgeManager",
     "LlamaCppCognitionClient",
+    "MeetingRequest",
+    "MeetingService",
     "NPCActionHandler",
     "NPCActionHandlerContractError",
     "NPCActionResolver",

@@ -161,6 +161,13 @@ each other conversation participant, with empty evidence and metadata. It does
 not create cognitive records or events directly; ordinary consolidation may
 later make a visible observation memorable.
 
+`MeetingService` is an ephemeral coordination wrapper around bounded dialogue.
+It validates engine-side requester and invitee identifiers, preserves a
+requester-first participant order, and may use an engine-owned call schedule.
+Only a participant's own qualitative perspective enters that participant's
+context; meetings create no persistent invitation, consent, relationship, or
+governance state.
+
 History represents objective facts about the world and recorded
 perceptions of the world, forming the foundation for future systems such
 as:

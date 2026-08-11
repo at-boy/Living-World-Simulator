@@ -13,6 +13,7 @@ governance, or world-state subsystem.
   `src/living_world/cognition/meeting.py`,
   `tests/test_meeting.py`, and `examples/021_npc_meeting.py`.
 - Edit: `src/living_world/cognition/conversation.py`,
+  `tests/test_conversation.py`,
   `src/living_world/cognition/__init__.py`,
   `src/living_world/simulation/simulation_engine.py`, `CHANGELOG.md`,
   `docs/project_journal.md`, `docs/backlog.md`, `docs/core_model.md`,

@@ -9,6 +9,16 @@ engineering milestones and lessons learned.
 
 # 2026-08-10
 
+## NPC Meeting Coordination
+
+NPC meeting coordination is deliberately an ephemeral wrapper around the
+existing conversation boundary. An engine-side requester may invite known NPCs
+and provide a bounded internal call schedule, while each speaker receives only
+its own qualitative perspective through holder-scoped context. The service
+creates no meeting record, invitation delivery or acceptance, consent,
+availability, relationship, event, vote, or policy result. This keeps the
+future council and governance designs separate from visible dialogue.
+
 ## Perception-Boundary Enforcement
 
 Perception now has an executable translation boundary rather than relying on

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass
 
 from living_world.cognition.action_resolution import ActionResolution, NPCActionResolver
@@ -73,20 +74,31 @@ class ConversationService:
         participant_ids: tuple[str, ...],
         topic: str,
         max_turns: int,
+        called_speaker_ids: tuple[str, ...] = (),
+        participant_self_knowledge: Mapping[str, tuple[str, ...]] | None = None,
     ) -> ConversationResult:
         """Conduct at most ``max_turns`` deterministic, visible dialogue turns."""
 
         self._validate_participants(participant_ids)
         topic_preamble = self._topic_preamble(topic)
         self._validate_max_turns(max_turns)
+        speaker_ids = self._speaker_schedule(
+            participant_ids=participant_ids,
+            called_speaker_ids=called_speaker_ids,
+            max_turns=max_turns,
+        )
+        self_knowledge = self._validate_participant_self_knowledge(
+            participant_ids=participant_ids,
+            value=participant_self_knowledge,
+        )
 
         history: list[str] = [topic_preamble]
         turns: list[ConversationTurn] = []
         resolutions: list[ActionResolution] = []
-        for turn_index in range(max_turns):
-            speaker_id = participant_ids[turn_index % len(participant_ids)]
+        for speaker_id in speaker_ids:
             context = self._context_assembler.assemble(
                 holder_id=speaker_id,
+                capability_descriptions=self_knowledge.get(speaker_id, ()),
                 conversation_history=tuple(history),
             )
             decision = self._decision_engine.decide(context, self._action_options)
@@ -117,6 +129,11 @@ class ConversationService:
                     )
                 )
         return ConversationResult(turns=tuple(turns), resolutions=tuple(resolutions))
+
+    def has_known_entity(self, entity_id: str) -> bool:
+        """Return whether an engine-side participant identifier is known."""
+
+        return self._context_assembler.has_known_entity(entity_id)
 
     def _validate_participants(self, participant_ids: object) -> None:
         if not isinstance(participant_ids, tuple):
@@ -149,6 +166,64 @@ class ConversationService:
             raise TypeError("max_turns must be a non-boolean integer.")
         if value < 0:
             raise ValueError("max_turns cannot be negative.")
+
+    @staticmethod
+    def _speaker_schedule(
+        *,
+        participant_ids: tuple[str, ...],
+        called_speaker_ids: object,
+        max_turns: int,
+    ) -> tuple[str, ...]:
+        if not isinstance(called_speaker_ids, tuple):
+            raise TypeError("called_speaker_ids must be a tuple of entity IDs.")
+        if not called_speaker_ids:
+            return tuple(
+                participant_ids[index % len(participant_ids)]
+                for index in range(max_turns)
+            )
+        if not all(isinstance(speaker_id, str) for speaker_id in called_speaker_ids):
+            raise TypeError("called_speaker_ids must contain only entity IDs.")
+        if any(not speaker_id.strip() for speaker_id in called_speaker_ids):
+            raise ValueError("called_speaker_ids cannot contain empty entity IDs.")
+        if any(speaker_id not in participant_ids for speaker_id in called_speaker_ids):
+            raise ValueError("called_speaker_ids must identify meeting participants.")
+        if len(called_speaker_ids) > max_turns:
+            raise ValueError("called_speaker_ids cannot exceed max_turns.")
+        return called_speaker_ids
+
+    def _validate_participant_self_knowledge(
+        self,
+        *,
+        participant_ids: tuple[str, ...],
+        value: object,
+    ) -> dict[str, tuple[str, ...]]:
+        if value is None:
+            return {}
+        if not isinstance(value, Mapping):
+            raise TypeError("participant_self_knowledge must be a mapping or None.")
+        validated: dict[str, tuple[str, ...]] = {}
+        for participant_id, knowledge in value.items():
+            if not isinstance(participant_id, str):
+                raise TypeError(
+                    "participant_self_knowledge keys must be entity ID strings."
+                )
+            if participant_id not in participant_ids:
+                raise ValueError(
+                    "participant_self_knowledge keys must identify participants."
+                )
+            if not isinstance(knowledge, tuple):
+                raise TypeError(
+                    "participant_self_knowledge values must be tuples of prose."
+                )
+            if not knowledge:
+                raise ValueError(
+                    "participant_self_knowledge values cannot be empty tuples."
+                )
+            validated[participant_id] = tuple(
+                self._context_assembler.validate_conversation_prose(prose)
+                for prose in knowledge
+            )
+        return validated
 
     def _record_for_recipients(
         self,

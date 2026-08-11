@@ -9,6 +9,7 @@ from living_world.cognition.consolidation import (
     SleepCognitiveConsolidator,
 )
 from living_world.cognition.conversation import ConversationResult, ConversationService
+from living_world.cognition.meeting import MeetingRequest, MeetingService
 from living_world.cognition.npc_cognition_client import ActionRequest
 from living_world.core.definition import Definition
 from living_world.definitions.yaml_loader import YAMLWorldDefinitionLoader
@@ -266,6 +267,18 @@ class SimulationEngine:
             topic=topic,
             max_turns=max_turns,
         )
+
+    def conduct_npc_meeting(
+        self,
+        *,
+        service: MeetingService,
+        request: MeetingRequest,
+    ) -> ConversationResult:
+        """Delegate an ephemeral NPC meeting to its explicit service."""
+
+        if not isinstance(service, MeetingService):
+            raise TypeError("service must be a MeetingService.")
+        return service.conduct(request)
 
     def step(self) -> None:
         self._scheduler.step()

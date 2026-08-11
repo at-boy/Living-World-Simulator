@@ -214,3 +214,34 @@ def test_zero_turns_and_engine_delegation_are_deterministic() -> None:
     assert result.turns == ()
     assert result.resolutions == ()
     assert client.contexts == []
+
+
+def test_explicit_speakers_and_holder_knowledge_are_engine_only() -> None:
+    client = RecordingClient(
+        [
+            NPCDecision("The river route feels calm.", None),
+            NPCDecision("The grove route feels familiar.", None),
+        ]
+    )
+    state = make_state()
+    result = make_service(client, state).conduct(
+        participant_ids=("npc_1", "npc_2"),
+        topic="choosing a route",
+        max_turns=2,
+        called_speaker_ids=("npc_2", "npc_1"),
+        participant_self_knowledge={
+            "npc_1": ("I prefer the grove.",),
+            "npc_2": ("I prefer the river.",),
+        },
+    )
+
+    assert tuple(turn.speaker_label for turn in result.turns) == ("Mira", "Erik")
+    assert [context.self_knowledge for context in client.contexts] == [
+        ("I prefer the river.",),
+        ("I prefer the grove.",),
+    ]
+    assert all(
+        "npc_" not in item
+        for context in client.contexts
+        for item in context.self_knowledge
+    )

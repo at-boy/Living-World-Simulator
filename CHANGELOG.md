@@ -4,6 +4,14 @@
 
 ### Added
 
+- Ephemeral `MeetingService` coordination for requester-initiated, bounded NPC
+  dialogue with engine-owned speaker calls and holder-scoped qualitative
+  perspectives. Meetings retain the existing conversation and action-gateway
+  boundaries without creating invitation, consent, relationship, event, or
+  governance state.
+- `MeetingRequest`, engine delegation, ADR-0012, and an executable NPC meeting
+  example.
+
 - Bounded `ConversationService` NPC dialogue with per-turn holder-scoped
   context, boundary-validated history, and recipient-only visible observations.
 - `ConversationResult` and `ConversationTurn` value objects, engine delegation,
