@@ -397,3 +397,23 @@ attribution. It is neither retained perception (`Memory`), learned experience
 world truth. Observation, memory, and experience record identifiers remain
 internal provenance rather than visible NPC text. This keeps later retrieval
 and context assembly constrained to NPC-valid cognitive records.
+
+## NPC Retrieval and Context Boundary
+
+NPC context assembly is now an explicit boundary rather than a convenience
+view over `WorldState`. The assembler uses an internal holder ID only while
+looking up holder-scoped cognition, then returns a context without internal
+entity identity or raw capability data.
+
+The initial retrieval policy is deterministic: it selects up to ten core
+memories, beliefs, and experiences by salience, tick, and record ID. Relevant
+relationships and knowledge claims are query-only, so a general context does
+not become an unrestricted dump of every cognitive record. All results are
+small prose projections with no provenance, metadata, confidence, or raw
+attributes.
+
+`NPCInformationBoundary` validates the complete result before handoff. It
+keeps engine objects, mappings, internal identifiers, and exact values copied
+from entity attributes out of future LLM input while retaining ordinary
+qualitative NPC language. Perception engines remain separate translators;
+their mandatory description filtering is the next dedicated boundary task.

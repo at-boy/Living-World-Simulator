@@ -133,6 +133,48 @@ Record a holder-scoped, source-attributed claim an NPC has heard or learned.
 
 ---
 
+## CognitiveRetriever
+
+**Purpose**
+
+Read-only holder-scoped selection of NPC cognitive interpretations.
+
+**Owns**
+
+- deterministic core ordering and query limits
+- visible projections of memory, belief, experience, relationship, and
+  knowledge records
+- case-insensitive topic relevance for relationships and knowledge
+
+**Does Not Own**
+
+- cognitive record mutation
+- direct access to a future LLM
+- exposure of IDs, provenance, metadata, confidence, or raw attributes
+
+---
+
+## NPCContextAssembler and NPCInformationBoundary
+
+**Purpose**
+
+Build and validate the limited context that a future NPC LLM may receive.
+
+**Owns**
+
+- display-name identity and prose capability descriptions
+- holder-scoped observation descriptions and cognitive retrieval projections
+- rejection of raw mappings, engine objects, internal IDs, and authoritative
+  entity-attribute numbers
+
+**Does Not Own**
+
+- authoritative world state or inspection output
+- perception-engine translation
+- LLM invocation or action handling
+
+---
+
 ## Relationship
 
 **Purpose**

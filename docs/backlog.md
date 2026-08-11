@@ -37,6 +37,8 @@ this completed scope.
 - Knowledge
 - Sleep-time cognitive consolidation creates memories, repeated-observation
   experiences, and candidate beliefs without asserting world truth.
+- Deterministic holder-scoped retrieval and NPC context assembly now project
+  only filtered cognitive interpretations.
 
 ---
 
@@ -49,7 +51,6 @@ this completed scope.
 - NPC conversations
 - NPC Cognition Protocol
 - NPC information boundary enforcement
-- Retrieval and context assembly for NPC cognition
 - NPC-only context filtering for perception and memory retrieval
 - LLM reasoning without direct world-truth authority
 

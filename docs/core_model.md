@@ -292,6 +292,28 @@ through `EntityManager`, recording `npc_activity_changed` through
 prose capability descriptions are not numeric engine skills. These attributes
 are not cognition inputs and do not grant an NPC direct access to world state.
 
+## NPC Retrieval and Context
+
+`NPCContextAssembler` is the only current composition point for NPC-facing
+context. It receives an internal holder ID only to look up the entity and
+returns display-name identity, prose self-knowledge, holder-scoped observation
+descriptions, core cognitive projections, and optional query retrieval. The
+returned `NPCContext` has no holder or entity ID and no raw capability or
+attribute mapping.
+
+`DeterministicCognitiveRetriever` is read-only. Its default policy returns up
+to ten core memories, beliefs, and experiences ordered by descending salience
+importance, descending tick, then ascending record ID. Relationships and
+knowledge claims require a non-empty topic match. `RetrievedCognition` exposes
+only kind, visible prose, importance, and core status; internal identifiers,
+provenance, metadata, confidence, and raw attributes remain engine-only.
+
+`NPCInformationBoundary` validates every completed context before it is
+returned. It rejects mappings, engine objects, known internal IDs, and numeric
+values copied from authoritative entity attributes, while allowing ordinary
+qualitative prose. Observation descriptions remain perception output; Task
+09a owns mandatory perception-description filtering.
+
 The scheduler is responsible only for calling `step(state)` in registration
 order and advancing the simulation tick.
 

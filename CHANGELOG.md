@@ -4,6 +4,11 @@
 
 ### Added
 
+- Deterministic holder-scoped cognitive retrieval and an NPC context assembly
+  contract with no holder IDs or raw capability mappings.
+- Mandatory NPC information-boundary validation for returned context,
+  including internal-ID and authoritative-number protection.
+
 - Immutable holder-scoped `Knowledge` claims with NPC-readable source
   attribution and internal provenance links.
 - SQLite persistence, legacy-load compatibility, engine composition, and an
