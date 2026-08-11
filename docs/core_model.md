@@ -96,6 +96,9 @@ for one known holder. This privileged projection includes internal provenance
 that must never be passed to NPC retrieval, context assembly, perception, or an
 LLM.
 
+See [HTTP inspection API](http_inspection_api.md) for startup instructions,
+the complete route list, request examples, and deployment cautions.
+
 Conversations, meetings, council calls and results, invitation feedback, and
 action resolutions are ephemeral service return values rather than
 `WorldState` records. The inspection API therefore does not advertise
