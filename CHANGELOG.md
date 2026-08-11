@@ -4,6 +4,11 @@
 
 ### Added
 
+- `DecisionEngine` and `NPCActionResolver` establish the NPC proposal-to-
+  application authority gateway. They revalidate offered action vocabulary,
+  keep actor IDs engine-only, and require a domain handler to validate before
+  manager-owned application and domain-event recording.
+
 - Loopback-only Ollama and llama.cpp NPC cognition clients that return strictly
   validated, untrusted speech and action proposals from filtered `NPCContext`.
 - Structured cognition request/response validation that restricts model action

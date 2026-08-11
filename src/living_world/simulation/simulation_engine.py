@@ -1,9 +1,14 @@
 from pathlib import Path
 
+from living_world.cognition.action_resolution import (
+    ActionResolution,
+    NPCActionResolver,
+)
 from living_world.cognition.consolidation import (
     CognitiveConsolidationSystem,
     SleepCognitiveConsolidator,
 )
+from living_world.cognition.npc_cognition_client import ActionRequest
 from living_world.core.definition import Definition
 from living_world.definitions.yaml_loader import YAMLWorldDefinitionLoader
 from living_world.managers.belief_manager import BeliefManager
@@ -229,6 +234,19 @@ class SimulationEngine:
         definitions = YAMLWorldDefinitionLoader().load(path)
         self._definitions.register_many(definitions)
         return definitions
+
+    def resolve_npc_action(
+        self,
+        *,
+        resolver: NPCActionResolver,
+        actor_id: str,
+        request: ActionRequest,
+    ) -> ActionResolution:
+        """Delegate one untrusted NPC action proposal to an engine-owned gateway."""
+
+        if not isinstance(resolver, NPCActionResolver):
+            raise TypeError("resolver must be an NPCActionResolver.")
+        return resolver.resolve(actor_id=actor_id, request=request)
 
     def step(self) -> None:
         self._scheduler.step()

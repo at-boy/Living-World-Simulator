@@ -58,6 +58,14 @@ grows.
 - Repositories own persistence.
 - LLMs interpret truth but never own truth.
 
+`DecisionEngine` may ask an NPC cognition client to propose from filtered
+`NPCContext` and offered `ActionOption` values, but its `NPCDecision` has no
+authoritative result. `NPCActionResolver` is called separately with an
+engine-only actor ID, validates the offered vocabulary again, and dispatches
+only an accepted proposal to a domain handler. Handlers own their manager
+mutations and domain events; the generic gateway owns neither domain rules nor
+generic history.
+
 `LLMPerceptionEngine` is one such interpretation boundary. It submits only a
 curated, provider-neutral perception request to a local model client, then
 constructs the authoritative observation identity, tick and evidence itself.

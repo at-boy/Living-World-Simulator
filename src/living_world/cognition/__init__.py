@@ -1,9 +1,16 @@
+from living_world.cognition.action_resolution import (
+    ActionResolution,
+    NPCActionHandler,
+    NPCActionHandlerContractError,
+    NPCActionResolver,
+)
 from living_world.cognition.consolidation import (
     DAY_LENGTH_TICKS,
     CognitiveConsolidationSystem,
     CognitiveConsolidator,
     SleepCognitiveConsolidator,
 )
+from living_world.cognition.decision_engine import DecisionEngine
 from living_world.cognition.information_boundary import NPCInformationBoundary
 from living_world.cognition.llama_cpp_cognition_client import LlamaCppCognitionClient
 from living_world.cognition.npc_cognition_client import (
@@ -29,13 +36,18 @@ __all__ = [
     "DAY_LENGTH_TICKS",
     "ActionOption",
     "ActionRequest",
+    "ActionResolution",
     "CognitiveConsolidationSystem",
     "CognitiveConsolidator",
     "CognitiveRetriever",
+    "DecisionEngine",
     "DeterministicCognitiveRetriever",
     "Knowledge",
     "KnowledgeManager",
     "LlamaCppCognitionClient",
+    "NPCActionHandler",
+    "NPCActionHandlerContractError",
+    "NPCActionResolver",
     "NPCCognitionClient",
     "NPCCognitionClientError",
     "NPCCognitionInvalidResponseError",

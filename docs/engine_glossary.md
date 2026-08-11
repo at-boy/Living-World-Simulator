@@ -175,6 +175,41 @@ Build and validate the limited context that a future NPC LLM may receive.
 
 ---
 
+## DecisionEngine
+
+**Purpose**
+
+Request and revalidate an untrusted NPC proposal against an offered action
+vocabulary.
+
+**Does Not Own**
+
+- actor identity
+- world state, managers, events, validation, or action application
+
+---
+
+## NPCActionResolver
+
+**Purpose**
+
+Provide the engine-owned boundary from an untrusted `ActionRequest` to a
+domain-specific handler.
+
+**Responsibilities**
+
+- revalidate offered action keys and target labels
+- call handler validation before application
+- return rejected resolutions without a generic mutation or event
+
+**Does Not Own**
+
+- default domain action rules
+- generic action events
+- LLM invocation or cognition context
+
+---
+
 ## Relationship
 
 **Purpose**

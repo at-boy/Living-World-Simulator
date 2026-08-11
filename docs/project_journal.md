@@ -443,3 +443,17 @@ optional action request. Parsing is strict and permits only offered action keys
 and target labels. This is deliberately vocabulary validation, not action
 validation or execution. The forthcoming action gateway remains the only owner
 of simulation authority.
+
+## NPC Cognition Protocol and Action Gateway
+
+NPC cognition now ends in a proposal boundary. `DecisionEngine` receives only
+an already filtered `NPCContext` and offered `ActionOption` vocabulary, then
+rejects even directly constructed client decisions that use an unoffered action
+or target. It neither receives an actor ID nor applies a result.
+
+`NPCActionResolver` is separately called by the engine with the internal actor
+ID. It repeats vocabulary validation and requires a domain handler to accept a
+non-mutating validation step before application. The generic gateway has no
+default domain behavior and records no generic event; a successful domain
+handler owns its manager mutation and one domain event. This preserves the
+rule that LLMs reason and propose while simulation validates and applies.

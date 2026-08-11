@@ -46,7 +46,8 @@ this completed scope.
 
 - llama.cpp integration
 - Local LLM client
-- Decision engine
+- Decision engine and proposal-to-action authority gateway are implemented;
+  future domain actions must register explicit simulation-owned handlers.
 - Council meetings
 - NPC conversations
 - NPC Cognition Protocol
