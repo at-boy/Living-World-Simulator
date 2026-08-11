@@ -8,62 +8,65 @@
   (Task 14). Do not bump it during ordinary feature tasks.
 - `CHANGELOG.md` receives feature entries as tasks are completed; final release
   versioning is owned by Task 14.
-- The implementation work through Task 13g is committed. The latest relevant
-  commit is `3fd1cb2 Clarify local cognition response shape`.
+- The implementation work through Task 13m is committed. The latest relevant
+  commit is `4d8025f Add cognition shaped council scenario`.
 
-At the completion of Task 13g, validation was:
+At the completion of Task 13m, validation was:
 
 | Command | Result |
 | --- | --- |
-| `make` | Passed: Ruff, Black, 339 pytest tests, numbered examples 001–022 |
+| `make` | Passed: Ruff, Black, 389 pytest tests, numbered examples 001–022 |
 | `make examples` | Passed: numbered examples 001–022 |
 | `git diff --check` | Passed |
 
 Always rerun suitable validation on the current worktree; these figures are a
 baseline, not a substitute for review.
 
-## Current worktree and planned pause
+## Completed council-quality sequence
 
-The following documentation artifacts were deliberately prepared but were not
-implementation work. They describe the next council-quality tasks:
+Tasks 13h–13m were implemented, independently reviewed, validated, reported,
+and committed in sequence:
 
 1. **Task 13h — deterministic council turn rotation**
-   - Add an explicit, validated `CouncilCall.turn_order_offset: int = 0`.
-   - Rotate only confirmed attendees deterministically; do not add randomness
+   - Added an explicit, validated `CouncilCall.turn_order_offset: int = 0`.
+   - Rotates only confirmed attendees deterministically; no randomness
      or LLM-controlled scheduling.
 2. **Task 13i — NPC dialogue opening guidance**
-   - Ensure an agenda is not represented as previous speech.
-   - Give an opening speaker guidance to state a direct position rather than
+   - Ensures an agenda is not represented as previous speech.
+   - Gives an opening speaker guidance to state a direct position rather than
      replying with phrases such as “I see” to nobody.
 3. **Task 13j — manual council scenario and safe context tracing**
-   - Improve the local Ollama/llama.cpp council demos with an opaque-ID
+   - Improved the local Ollama/llama.cpp council demos with an opaque-ID
      scenario, at least three meaningful actions, longer discussion, and
      nonzero deterministic turn offset.
-   - Add opt-in safe diagnostic context output only: filtered `NPCContext` and
+   - Added opt-in safe diagnostic context output only: filtered `NPCContext` and
      offered actions, never raw world state, IDs, hidden records, or provider
      secrets.
 4. **Task 13k — settlement-wide council scenario**
-   - Add a shared manual scenario catalog and a concern recognized as requiring
+   - Added a shared manual scenario catalog and a concern recognized as requiring
      a town decision rather than originating as the caller's personal issue.
-   - Keep the caller as an engine-selected coordinator, not an authoritative
+   - Keeps the caller as an engine-selected coordinator, not an authoritative
      representative of consensus or owner of the agenda.
 5. **Task 13l — opposing-groups council scenario**
-   - Demonstrate eligible NPCs with opposed and cross-cutting affiliations,
+   - Demonstrates eligible NPCs with opposed and cross-cutting affiliations,
      several plausible actions, and no forced model decision.
-   - Defer factions, voting weights, reputation effects, and political
+   - Defers factions, voting weights, reputation effects, and political
      consequences.
 6. **Task 13m — cognition-shaped council scenario**
-   - Seed holder-scoped observations, memories, experiences, beliefs, and
+   - Seeds holder-scoped observations, memories, experiences, beliefs, and
      social knowledge through existing manager-owned interfaces.
-   - Use the safe context trace to prove per-NPC isolation while allowing those
+   - Uses the safe context trace to prove per-NPC isolation while allowing those
      interpretations to influence, but never predetermine, opinions.
 
-The plan ordering in `docs/subagent_execution_plan/README.md` places 13h–13m
-before the remaining Task 13a HTTP-inspection coverage and Task 14 release
-closeout.
+Task 13m required a documented boundary amendment before implementation so the
+manual provider entry points could invoke one shared manager-owned runtime
+preparation path. Its first delivery then required one correction so the
+holder-scoped NPC-relationship record actually reached Rhea's filtered context
+through a manual-only retrieval adapter.
 
-**The user explicitly requested that no task be started yet.** Wait for a new
-instruction before delegating or implementing Tasks 13h–13m.
+The remaining sequence is Task 13a HTTP-inspection coverage followed by Task 14
+release closeout. Neither has been started under the authorization for Tasks
+13h–13m.
 
 ## Council decisions already established
 
@@ -101,8 +104,8 @@ The user wants the manual council output to be a useful debugging tool:
 - attendance and caller/invitee roles;
 - every invitee's attendance decision and private debug reason;
 - debate dialogue and votes;
-- eventually a safe opt-in view of exactly the filtered context/action choices
-  sent to cognition.
+- a safe opt-in view of exactly the filtered context/action choices sent to
+  cognition.
 
 The user also observed these limitations, which are the reason for 13h–13j:
 fixed turn order, too-short debate, an unnatural caller opening, and an
@@ -126,8 +129,8 @@ task without expanding Task 13j silently.
 - The user authorizes the orchestrator to review, request corrections, delegate
   the next documented task, and commit only reviewed, ready work.
 
-## Next work after the pause is lifted
+## Next work
 
-Read the task specifications and saved prompts before action. The anticipated
-sequence is 13h -> 13i -> 13j -> 13k -> 13l -> 13m -> 13a -> 14, subject to
-user direction and any needed plan amendments.
+Wait for user authorization before starting Task 13a. Then read its
+specification, recheck the clean worktree, and proceed one isolated task at a
+time: 13a -> 14, subject to user direction and any needed plan amendments.
