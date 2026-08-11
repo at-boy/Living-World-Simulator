@@ -51,6 +51,9 @@ this completed scope.
 - Council meetings
 - NPC conversations are implemented as bounded, visible recipient observations
   with holder-scoped context and the existing action gateway.
+- NPC meeting coordination: an NPC can request bounded dialogue with one or
+  more NPCs, while the simulation may call eligible participants to speak in a
+  deterministic order without exposing invitation or participant IDs to LLMs.
 - NPC Cognition Protocol
 - NPC information boundary enforcement
 - NPC-only context filtering for perception and memory retrieval
@@ -89,6 +92,26 @@ These are intentionally out of scope for the current milestone.
   arbitrary attributes.
 - Web administration interface, separately authorized from the read-only
   inspector and subject to explicit command/action authorization design.
+- **Council opposition and political realignment:** NPCs may later organize
+  against a council conclusion, form factions, withdraw support, or leave to
+  establish a settlement. This requires a dedicated post-v0.5 design for
+  collective intent, relationship/reputation consequences, membership changes,
+  resources, population movement, construction, and settlement authority; a
+  council conversation or declined invitation must never cause these outcomes
+  directly.
+- **Institution-specific meeting and decision rules:** settlements, towns,
+  organizations, and future groups may define their own eligible attendees,
+  quorum, notice, voting threshold, delegated authority, and categories of
+  rules/tasks that a meeting may approve. This needs an engine-owned governance
+  policy model and auditable decision records; it must not be inferred from a
+  generic conversation or council transcript.
+- **Invitation claims, deception, and contested participation:** an NPC may
+  later claim that it invited, excluded, or spoke for another NPC, including
+  intentionally deceptive claims. The engine must distinguish an actual
+  delivered invitation/attendance record from an NPC-visible claim, observation,
+  memory, belief, or rumour about it. This requires a dedicated social
+  communication and trust/reputation design; an LLM assertion must never alter
+  verified attendance or governance eligibility.
 - Experience validation and confidence weighting
 - Long-term memory decay and retrieval ranking
 

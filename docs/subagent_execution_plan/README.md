@@ -48,9 +48,10 @@ NPC interpretation until a simulation-owned handler validates an action.
 15. [10 Local LLM cognition client](10_local_llm_cognition_client.md)
 16. [11 NPC Cognition Protocol and action gateway](11_npc_cognition_protocol_action_gateway.md)
 17. [12 NPC conversations](12_npc_conversations.md)
-18. [13 Council meetings](13_council_meetings.md)
-19. [13a HTTP inspection coverage for v0.4–v0.5](13a_http_inspection_coverage.md)
-20. [14 v0.5 release closeout](14_v05_release_closeout.md)
+18. [12a NPC meeting coordination and directed dialogue](12a_npc_meeting_coordination.md)
+19. [13 Council meetings](13_council_meetings.md)
+20. [13a HTTP inspection coverage for v0.4–v0.5](13a_http_inspection_coverage.md)
+21. [14 v0.5 release closeout](14_v05_release_closeout.md)
 
 ## Deferred post-v0.5 task candidates
 

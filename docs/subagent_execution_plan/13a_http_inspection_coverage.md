@@ -7,7 +7,7 @@ AI-layer records, while preserving its strict separation from NPC-facing data.
 
 ## Context Needed
 
-- Create: `examples/022_http_inspection.py` and
+- Create: `examples/023_http_inspection.py` and
   `docs/subagent_execution_plan/13a_http_inspection_coverage-report.md`.
 - Edit: `src/living_world/api/inspection.py`, `src/living_world/api/server.py`,
   `tests/test_inspection_api.py`, `Makefile`, `docs/core_model.md`,
