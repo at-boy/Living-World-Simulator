@@ -10,6 +10,11 @@ from living_world.cognition.consolidation import (
     CognitiveConsolidator,
     SleepCognitiveConsolidator,
 )
+from living_world.cognition.conversation import (
+    ConversationResult,
+    ConversationService,
+    ConversationTurn,
+)
 from living_world.cognition.decision_engine import DecisionEngine
 from living_world.cognition.information_boundary import NPCInformationBoundary
 from living_world.cognition.llama_cpp_cognition_client import LlamaCppCognitionClient
@@ -40,6 +45,9 @@ __all__ = [
     "CognitiveConsolidationSystem",
     "CognitiveConsolidator",
     "CognitiveRetriever",
+    "ConversationResult",
+    "ConversationService",
+    "ConversationTurn",
     "DecisionEngine",
     "DeterministicCognitiveRetriever",
     "Knowledge",

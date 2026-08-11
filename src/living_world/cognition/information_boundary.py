@@ -32,6 +32,10 @@ class NPCInformationBoundary:
             context.current_perceptions,
             "current_perceptions",
         )
+        self._validate_prose_collection(
+            context.conversation_history,
+            "conversation_history",
+        )
         if not isinstance(context.core_cognition, tuple):
             raise TypeError("NPC context core_cognition must be a tuple.")
         if not isinstance(context.retrieved_information, tuple):
@@ -46,6 +50,12 @@ class NPCInformationBoundary:
                         f"NPC context {field_name} must contain RetrievedCognition."
                     )
                 self._validate_prose(record.text, f"{field_name} text")
+
+    def validate_conversation_prose(self, value: object) -> str:
+        """Validate one visible conversation item before it reaches an NPC."""
+
+        self._validate_prose(value, "conversation prose")
+        return value
 
     def _validate_prose_collection(self, value: object, field_name: str) -> None:
         if not isinstance(value, tuple):

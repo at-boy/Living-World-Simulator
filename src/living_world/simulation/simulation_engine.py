@@ -8,6 +8,7 @@ from living_world.cognition.consolidation import (
     CognitiveConsolidationSystem,
     SleepCognitiveConsolidator,
 )
+from living_world.cognition.conversation import ConversationResult, ConversationService
 from living_world.cognition.npc_cognition_client import ActionRequest
 from living_world.core.definition import Definition
 from living_world.definitions.yaml_loader import YAMLWorldDefinitionLoader
@@ -247,6 +248,24 @@ class SimulationEngine:
         if not isinstance(resolver, NPCActionResolver):
             raise TypeError("resolver must be an NPCActionResolver.")
         return resolver.resolve(actor_id=actor_id, request=request)
+
+    def conduct_npc_conversation(
+        self,
+        *,
+        service: ConversationService,
+        participant_ids: tuple[str, ...],
+        topic: str,
+        max_turns: int,
+    ) -> ConversationResult:
+        """Delegate bounded NPC dialogue to its explicit conversation service."""
+
+        if not isinstance(service, ConversationService):
+            raise TypeError("service must be a ConversationService.")
+        return service.conduct(
+            participant_ids=participant_ids,
+            topic=topic,
+            max_turns=max_turns,
+        )
 
     def step(self) -> None:
         self._scheduler.step()

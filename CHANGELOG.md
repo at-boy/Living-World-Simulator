@@ -4,6 +4,11 @@
 
 ### Added
 
+- Bounded `ConversationService` NPC dialogue with per-turn holder-scoped
+  context, boundary-validated history, and recipient-only visible observations.
+- `ConversationResult` and `ConversationTurn` value objects, engine delegation,
+  ADR-0011, and an executable NPC-conversations example.
+
 - `DecisionEngine` and `NPCActionResolver` establish the NPC proposal-to-
   application authority gateway. They revalidate offered action vocabulary,
   keep actor IDs engine-only, and require a domain handler to validate before

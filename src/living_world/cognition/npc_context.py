@@ -27,6 +27,7 @@ class NPCContext:
     current_perceptions: tuple[str, ...]
     core_cognition: tuple[RetrievedCognition, ...]
     retrieved_information: tuple[RetrievedCognition, ...]
+    conversation_history: tuple[str, ...] = ()
 
 
 class NPCContextAssembler:
@@ -57,6 +58,7 @@ class NPCContextAssembler:
         capability_descriptions: tuple[str, ...] = (),
         query: RetrievalQuery | None = None,
         max_perceptions: int | None = None,
+        conversation_history: tuple[str, ...] = (),
     ) -> NPCContext:
         if not isinstance(holder_id, str):
             raise TypeError("holder_id must be a string.")
@@ -66,6 +68,7 @@ class NPCContextAssembler:
         if holder is None:
             raise ValueError("holder_id must identify a known entity.")
         self._validate_capability_descriptions(capability_descriptions)
+        self._validate_conversation_history(conversation_history)
         self._validate_max_perceptions(max_perceptions)
         if query is not None and query.holder_id != holder_id:
             raise ValueError("Retrieval query holder_id must match context holder_id.")
@@ -93,9 +96,22 @@ class NPCContextAssembler:
             retrieved_information=(
                 () if query is None else self._retriever.retrieve(query)
             ),
+            conversation_history=conversation_history,
         )
         self._boundary.validate_context(context)
         return context
+
+    def has_known_entity(self, entity_id: str) -> bool:
+        """Return whether an internal entity identifier exists in this world."""
+
+        if not isinstance(entity_id, str):
+            raise TypeError("entity_id must be a string.")
+        return entity_id in self._state.entities
+
+    def validate_conversation_prose(self, prose: object) -> str:
+        """Validate visible conversation prose without exposing world state."""
+
+        return self._boundary.validate_conversation_prose(prose)
 
     @staticmethod
     def _validate_capability_descriptions(value: object) -> None:
@@ -117,3 +133,13 @@ class NPCContextAssembler:
             raise TypeError("max_perceptions must be an integer or None.")
         if value < 0:
             raise ValueError("max_perceptions cannot be negative.")
+
+    @staticmethod
+    def _validate_conversation_history(value: object) -> None:
+        if not isinstance(value, tuple):
+            raise TypeError("conversation_history must be a tuple of prose strings.")
+        for item in value:
+            if not isinstance(item, str):
+                raise TypeError("conversation_history must contain only prose strings.")
+            if not item.strip():
+                raise ValueError("conversation_history cannot contain empty prose.")

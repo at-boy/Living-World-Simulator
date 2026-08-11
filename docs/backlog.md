@@ -49,7 +49,8 @@ this completed scope.
 - Decision engine and proposal-to-action authority gateway are implemented;
   future domain actions must register explicit simulation-owned handlers.
 - Council meetings
-- NPC conversations
+- NPC conversations are implemented as bounded, visible recipient observations
+  with holder-scoped context and the existing action gateway.
 - NPC Cognition Protocol
 - NPC information boundary enforcement
 - NPC-only context filtering for perception and memory retrieval

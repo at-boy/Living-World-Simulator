@@ -141,3 +141,28 @@ def test_assembler_rejects_unsafe_direct_observation_descriptions() -> None:
 
     with pytest.raises(ValueError, match="raw attribute"):
         NPCContextAssembler(state).assemble(holder_id="npc_1")
+
+
+def test_assembler_includes_only_validated_conversation_history() -> None:
+    state = make_state()
+    assembler = NPCContextAssembler(state)
+
+    context = assembler.assemble(
+        holder_id="npc_1",
+        conversation_history=("Conversation topic: the old oak.", "It seems calm."),
+    )
+
+    assert context.conversation_history == (
+        "Conversation topic: the old oak.",
+        "It seems calm.",
+    )
+    with pytest.raises(ValueError, match="internal IDs"):
+        assembler.assemble(
+            holder_id="npc_1",
+            conversation_history=("I saw observation_1.",),
+        )
+    with pytest.raises(ValueError, match="numeric values"):
+        assembler.assemble(
+            holder_id="npc_1",
+            conversation_history=("The skill is 80.",),
+        )

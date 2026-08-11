@@ -65,6 +65,7 @@ def test_serializes_only_npc_context_and_offered_action_vocabulary() -> None:
                 "text": "I remember the oak is sturdy.",
             }
         ],
+        "conversation_history": [],
         "current_perceptions": ["A mature oak stands nearby."],
         "identity": "Erik",
         "retrieved_information": [],

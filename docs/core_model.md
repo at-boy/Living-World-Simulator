@@ -156,6 +156,11 @@ and provenance without exposing that data as the NPC-facing perception.
 the perception engine and again when it is projected into `NPCContext`; the
 latter path has no access to the observation's evidence or metadata.
 
+`ConversationService` records a validated NPC utterance as an observation for
+each other conversation participant, with empty evidence and metadata. It does
+not create cognitive records or events directly; ordinary consolidation may
+later make a visible observation memorable.
+
 History represents objective facts about the world and recorded
 perceptions of the world, forming the foundation for future systems such
 as:

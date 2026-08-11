@@ -56,6 +56,35 @@ def test_boundary_rejects_internal_ids_and_authoritative_numbers() -> None:
         boundary.validate_context(_context("My skill is 80."))
 
 
+def test_boundary_rejects_unsafe_conversation_history_directly() -> None:
+    state = WorldState()
+    state.entities["entity_000001"] = Entity(
+        id="entity_000001",
+        definition_key="tree",
+        name="Old Oak",
+        attributes={"wood": 120},
+    )
+    boundary = NPCInformationBoundary(state)
+
+    internal_id_context = _context("A calm memory.")
+    object.__setattr__(
+        internal_id_context,
+        "conversation_history",
+        ("Erik: I visited entity_000001.",),
+    )
+    with pytest.raises(ValueError, match="internal IDs"):
+        boundary.validate_context(internal_id_context)
+
+    numeric_context = _context("A calm memory.")
+    object.__setattr__(
+        numeric_context,
+        "conversation_history",
+        ("Erik: The oak has 120 branches.",),
+    )
+    with pytest.raises(ValueError, match="numeric values"):
+        boundary.validate_context(numeric_context)
+
+
 def test_boundary_rejects_structural_engine_data() -> None:
     state = WorldState()
     context = _context("A calm memory.")

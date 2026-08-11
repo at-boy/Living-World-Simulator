@@ -210,6 +210,29 @@ domain-specific handler.
 
 ---
 
+## ConversationService
+
+**Purpose**
+
+Conduct bounded, deterministic visible dialogue between known NPC entities.
+
+**Responsibilities**
+
+- assemble a fresh holder-scoped context for each speaker
+- pass only validated topic and earlier visible utterances as conversation history
+- record each utterance as an empty-evidence, empty-metadata observation for
+  other participants
+- submit any proposal to `NPCActionResolver` without revealing its result to
+  the cognition client
+
+**Does Not Own**
+
+- private cognition sharing, memories, beliefs, experiences, relationships, or
+  events
+- action authority, domain handlers, council policy, or governance
+
+---
+
 ## Relationship
 
 **Purpose**

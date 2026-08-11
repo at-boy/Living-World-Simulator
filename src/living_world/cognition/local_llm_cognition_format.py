@@ -65,6 +65,7 @@ def serialize_decision_request(
         "retrieved_information": tuple(
             _serialize_cognition(item) for item in context.retrieved_information
         ),
+        "conversation_history": context.conversation_history,
         "actions": tuple(
             {
                 "key": action.key,

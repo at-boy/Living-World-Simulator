@@ -457,3 +457,18 @@ non-mutating validation step before application. The generic gateway has no
 default domain behavior and records no generic event; a successful domain
 handler owns its manager mutation and one domain event. This preserves the
 rule that LLMs reason and propose while simulation validates and applies.
+
+## NPC Conversations
+
+Bounded NPC conversations now use a fresh, holder-scoped context for every
+turn. The model receives only a validated topic preamble and earlier visible
+utterance prose; it never receives participant identifiers, transcript records,
+observation evidence, metadata, private cognition from other participants, raw
+state, or action resolutions.
+
+An utterance becomes a recipient observation with empty evidence and metadata,
+not an immediate fact or cognitive record. Normal consolidation may later turn
+that visible perception into memory. Any proposed action remains an untrusted
+proposal sent through the existing engine-owned action gateway, so conversations
+add no default domain action, event, relationship, belief, experience, or
+council policy.
