@@ -2,6 +2,14 @@
 
 import argparse
 
+from council_scenarios import (
+    DEFAULT_SCENARIO_NAME,
+    JOURNEY,
+    SCENARIO_NAMES,
+    ManualCouncilScenario,
+    get_scenario,
+)
+
 from living_world.cognition.action_resolution import ActionResolution, NPCActionResolver
 from living_world.cognition.conversation import ConversationService
 from living_world.cognition.council import (
@@ -29,29 +37,25 @@ from living_world.core.entity import Entity
 from living_world.core.relationship import Relationship
 from living_world.simulation.simulation_engine import SimulationEngine
 
-PERSPECTIVES: tuple[tuple[str, str], ...] = (
-    ("Aster", "I favour careful preparation before travel."),
-    ("Bryn", "I favour a swift route while daylight lasts."),
-    ("Cato", "I favour conserving supplies for later."),
-    ("Dara", "I favour preparing first so every concern can shape the plan."),
-    ("Eris", "I favour the bold daybreak route that benefits the settlement."),
+PERSPECTIVES = tuple(
+    (participant.name, participant.self_knowledge)
+    for participant in JOURNEY.participants
 )
-PARTICIPANT_IDS = tuple(f"entity_{number}" for number in range(401, 406))
-ORGANIZATION_ID = "organization_301"
-MAX_ROUNDS = 15
-TURN_ORDER_OFFSET = 2
-ACTIONS = (
-    ActionOption("prepare_then_travel", "Prepare supplies before taking the journey."),
-    ActionOption("travel_at_daybreak", "Take the quickest route at daybreak."),
-    ActionOption("postpone_journey", "Postpone the journey and conserve supplies."),
-)
+PARTICIPANT_IDS = JOURNEY.participant_ids
+ORGANIZATION_ID = JOURNEY.organization_id
+MAX_ROUNDS = JOURNEY.max_rounds
+TURN_ORDER_OFFSET = JOURNEY.turn_order_offset
+ACTIONS = JOURNEY.actions
 
 
 class ManualCouncilActionHandler:
     """Accept offered demonstration choices without mutating simulation state."""
 
+    def __init__(self, actions: tuple[ActionOption, ...] = ACTIONS) -> None:
+        self._action_keys = frozenset(action.key for action in actions)
+
     def supports(self, action_key: str) -> bool:
-        return action_key in {action.key for action in ACTIONS}
+        return action_key in self._action_keys
 
     def validate(self, *, actor_id: str, request: ActionRequest) -> ActionResolution:
         return ActionResolution(
@@ -71,32 +75,49 @@ def main() -> None:
     parser.add_argument(
         "--show-context", action="store_true", help="print filtered model requests"
     )
+    parser.add_argument(
+        "--scenario",
+        choices=SCENARIO_NAMES,
+        default=DEFAULT_SCENARIO_NAME,
+        help="select a deterministic manual council scenario",
+    )
     args = parser.parse_args()
     _run(
         LlamaCppCognitionClient(model="qwen3-4b-q4-k-m"),
         show_context=args.show_context,
+        scenario=get_scenario(args.scenario),
     )
 
 
-def _run(client: NPCCognitionClient, *, show_context: bool = False) -> None:
+def _run(
+    client: NPCCognitionClient,
+    *,
+    show_context: bool = False,
+    scenario: ManualCouncilScenario = JOURNEY,
+) -> None:
     recording_client = RecordingCognitionClient(client)
     engine = SimulationEngine()
-    engine.state.entities[ORGANIZATION_ID] = Entity(
-        ORGANIZATION_ID, "organization", "Council"
+    engine.state.entities[scenario.organization_id] = Entity(
+        scenario.organization_id, "organization", scenario.organization_name
     )
-    for index, (identifier, (name, _)) in enumerate(
-        zip(PARTICIPANT_IDS, PERSPECTIVES, strict=True), start=1
-    ):
-        engine.state.entities[identifier] = Entity(identifier, "npc", name)
+    for index, participant in enumerate(scenario.participants, start=1):
+        engine.state.entities[participant.identifier] = Entity(
+            participant.identifier, "npc", participant.name
+        )
         relationship_id = f"relationship_{index + 500}"
         engine.state.relationships[relationship_id] = Relationship(
-            relationship_id, "member_of", identifier, ORGANIZATION_ID
+            relationship_id,
+            "member_of",
+            participant.identifier,
+            scenario.organization_id,
         )
     assembler = NPCContextAssembler(engine.state)
     decisions = DecisionEngine(recording_client)
-    resolver = NPCActionResolver(ACTIONS, (ManualCouncilActionHandler(),))
+    resolver = NPCActionResolver(
+        scenario.actions, (ManualCouncilActionHandler(scenario.actions),)
+    )
     conversation = ConversationService(
-        assembler, decisions, resolver, engine.observations, ACTIONS
+        assembler, decisions, resolver, engine.observations, scenario.actions
     )
     council = CouncilService(
         MeetingService(conversation),
@@ -107,20 +128,16 @@ def _run(client: NPCCognitionClient, *, show_context: bool = False) -> None:
     )
     result = council.convene(
         call=CouncilCall(
-            PARTICIPANT_IDS[0],
-            ORGANIZATION_ID,
-            PARTICIPANT_IDS[1:],
-            CouncilAgenda(
-                "how the settlement should approach a necessary risky journey", ACTIONS
-            ),
-            MAX_ROUNDS,
+            scenario.participant_ids[0],
+            scenario.organization_id,
+            scenario.participant_ids[1:],
+            CouncilAgenda(scenario.agenda, scenario.actions),
+            scenario.max_rounds,
             participant_self_knowledge={
-                identifier: (perspective,)
-                for identifier, (_, perspective) in zip(
-                    PARTICIPANT_IDS, PERSPECTIVES, strict=True
-                )
+                participant.identifier: (participant.self_knowledge,)
+                for participant in scenario.participants
             },
-            turn_order_offset=TURN_ORDER_OFFSET,
+            turn_order_offset=scenario.turn_order_offset,
         )
     )
     print(format_council_result(result))

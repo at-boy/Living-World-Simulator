@@ -569,3 +569,13 @@ prior dialogue as context rather than an utterance to acknowledge. It asks an
 NPC to begin with a direct position, then limits any reply to labelled visible
 turns once they exist. This changes no context assembly, response schema,
 parser acceptance, proposal authority, or generated model text after the fact.
+
+The Ollama and llama.cpp council entry points now share an immutable,
+manual-example-only scenario catalog and deterministic `--scenario` names. The
+existing journey remains the default. The settlement scenario frames a visible
+public-well failure as a shared condition requiring a decision, while explicitly
+describing the engine-appointed caller as only the meeting coordinator rather
+than the issue's author, a representative of unanimous action support, or a
+special authority. Its three alternatives remain untrusted proposals routed to
+the accepted no-mutation demonstration gateway. Collective agenda discovery,
+institutional governance, persistence, and world mutation remain deferred.

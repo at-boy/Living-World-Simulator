@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add a shared immutable manual council-scenario catalog and deterministic
+  `--scenario settlement` demonstration that separates a settlement-wide issue
+  from the engine-appointed caller's procedural coordinator role.
 - Expand both opt-in local council examples into longer five-NPC scenarios with
   three agenda choices, deterministic turn rotation, opaque engine IDs, an
   accepted no-mutation gateway demonstration, and an opt-in safe request trace.

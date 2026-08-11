@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import importlib.util
+import sys
 from pathlib import Path
 from types import ModuleType
 
@@ -35,6 +36,9 @@ _EXAMPLE_PATHS = (
 def _load_example(path: Path) -> ModuleType:
     """Load an example module without calling its opt-in ``main`` function."""
 
+    manual_path = str(path.parent.resolve())
+    if manual_path not in sys.path:
+        sys.path.insert(0, manual_path)
     spec = importlib.util.spec_from_file_location(path.stem, path)
     assert spec is not None
     assert spec.loader is not None
@@ -279,3 +283,12 @@ def test_normal_result_rendering_remains_concise_without_context(path: Path) -> 
     assert "Attendance" in output
     assert "Filtered cognition request context" not in output
     assert '"identity"' not in output
+
+
+@pytest.mark.parametrize("path", _EXAMPLE_PATHS)
+def test_default_scenario_remains_the_existing_journey(path: Path) -> None:
+    module = _load_example(path)
+
+    assert module.DEFAULT_SCENARIO_NAME == "journey"
+    assert module.ACTIONS == module.get_scenario("journey").actions
+    assert module.PARTICIPANT_IDS == module.get_scenario("journey").participant_ids

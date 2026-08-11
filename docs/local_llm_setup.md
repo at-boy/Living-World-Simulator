@@ -55,6 +55,13 @@ The opt-in five-NPC council demonstration uses the same loopback server:
 PYTHONPATH=src .venv/bin/python examples/manual/ollama_council_meeting.py
 ```
 
+The journey remains the default. Select the settlement-wide public-well
+scenario explicitly with `--scenario settlement`:
+
+```bash
+PYTHONPATH=src .venv/bin/python examples/manual/ollama_council_meeting.py --scenario settlement
+```
+
 Add `--show-context` to print the filtered `NPCContext` and offered action
 vocabulary recorded before each provider call:
 
@@ -101,6 +108,12 @@ The corresponding five-NPC council demonstration is:
 PYTHONPATH=src .venv/bin/python examples/manual/llama_cpp_council_meeting.py
 ```
 
+The same deterministic scenario catalog is available here:
+
+```bash
+PYTHONPATH=src .venv/bin/python examples/manual/llama_cpp_council_meeting.py --scenario settlement
+```
+
 The same safe request trace is available explicitly:
 
 ```bash
@@ -134,9 +147,14 @@ transports and do not require a model server; the manual examples are optional
 smoke tests for a locally running server.
 
 The council demonstrations are deliberately opt-in and are not part of `make`.
-They show five differentiated, attendance-friendly perspectives considering
-three qualitative journey alternatives over a longer, deterministically
-rotated discussion. A manual-only gateway handler can accept a selected
+They share an immutable, manual-only scenario catalog. The default journey
+shows five differentiated perspectives considering three qualitative
+alternatives. The `settlement` scenario instead presents a visible public-well
+failure that requires a council decision. Its engine-selected caller only
+coordinates the meeting: the caller did not originate the condition, does not
+represent unanimous support for an action, and receives no special decision
+authority. Both use a longer, deterministically rotated discussion. A
+manual-only gateway handler can accept a selected
 alternative while explicitly leaving world state unchanged. A real model may
 nevertheless decline, abstain, choose any offered alternative, or fail to
 return schema-valid JSON. Such a response is non-authoritative.
