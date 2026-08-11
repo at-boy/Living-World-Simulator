@@ -16,7 +16,10 @@ Everything that happens is an Event.
 - Relationship
 - Event
 - Observation
+- Memory
 - Belief
+- Experience
+- NPCRelationship
 - System
 
 These are the only concepts understood by the simulation engine.
@@ -150,9 +153,20 @@ as:
 - debugging
 - simulation replay
 
-A belief is an NPC-specific interpretation derived from observations,
-memories, and lived experience. It is intentionally distinct from the
-objective simulator truth represented in events and entity state.
+A memory is a holder-scoped retained interpretation of a visible observation.
+An experience is holder-scoped learning from repeated observations, while a
+belief is a holder-scoped proposition that may be wrong. `NPCRelationship` is
+likewise an NPC's interpretation, not a generic graph `Relationship`. These
+records use `CognitiveSalience`: importance at or above `0.6` is important;
+core is an explicit state requiring importance at or above `0.8`.
+
+`CognitiveConsolidationSystem` runs after `ScheduleSystem`. It processes only
+entities whose engine-owned `active_activity` is `"sleeping"`. A cognitive day
+is 24 ticks: at tick 24 through 47 it considers only observations from ticks 0
+through 23. It retains observation IDs solely as internal provenance, derives
+all visible prose from `Observation.description`, and never reads evidence,
+raw attributes, event internals, or world truth into cognition. Existing
+provenance makes repeated consolidation idempotent.
 
 ## Simulation
 
@@ -198,6 +212,9 @@ Current generic systems include:
 - `ScheduleSystem`, which derives a generic NPC entity's engine-owned
   `active_activity` from validated inclusive-start, exclusive-end schedule
   entries and records only material activity transitions.
+- `CognitiveConsolidationSystem`, which creates holder-scoped memories,
+  repeated-observation experiences, and candidate beliefs from completed-day
+  visible observations while an NPC is sleeping.
 
 Regions and terrain are ordinary entities. A `contains` relationship may link
 a region to terrain it contains, while `adjacent` may link peer entities. These
@@ -297,6 +314,10 @@ The engine composes the runtime by constructing:
 - RelationshipManager
 - EventManager
 - ObservationManager
+- MemoryManager
+- BeliefManager
+- ExperienceManager
+- NPCRelationshipManager
 - SimulationScheduler
 
 The engine exposes a simplified API for running simulations while

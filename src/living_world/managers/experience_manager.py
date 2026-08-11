@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from living_world.core.experience import Experience
+from living_world.core.memory import CognitiveSalience
 from living_world.state.world_state import WorldState
 
 
@@ -24,6 +25,7 @@ class ExperienceManager:
         supporting_memories: tuple[str, ...] | None = None,
         supporting_beliefs: tuple[str, ...] | None = None,
         metadata: dict[str, object] | None = None,
+        salience: CognitiveSalience | None = None,
     ) -> Experience:
         """Record a new immutable experience."""
 
@@ -46,6 +48,7 @@ class ExperienceManager:
             supporting_memories=supporting_memories or (),
             supporting_beliefs=supporting_beliefs or (),
             metadata=metadata or {},
+            salience=salience or CognitiveSalience(importance=0.0),
         )
 
         self.add(experience)
@@ -61,6 +64,7 @@ class ExperienceManager:
         supporting_memories: tuple[str, ...] | None = None,
         supporting_beliefs: tuple[str, ...] | None = None,
         metadata: dict[str, object] | None = None,
+        salience: CognitiveSalience | None = None,
     ) -> Experience:
         """Create an experience from repeated or consolidated observations."""
 
@@ -72,6 +76,7 @@ class ExperienceManager:
             supporting_memories=supporting_memories,
             supporting_beliefs=supporting_beliefs,
             metadata=metadata,
+            salience=salience,
         )
 
     def consolidate_repeated_observations(
@@ -85,6 +90,7 @@ class ExperienceManager:
         supporting_memories: tuple[str, ...] | None = None,
         supporting_beliefs: tuple[str, ...] | None = None,
         metadata: dict[str, object] | None = None,
+        salience: CognitiveSalience | None = None,
     ) -> Experience:
         """Create an experience when repeated observations point to a stable pattern."""
 
@@ -107,6 +113,7 @@ class ExperienceManager:
             supporting_memories=supporting_memories,
             supporting_beliefs=supporting_beliefs,
             metadata=metadata,
+            salience=salience,
         )
 
     def get(self, experience_id: str) -> Experience | None:

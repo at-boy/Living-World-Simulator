@@ -4,6 +4,8 @@ from collections.abc import Mapping
 from dataclasses import dataclass, field
 from types import MappingProxyType
 
+from living_world.core.memory import CognitiveSalience
+
 
 @dataclass(frozen=True, slots=True)
 class ExperienceHistoryEntry:
@@ -29,6 +31,9 @@ class Experience:
     supporting_beliefs: tuple[str, ...] = ()
     metadata: Mapping[str, object] = field(default_factory=dict)
     history: tuple[ExperienceHistoryEntry, ...] = ()
+    salience: CognitiveSalience = field(
+        default_factory=lambda: CognitiveSalience(importance=0.0)
+    )
 
     def __post_init__(self) -> None:
         if not self.holder_id.strip():
@@ -39,6 +44,8 @@ class Experience:
 
         if not self.summary.strip():
             raise ValueError("Experience summary cannot be empty.")
+        if not isinstance(self.salience, CognitiveSalience):
+            raise TypeError("Experience salience must be a CognitiveSalience value.")
 
         object.__setattr__(
             self,
@@ -95,4 +102,5 @@ class Experience:
             supporting_beliefs=self.supporting_beliefs,
             metadata=self.metadata,
             history=self.history + (entry,),
+            salience=self.salience,
         )

@@ -69,6 +69,52 @@ Derive an NPC entity's current activity from its validated schedule.
 
 ---
 
+## CognitiveConsolidationSystem
+
+**Purpose**
+
+Create NPC-scoped interpretations from the prior completed day only while the
+engine-owned `active_activity` is `"sleeping"`.
+
+**Responsibilities**
+
+- use a fixed 24-tick day and exclude the current day
+- create memories from visible observation descriptions
+- derive repeated-observation experiences and candidate beliefs with internal
+  observation provenance
+- avoid duplicate records when the same persisted provenance is processed
+
+**Does Not Own**
+
+- world truth, entity mutation, or actions
+- observation evidence, raw attributes, event internals, or LLM context
+
+---
+
+## Cognitive Records
+
+**Purpose**
+
+Represent holder-scoped NPC interpretations: `Memory`, `Experience`, `Belief`,
+and `NPCRelationship`.
+
+**Owns**
+
+- NPC-visible prose
+- salience and core policy
+- internal provenance IDs
+
+**Does Not Own**
+
+- authoritative `Relationship` graph edges
+- raw simulator values or inspection data
+- validation of a belief as objective fact
+
+`CognitiveSalience` is important at `importance >= 0.6`; an explicitly core
+record requires `importance >= 0.8`.
+
+---
+
 ## Relationship
 
 **Purpose**
@@ -114,6 +160,7 @@ Runtime state should only be mutated through managers.
 - entities
 - relationships
 - current tick
+- holder-scoped memories and NPC relationship interpretations
 
 **Does Not Own**
 

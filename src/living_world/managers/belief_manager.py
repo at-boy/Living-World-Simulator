@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from living_world.core.belief import Belief, BeliefHistoryEntry, BeliefStatus
 from living_world.core.experience import Experience
+from living_world.core.memory import CognitiveSalience
 from living_world.state.world_state import WorldState
 
 
@@ -28,6 +29,7 @@ class BeliefManager:
         supporting_memories: tuple[str, ...] | None = None,
         supporting_experiences: tuple[str, ...] | None = None,
         metadata: dict[str, object] | None = None,
+        salience: CognitiveSalience | None = None,
     ) -> Belief:
         """Record a new immutable belief."""
 
@@ -44,6 +46,7 @@ class BeliefManager:
             supporting_memories=supporting_memories or (),
             supporting_experiences=supporting_experiences or (),
             metadata=metadata or {},
+            salience=salience,
         )
 
         self.add(belief)
@@ -60,6 +63,7 @@ class BeliefManager:
         supporting_observations: tuple[str, ...] | None = None,
         supporting_memories: tuple[str, ...] | None = None,
         metadata: dict[str, object] | None = None,
+        salience: CognitiveSalience | None = None,
     ) -> Belief:
         """Create a belief from a lived experience while retaining the source link."""
 
@@ -79,6 +83,7 @@ class BeliefManager:
                 "source": "experience",
                 "experience_id": experience.id,
             },
+            salience=salience,
         )
 
     def get(self, belief_id: str) -> Belief | None:

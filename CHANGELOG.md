@@ -4,6 +4,15 @@
 
 ### Added
 
+- Immutable holder-scoped `Memory` and `NPCRelationship` cognitive records,
+  with salience and internal observation provenance.
+- Sleep-only, deterministic 24-tick cognitive consolidation that derives
+  memories, repeated-observation experiences, and candidate beliefs from
+  NPC-visible observation descriptions.
+- SQLite persistence and round-trip support for cognitive records, salience,
+  and consolidation provenance.
+- Executable NPC cognition example.
+
 - Validated `NPCIdentity`, `Occupation`, and `ScheduleEntry` value objects
   with JSON-compatible generic entity-attribute forms.
 - Deterministic `ScheduleSystem` activity transitions with immutable

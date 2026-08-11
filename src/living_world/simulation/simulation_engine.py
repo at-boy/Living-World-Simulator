@@ -1,5 +1,9 @@
 from pathlib import Path
 
+from living_world.cognition.consolidation import (
+    CognitiveConsolidationSystem,
+    SleepCognitiveConsolidator,
+)
 from living_world.core.definition import Definition
 from living_world.definitions.yaml_loader import YAMLWorldDefinitionLoader
 from living_world.managers.belief_manager import BeliefManager
@@ -7,6 +11,8 @@ from living_world.managers.definition_manager import DefinitionManager
 from living_world.managers.entity_manager import EntityManager
 from living_world.managers.event_manager import EventManager
 from living_world.managers.experience_manager import ExperienceManager
+from living_world.managers.memory_manager import MemoryManager
+from living_world.managers.npc_relationship_manager import NPCRelationshipManager
 from living_world.managers.observation_manager import ObservationManager
 from living_world.managers.relationship_manager import RelationshipManager
 from living_world.managers.resource_definition_manager import ResourceDefinitionManager
@@ -61,6 +67,14 @@ class SimulationEngine:
         )
 
         self._experiences = ExperienceManager(
+            self._state,
+        )
+
+        self._memories = MemoryManager(
+            self._state,
+        )
+
+        self._npc_relationships = NPCRelationshipManager(
             self._state,
         )
 
@@ -139,6 +153,18 @@ class SimulationEngine:
                 self._events,
             )
         )
+        self.register_system(
+            CognitiveConsolidationSystem(
+                SleepCognitiveConsolidator(
+                    entities=self._entities,
+                    observations=self._observations,
+                    memories=self._memories,
+                    experiences=self._experiences,
+                    beliefs=self._beliefs,
+                ),
+                self._entities,
+            )
+        )
 
     @property
     def state(self) -> WorldState:
@@ -173,6 +199,14 @@ class SimulationEngine:
     @property
     def experiences(self) -> ExperienceManager:
         return self._experiences
+
+    @property
+    def memories(self) -> MemoryManager:
+        return self._memories
+
+    @property
+    def npc_relationships(self) -> NPCRelationshipManager:
+        return self._npc_relationships
 
     def register_system(
         self,

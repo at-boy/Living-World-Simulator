@@ -10,6 +10,8 @@ from living_world.core.belief import Belief, BeliefStatus
 from living_world.core.entity import Entity
 from living_world.core.event import Event
 from living_world.core.experience import Experience
+from living_world.core.memory import CognitiveSalience, Memory
+from living_world.core.npc_relationship import NPCRelationship
 from living_world.core.observation import Observation
 from living_world.core.relationship import Relationship
 from living_world.repositories.sqlite_repository import (
@@ -36,6 +38,8 @@ def test_sqlite_repository_round_trips_all_world_records(tmp_path: Path) -> None
     assert loaded.observations == state.observations
     assert loaded.beliefs == state.beliefs
     assert loaded.experiences == state.experiences
+    assert loaded.memories == state.memories
+    assert loaded.npc_relationships == state.npc_relationships
 
 
 def test_loaded_history_records_remain_immutable(tmp_path: Path) -> None:
@@ -71,6 +75,10 @@ def test_loaded_history_records_remain_immutable(tmp_path: Path) -> None:
         loaded.beliefs["belief-1"].confidence = 0.1
     with pytest.raises(FrozenInstanceError):
         loaded.experiences["experience-1"].summary = "changed"
+    with pytest.raises(FrozenInstanceError):
+        loaded.memories["memory-1"].summary = "changed"
+    with pytest.raises(FrozenInstanceError):
+        loaded.npc_relationships["npc-relationship-1"].summary = "changed"
 
 
 def test_malformed_snapshot_raises_without_returning_partial_state(
@@ -197,4 +205,26 @@ def _world_state() -> WorldState:
         },
         beliefs={belief.id: belief},
         experiences={experience.id: experience},
+        memories={
+            "memory-1": Memory(
+                id="memory-1",
+                tick=6,
+                holder_id="entity-1",
+                subject_id="entity-2",
+                summary="I remember the route seemed reliable.",
+                salience=CognitiveSalience(importance=0.7),
+                source_observation_ids=("observation-1",),
+            )
+        },
+        npc_relationships={
+            "npc-relationship-1": NPCRelationship(
+                id="npc-relationship-1",
+                tick=6,
+                holder_id="entity-1",
+                subject_id="entity-2",
+                summary="I find the road dependable.",
+                salience=CognitiveSalience(importance=0.6),
+                source_observation_ids=("observation-1",),
+            )
+        },
     )

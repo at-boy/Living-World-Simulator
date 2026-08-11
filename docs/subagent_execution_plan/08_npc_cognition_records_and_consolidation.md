@@ -17,8 +17,9 @@ that creates NPC interpretations without converting them into world truth.
   `tests/test_npc_relationship.py`, `tests/test_consolidation.py`,
   `examples/018_npc_cognition.py`.
 - Edit: `core/belief.py`, `core/experience.py`, `state/world_state.py`,
-  `simulation/simulation_engine.py`, `cognition/__init__.py`, `Makefile`, and
-  standard docs/ADR.
+  `simulation/simulation_engine.py`, `cognition/__init__.py`,
+  `repositories/sqlite_repository.py`, `tests/test_sqlite_repository.py`,
+  `Makefile`, and standard docs/ADR.
 - Know: immutable `Observation`, `Belief`, `Experience`, their managers, and
   the sleep requirement in `architectural_direction.md`.
 
@@ -48,6 +49,10 @@ class CognitiveConsolidator(Protocol):
 - Consolidation runs only during an explicit sleep schedule activity, consumes
   the prior day’s observations, and may create memory, repeated-observation
   experiences, and belief candidates. It never asserts a belief as fact.
+- SQLite persists and restores memories, NPC relationships, cognitive
+  salience, and consolidation provenance. Reloaded records retain their
+  immutable-holder-scoped contract, and persisted provenance prevents a repeat
+  consolidation from duplicating records.
 
 ## Test Criteria
 
@@ -57,6 +62,7 @@ class CognitiveConsolidator(Protocol):
 - Candidate beliefs retain provenance and can be wrong.
 - Existing observation, belief, and experience tests remain green; example and
   `make` pass.
+- SQLite round trips preserve cognitive records and processed-input provenance.
 
 ## Orchestrator Report
 
@@ -66,8 +72,9 @@ evidence, provenance handling, boundary audit, and validation results.
 
 ## Boundary
 
-- Touch only listed cognitive record/manager/consolidation files and stated
-  integration/docs, plus the approved report artifact.
+- Touch only listed cognitive record/manager/consolidation files, the stated
+  SQLite serializer and its tests, stated integration/docs, plus the approved
+  report artifact.
 - Generic `Relationship` stays authoritative graph infrastructure; do not turn
   it into NPC knowledge.
 - Adhere to the cognitive distinctions and sleep policy in architectural docs.

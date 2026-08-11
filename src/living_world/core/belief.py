@@ -5,6 +5,8 @@ from dataclasses import dataclass, field
 from enum import Enum
 from types import MappingProxyType
 
+from living_world.core.memory import CognitiveSalience
+
 
 class BeliefStatus(str, Enum):
     """Valid status states for NPC beliefs."""
@@ -14,6 +16,7 @@ class BeliefStatus(str, Enum):
     CORE = "core"
     WEAKENED = "weakened"
     DISPROVEN = "disproven"
+    CANDIDATE = "candidate"
 
 
 @dataclass(frozen=True, slots=True)
@@ -45,6 +48,7 @@ class Belief:
     supporting_experiences: tuple[str, ...] = ()
     metadata: Mapping[str, object] = field(default_factory=dict)
     history: tuple[BeliefHistoryEntry, ...] = ()
+    salience: CognitiveSalience | None = None
 
     def __post_init__(self) -> None:
         if not self.holder_id.strip():
@@ -84,6 +88,17 @@ class Belief:
                 "Core beliefs must have importance >= 0.8 and confidence >= 0.7."
             )
 
+        salience = self.salience or CognitiveSalience(
+            importance=self.importance,
+            is_core=self.status is BeliefStatus.CORE,
+        )
+        if not isinstance(salience, CognitiveSalience):
+            raise TypeError("Belief salience must be a CognitiveSalience value.")
+        if salience.importance != float(self.importance):
+            raise ValueError("Belief salience importance must match belief importance.")
+        if salience.is_core != (self.status is BeliefStatus.CORE):
+            raise ValueError("Belief core salience must match belief status.")
+
         object.__setattr__(
             self,
             "supporting_observations",
@@ -109,6 +124,7 @@ class Belief:
             "history",
             tuple(self.history),
         )
+        object.__setattr__(self, "salience", salience)
 
     def strengthen(
         self,
@@ -152,6 +168,10 @@ class Belief:
             supporting_experiences=self.supporting_experiences,
             metadata=self.metadata,
             history=self.history + (entry,),
+            salience=CognitiveSalience(
+                importance=self.importance,
+                is_core=updated_status is BeliefStatus.CORE,
+            ),
         )
 
     def weaken(
@@ -196,6 +216,10 @@ class Belief:
             supporting_experiences=self.supporting_experiences,
             metadata=self.metadata,
             history=self.history + (entry,),
+            salience=CognitiveSalience(
+                importance=self.importance,
+                is_core=updated_status is BeliefStatus.CORE,
+            ),
         )
 
     def confirm(
@@ -234,6 +258,10 @@ class Belief:
             supporting_experiences=self.supporting_experiences,
             metadata=self.metadata,
             history=self.history + (entry,),
+            salience=CognitiveSalience(
+                importance=self.importance,
+                is_core=False,
+            ),
         )
 
     def disprove(
@@ -270,6 +298,10 @@ class Belief:
             supporting_experiences=self.supporting_experiences,
             metadata=self.metadata,
             history=self.history + (entry,),
+            salience=CognitiveSalience(
+                importance=self.importance,
+                is_core=False,
+            ),
         )
 
     def mark_important(
@@ -313,6 +345,7 @@ class Belief:
             supporting_experiences=self.supporting_experiences,
             metadata=self.metadata,
             history=self.history + (entry,),
+            salience=CognitiveSalience(importance=updated_importance),
         )
 
     def mark_core(
@@ -361,4 +394,5 @@ class Belief:
             supporting_experiences=self.supporting_experiences,
             metadata=self.metadata,
             history=self.history + (entry,),
+            salience=CognitiveSalience(importance=updated_importance, is_core=True),
         )

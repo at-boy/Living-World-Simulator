@@ -32,13 +32,11 @@ this completed scope.
 
 - NPC identity, schedules, and occupations are implemented as validated
   JSON-compatible attributes on generic entities.
-- Memory
-- Experience
-- Belief
-- Relationships
+- Holder-scoped memory, experience, belief, and NPC relationship records are
+  immutable and use internal provenance only.
 - Knowledge
-- Cognitive consolidation
-- Experience-to-belief candidate generation
+- Sleep-time cognitive consolidation creates memories, repeated-observation
+  experiences, and candidate beliefs without asserting world truth.
 
 ---
 

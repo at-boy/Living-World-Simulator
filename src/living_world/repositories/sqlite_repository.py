@@ -12,12 +12,23 @@ from living_world.core.belief import Belief, BeliefHistoryEntry, BeliefStatus
 from living_world.core.entity import Entity
 from living_world.core.event import Event
 from living_world.core.experience import Experience, ExperienceHistoryEntry
+from living_world.core.memory import CognitiveSalience, Memory
+from living_world.core.npc_relationship import NPCRelationship
 from living_world.core.observation import Observation
 from living_world.core.relationship import Relationship
 from living_world.state.world_state import WorldState
 
 _SCHEMA_VERSION = 1
-Record = Entity | Relationship | Event | Observation | Belief | Experience
+Record = (
+    Entity
+    | Relationship
+    | Event
+    | Observation
+    | Belief
+    | Experience
+    | Memory
+    | NPCRelationship
+)
 RecordType = TypeVar("RecordType", bound=Record)
 
 
@@ -133,6 +144,11 @@ def _serialize_world(state: WorldState) -> dict[str, object]:
             _serialize_experience(experience)
             for experience in state.experiences.values()
         ],
+        "memories": [_serialize_memory(memory) for memory in state.memories.values()],
+        "npc_relationships": [
+            _serialize_npc_relationship(relationship)
+            for relationship in state.npc_relationships.values()
+        ],
     }
 
 
@@ -226,6 +242,7 @@ def _serialize_belief(belief: Belief) -> dict[str, object]:
             }
             for entry in belief.history
         ],
+        "salience": _serialize_salience(belief.salience),
     }
 
 
@@ -249,7 +266,36 @@ def _serialize_experience(experience: Experience) -> dict[str, object]:
             }
             for entry in experience.history
         ],
+        "salience": _serialize_salience(experience.salience),
     }
+
+
+def _serialize_memory(memory: Memory) -> dict[str, object]:
+    return {
+        "id": memory.id,
+        "tick": memory.tick,
+        "holder_id": memory.holder_id,
+        "subject_id": memory.subject_id,
+        "summary": memory.summary,
+        "salience": _serialize_salience(memory.salience),
+        "source_observation_ids": list(memory.source_observation_ids),
+    }
+
+
+def _serialize_npc_relationship(relationship: NPCRelationship) -> dict[str, object]:
+    return {
+        "id": relationship.id,
+        "tick": relationship.tick,
+        "holder_id": relationship.holder_id,
+        "subject_id": relationship.subject_id,
+        "summary": relationship.summary,
+        "salience": _serialize_salience(relationship.salience),
+        "source_observation_ids": list(relationship.source_observation_ids),
+    }
+
+
+def _serialize_salience(salience: CognitiveSalience) -> dict[str, object]:
+    return {"importance": salience.importance, "is_core": salience.is_core}
 
 
 def _deserialize_world(payload: object) -> WorldState:
@@ -266,6 +312,10 @@ def _deserialize_world(payload: object) -> WorldState:
     state.beliefs = _records(payload_mapping["beliefs"], _deserialize_belief)
     state.experiences = _records(
         payload_mapping["experiences"], _deserialize_experience
+    )
+    state.memories = _records(payload_mapping.get("memories", []), _deserialize_memory)
+    state.npc_relationships = _records(
+        payload_mapping.get("npc_relationships", []), _deserialize_npc_relationship
     )
     return state
 
@@ -355,6 +405,11 @@ def _deserialize_belief(value: Mapping[str, object]) -> Belief:
             for history_value in _list(value["history"])
             for entry in (_mapping(history_value),)
         ),
+        salience=_deserialize_salience(
+            value.get("salience"),
+            default_importance=_number(value["importance"]),
+            default_is_core=BeliefStatus(_string(value["status"])) is BeliefStatus.CORE,
+        ),
     )
 
 
@@ -379,6 +434,49 @@ def _deserialize_experience(value: Mapping[str, object]) -> Experience:
             for history_value in _list(value["history"])
             for entry in (_mapping(history_value),)
         ),
+        salience=_deserialize_salience(value.get("salience")),
+    )
+
+
+def _deserialize_memory(value: Mapping[str, object]) -> Memory:
+    return Memory(
+        id=_string(value["id"]),
+        tick=_integer(value["tick"]),
+        holder_id=_string(value["holder_id"]),
+        subject_id=_string(value["subject_id"]),
+        summary=_string(value["summary"]),
+        salience=_deserialize_salience(value.get("salience")),
+        source_observation_ids=_strings(value["source_observation_ids"]),
+    )
+
+
+def _deserialize_npc_relationship(value: Mapping[str, object]) -> NPCRelationship:
+    return NPCRelationship(
+        id=_string(value["id"]),
+        tick=_integer(value["tick"]),
+        holder_id=_string(value["holder_id"]),
+        subject_id=_string(value["subject_id"]),
+        summary=_string(value["summary"]),
+        salience=_deserialize_salience(value.get("salience")),
+        source_observation_ids=_strings(value["source_observation_ids"]),
+    )
+
+
+def _deserialize_salience(
+    value: object,
+    *,
+    default_importance: float = 0.0,
+    default_is_core: bool = False,
+) -> CognitiveSalience:
+    if value is None:
+        return CognitiveSalience(
+            importance=default_importance,
+            is_core=default_is_core,
+        )
+    mapping = _mapping(value)
+    return CognitiveSalience(
+        importance=_number(mapping["importance"]),
+        is_core=_boolean(mapping["is_core"]),
     )
 
 
@@ -422,3 +520,9 @@ def _number(value: object) -> float:
     if not isinstance(value, (int, float)) or isinstance(value, bool):
         raise TypeError("Persisted value must be a number.")
     return float(value)
+
+
+def _boolean(value: object) -> bool:
+    if not isinstance(value, bool):
+        raise TypeError("Persisted value must be a boolean.")
+    return value

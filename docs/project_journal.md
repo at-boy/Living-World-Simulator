@@ -9,6 +9,23 @@ engineering milestones and lessons learned.
 
 # 2026-08-10
 
+## Cognitive Records and Sleep Consolidation
+
+The v0.4 cognitive model now distinguishes immutable, holder-scoped memories,
+experiences, beliefs, and NPC relationship interpretations from authoritative
+graph relationships and simulator state. Each record uses explicit salience;
+important and core remain separate policy states. Observation IDs are retained
+only for internal provenance.
+
+`CognitiveConsolidationSystem` executes after schedules, and only while an
+entity's engine-owned activity is `sleeping`. The first completed day ends at
+tick 24, using a fixed 24-tick day; its visible observation descriptions may
+be retained as memories, while repeated observations may produce an experience
+and a candidate belief. It never consumes observation evidence, entity
+attributes, resource quantities, event internals, or raw IDs as visible prose.
+Persisted provenance makes rerunning the same consolidation idempotent after
+SQLite reload.
+
 ## NPC Identity, Schedules, and Occupations
 
 NPC identity, occupation, and schedules are now validated domain values stored
