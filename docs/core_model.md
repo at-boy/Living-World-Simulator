@@ -399,3 +399,9 @@ an ephemeral, operator-visible invitation-feedback trace in invitee order. It
 records only the resolver outcome and filtered submitted statement/rationale;
 it is not supplied to another NPC, retrieval, context assembly, cognition,
 governance, an event, memory, or world state.
+
+For automatic discussion, the engine may supply a non-negative turn-order
+offset. Confirmed attendees are rotated by that offset and then scheduled in a
+bounded deterministic round robin. An explicit speaker-call schedule takes
+precedence. The offset is ephemeral engine coordination: it is not NPC input,
+cognitive state, authority, or model output.

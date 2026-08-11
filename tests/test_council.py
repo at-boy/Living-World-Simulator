@@ -163,6 +163,37 @@ def test_tie_or_abstention_has_no_gateway_resolution() -> None:
     assert state.events == {}
 
 
+def test_automatic_council_turns_use_the_engine_rotation_offset() -> None:
+    attend = ActionRequest("attend_council", None, "I will attend.")
+    service, state = _service(
+        [
+            NPCDecision(None, attend),
+            NPCDecision(None, attend),
+            NPCDecision("Mira opens.", None),
+            NPCDecision("Sana follows.", None),
+            NPCDecision("Erik continues.", None),
+        ]
+    )
+
+    result = service.convene(
+        call=CouncilCall(
+            "npc_1",
+            "council",
+            ("npc_2", "npc_3"),
+            CouncilAgenda("a route", (ActionOption("wait", "Wait."),)),
+            3,
+            turn_order_offset=1,
+        )
+    )
+
+    assert [turn.speaker_label for turn in result.conversation.turns] == [
+        "Mira",
+        "Sana",
+        "Erik",
+    ]
+    assert state.events == {}
+
+
 def test_unavailable_or_declining_invitees_leave_a_safe_caller_only_result() -> None:
     class UnavailableClient:
         @property

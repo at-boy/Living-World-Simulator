@@ -233,6 +233,22 @@ Conduct bounded, deterministic visible dialogue between known NPC entities.
 
 ---
 
+## CouncilService
+
+**Purpose**
+
+Coordinate bounded attendance, deterministic council discussion, and
+non-authoritative proposals to the ordinary action gateway.
+
+**Speaker scheduling**
+
+- explicit engine speaker calls are preserved exactly
+- otherwise, confirmed attendees form a bounded round robin rotated by the
+  call's non-negative engine-owned offset
+- the offset is not exposed to NPC cognition or selected by model output
+
+---
+
 ## MeetingService
 
 **Purpose**

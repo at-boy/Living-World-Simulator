@@ -536,3 +536,11 @@ Unavailable invitation feedback now adds exactly one fixed operator-safe
 diagnostic: provider unavailable, invalid structured response, or invalid
 decision. The category contains neither provider data nor internal engine data,
 and it does not retry, infer attendance, or remedy a non-compliant model.
+
+Automatic council discussion can now rotate its confirmed-attendee round robin
+by a non-negative engine-owned offset. Zero retains caller-first order, larger
+values wrap by attendee count, and the resulting schedule remains bounded by
+the council's round limit. Explicit engine calls still take precedence. The
+offset is ephemeral scheduling input, never NPC context, cognitive state,
+authority, or model-selected output; policy for deriving it from deterministic
+simulation state remains deferred.

@@ -4,6 +4,8 @@
 
 - Strengthen local NPC cognition response-shape guidance with a bare-JSON
   checklist and schema-compliant templates while retaining strict validation.
+- Add an engine-owned offset for deterministic rotation of automatic council
+  turns while preserving explicit speaker-call schedules.
 - Add bounded, agenda-driven NPC council coordination with membership checks,
   attendance delegation, and action-gateway majority proposals.
 - Clarify manual Ollama and llama.cpp council output by marking the caller,

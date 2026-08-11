@@ -50,6 +50,7 @@ class CouncilCall:
     participant_self_knowledge: Mapping[str, tuple[str, ...]] = field(
         default_factory=dict
     )
+    turn_order_offset: int = 0
 
     def __post_init__(self) -> None:
         _identifier(self.caller_id, "caller_id")
@@ -59,6 +60,7 @@ class CouncilCall:
             raise TypeError("agenda must be a CouncilAgenda.")
         _turns(self.max_rounds)
         _identifiers(self.called_speaker_ids, "called_speaker_ids", False)
+        _turn_order_offset(self.turn_order_offset)
         object.__setattr__(
             self,
             "participant_self_knowledge",
@@ -334,7 +336,10 @@ class CouncilService:
                 tuple(feedback),
             )
         schedule = self._schedule(
-            call.called_speaker_ids, tuple(attending), call.max_rounds
+            call.called_speaker_ids,
+            tuple(attending),
+            call.max_rounds,
+            call.turn_order_offset,
         )
         conversation = self._meetings.conduct(
             MeetingRequest(
@@ -484,15 +489,20 @@ class CouncilService:
 
     @staticmethod
     def _schedule(
-        called: tuple[str, ...], attending: tuple[str, ...], max_rounds: int
+        called: tuple[str, ...],
+        attending: tuple[str, ...],
+        max_rounds: int,
+        turn_order_offset: int,
     ) -> tuple[str, ...]:
-        if not called:
-            return ()
-        if any(identifier not in attending for identifier in called):
-            raise ValueError("called speakers must attend the council.")
-        if len(called) > max_rounds:
-            raise ValueError("called speakers cannot exceed max_rounds.")
-        return called
+        if called:
+            if any(identifier not in attending for identifier in called):
+                raise ValueError("called speakers must attend the council.")
+            if len(called) > max_rounds:
+                raise ValueError("called speakers cannot exceed max_rounds.")
+            return called
+        offset = turn_order_offset % len(attending)
+        rotated = attending[offset:] + attending[:offset]
+        return tuple(rotated[index % len(rotated)] for index in range(max_rounds))
 
     @staticmethod
     def _majority(
@@ -555,6 +565,13 @@ def _turns(value: object) -> None:
         raise TypeError("max_rounds must be a non-boolean integer.")
     if value < 0:
         raise ValueError("max_rounds cannot be negative.")
+
+
+def _turn_order_offset(value: object) -> None:
+    if not isinstance(value, int) or isinstance(value, bool):
+        raise TypeError("turn_order_offset must be a non-boolean integer.")
+    if value < 0:
+        raise ValueError("turn_order_offset cannot be negative.")
 
 
 def _actions(value: object, field_name: str) -> None:
