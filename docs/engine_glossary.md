@@ -600,5 +600,7 @@ order, and report PASS or FAIL. A failure stops the command.
 # Council
 
 An engine-coordinated bounded discussion, not a persistent governance object or
-source of authority. Its invitation feedback is transient filtered diagnostic
-output, not a governance or cognitive record.
+source of authority. A strict attendee majority, or only unanimous explicit
+invitee declines, may supply one proposal to the ordinary action gateway;
+unavailable and no-selection replies never delegate. Its invitation feedback is
+transient filtered diagnostic output, not a governance or cognitive record.

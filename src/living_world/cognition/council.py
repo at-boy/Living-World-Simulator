@@ -101,6 +101,13 @@ class CouncilInvitationDiagnostic(StrEnum):
     INVALID_DECISION = "invalid_decision"
 
 
+class CouncilDecisionBasis(StrEnum):
+    """The limited policy that supplied an agenda proposal to the gateway."""
+
+    ATTENDEE_MAJORITY = "attendee_majority"
+    EXPLICIT_DECLINE_CALLER_FALLBACK = "explicit_decline_caller_fallback"
+
+
 @dataclass(frozen=True, slots=True)
 class CouncilInvitationFeedback:
     """Ephemeral, filtered submission made in response to an invitation."""
@@ -137,6 +144,7 @@ class CouncilResult:
     majority_proposal: ActionRequest | None
     resolutions: tuple[ActionResolution, ...]
     invitation_feedback: tuple[CouncilInvitationFeedback, ...] = ()
+    decision_basis: CouncilDecisionBasis | None = None
 
     def __post_init__(self) -> None:
         if not isinstance(self.attendance, tuple) or not all(
@@ -160,6 +168,10 @@ class CouncilResult:
             raise TypeError(
                 "invitation_feedback must be a tuple of CouncilInvitationFeedback values."
             )
+        if self.decision_basis is not None and not isinstance(
+            self.decision_basis, CouncilDecisionBasis
+        ):
+            raise TypeError("decision_basis must be a CouncilDecisionBasis or None.")
 
 
 class _AttendanceHandler:
@@ -208,7 +220,7 @@ class CouncilService:
         self._state = state
 
     def convene(self, *, call: CouncilCall) -> CouncilResult:
-        """Conduct one council; only a strict agenda majority reaches the gateway."""
+        """Conduct one council; only bounded policy proposals reach the gateway."""
 
         if not isinstance(call, CouncilCall):
             raise TypeError("call must be a CouncilCall.")
@@ -241,7 +253,9 @@ class CouncilService:
             f"{labels[call.caller_id]}: {call.agenda.topic}. "
             "In action_request, return exactly one offered attendance action. "
             "Include a short reason in that action request's rationale. "
-            "A statement by itself is not an attendance selection."
+            "A statement by itself is not an attendance selection. An explicit "
+            "decline delegates to the caller only when every invitee explicitly "
+            "declines; unavailable or no-selection replies do not delegate."
         )
         for invitee_id in call.invited_participant_ids:
             context = self._contexts.assemble(
@@ -307,6 +321,10 @@ class CouncilService:
             )
             if is_attending:
                 attending.append(invitee_id)
+        if self._all_invitees_explicitly_delegate(call, attendance, feedback):
+            return self._caller_fallback_result(
+                call, self_knowledge, tuple(attendance), tuple(feedback)
+            )
         if len(attending) == 1:
             return CouncilResult(
                 tuple(attendance),
@@ -342,7 +360,70 @@ class CouncilService:
             else (self._resolver.resolve(actor_id=call.caller_id, request=majority),)
         )
         return CouncilResult(
-            tuple(attendance), conversation, majority, resolutions, tuple(feedback)
+            tuple(attendance),
+            conversation,
+            majority,
+            resolutions,
+            tuple(feedback),
+            (CouncilDecisionBasis.ATTENDEE_MAJORITY if majority is not None else None),
+        )
+
+    def _caller_fallback_result(
+        self,
+        call: CouncilCall,
+        self_knowledge: dict[str, tuple[str, ...]],
+        attendance: tuple[CouncilAttendance, ...],
+        feedback: tuple[CouncilInvitationFeedback, ...],
+    ) -> CouncilResult:
+        """Offer one caller proposal after every invitee explicitly delegates."""
+
+        fallback_notice = self._contexts.validate_conversation_prose(
+            "Every person asked explicitly declined and delegated. You may submit "
+            "one offered proposal; it remains "
+            "subject to normal simulation validation."
+        )
+        context = self._contexts.assemble(
+            holder_id=call.caller_id,
+            capability_descriptions=self_knowledge.get(call.caller_id, ()),
+            conversation_history=(fallback_notice,),
+        )
+        try:
+            decision = self._decisions.decide(context, call.agenda.action_options)
+        except (
+            NPCCognitionClientError,
+            NPCCognitionInvalidResponseError,
+            TypeError,
+            ValueError,
+        ):
+            proposal = None
+        else:
+            proposal = decision.action_request
+        resolutions = (
+            ()
+            if proposal is None
+            else (self._resolver.resolve(actor_id=call.caller_id, request=proposal),)
+        )
+        return CouncilResult(
+            attendance,
+            ConversationResult(turns=(), resolutions=()),
+            proposal,
+            resolutions,
+            feedback,
+            CouncilDecisionBasis.EXPLICIT_DECLINE_CALLER_FALLBACK,
+        )
+
+    @staticmethod
+    def _all_invitees_explicitly_delegate(
+        call: CouncilCall,
+        attendance: list[CouncilAttendance],
+        feedback: list[CouncilInvitationFeedback],
+    ) -> bool:
+        """Return true only for unanimous accepted explicit invitee declines."""
+
+        return bool(call.invited_participant_ids) and all(
+            item.status is CouncilInvitationStatus.DECLINED
+            and attendance[index + 1].delegates_to_majority
+            for index, item in enumerate(feedback)
         )
 
     def _safe_feedback_prose(self, prose: object) -> str | None:

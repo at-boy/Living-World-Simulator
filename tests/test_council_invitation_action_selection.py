@@ -29,7 +29,9 @@ _INVITATION = (
     "Council invitation from Erik: a careful route. "
     "In action_request, return exactly one offered attendance action. "
     "Include a short reason in that action request's rationale. "
-    "A statement by itself is not an attendance selection."
+    "A statement by itself is not an attendance selection. An explicit decline "
+    "delegates to the caller only when every invitee explicitly declines; "
+    "unavailable or no-selection replies do not delegate."
 )
 
 
@@ -104,13 +106,14 @@ def test_every_invitee_receives_exact_safe_action_selection_guidance() -> None:
                 "I will decide.",
                 ActionRequest("decline_council", None, "I cannot attend."),
             ),
+            NPCDecision("I abstain.", None),
         ]
     )
     state.entities["npc_1"].attributes["hidden_strength"] = 42
 
     service.convene(call=_call(("npc_2", "npc_3")))
 
-    assert [context.conversation_history for context in client.contexts] == [
+    assert [context.conversation_history for context in client.contexts[:2]] == [
         (_INVITATION,),
         (_INVITATION,),
     ]

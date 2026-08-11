@@ -16,6 +16,7 @@ from living_world.cognition.conversation import (
 )
 from living_world.cognition.council import (
     CouncilAttendance,
+    CouncilDecisionBasis,
     CouncilInvitationDiagnostic,
     CouncilInvitationFeedback,
     CouncilInvitationStatus,
@@ -127,6 +128,34 @@ def test_invitation_feedback_renders_each_invitee_without_caller(path: Path) -> 
     assert "- Cato: unavailable" in output
     assert "No usable reply: invalid structured response." in output
     assert "- Aster: " not in output
+
+
+@pytest.mark.parametrize("path", _EXAMPLE_PATHS)
+def test_explicit_decline_fallback_basis_renders_without_invitee_reasons(
+    path: Path,
+) -> None:
+    module = _load_example(path)
+    result = CouncilResult(
+        (
+            CouncilAttendance("Aster", True, False),
+            CouncilAttendance("Bryn", False, True),
+        ),
+        ConversationResult((), ()),
+        ActionRequest("wait", None, "The caller proposes waiting."),
+        (ActionResolution(False, "No handler supports the requested action."),),
+        (),
+        CouncilDecisionBasis.EXPLICIT_DECLINE_CALLER_FALLBACK,
+    )
+
+    output = module.format_council_result(result)
+
+    assert (
+        "Every invitee explicitly declined and delegated one fallback proposal."
+        in output
+    )
+    assert "Decision basis: explicit_decline_caller_fallback" in output
+    assert "Caller fallback proposal: ActionRequest(" in output
+    assert "Majority proposal: ActionRequest(" not in output
 
 
 @pytest.mark.parametrize("path", _EXAMPLE_PATHS)

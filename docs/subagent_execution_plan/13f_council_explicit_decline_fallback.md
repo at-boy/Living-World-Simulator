@@ -16,6 +16,7 @@ silence, provider failure, or an automatic right to rule.
   governance rules.
 - Edit: `src/living_world/cognition/council.py`,
   `src/living_world/cognition/__init__.py`, `tests/test_council.py`,
+  `tests/test_council_invitation_action_selection.py`,
   `tests/test_manual_council_examples.py`, both manual council examples,
   `docs/local_llm_setup.md`, `docs/core_model.md`, `docs/engine_glossary.md`,
   `docs/backlog.md`, `CHANGELOG.md`, and `docs/project_journal.md`.
@@ -39,7 +40,9 @@ class CouncilResult:
     decision_basis: CouncilDecisionBasis | None = None
 ```
 
-- Fallback is available only when `invited_participant_ids` is non-empty and
+- `CouncilCall` retains Task 13's existing requirement that
+  `invited_participant_ids` is non-empty. Fallback is available only when that
+  non-empty invitation set
   every invitee has `CouncilInvitationStatus.DECLINED` plus
   `delegates_to_majority=True`. `UNAVAILABLE`, `NO_SELECTION`, malformed
   responses, mixed attendance, a caller-only call, or caller self-delegation
@@ -64,10 +67,13 @@ class CouncilResult:
 - All explicit declines enable exactly one caller fallback decision and normal
   gateway submission; tests show the caller sees only safe aggregate delegation
   context and its own permissible context.
-- Mixed decline/no-selection, unavailable, any attendee, no invitees, and a
-  caller fallback abstention create no fallback action or state change.
+- Mixed decline/no-selection, unavailable, any attendee, and a caller fallback
+  abstention create no fallback action or state change. Explicit tests must
+  cover an `UNAVAILABLE` invitee alongside a decline. Empty invitation sets
+  remain invalid calls under the existing `CouncilCall` contract.
 - Manual output identifies fallback basis without exposing individual invitee
-  reasons as caller context.
+  reasons as caller context and calls its proposal a caller fallback, not a
+  majority proposal.
 - Full boundary, action-gateway, event/persistence, examples, and `make`
   validation pass.
 

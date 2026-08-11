@@ -129,3 +129,5 @@ good ideas are never lost.
 
 The v0.5 council coordination layer is bounded and non-authoritative. Rules for
 institutional quorums, legitimacy, factions, and secession remain future work.
+The temporary unanimous explicit-decline caller fallback must be replaced by
+engine-owned, organization-specific governance rules and auditable records.

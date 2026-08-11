@@ -13,6 +13,9 @@
 - Direct council invitees to submit exactly one offered attendance action, while
   retaining no-selection handling for statement-only local-model responses and
   filtering selected-action rationales into transient operator feedback only.
+- Permit one caller agenda proposal through the ordinary action gateway only
+  after every invited NPC explicitly declines and delegates; unavailable and
+  no-selection replies never grant that fallback.
 
 ## v0.2.3 (Unreleased)
 

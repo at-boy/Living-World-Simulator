@@ -151,6 +151,11 @@ The category is diagnostic only and does not retry or repair a model response.
 `Majority proposal: None` then means no strict majority was available, not that
 the model changed the world.
 
+When every invitee explicitly selects the decline action, the output instead
+identifies the temporary explicit-decline caller fallback basis. It means only
+that the caller may make one offered agenda proposal through normal simulation
+validation; unavailable or no-selection replies never count as delegation.
+
 Identical outcomes from successive local-model runs are valid. The examples
 send equivalent constrained requests and rely on the provider and model's
 sampling defaults; they do not promise varied or random results.

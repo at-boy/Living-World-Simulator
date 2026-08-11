@@ -5,6 +5,7 @@ from living_world.cognition.conversation import ConversationService
 from living_world.cognition.council import (
     CouncilAgenda,
     CouncilCall,
+    CouncilDecisionBasis,
     CouncilResult,
     CouncilService,
 )
@@ -94,7 +95,11 @@ def format_council_result(result: CouncilResult) -> str:
         and result.attendance[0].attending
         and not any(attendance.attending for attendance in result.attendance[1:])
     )
-    if caller_only:
+    if result.decision_basis is CouncilDecisionBasis.EXPLICIT_DECLINE_CALLER_FALLBACK:
+        lines.append(
+            "Every invitee explicitly declined and delegated one fallback proposal."
+        )
+    elif caller_only:
         lines.append("Only the caller attended; no invited NPC joined.")
 
     lines.extend(("", "Invitation feedback"))
@@ -106,8 +111,7 @@ def format_council_result(result: CouncilResult) -> str:
             lines.append(f"  rationale: {feedback.rationale}")
         if feedback.diagnostic is not None:
             lines.append(
-                "  No usable reply: "
-                f"{feedback.diagnostic.value.replace('_', ' ')}."
+                "  No usable reply: " f"{feedback.diagnostic.value.replace('_', ' ')}."
             )
         elif feedback.spoken_text is None and feedback.rationale is None:
             lines.append("  No displayable text was supplied.")
@@ -131,7 +135,14 @@ def format_council_result(result: CouncilResult) -> str:
     else:
         lines.append("No agenda proposal was cast.")
 
-    lines.append(f"\nMajority proposal: {result.majority_proposal}")
+    lines.append(f"\nDecision basis: {result.decision_basis}")
+    proposal_label = (
+        "Caller fallback proposal"
+        if result.decision_basis
+        is CouncilDecisionBasis.EXPLICIT_DECLINE_CALLER_FALLBACK
+        else "Majority proposal"
+    )
+    lines.append(f"{proposal_label}: {result.majority_proposal}")
     if result.resolutions:
         lines.append(f"Gateway resolution: {result.resolutions[0]}")
     return "\n".join(lines)

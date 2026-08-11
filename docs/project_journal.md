@@ -9,6 +9,16 @@ engineering milestones and lessons learned.
 
 # 2026-08-10
 
+## Council Explicit-Decline Fallback
+
+The temporary v0.5 council policy permits the caller to make one ordinary
+agenda proposal only after every invitee explicitly selects `decline_council`.
+The caller sees a safe aggregate fact, never invitation identities, reasons,
+IDs, scores, or raw replies. That proposal has no authority until the existing
+action gateway accepts it. Unavailable, malformed, no-selection, mixed, and
+caller-only calls do not delegate; future organization-specific governance must
+replace this narrow policy.
+
 ## Council Invitation Action Selection
 
 Council invitations now state the two available attendance actions and direct
