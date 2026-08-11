@@ -7,6 +7,8 @@ and metadata, and perform the final quality and information-boundary audit.
 
 ## Context Needed
 
+- Create before delegation:
+  `docs/subagent_execution_plan/14_v05_release_closeout-prombt.md`.
 - Create: `docs/subagent_execution_plan/14_v05_release_closeout-report.md`.
 - Edit: `VERSION`, `pyproject.toml`, `CHANGELOG.md`, `README.md`,
   `docs/backlog.md`, `docs/technical_debt.md`, `docs/core_model.md`,
