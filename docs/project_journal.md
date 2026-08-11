@@ -9,6 +9,19 @@ engineering milestones and lessons learned.
 
 # 2026-08-10
 
+## Council Invitation Action Selection
+
+Council invitations now state the two available attendance actions and direct
+an invitee to return exactly one through `action_request`, with a short
+NPC-visible reason in its `rationale`. The safe NPC-facing prose names the
+caller, agenda topic, and structured response fields, while the action keys
+remain in the separately supplied structured vocabulary. This preserves the
+internal-identifier boundary. The reason stays only as filtered, transient
+operator-debug invitation feedback: it is not state, persistence, an event, or
+another NPC's context. This does not change the action gateway: a statement
+without an action request remains a non-attending `no_selection` result, and
+local model compliance remains probabilistic.
+
 ## NPC Meeting Coordination
 
 NPC meeting coordination is deliberately an ephemeral wrapper around the

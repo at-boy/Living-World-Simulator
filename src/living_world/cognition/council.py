@@ -218,7 +218,11 @@ class CouncilService:
         feedback: list[CouncilInvitationFeedback] = []
         attending = [call.caller_id]
         invitation = self._contexts.validate_conversation_prose(
-            f"Council invitation from {labels[call.caller_id]}: {call.agenda.topic}"
+            "Council invitation from "
+            f"{labels[call.caller_id]}: {call.agenda.topic}. "
+            "In action_request, return exactly one offered attendance action. "
+            "Include a short reason in that action request's rationale. "
+            "A statement by itself is not an attendance selection."
         )
         for invitee_id in call.invited_participant_ids:
             context = self._contexts.assemble(

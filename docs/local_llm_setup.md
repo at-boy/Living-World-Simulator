@@ -125,6 +125,18 @@ They show five differentiated, attendance-friendly perspectives; a real model
 may nevertheless decline, abstain, or fail to return schema-valid JSON. Such a
 response is non-authoritative and does not change the world.
 
+Each council invitation explicitly directs an invitee to return exactly one
+offered attendance action in `action_request`, with a short NPC-visible reason
+in `rationale`. The action keys remain exclusively in the separate structured
+action vocabulary already supplied to the cognition client, so the invitation
+prose can preserve the internal-identifier boundary. That reason remains only
+the existing filtered, transient operator-debug invitation feedback; it is not
+public world state, persisted, emitted as an event, or forwarded to another
+NPC. A statement alone is not an attendance selection. This improves
+local-model guidance only: omitted, malformed, or unavailable action requests
+still do not cause attendance, and the engine does not infer a choice from
+prose.
+
 Each manual council example prints attendance, identifying the always-attending
 caller separately from invited NPCs, invitation feedback for each invitee,
 visible debate turns, collected agenda votes/proposals, the majority proposal,

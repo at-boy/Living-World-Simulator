@@ -9,6 +9,7 @@ from living_world.cognition.conversation import ConversationService
 from living_world.cognition.council import (
     CouncilAgenda,
     CouncilCall,
+    CouncilInvitationStatus,
     CouncilService,
 )
 from living_world.cognition.decision_engine import DecisionEngine
@@ -107,6 +108,10 @@ def test_council_can_proceed_below_five_and_resolves_only_majority_once() -> Non
     assert result.majority_proposal == wait
     assert len(result.resolutions) == 1
     assert result.resolutions[0].accepted is False
+    assert [item.status for item in result.invitation_feedback] == [
+        CouncilInvitationStatus.ATTENDING,
+        CouncilInvitationStatus.DECLINED,
+    ]
     assert len(result.conversation.proposals) == 2
     assert state.events == {}
 
