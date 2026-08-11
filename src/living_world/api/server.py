@@ -51,9 +51,21 @@ def create_app(engine: SimulationEngine) -> FastAPI:
     async def events() -> tuple[Mapping[str, object], ...]:
         return inspector.events()
 
+    @application.get("/world/npcs")
+    async def npcs() -> tuple[Mapping[str, object], ...]:
+        return inspector.npcs()
+
     @application.get("/world/observations")
     async def observations() -> tuple[Mapping[str, object], ...]:
         return inspector.observations()
+
+    @application.get("/world/memories")
+    async def memories() -> tuple[Mapping[str, object], ...]:
+        return inspector.memories()
+
+    @application.get("/world/knowledge")
+    async def knowledge() -> tuple[Mapping[str, object], ...]:
+        return inspector.knowledge()
 
     @application.get("/world/beliefs")
     async def beliefs() -> tuple[Mapping[str, object], ...]:
@@ -62,6 +74,13 @@ def create_app(engine: SimulationEngine) -> FastAPI:
     @application.get("/world/experiences")
     async def experiences() -> tuple[Mapping[str, object], ...]:
         return inspector.experiences()
+
+    @application.get("/world/cognitive-history/{holder_id}")
+    async def cognitive_history(holder_id: str) -> Mapping[str, object]:
+        snapshot = inspector.cognitive_history(holder_id)
+        if snapshot is None:
+            raise HTTPException(status_code=404, detail="Holder not found.")
+        return snapshot
 
     return application
 

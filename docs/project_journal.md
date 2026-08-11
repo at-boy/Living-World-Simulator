@@ -462,6 +462,20 @@ identifier order. It remains explicitly separate from `NPCContextAssembler`
 and every NPC-facing cognition boundary: authoritative data may be inspected
 by an operator, but it does not become NPC knowledge.
 
+## Persisted NPC and Cognitive Inspection Coverage
+
+The privileged inspection contract now includes NPC presentation and all
+persisted cognitive collections. Operators can inspect memories, knowledge,
+belief and experience history/provenance, observations, and holder-scoped
+NPC-relationship interpretations in deterministic ID order. A known holder
+with no records receives stable empty categories; an unknown holder remains a
+404. Every payload is recursively detached from `WorldState`.
+
+This expansion does not alter the NPC information flow. Inspection responses
+are not consumed by retrieval, context assembly, perception, or model clients.
+Conversation, meeting, council, invitation-feedback, and action-resolution
+values remain ephemeral and deliberately have no inspection endpoint.
+
 ## NPC Knowledge
 
 `Knowledge` now records a distinct NPC-held claim with human-readable source

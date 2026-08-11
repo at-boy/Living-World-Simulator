@@ -85,6 +85,22 @@ are never exposed to runtime callers.
 Call `save_world()` to persist the current snapshot. Omitting a repository
 retains the existing in-memory engine behavior.
 
+## Privileged inspection
+
+The HTTP inspection application exposes detached, deterministic snapshots for
+operators. In addition to generic entities and history, it presents NPC
+identity, occupation, and schedule attributes and every persisted cognitive
+record collection. `/world/cognitive-history/{holder_id}` groups observations,
+memories, knowledge, beliefs, experiences, and NPC-relationship interpretations
+for one known holder. This privileged projection includes internal provenance
+that must never be passed to NPC retrieval, context assembly, perception, or an
+LLM.
+
+Conversations, meetings, council calls and results, invitation feedback, and
+action resolutions are ephemeral service return values rather than
+`WorldState` records. The inspection API therefore does not advertise
+persistence-like conversation or council endpoints.
+
 ## Entity Lifecycle
 
 Runtime entities are created exclusively through `EntityManager.create()`.

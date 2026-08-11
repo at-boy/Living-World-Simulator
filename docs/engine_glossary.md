@@ -615,6 +615,26 @@ Documents and smoke-tests the public runtime API.
 
 Numbered top-level examples are discovered by `make examples`, run in lexical
 order, and report PASS or FAIL. A failure stops the command.
+
+## WorldInspector
+
+**Purpose**
+
+Provide a privileged, GET-only operator projection of authoritative runtime
+state as recursively detached JSON-safe snapshots.
+
+**Persisted cognitive coverage**
+
+- observations, memories, knowledge, beliefs, and experiences
+- NPC-relationship interpretations
+- holder-scoped cognitive history in record-ID order
+- NPC identity, occupation, schedule, and active-activity presentation
+
+This operator surface can expose internal provenance for diagnosis, but it is
+never an input to NPC retrieval, context assembly, perception, or cognition.
+Conversation and council values are ephemeral and intentionally have no
+persistence-like inspection route.
+
 # Council
 
 An engine-coordinated bounded discussion, not a persistent governance object or

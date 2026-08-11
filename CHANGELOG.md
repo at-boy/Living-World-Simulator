@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Extend the privileged GET-only inspection API across persisted NPC
+  presentation and cognitive records, including deterministic holder-scoped
+  history and summary counts, without persisting ephemeral coordination results.
 - Add a cognition-shaped manual council scenario whose shared manager-owned
   runtime seeds isolated observations, memories, experiences, beliefs, and
   social interpretations without forcing a proposal or exposing provenance.

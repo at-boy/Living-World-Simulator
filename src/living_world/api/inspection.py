@@ -23,6 +23,28 @@ class WorldInspector(Protocol):
 
     def entity(self, entity_id: str) -> Mapping[str, object] | None: ...
 
+    def definitions(self) -> tuple[Mapping[str, object], ...]: ...
+
+    def resources(self) -> tuple[Mapping[str, object], ...]: ...
+
+    def relationships(self) -> tuple[Mapping[str, object], ...]: ...
+
+    def events(self) -> tuple[Mapping[str, object], ...]: ...
+
+    def npcs(self) -> tuple[Mapping[str, object], ...]: ...
+
+    def observations(self) -> tuple[Mapping[str, object], ...]: ...
+
+    def memories(self) -> tuple[Mapping[str, object], ...]: ...
+
+    def knowledge(self) -> tuple[Mapping[str, object], ...]: ...
+
+    def beliefs(self) -> tuple[Mapping[str, object], ...]: ...
+
+    def experiences(self) -> tuple[Mapping[str, object], ...]: ...
+
+    def cognitive_history(self, holder_id: str) -> Mapping[str, object] | None: ...
+
 
 class EngineWorldInspector:
     """Create detached JSON-safe snapshots from a ``SimulationEngine``."""
@@ -38,8 +60,11 @@ class EngineWorldInspector:
             "relationship_count": len(state.relationships),
             "event_count": len(state.events),
             "observation_count": len(state.observations),
+            "memory_count": len(state.memories),
+            "knowledge_count": len(state.knowledge),
             "belief_count": len(state.beliefs),
             "experience_count": len(state.experiences),
+            "npc_relationship_count": len(state.npc_relationships),
             "definition_count": len(self._engine.definitions.all()),
             "resource_definition_count": len(self._engine.resource_definitions.all()),
         }
@@ -76,14 +101,78 @@ class EngineWorldInspector:
     def events(self) -> tuple[Mapping[str, object], ...]:
         return self._records(self._engine.state.events)
 
+    def npcs(self) -> tuple[Mapping[str, object], ...]:
+        """Return the presentation attributes of entities declared as NPCs."""
+
+        return tuple(
+            _snapshot_value(
+                {
+                    "id": entity.id,
+                    "identity": entity.attributes["npc_identity"],
+                    "occupation": entity.attributes.get("occupation"),
+                    "schedule": entity.attributes.get("schedule", []),
+                    "active_activity": entity.attributes.get("active_activity"),
+                }
+            )
+            for entity in sorted(
+                (
+                    entity
+                    for entity in self._engine.state.entities.values()
+                    if "npc_identity" in entity.attributes
+                ),
+                key=lambda entity: entity.id,
+            )
+        )
+
     def observations(self) -> tuple[Mapping[str, object], ...]:
         return self._records(self._engine.state.observations)
+
+    def memories(self) -> tuple[Mapping[str, object], ...]:
+        return self._records(self._engine.state.memories)
+
+    def knowledge(self) -> tuple[Mapping[str, object], ...]:
+        return self._records(self._engine.state.knowledge)
 
     def beliefs(self) -> tuple[Mapping[str, object], ...]:
         return self._records(self._engine.state.beliefs)
 
     def experiences(self) -> tuple[Mapping[str, object], ...]:
         return self._records(self._engine.state.experiences)
+
+    def cognitive_history(self, holder_id: str) -> Mapping[str, object] | None:
+        """Return all persisted cognition scoped to one known entity holder."""
+
+        state = self._engine.state
+        if holder_id not in state.entities:
+            return None
+        return _snapshot_value(
+            {
+                "holder_id": holder_id,
+                "observations": self._holder_records(
+                    state.observations, holder_id, holder_field="observer"
+                ),
+                "memories": self._holder_records(state.memories, holder_id),
+                "knowledge": self._holder_records(state.knowledge, holder_id),
+                "beliefs": self._holder_records(state.beliefs, holder_id),
+                "experiences": self._holder_records(state.experiences, holder_id),
+                "npc_relationships": self._holder_records(
+                    state.npc_relationships, holder_id
+                ),
+            }
+        )
+
+    @staticmethod
+    def _holder_records(
+        records: Mapping[str, object],
+        holder_id: str,
+        *,
+        holder_field: str = "holder_id",
+    ) -> tuple[Mapping[str, object], ...]:
+        return tuple(
+            _snapshot_value(records[record_id])
+            for record_id in sorted(records)
+            if getattr(records[record_id], holder_field) == holder_id
+        )
 
     @staticmethod
     def _records(records: Mapping[str, object]) -> tuple[Mapping[str, object], ...]:
