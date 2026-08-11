@@ -119,7 +119,71 @@ SETTLEMENT = ManualCouncilScenario(
     turn_order_offset=3,
 )
 
-SCENARIOS: tuple[ManualCouncilScenario, ...] = (JOURNEY, SETTLEMENT)
+OPPOSING_INTERESTS = ManualCouncilScenario(
+    name="opposing-interests",
+    organization_id="organization_303",
+    organization_name="Town Council",
+    participants=(
+        CouncilParticipant(
+            "entity_421",
+            "Fara",
+            "I work with the riverside traders, who need dependable wagon access "
+            "to the market.",
+        ),
+        CouncilParticipant(
+            "entity_422",
+            "Galen",
+            "I belong to the hillside growers, who want scarce communal labour "
+            "kept available for the coming harvest.",
+        ),
+        CouncilParticipant(
+            "entity_423",
+            "Hesta",
+            "I trade produce from the hillside growers at the riverside market, "
+            "so both reliable access and harvest readiness matter to me.",
+        ),
+        CouncilParticipant(
+            "entity_424",
+            "Ivo",
+            "I work with the riverside carriers and favour repairing the damaged "
+            "market road before trade is disrupted further.",
+        ),
+        CouncilParticipant(
+            "entity_425",
+            "Jora",
+            "I am an independent healer who needs market deliveries but worries "
+            "about exhausting the town's workers before harvest.",
+        ),
+    ),
+    agenda=(
+        "The damaged market road is slowing riverside trade while the hillside "
+        "growers need communal labour for the approaching harvest. The council "
+        "must choose how the town should balance these opposed and overlapping "
+        "interests; no group has special voting authority."
+    ),
+    actions=(
+        ActionOption(
+            "repair_market_road_now",
+            "Commit communal labour to repair the market road immediately.",
+        ),
+        ActionOption(
+            "prioritize_harvest",
+            "Keep communal labour on harvest preparations and defer the road repair.",
+        ),
+        ActionOption(
+            "split_work_crews",
+            "Divide available work crews between a limited road repair and harvest preparations.",
+        ),
+    ),
+    max_rounds=20,
+    turn_order_offset=1,
+)
+
+SCENARIOS: tuple[ManualCouncilScenario, ...] = (
+    JOURNEY,
+    SETTLEMENT,
+    OPPOSING_INTERESTS,
+)
 SCENARIO_NAMES: tuple[str, ...] = tuple(scenario.name for scenario in SCENARIOS)
 DEFAULT_SCENARIO_NAME = JOURNEY.name
 

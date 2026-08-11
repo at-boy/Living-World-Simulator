@@ -579,3 +579,13 @@ than the issue's author, a representative of unanimous action support, or a
 special authority. Its three alternatives remain untrusted proposals routed to
 the accepted no-mutation demonstration gateway. Collective agenda discovery,
 institutional governance, persistence, and world mutation remain deferred.
+
+The same manual catalog now includes an `opposing-interests` scenario. Five
+independently eligible town-council members receive qualitative self-knowledge
+about riverside trade, hillside growing, or cross-cutting and independent
+concerns, then consider immediate road repair, harvest priority, or divided
+work crews. Affiliation is context rather than engine authority: it supplies no
+faction object, attendance rule, voting weight, delegate, predetermined model
+choice, reputation effect, or durable political consequence. Any selected
+alternative remains an untrusted proposal routed through the existing accepted
+no-mutation demonstration gateway.

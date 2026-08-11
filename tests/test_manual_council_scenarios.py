@@ -22,6 +22,7 @@ _SCENARIO_SPEC.loader.exec_module(_SCENARIO_MODULE)
 
 DEFAULT_SCENARIO_NAME = _SCENARIO_MODULE.DEFAULT_SCENARIO_NAME
 JOURNEY = _SCENARIO_MODULE.JOURNEY
+OPPOSING_INTERESTS = _SCENARIO_MODULE.OPPOSING_INTERESTS
 SCENARIO_NAMES = _SCENARIO_MODULE.SCENARIO_NAMES
 SETTLEMENT = _SCENARIO_MODULE.SETTLEMENT
 get_scenario = _SCENARIO_MODULE.get_scenario
@@ -83,7 +84,9 @@ def test_argument_help_does_not_construct_or_contact_provider(
         module.main()
 
     assert exit_info.value.code == 0
-    assert "--scenario {journey,settlement}" in capsys.readouterr().out
+    assert (
+        "--scenario {journey,settlement,opposing-interests}" in capsys.readouterr().out
+    )
 
 
 def test_settlement_scenario_is_opaque_long_rotated_and_qualitative() -> None:
@@ -118,6 +121,79 @@ def test_settlement_text_separates_shared_condition_from_coordinator() -> None:
     assert "not introduced by alma" in visible_text
     assert "no action has unanimous support" in visible_text
     assert "speak for everyone" in visible_text
+
+
+@pytest.mark.parametrize("path", _EXAMPLE_PATHS)
+def test_providers_select_opposing_interests_without_provider_access(
+    path: Path,
+) -> None:
+    module = _load_example(path)
+
+    assert module.get_scenario("opposing-interests") is OPPOSING_INTERESTS
+    assert module.SCENARIO_NAMES == (
+        "journey",
+        "settlement",
+        "opposing-interests",
+    )
+
+
+def test_opposing_interests_has_five_independently_eligible_members() -> None:
+    assert len(OPPOSING_INTERESTS.participants) == 5
+    assert len(set(OPPOSING_INTERESTS.participant_ids)) == 5
+    assert OPPOSING_INTERESTS.organization_name == "Town Council"
+    assert all(
+        participant.identifier.startswith("entity_")
+        for participant in OPPOSING_INTERESTS.participants
+    )
+
+    # Both manual entry points create one member_of relationship per participant;
+    # no affiliation grants or substitutes for council eligibility.
+    for path in _EXAMPLE_PATHS:
+        source = path.read_text(encoding="utf-8")
+        assert "for index, participant in enumerate(scenario.participants" in source
+        assert '"member_of"' in source
+        assert "participant.identifier" in source
+        assert "scenario.organization_id" in source
+
+
+def test_opposing_interests_context_is_opposed_cross_cutting_and_safe() -> None:
+    visible_text = " ".join(
+        (
+            OPPOSING_INTERESTS.agenda,
+            *(
+                participant.self_knowledge
+                for participant in OPPOSING_INTERESTS.participants
+            ),
+        )
+    ).casefold()
+
+    assert "riverside traders" in visible_text
+    assert "hillside growers" in visible_text
+    assert "both reliable access and harvest readiness" in visible_text
+    assert "independent healer" in visible_text
+    assert "opposed and overlapping interests" in visible_text
+    assert "special voting authority" in visible_text
+    assert "entity_" not in visible_text
+    assert "organization_" not in visible_text
+    assert "relationship" not in visible_text
+    assert "score" not in visible_text
+
+
+def test_opposing_interests_offers_choices_without_preselected_result() -> None:
+    assert len(OPPOSING_INTERESTS.actions) >= 3
+    assert len({action.key for action in OPPOSING_INTERESTS.actions}) == len(
+        OPPOSING_INTERESTS.actions
+    )
+    assert all(action.description.strip() for action in OPPOSING_INTERESTS.actions)
+
+    participant_text = " ".join(
+        participant.self_knowledge for participant in OPPOSING_INTERESTS.participants
+    )
+    assert all(
+        action.key not in participant_text for action in OPPOSING_INTERESTS.actions
+    )
+    assert not hasattr(OPPOSING_INTERESTS, "proposal")
+    assert not hasattr(OPPOSING_INTERESTS, "majority")
 
 
 def test_unknown_scenario_is_rejected_without_provider_access() -> None:

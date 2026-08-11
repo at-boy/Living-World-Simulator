@@ -154,6 +154,12 @@ failure that requires a council decision. Its engine-selected caller only
 coordinates the meeting: the caller did not originate the condition, does not
 represent unanimous support for an action, and receives no special decision
 authority. Both use a longer, deterministically rotated discussion. A
+third `opposing-interests` scenario gives five independently eligible town
+council members safe natural-language affiliations with riverside trade,
+hillside growing, or cross-cutting and independent interests. They consider
+immediate road repair, harvest priority, or split work crews. These affiliations
+are filtered perspective only: they do not force attendance, speech, proposals,
+votes, or a model result, and they create no faction or political state. A
 manual-only gateway handler can accept a selected
 alternative while explicitly leaving world state unchanged. A real model may
 nevertheless decline, abstain, choose any offered alternative, or fail to

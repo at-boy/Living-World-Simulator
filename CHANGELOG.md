@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add an opt-in opposing-interests council scenario with five independently
+  eligible members, safe cross-cutting affiliations, and three unforced choices.
 - Add a shared immutable manual council-scenario catalog and deterministic
   `--scenario settlement` demonstration that separates a settlement-wide issue
   from the engine-appointed caller's procedural coordinator role.
