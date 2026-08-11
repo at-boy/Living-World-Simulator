@@ -59,8 +59,10 @@ reported, and committed. HTTP inspection usage is documented. The remaining
 v0.5 work is Task 14 release closeout. **Do not start or delegate Task 14 until
 the user explicitly authorizes it.** A proposed post-v0.5 settlement-evolution
 roadmap is documented, but it is not authorized implementation work and must
-not expand release closeout. The completed work and current validation baseline
-are in `docs/orchestrator_handoff/continuation_brief.md`.
+not expand release closeout. Its backlog items are assigned to milestones, and
+the milestone-plus-task branch workflow begins only after the v0.6 vertical
+slice is accepted. The completed work and current validation baseline are in
+`docs/orchestrator_handoff/continuation_brief.md`.
 
 When the user asks to continue, begin with the earliest approved task after
 rechecking the current worktree and its plan/prompt.

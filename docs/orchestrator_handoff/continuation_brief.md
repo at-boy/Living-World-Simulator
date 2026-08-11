@@ -78,6 +78,14 @@ work execution, development stages, population continuity, governance, and
 regional growth. These are roadmap candidates, not authorized implementation
 tasks, and must not expand Task 14.
 
+Every future idea currently in `docs/backlog.md` is assigned to a roadmap
+milestone or supporting track. After the v0.6 unattended founders scenario
+passes its acceptance target, development changes from reviewed commits on
+`main` to one `milestone/vX.Y` integration branch with short-lived
+`task/<task>-<slug>` branches. `main` remains the stable release line. This
+workflow decision is documented in `docs/development_workflow.md` and does not
+authorize any roadmap task.
+
 ## Council decisions already established
 
 - A council call has a caller, agenda, one or more decision points/actions, and

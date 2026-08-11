@@ -79,6 +79,11 @@ to an evolving town and regional simulation is documented in the
 Its v0.6 work must be decomposed into isolated numbered plans and prompts only
 after the milestone is explicitly authorized.
 
+After the v0.6 vertical-slice acceptance target, the repository adopts the
+milestone integration branch plus short-lived task branch workflow documented
+in `docs/development_workflow.md`. Branch creation does not itself authorize a
+roadmap task.
+
 ## Delivery rule for every task
 
 The assigned subagent writes or updates its specified tests and examples,

@@ -131,8 +131,10 @@ succeeded, stalled, or failed, and replay the same configured seed.
 
 After the founding loop works, add households and families, births, childhood,
 apprenticeship, aging, death, inheritance, migration, skill development,
-reputation, and durable social roles. These systems create labor and care
-constraints and allow the settlement to outlive its founders.
+reputation, and durable social roles. Cognitive maturation in this milestone
+also covers experience validation/confidence weighting and long-term memory
+decay and retrieval ranking. These systems create labor and care constraints
+and allow the settlement to outlive its founders.
 
 Town growth must remain possible without being guaranteed. Shortages, unsafe
 conditions, political conflict, demographic imbalance, or loss of external
@@ -143,14 +145,58 @@ connections can cause stagnation, decline, abandonment, or recovery.
 Add engine-owned institutions, offices, jurisdiction, decision categories,
 quorum and voting policies, auditable decisions, collective intent, factions,
 political realignment, law/rule effects, and authorized public works. Council
-dialogue can inform these systems but cannot substitute for them.
+dialogue can inform these systems but cannot substitute for them. This
+milestone also distinguishes verified invitations and attendance from claims,
+deception, rumours, and contested participation.
 
 ### v0.9 — Regional growth and historical emergence
 
 Add multiple simulated settlements, spatial travel and logistics, settlement
 specialization, inter-settlement trade, diplomacy and conflict, culture,
 religion, disease, ruins, historical figures, rumours, and promotion of
-selected off-map references into simulated regions.
+selected off-map references into simulated regions. Emergent quests are
+derived from world conditions, histories, needs, and NPC interpretations
+rather than inserted as unsupported LLM facts.
+
+### v1.0 — Mature observable sandbox and player influence
+
+Consolidate the simulation into a supported long-running sandbox with stable
+scenario/run interfaces, compatibility and migration policy, richer failure
+and recovery behavior, and an operator experience built on the read-only and
+spatial inspectors. Add player influence on history only through explicit,
+authorized commands and world actions; the web administration interface
+remains separate from read-only inspection and must have its own authority and
+audit model.
+
+## Backlog placement
+
+Every current future idea has a roadmap home. Placement records intent and
+dependency order; it does not authorize implementation or promise that the
+scope cannot be refined during task planning.
+
+| Backlog idea | Planned milestone or track |
+| --- | --- |
+| Autonomous settlement evolution, founding mandates, objective graphs | v0.6 |
+| Off-map homelands, markets, trade/travel/communication references | v0.6, with promotion to simulated regions in v0.9 |
+| Read-only World Inspector UI | v0.6 supporting observability track (existing Task 15 candidate) |
+| Spatial World Inspector and canonical placement | Begin as a v0.6 supporting contract; expand for regional simulation in v0.9 (existing Task 15a candidate) |
+| Births, childhood, apprenticeships, old age | v0.7 |
+| Death, inheritance, families, genealogies | v0.7 |
+| Migration | v0.7 local/population continuity; v0.9 inter-settlement movement |
+| Reputation | v0.7 personal/social foundation; consumed by v0.8 politics |
+| Experience validation and confidence weighting | v0.7 cognitive maturation |
+| Long-term memory decay and retrieval ranking | v0.7 cognitive maturation |
+| Dynamic factions | v0.8 |
+| Council opposition, political realignment, withdrawal, and secession | v0.8, using v0.7 migration and v0.6 settlement foundations |
+| Institution-specific meeting and decision rules | v0.8 |
+| Invitation claims, deception, and contested participation | v0.8 |
+| Culture and religions | v0.9 |
+| Disease | v0.9, building on v0.7 demography and care constraints |
+| Historical figures and ruins created by simulation | v0.9 historical emergence |
+| Dynamic rumours | v0.9, building on verified communication and belief boundaries |
+| Emergent quests | v0.9 |
+| Player influence on history | v1.0 |
+| Web administration interface | v1.0 authorized-control track, separate from inspection |
 
 ## Observability and user experience
 
@@ -181,3 +227,11 @@ separate. A visualization must not become an undocumented mutation API.
 - Randomness, when introduced, must be seedable and replayable enough to debug
   unattended simulations.
 - The canonical vertical slice comes before broad feature expansion.
+
+## Branching transition
+
+After the v0.6 unattended founders scenario satisfies its acceptance target,
+use the milestone-plus-task branch workflow in `docs/development_workflow.md`.
+The first such integration branch is `milestone/v0.7`; its implementation
+tasks use short-lived branches created from it. This transition is a workflow
+decision, not permission to begin v0.7.

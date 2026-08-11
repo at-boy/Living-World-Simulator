@@ -23,6 +23,48 @@ reviewable steps.
 
 ---
 
+## Branch Workflow After the v0.6 Vertical Slice
+
+The repository currently uses focused reviewed commits on `main`. After the
+v0.6 autonomous-founding-settlement acceptance target is complete, development
+moves to a two-level branch workflow:
+
+```text
+main
+  └── milestone/v0.7
+        ├── task/17-households
+        ├── task/18-aging
+        └── task/19-migration
+```
+
+- `main` is the stable reviewed release line. Normal feature work is not
+  committed directly to it.
+- One `milestone/vX.Y` integration branch owns each active roadmap milestone.
+  “Milestone” is used instead of “major version” because `v0.6`, `v0.7`, and
+  similar releases are minor-version milestones.
+- Every isolated implementation task uses a short-lived `task/<task>-<slug>`
+  branch created from the active milestone branch. Its correction cycles stay
+  on that same task branch.
+- A task branch returns to the milestone branch only after independent review,
+  its report, boundary audit, `make`, `make examples`, and `git diff --check`
+  pass. The milestone branch must remain usable between merges.
+- Dependent tasks are merged in documented order. A task branch must not use an
+  unmerged sibling branch as an informal dependency; amend the plan and merge
+  the prerequisite first.
+- Release closeout runs on the milestone branch. Once accepted, the milestone
+  is merged into `main` and tagged. The next milestone branch starts from that
+  reviewed `main` state.
+- Urgent release fixes branch from `main` as `fix/<slug>` and are also brought
+  into any active milestone branch when applicable.
+- Planning documents may describe future branches but creating a branch does
+  not authorize its task or broaden its allowed-file boundary.
+
+Only one milestone integration branch should normally be active. This avoids
+long-lived version branches drifting apart while still isolating individual
+features and their review history.
+
+---
+
 ## Engineering Principles
 
 ### The engine understands structure, not meaning.

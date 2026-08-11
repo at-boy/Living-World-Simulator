@@ -69,6 +69,11 @@ this completed scope.
 
 These are intentionally out of scope for the current milestone.
 
+Every item below is placed in the milestone/track matrix in
+`docs/post_v05_settlement_evolution_roadmap.md`. That placement preserves the
+idea and its dependencies but does not activate it; a feature still requires
+an approved task plan and saved prompt.
+
 - **Autonomous settlement evolution roadmap:** a staged post-v0.5 program for
   reproducible scenarios, engine-owned goals, off-map external references,
   needs and maintenance, work execution, settlement-to-town development,
