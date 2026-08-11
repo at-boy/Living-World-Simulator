@@ -1,5 +1,9 @@
 import pytest
 
+from living_world.cognition.local_llm_cognition_format import (
+    RESPONSE_SCHEMA,
+    SYSTEM_INSTRUCTIONS,
+)
 from living_world.cognition.npc_cognition_client import (
     ActionOption,
     NPCCognitionClientError,
@@ -64,8 +68,10 @@ def test_calls_ollama_with_structured_proposal_request() -> None:
     url, payload, timeout = transport.calls[0]
     assert url == "http://127.0.0.1:11434/api/generate"
     assert payload["model"] == "qwen3:4b"
-    assert payload["system"] == client.SYSTEM_INSTRUCTIONS
-    assert payload["format"] == client.RESPONSE_SCHEMA
+    assert client.SYSTEM_INSTRUCTIONS == SYSTEM_INSTRUCTIONS
+    assert client.RESPONSE_SCHEMA == RESPONSE_SCHEMA
+    assert payload["system"] == SYSTEM_INSTRUCTIONS
+    assert payload["format"] == RESPONSE_SCHEMA
     assert payload["stream"] is False
     assert payload["think"] is False
     assert timeout == 30.0

@@ -113,6 +113,15 @@ def test_parses_offered_action_proposal_without_side_effects() -> None:
         "[]",
         '{"spoken_text":"hello"}',
         '{"spoken_text":"hello","action_request":null,"extra":true}',
+        (
+            '{"spoken_text":"hello","action_request":{"action_key":"wait",'
+            '"target_label":null,"rationale":"because"}}'
+        ),
+        (
+            '{"spoken_text":"hello","action_request":{"action_key":"wait",'
+            '"rationale":"because","arguments":{}}}'
+        ),
+        '```json\n{"spoken_text":"hello","action_request":null}\n```',
         '{"spoken_text":null,"action_request":null}',
         (
             '{"spoken_text":null,"action_request":{"action_key":"invent",'
@@ -131,6 +140,15 @@ def test_parses_offered_action_proposal_without_side_effects() -> None:
 def test_rejects_invalid_or_unoffered_model_proposals(content: str) -> None:
     with pytest.raises(NPCCognitionInvalidResponseError):
         parse_decision_response(content, make_actions())
+
+
+def test_parses_compliant_null_action_response() -> None:
+    decision = parse_decision_response(
+        '{"spoken_text":"I will observe for now.","action_request":null}',
+        make_actions(),
+    )
+
+    assert decision == NPCDecision("I will observe for now.", None)
 
 
 def test_value_objects_are_validated_and_arguments_are_immutable() -> None:

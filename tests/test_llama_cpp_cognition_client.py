@@ -1,6 +1,10 @@
 import pytest
 
 from living_world.cognition.llama_cpp_cognition_client import LlamaCppCognitionClient
+from living_world.cognition.local_llm_cognition_format import (
+    RESPONSE_SCHEMA,
+    SYSTEM_INSTRUCTIONS,
+)
 from living_world.cognition.npc_cognition_client import (
     ActionOption,
     NPCCognitionClientError,
@@ -71,12 +75,14 @@ def test_calls_llama_cpp_with_structured_proposal_request() -> None:
     assert payload["model"] == "qwen3.gguf"
     assert payload["response_format"] == {
         "type": "json_object",
-        "schema": client.RESPONSE_SCHEMA,
+        "schema": RESPONSE_SCHEMA,
     }
     assert payload["messages"][0] == {
         "role": "system",
-        "content": client.SYSTEM_INSTRUCTIONS,
+        "content": SYSTEM_INSTRUCTIONS,
     }
+    assert client.SYSTEM_INSTRUCTIONS == SYSTEM_INSTRUCTIONS
+    assert client.RESPONSE_SCHEMA == RESPONSE_SCHEMA
     assert timeout == 30.0
 
 

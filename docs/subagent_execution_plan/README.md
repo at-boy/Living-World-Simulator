@@ -55,8 +55,9 @@ NPC interpretation until a simulation-owned handler validates an action.
 22. [13d Council invitation action-selection guidance](13d_council_invitation_action_selection.md)
 23. [13e Council invitation diagnostics](13e_council_invitation_diagnostics.md)
 24. [13f Explicit-decline caller fallback](13f_council_explicit_decline_fallback.md)
-25. [13a HTTP inspection coverage for v0.4–v0.5](13a_http_inspection_coverage.md)
-26. [14 v0.5 release closeout](14_v05_release_closeout.md)
+25. [13g Local cognition response-shape guidance](13g_local_cognition_response_shape_guidance.md)
+26. [13a HTTP inspection coverage for v0.4–v0.5](13a_http_inspection_coverage.md)
+27. [14 v0.5 release closeout](14_v05_release_closeout.md)
 
 ## Deferred post-v0.5 task candidates
 

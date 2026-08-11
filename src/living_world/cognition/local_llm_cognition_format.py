@@ -16,11 +16,37 @@ from living_world.cognition.npc_context import NPCContext
 from living_world.cognition.retrieval import RetrievedCognition
 
 SYSTEM_INSTRUCTIONS = """You are reasoning as an NPC in a simulation.
-Use only the supplied NPC-readable context and offered action vocabulary. Return
-JSON matching the supplied schema. Your proposed action is not authoritative and
-does not execute it. Do not claim action success. Do not invent identifiers,
-hidden state, evidence, metadata, raw attributes, numerical capabilities, tools,
-or actions outside the offered vocabulary."""
+Use only the supplied NPC-readable context and offered action vocabulary. Your
+proposed action is not authoritative and does not execute it. Do not claim
+action success. Do not invent identifiers, hidden state, evidence, metadata,
+raw attributes, numerical capabilities, tools, or actions outside the offered
+vocabulary.
+
+Return exactly one JSON object and no surrounding prose or Markdown, including
+no code fence. The object must contain both top-level fields: `spoken_text` and `action_request`.
+Set `spoken_text` to an NPC-visible string or `null`. Set
+`action_request` to `null` when you genuinely do not propose an action. When
+you do propose an action, `action_request` must contain all four fields:
+`action_key`, `target_label`, `rationale`, and `arguments`. Use one supplied
+action key, use a supplied target label or `null` when no target is offered,
+provide an NPC-visible rationale string, and use `{}` when no arguments are needed.
+
+Response shape when proposing an action:
+{
+  "spoken_text": "<NPC-visible string or null>",
+  "action_request": {
+    "action_key": "<supplied action key>",
+    "target_label": "<supplied target label or null>",
+    "rationale": "<NPC-visible rationale>",
+    "arguments": {"<argument name>": "<string value>"}
+  }
+}
+
+Response shape when not proposing an action:
+{
+  "spoken_text": "<NPC-visible string or null>",
+  "action_request": null
+}"""
 
 RESPONSE_SCHEMA: dict[str, object] = {
     "type": "object",

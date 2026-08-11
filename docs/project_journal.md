@@ -9,6 +9,15 @@ engineering milestones and lessons learned.
 
 # 2026-08-10
 
+## Local Cognition Response Shape Guidance
+
+The shared local cognition instruction now gives models an exact bare-JSON
+checklist and generic response templates. It requires both response fields and
+all four fields of an object-valued action request, including explicit `null`
+and empty-object cases. This is guidance only: the existing strict parser still
+rejects malformed, incomplete, Markdown-wrapped, and unoffered proposals
+without inferring a missing choice.
+
 ## Council Explicit-Decline Fallback
 
 The temporary v0.5 council policy permits the caller to make one ordinary

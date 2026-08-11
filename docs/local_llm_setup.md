@@ -173,3 +173,11 @@ keys/target labels offered for that decision. They require a JSON response with
 `spoken_text` and `action_request`; an action request may be `null`, and any
 proposal must use an offered key and target label. Invalid provider/network
 responses raise a cognition-client error and remain non-authoritative.
+
+The shared cognition instruction requires exactly one bare JSON object: both
+top-level fields must be present, and an object-valued `action_request` must
+include `action_key`, `target_label`, `rationale`, and `arguments`. It directs
+the model to use `null` where no target or action is proposed and `{}` where no
+arguments are needed. This response-shape guidance helps local models follow
+the strict contract, but cannot guarantee compliance; malformed or unoffered
+proposals are still rejected without repair or inference.
