@@ -165,6 +165,18 @@ alternative while explicitly leaving world state unchanged. A real model may
 nevertheless decline, abstain, choose any offered alternative, or fail to
 return schema-valid JSON. Such a response is non-authoritative.
 
+The `cognition-shaped` scenario gives every participant the same public-well
+agenda and three actions while seeding different private histories through the
+engine's manager-owned lifecycles. Both providers share that preparation path:
+
+```bash
+PYTHONPATH=src .venv/bin/python examples/manual/ollama_council_meeting.py --scenario cognition-shaped --show-context
+```
+
+The trace can show each holder's filtered observation and core interpretation,
+but never another holder's records, provenance IDs, evidence, or metadata.
+Conflicting beliefs are NPC interpretations, not world truth or forced votes.
+
 The optional context trace records only each already-filtered request before
 the provider call and renders it through the production request serializer. It
 never records or prints raw model responses, exception text, HTTP payloads,

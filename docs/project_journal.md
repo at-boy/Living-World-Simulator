@@ -589,3 +589,13 @@ faction object, attendance rule, voting weight, delegate, predetermined model
 choice, reputation effect, or durable political consequence. Any selected
 alternative remains an untrusted proposal routed through the existing accepted
 no-mutation demonstration gateway.
+
+The manual catalog now also includes `cognition-shaped`. Both provider entry
+points use one typed runtime-preparation function for every scenario, replacing
+direct world-collection setup with definition, entity, and relationship
+managers and manager-generated IDs. Five distinct holder histories contain
+current observations plus a memory, experiences, conflicting beliefs, and a
+private NPC-relationship interpretation. Safe request serialization contains
+only each holder's prose projection; IDs, lineage, evidence, metadata, raw
+state, and other holders' cognition remain engine-only. These histories do not
+prescribe attendance, speech, a proposal, a majority, or a gateway outcome.

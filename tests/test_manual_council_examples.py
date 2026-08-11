@@ -24,7 +24,7 @@ from living_world.cognition.council import (
     CouncilResult,
 )
 from living_world.cognition.npc_cognition_client import ActionRequest
-from living_world.cognition.npc_context import NPCContext
+from living_world.cognition.npc_context import NPCContext, NPCContextAssembler
 from living_world.cognition.recording_cognition_client import RecordedCognitionRequest
 
 _EXAMPLE_PATHS = (
@@ -292,3 +292,40 @@ def test_default_scenario_remains_the_existing_journey(path: Path) -> None:
     assert module.DEFAULT_SCENARIO_NAME == "journey"
     assert module.ACTIONS == module.get_scenario("journey").actions
     assert module.PARTICIPANT_IDS == module.get_scenario("journey").participant_ids
+
+
+@pytest.mark.parametrize("path", _EXAMPLE_PATHS)
+def test_cognition_shaped_recorded_trace_contains_only_holder_contexts(
+    path: Path,
+) -> None:
+    module = _load_example(path)
+    scenario = module.get_scenario("cognition-shaped")
+    runtime = module.prepare_council_runtime(scenario)
+    assembler = NPCContextAssembler(
+        runtime.engine.state, retriever=runtime.cognitive_retriever
+    )
+    requests = tuple(
+        RecordedCognitionRequest(
+            assembler.assemble(
+                holder_id=holder_id,
+                capability_descriptions=runtime.participant_self_knowledge[holder_id],
+            ),
+            scenario.actions,
+        )
+        for holder_id in runtime.participant_ids
+    )
+
+    output = module.format_context_trace(requests)
+
+    assert output.count('"identity":') == 5
+    assert "hidden damage was missed" in output
+    assert "handle a water emergency calmly" in output
+    assert "prevent wasting scarce stone" in output
+    assert "allowing the disruption to continue" in output
+    assert "trust Nessa's caution but know Quin values urgency" in output
+    assert output.count('"kind":"relationship"') == 1
+    assert all(identifier not in output for identifier in runtime.participant_ids)
+    assert runtime.organization_id not in output
+    assert "evidence" not in output
+    assert "metadata" not in output
+    assert "private_" not in output

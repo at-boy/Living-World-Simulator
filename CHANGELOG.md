@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add a cognition-shaped manual council scenario whose shared manager-owned
+  runtime seeds isolated observations, memories, experiences, beliefs, and
+  social interpretations without forcing a proposal or exposing provenance.
 - Add an opt-in opposing-interests council scenario with five independently
   eligible members, safe cross-cutting affiliations, and three unforced choices.
 - Add a shared immutable manual council-scenario catalog and deterministic

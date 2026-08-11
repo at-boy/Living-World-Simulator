@@ -246,6 +246,8 @@ non-authoritative proposals to the ordinary action gateway.
 - otherwise, confirmed attendees form a bounded round robin rotated by the
   call's non-negative engine-owned offset
 - the offset is not exposed to NPC cognition or selected by model output
+- manual examples use manager-generated runtime IDs and manager-owned cognitive
+  lifecycles; their trace contains only holder-filtered context projections
 
 ---
 

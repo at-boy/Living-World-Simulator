@@ -405,3 +405,10 @@ offset. Confirmed attendees are rotated by that offset and then scheduled in a
 bounded deterministic round robin. An explicit speaker-call schedule takes
 precedence. The offset is ephemeral engine coordination: it is not NPC input,
 cognitive state, authority, or model output.
+
+Manual council scenarios prepare organizations, participants, and membership
+through `SimulationEngine` managers and retain manager-generated IDs only for
+engine calls. The cognition-shaped demonstration records holder-scoped
+observations, memories, experiences, beliefs, and social interpretations
+through their managers. Every NPC still receives only its filtered
+`NPCContext`; beliefs do not mutate world truth or select a proposal.

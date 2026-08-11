@@ -5,6 +5,15 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from living_world.cognition.npc_cognition_client import ActionOption
+from living_world.cognition.retrieval import (
+    CognitiveRetriever,
+    DeterministicCognitiveRetriever,
+    RetrievalQuery,
+    RetrievedCognition,
+)
+from living_world.core.definition import Definition
+from living_world.core.memory import CognitiveSalience
+from living_world.simulation.simulation_engine import SimulationEngine
 
 
 @dataclass(frozen=True)
@@ -34,6 +43,34 @@ class ManualCouncilScenario:
         """Return opaque participant identifiers in deterministic call order."""
 
         return tuple(participant.identifier for participant in self.participants)
+
+
+@dataclass(frozen=True)
+class PreparedCouncilRuntime:
+    """Manager-created runtime state and opaque IDs for one manual council."""
+
+    engine: SimulationEngine
+    organization_id: str
+    participant_ids: tuple[str, ...]
+    participant_self_knowledge: dict[str, tuple[str, ...]]
+    cognitive_retriever: CognitiveRetriever | None
+
+
+@dataclass(frozen=True)
+class _ManualTopicRetriever:
+    """Apply a scenario topic through the production retrieval protocol."""
+
+    retriever: CognitiveRetriever
+    topic: str
+
+    def retrieve(self, query: RetrievalQuery) -> tuple[RetrievedCognition, ...]:
+        return self.retriever.retrieve(
+            RetrievalQuery(
+                holder_id=query.holder_id,
+                topic=self.topic if query.topic is None else query.topic,
+                limit=query.limit,
+            )
+        )
 
 
 JOURNEY = ManualCouncilScenario(
@@ -179,10 +216,52 @@ OPPOSING_INTERESTS = ManualCouncilScenario(
     turn_order_offset=1,
 )
 
+COGNITION_SHAPED = ManualCouncilScenario(
+    name="cognition-shaped",
+    organization_id="organization_304",
+    organization_name="Town Council",
+    participants=(
+        CouncilParticipant(
+            "entity_431", "Nessa", "I maintain shared buildings for the town."
+        ),
+        CouncilParticipant(
+            "entity_432", "Orin", "I coordinate water deliveries between households."
+        ),
+        CouncilParticipant(
+            "entity_433", "Pella", "I account for the town's repair materials."
+        ),
+        CouncilParticipant(
+            "entity_434", "Quin", "I carry urgent goods along the well road."
+        ),
+        CouncilParticipant(
+            "entity_435", "Rhea", "I help neighbours organize shared work."
+        ),
+    ),
+    agenda=(
+        "The public well is failing and the council must choose a response. Each "
+        "member may weigh the same condition and choices differently."
+    ),
+    actions=(
+        ActionOption(
+            "repair_well_now", "Organize an immediate repair with available materials."
+        ),
+        ActionOption(
+            "secure_water_first",
+            "Establish temporary water deliveries before beginning repairs.",
+        ),
+        ActionOption(
+            "inspect_then_repair", "Inspect the failure and prepare a staged repair."
+        ),
+    ),
+    max_rounds=20,
+    turn_order_offset=4,
+)
+
 SCENARIOS: tuple[ManualCouncilScenario, ...] = (
     JOURNEY,
     SETTLEMENT,
     OPPOSING_INTERESTS,
+    COGNITION_SHAPED,
 )
 SCENARIO_NAMES: tuple[str, ...] = tuple(scenario.name for scenario in SCENARIOS)
 DEFAULT_SCENARIO_NAME = JOURNEY.name
@@ -195,3 +274,146 @@ def get_scenario(name: str) -> ManualCouncilScenario:
         if scenario.name == name:
             return scenario
     raise ValueError(f"Unknown manual council scenario: {name}")
+
+
+def prepare_council_runtime(
+    scenario: ManualCouncilScenario,
+) -> PreparedCouncilRuntime:
+    """Create one scenario solely through manager-owned runtime lifecycles."""
+
+    engine = SimulationEngine()
+    engine.definitions.register_many(
+        (Definition(key="organization"), Definition(key="npc"))
+    )
+    organization = engine.entities.create(
+        definition_key="organization", name=scenario.organization_name
+    )
+    participants = tuple(
+        engine.entities.create(definition_key="npc", name=participant.name)
+        for participant in scenario.participants
+    )
+    for participant in participants:
+        engine.relationships.create(
+            kind="member_of",
+            source_id=participant.id,
+            target_id=organization.id,
+        )
+
+    if scenario is COGNITION_SHAPED:
+        _seed_cognition_shaped_history(engine, tuple(item.id for item in participants))
+
+    cognitive_retriever = (
+        _ManualTopicRetriever(
+            DeterministicCognitiveRetriever(engine.state), "public well"
+        )
+        if scenario is COGNITION_SHAPED
+        else None
+    )
+
+    return PreparedCouncilRuntime(
+        engine=engine,
+        organization_id=organization.id,
+        participant_ids=tuple(participant.id for participant in participants),
+        participant_self_knowledge={
+            runtime.id: (catalog.self_knowledge,)
+            for runtime, catalog in zip(
+                participants, scenario.participants, strict=True
+            )
+        },
+        cognitive_retriever=cognitive_retriever,
+    )
+
+
+def _seed_cognition_shaped_history(
+    engine: SimulationEngine, participant_ids: tuple[str, ...]
+) -> None:
+    """Seed private interpretations without selecting a council response."""
+
+    nessa_id, orin_id, pella_id, quin_id, rhea_id = participant_ids
+    observations = (
+        engine.observations.record(
+            observer=nessa_id,
+            subject="well_record",
+            description="Fresh cracks are spreading beside the public well's old repair.",
+            confidence=0.9,
+            evidence={"private_measurement": "north seam widened"},
+            metadata={"internal_note": "maintenance round"},
+        ),
+        engine.observations.record(
+            observer=orin_id,
+            subject="well_record",
+            description="Several households are already rationing their remaining water.",
+            confidence=0.8,
+            evidence={"private_route_count": 7},
+            metadata={"internal_note": "delivery route"},
+        ),
+        engine.observations.record(
+            observer=pella_id,
+            subject="well_record",
+            description="The available stone looks sufficient only if damaged sections are identified first.",
+            confidence=0.75,
+            evidence={"private_inventory": "limited"},
+            metadata={"internal_note": "store ledger"},
+        ),
+        engine.observations.record(
+            observer=quin_id,
+            subject="well_record",
+            description="Queues around the failing well are blocking the road used for urgent deliveries.",
+            confidence=0.85,
+            evidence={"private_schedule": "missed route"},
+            metadata={"internal_note": "courier round"},
+        ),
+        engine.observations.record(
+            observer=rhea_id,
+            subject="well_record",
+            description="Neighbours are volunteering, but they disagree about whether to inspect or repair first.",
+            confidence=0.8,
+            evidence={"private_names": "volunteer list"},
+            metadata={"internal_note": "work gathering"},
+        ),
+    )
+    core = CognitiveSalience(importance=0.9, is_core=True)
+    engine.memories.record(
+        holder_id=nessa_id,
+        subject_id="public well",
+        summary="I remember a rushed repair failing because hidden damage was missed.",
+        salience=core,
+        source_observation_ids=(observations[0].id,),
+    )
+    engine.experiences.record(
+        holder_id=orin_id,
+        subject_id="public well",
+        summary="Temporary deliveries once gave households time to handle a water emergency calmly.",
+        supporting_observations=(observations[1].id,),
+        metadata={"private_source": "earlier shortage"},
+        salience=core,
+    )
+    engine.beliefs.record(
+        holder_id=pella_id,
+        subject_id="public well",
+        proposition="I believe inspection first is most likely to prevent wasting scarce stone.",
+        confidence=0.75,
+        importance=0.9,
+        status="core",
+        supporting_observations=(observations[2].id,),
+        metadata={"private_basis": "material estimate"},
+        salience=core,
+    )
+    engine.beliefs.record(
+        holder_id=quin_id,
+        subject_id="public well",
+        proposition="I believe immediate repair is safer than allowing the disruption to continue.",
+        confidence=0.75,
+        importance=0.9,
+        status="core",
+        supporting_observations=(observations[3].id,),
+        metadata={"private_basis": "delivery delays"},
+        salience=core,
+    )
+    engine.npc_relationships.record(
+        holder_id=rhea_id,
+        subject_id=nessa_id,
+        summary="On public well work, I trust Nessa's caution but know Quin values urgency.",
+        salience=CognitiveSalience(importance=0.7),
+        source_observation_ids=(observations[4].id,),
+    )

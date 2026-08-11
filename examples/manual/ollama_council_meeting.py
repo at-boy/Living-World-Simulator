@@ -8,6 +8,7 @@ from council_scenarios import (
     SCENARIO_NAMES,
     ManualCouncilScenario,
     get_scenario,
+    prepare_council_runtime,
 )
 
 from living_world.cognition.action_resolution import ActionResolution, NPCActionResolver
@@ -33,9 +34,6 @@ from living_world.cognition.recording_cognition_client import (
     RecordedCognitionRequest,
     RecordingCognitionClient,
 )
-from living_world.core.entity import Entity
-from living_world.core.relationship import Relationship
-from living_world.simulation.simulation_engine import SimulationEngine
 
 PERSPECTIVES = tuple(
     (participant.name, participant.self_knowledge)
@@ -96,22 +94,9 @@ def _run(
     scenario: ManualCouncilScenario = JOURNEY,
 ) -> None:
     recording_client = RecordingCognitionClient(client)
-    engine = SimulationEngine()
-    engine.state.entities[scenario.organization_id] = Entity(
-        scenario.organization_id, "organization", scenario.organization_name
-    )
-    for index, participant in enumerate(scenario.participants, start=1):
-        engine.state.entities[participant.identifier] = Entity(
-            participant.identifier, "npc", participant.name
-        )
-        relationship_id = f"relationship_{index + 500}"
-        engine.state.relationships[relationship_id] = Relationship(
-            relationship_id,
-            "member_of",
-            participant.identifier,
-            scenario.organization_id,
-        )
-    assembler = NPCContextAssembler(engine.state)
+    runtime = prepare_council_runtime(scenario)
+    engine = runtime.engine
+    assembler = NPCContextAssembler(engine.state, retriever=runtime.cognitive_retriever)
     decisions = DecisionEngine(recording_client)
     resolver = NPCActionResolver(
         scenario.actions, (ManualCouncilActionHandler(scenario.actions),)
@@ -128,15 +113,12 @@ def _run(
     )
     result = council.convene(
         call=CouncilCall(
-            scenario.participant_ids[0],
-            scenario.organization_id,
-            scenario.participant_ids[1:],
+            runtime.participant_ids[0],
+            runtime.organization_id,
+            runtime.participant_ids[1:],
             CouncilAgenda(scenario.agenda, scenario.actions),
             scenario.max_rounds,
-            participant_self_knowledge={
-                participant.identifier: (participant.self_knowledge,)
-                for participant in scenario.participants
-            },
+            participant_self_knowledge=runtime.participant_self_knowledge,
             turn_order_offset=scenario.turn_order_offset,
         )
     )
