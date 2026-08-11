@@ -27,6 +27,7 @@ docs/subagent_execution_plan/
 │   ├── 01_...
 │   ├── ...
 │   ├── 14_v05_release_closeout...
+│   ├── 14b_release_version_consistency...
 │   └── 14a_milestone_plan_reorganization...
 ├── v0_6.md
 └── v0_6/
@@ -47,7 +48,7 @@ correction prompts, and reports.
   `docs/subagent_execution_plan/v0_6.md`, and
   `docs/subagent_execution_plan/14a_milestone_plan_reorganization-report.md`.
 - Move every execution-plan artifact whose filename belongs to Tasks 01 through
-  14a into
+  14, corrective Task 14b, or Task 14a into
   `docs/subagent_execution_plan/initial_v0_2_3_to_v0_5/`. This includes task
   plans, saved `-prombt.md` files, correction prompts, reports, and other
   task-prefixed historical artifacts.
@@ -98,7 +99,8 @@ correction prompts, and reports.
 - The root directory contains only the cross-milestone README, milestone
   overview files, and milestone directories; no Task 01–15 artifact remains
   loose at the root.
-- Every Task 01–14a artifact is present in the initial-program directory.
+- Every Task 01–14b and Task 14a artifact is present in the initial-program
+  directory.
 - Every existing Task 15/15a artifact is present in the v0.6 directory.
 - The root README presents the historical order and links successfully to every
   plan, prompt, correction artifact, and report.

@@ -11,8 +11,9 @@ full. Inspect the complete execution-plan directory and search the repository
 for references to every path that will move before changing files.
 
 Use Git-aware moves. Preserve every historical plan, saved `-prombt.md`,
-correction artifact, and report for Tasks 01 through 14a in the
-`initial_v0_2_3_to_v0_5/` archive. Move Task 15 and 15a artifacts to `v0_6/`.
+correction artifact, and report for Tasks 01 through 14, Task 14b, and Task 14a
+in the `initial_v0_2_3_to_v0_5/` archive. Move Task 15 and 15a artifacts to
+`v0_6/`.
 Create the two milestone overview files and keep the root README as the complete
 cross-milestone index. Preserve global task numbering and the established
 `-prombt.md` spelling.
