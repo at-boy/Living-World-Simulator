@@ -28,40 +28,24 @@ this completed scope.
 
 ---
 
-## v0.4 – NPC System
+## Completed v0.4 – NPC System
 
-- NPC identity, schedules, and occupations are implemented as validated
-  JSON-compatible attributes on generic entities.
-- Holder-scoped memory, experience, belief, and NPC relationship records are
-  immutable and use internal provenance only.
-- Knowledge
-- Sleep-time cognitive consolidation creates memories, repeated-observation
-  experiences, and candidate beliefs without asserting world truth.
-- Deterministic holder-scoped retrieval and NPC context assembly now project
-  only filtered cognitive interpretations.
+NPC identity, schedules, occupations, holder-scoped cognitive records,
+knowledge, sleep consolidation, deterministic retrieval, and filtered context
+assembly are implemented. Further NPC lifecycle and social capabilities remain
+future work below.
 
 ---
 
-## v0.5 – AI Layer
+## Completed v0.5 – AI Layer
 
-- llama.cpp integration
-- Local LLM client
-- Decision engine and proposal-to-action authority gateway are implemented;
-  future domain actions must register explicit simulation-owned handlers.
-- Council meetings
-- NPC conversations are implemented as bounded, visible recipient observations
-  with holder-scoped context and the existing action gateway.
-- NPC meeting coordination is implemented as bounded, requester-initiated
-  dialogue. The simulation may call eligible participants in a deterministic
-  engine-only order without exposing invitation or participant IDs to LLMs.
-- NPC Cognition Protocol
-- NPC information boundary enforcement
-- NPC-only context filtering for perception and memory retrieval
-- LLM reasoning without direct world-truth authority
-- Manual local-model council scenarios are scheduled to demonstrate a
-  settlement-wide concern, opposed affiliations, and opinions shaped by
-  holder-scoped cognitive histories. These remain opt-in demonstrations rather
-  than new governance or world-mutation systems.
+Loopback-only Ollama and llama.cpp perception and cognition clients, the NPC
+Cognition Protocol, filtered retrieval and context enforcement, the decision
+engine and action gateway, bounded conversations and meetings, and council
+coordination are implemented. The opt-in manual council scenarios demonstrate
+a settlement-wide concern, opposing interests, and opinions shaped by isolated
+cognitive histories. Local-model output remains an untrusted proposal, and
+future domain actions still require explicit simulation-owned handlers.
 
 ---
 

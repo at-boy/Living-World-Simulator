@@ -9,6 +9,22 @@ engineering milestones and lessons learned.
 
 # 2026-08-12
 
+## v0.5 Release Closeout
+
+The v0.5 capability audit traced every AI-layer backlog claim to production
+interfaces, tests, and examples. It confirmed loopback-only local LLM clients,
+filtered NPC context, proposal-only cognition, the action gateway, bounded
+conversations and meetings, council coordination, and three distinct manual
+council scenarios. A targeted boundary review found no route from privileged
+inspection or raw world state into NPC cognition.
+
+The first closeout pass correctly stopped on inconsistent hard-coded release
+versions. Task 14b then unified the runtime and HTTP version and added a
+four-surface regression test before closeout resumed. Completed v0.4 and v0.5
+items have now left the active backlog, satisfied technical-debt entries have
+been removed, and deferred retrieval, governance, settlement evolution, and UI
+work remain explicitly future scope.
+
 ## Release Version Consistency
 
 The v0.5 release correction makes `living_world.__version__` the single runtime

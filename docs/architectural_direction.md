@@ -28,6 +28,10 @@ The intended progression is:
         ↓
     New world state
 
+Version 0.5 completes this initial cognition and authority flow for local LLM
+clients, bounded dialogue, meeting coordination, and councils. Post-v0.5 work
+extends the engine-owned simulation around it rather than weakening it.
+
 For post-v0.5 autonomous settlement development, a parallel engine-owned
 planning loop is intended:
 

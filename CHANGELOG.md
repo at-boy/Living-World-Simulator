@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## v0.5.0 - 2026-08-12
+
+### Added
+
 - Synchronize release metadata, the public runtime version, and the HTTP health
   response at `0.5.0`, with one runtime version export and a consistency test.
 - Extend the privileged GET-only inspection API across persisted NPC
@@ -40,10 +44,6 @@
 - Permit one caller agenda proposal through the ordinary action gateway only
   after every invited NPC explicitly declines and delegates; unavailable and
   no-selection replies never grant that fallback.
-
-## v0.2.3 (Unreleased)
-
-### Added
 
 - Ephemeral `MeetingService` coordination for requester-initiated, bounded NPC
   dialogue with engine-owned speaker calls and holder-scoped qualitative

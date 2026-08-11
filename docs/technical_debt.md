@@ -20,61 +20,10 @@ part of the same pull request.
 
 # High Priority
 
-------------------------------------------------------------------------
-
-## Resolved
-
-------------------------------------------------------------------------
-
-### Entity lifecycle
-
-`EntityManager` now owns runtime entity creation, identifier generation, and registration within `WorldState`.
-
-------------------------------------------------------------------------
-
-### Relationship lifecycle
-
-`RelationshipManager` now owns runtime relationship creation,
-validation and registration.
-
-Examples and production code no longer mutate
-`WorldState.relationships` directly.
-
-------------------------------------------------------------------------
-
-### World history
-
-The runtime now records recursively immutable history through `EventManager`.
-Event attributes are detached from callers and recursively frozen, so recorded
-history cannot be changed through nested mappings or collections.
-
-The engine has a dedicated history mechanism that future systems can
-build upon.
-
-------------------------------------------------------------------------
-
-### Repository layer
-
-`GraphRepository` now defines complete-world persistence and
-`SQLiteRepository` provides a versioned, atomic SQLite snapshot implementation.
-`SimulationEngine` composes an optional repository without changing manager
-lifecycle APIs or its no-argument in-memory behavior.
-
-------------------------------------------------------------------------
-
-### Baseline audit (v0.2.3)
-
-`Location` has been removed; `examples/001_create_world.py` creates its
-location entities through `EntityManager`, and no location-specific runtime
-collection remains.
-
-`RelationshipManager` is the sole production mutation boundary for
-relationship creation and registration in `WorldState.relationships`; the
-example uses that manager.
-
-`make examples` automatically discovers top-level files named
-`[0-9][0-9][0-9]_*.py`, executes them in lexical order, reports PASS or FAIL
-for each file, and stops on the first failure.
+There are no active high-priority technical-debt entries at the v0.5 closeout.
+The former entity lifecycle, relationship lifecycle, immutable history,
+repository, and baseline-audit entries were removed only after their recorded
+resolution criteria were verified by implementation and tests.
 
 ------------------------------------------------------------------------
 
