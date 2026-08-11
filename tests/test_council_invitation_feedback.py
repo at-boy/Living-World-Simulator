@@ -9,6 +9,7 @@ from living_world.cognition.conversation import ConversationService
 from living_world.cognition.council import (
     CouncilAgenda,
     CouncilCall,
+    CouncilInvitationDiagnostic,
     CouncilInvitationStatus,
     CouncilService,
 )
@@ -18,6 +19,7 @@ from living_world.cognition.npc_cognition_client import (
     ActionOption,
     ActionRequest,
     NPCCognitionClientError,
+    NPCCognitionInvalidResponseError,
     NPCDecision,
 )
 from living_world.cognition.npc_context import NPCContext, NPCContextAssembler
@@ -149,6 +151,7 @@ def test_feedback_marks_provider_errors_unavailable_without_error_text() -> None
     feedback = service.convene(call=_call(("npc_2",))).invitation_feedback[0]
 
     assert feedback.status is CouncilInvitationStatus.UNAVAILABLE
+    assert feedback.diagnostic is CouncilInvitationDiagnostic.PROVIDER_UNAVAILABLE
     assert feedback.spoken_text is None
     assert feedback.rationale is None
     assert "private provider failure" not in repr(feedback)
@@ -171,3 +174,43 @@ def test_feedback_suppresses_internal_and_authoritative_submission_prose() -> No
     assert feedback.spoken_text is None
     assert feedback.rationale is None
     assert state.events == {}
+
+
+def test_feedback_distinguishes_invalid_structured_provider_response() -> None:
+    class InvalidResponseClient:
+        @property
+        def provider_name(self) -> str:
+            return "invalid-response"
+
+        def decide(
+            self, context: NPCContext, actions: tuple[ActionOption, ...]
+        ) -> NPCDecision:
+            raise NPCCognitionInvalidResponseError("distinctive provider payload")
+
+    service, state = _service([])
+    assembler = NPCContextAssembler(state)
+    decisions = DecisionEngine(InvalidResponseClient())
+    actions = (ActionOption("wait", "Wait."),)
+    service = CouncilService(
+        MeetingService(
+            ConversationService(
+                assembler,
+                decisions,
+                NPCActionResolver(actions),
+                ObservationManager(state),
+                actions,
+            )
+        ),
+        assembler,
+        decisions,
+        NPCActionResolver(actions),
+        state,
+    )
+
+    feedback = service.convene(call=_call(("npc_2",))).invitation_feedback[0]
+
+    assert feedback.status is CouncilInvitationStatus.UNAVAILABLE
+    assert (
+        feedback.diagnostic is CouncilInvitationDiagnostic.INVALID_STRUCTURED_RESPONSE
+    )
+    assert "distinctive provider payload" not in repr(feedback)

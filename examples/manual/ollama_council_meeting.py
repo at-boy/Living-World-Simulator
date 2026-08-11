@@ -104,7 +104,12 @@ def format_council_result(result: CouncilResult) -> str:
             lines.append(f"  statement: {feedback.spoken_text}")
         if feedback.rationale is not None:
             lines.append(f"  rationale: {feedback.rationale}")
-        if feedback.spoken_text is None and feedback.rationale is None:
+        if feedback.diagnostic is not None:
+            lines.append(
+                "  No usable reply: "
+                f"{feedback.diagnostic.value.replace('_', ' ')}."
+            )
+        elif feedback.spoken_text is None and feedback.rationale is None:
             lines.append("  No displayable text was supplied.")
 
     lines.extend(("", "Debate"))

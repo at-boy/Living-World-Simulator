@@ -16,6 +16,7 @@ from living_world.cognition.conversation import (
 )
 from living_world.cognition.council import (
     CouncilAttendance,
+    CouncilInvitationDiagnostic,
     CouncilInvitationFeedback,
     CouncilInvitationStatus,
     CouncilResult,
@@ -108,7 +109,11 @@ def test_invitation_feedback_renders_each_invitee_without_caller(path: Path) -> 
                 "Please count my delegation.",
             ),
             CouncilInvitationFeedback(
-                "Cato", CouncilInvitationStatus.UNAVAILABLE, None, None
+                "Cato",
+                CouncilInvitationStatus.UNAVAILABLE,
+                None,
+                None,
+                CouncilInvitationDiagnostic.INVALID_STRUCTURED_RESPONSE,
             ),
         ),
     )
@@ -120,8 +125,38 @@ def test_invitation_feedback_renders_each_invitee_without_caller(path: Path) -> 
     assert "statement: I must remain at the gate." in output
     assert "rationale: Please count my delegation." in output
     assert "- Cato: unavailable" in output
-    assert "No displayable text was supplied." in output
+    assert "No usable reply: invalid structured response." in output
     assert "- Aster: " not in output
+
+
+@pytest.mark.parametrize("path", _EXAMPLE_PATHS)
+def test_unavailable_feedback_renders_only_fixed_diagnostic(path: Path) -> None:
+    module = _load_example(path)
+    raw_provider_error = "transport timeout entity_999"
+    result = CouncilResult(
+        (
+            CouncilAttendance("Aster", True, False),
+            CouncilAttendance("Bryn", False, False),
+        ),
+        ConversationResult((), ()),
+        None,
+        (),
+        (
+            CouncilInvitationFeedback(
+                "Bryn",
+                CouncilInvitationStatus.UNAVAILABLE,
+                None,
+                None,
+                CouncilInvitationDiagnostic.PROVIDER_UNAVAILABLE,
+            ),
+        ),
+    )
+
+    output = module.format_council_result(result)
+
+    assert "No usable reply: provider unavailable." in output
+    assert raw_provider_error not in output
+    assert "entity_999" not in output
 
 
 @pytest.mark.parametrize("path", _EXAMPLE_PATHS)

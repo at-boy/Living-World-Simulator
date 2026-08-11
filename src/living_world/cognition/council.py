@@ -19,6 +19,7 @@ from living_world.cognition.npc_cognition_client import (
     ActionOption,
     ActionRequest,
     NPCCognitionClientError,
+    NPCCognitionInvalidResponseError,
 )
 from living_world.cognition.npc_context import NPCContextAssembler
 from living_world.state.world_state import WorldState
@@ -92,6 +93,14 @@ class CouncilInvitationStatus(StrEnum):
     UNAVAILABLE = "unavailable"
 
 
+class CouncilInvitationDiagnostic(StrEnum):
+    """Fixed operator-safe category for an unavailable invitation reply."""
+
+    PROVIDER_UNAVAILABLE = "provider_unavailable"
+    INVALID_STRUCTURED_RESPONSE = "invalid_structured_response"
+    INVALID_DECISION = "invalid_decision"
+
+
 @dataclass(frozen=True, slots=True)
 class CouncilInvitationFeedback:
     """Ephemeral, filtered submission made in response to an invitation."""
@@ -100,6 +109,7 @@ class CouncilInvitationFeedback:
     status: CouncilInvitationStatus
     spoken_text: str | None
     rationale: str | None
+    diagnostic: CouncilInvitationDiagnostic | None = None
 
     def __post_init__(self) -> None:
         _prose(self.participant_label, "participant_label")
@@ -107,6 +117,15 @@ class CouncilInvitationFeedback:
             raise TypeError("status must be a CouncilInvitationStatus.")
         _optional_prose(self.spoken_text, "spoken_text")
         _optional_prose(self.rationale, "rationale")
+        if self.diagnostic is not None and not isinstance(
+            self.diagnostic, CouncilInvitationDiagnostic
+        ):
+            raise TypeError("diagnostic must be a CouncilInvitationDiagnostic or None.")
+        if self.status is CouncilInvitationStatus.UNAVAILABLE:
+            if self.diagnostic is None:
+                raise ValueError("unavailable feedback must include a diagnostic.")
+        elif self.diagnostic is not None:
+            raise ValueError("only unavailable feedback may include a diagnostic.")
 
 
 @dataclass(frozen=True, slots=True)
@@ -231,16 +250,23 @@ class CouncilService:
                 conversation_history=(invitation,),
             )
             decision = None
+            diagnostic = None
             try:
                 decision = self._decisions.decide(context, attendance_actions)
+            except NPCCognitionInvalidResponseError:
+                request = None
+                status = CouncilInvitationStatus.UNAVAILABLE
+                diagnostic = CouncilInvitationDiagnostic.INVALID_STRUCTURED_RESPONSE
             except NPCCognitionClientError:
                 request = None
                 status = CouncilInvitationStatus.UNAVAILABLE
+                diagnostic = CouncilInvitationDiagnostic.PROVIDER_UNAVAILABLE
             except (TypeError, ValueError):
                 # This narrow decision boundary treats an invalid direct client
                 # response as unavailable, without masking engine validation.
                 request = None
                 status = CouncilInvitationStatus.UNAVAILABLE
+                diagnostic = CouncilInvitationDiagnostic.INVALID_DECISION
             else:
                 request = decision.action_request
                 status = CouncilInvitationStatus.NO_SELECTION
@@ -276,6 +302,7 @@ class CouncilService:
                     self._safe_feedback_prose(
                         None if request is None else request.rationale
                     ),
+                    diagnostic,
                 )
             )
             if is_attending:

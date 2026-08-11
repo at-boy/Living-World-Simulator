@@ -8,6 +8,8 @@
   distinguishing absent invitees, and documenting valid repeatable outcomes.
 - Add filtered, ephemeral council invitation feedback for each invitee's
   attendance proposal without exposing provider errors or creating world state.
+- Distinguish unavailable council invitation replies with fixed safe diagnostics
+  for provider availability, invalid structured responses, and invalid decisions.
 - Direct council invitees to submit exactly one offered attendance action, while
   retaining no-selection handling for statement-only local-model responses and
   filtering selected-action rationales into transient operator feedback only.

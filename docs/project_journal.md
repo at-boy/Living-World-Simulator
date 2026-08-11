@@ -512,3 +512,8 @@ and unavailable output while showing only prose that passes the NPC conversation
 boundary. Existing council validation makes a resolver-rejected invitation
 unreachable, so the trace does not invent a new rejection rule. It creates no
 governance, cognition, event, or persistence record.
+
+Unavailable invitation feedback now adds exactly one fixed operator-safe
+diagnostic: provider unavailable, invalid structured response, or invalid
+decision. The category contains neither provider data nor internal engine data,
+and it does not retry, infer attendance, or remedy a non-compliant model.

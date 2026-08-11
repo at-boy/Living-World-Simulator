@@ -145,7 +145,9 @@ filtered record of the NPC's submitted attendance proposal: its status and any
 safe statement or rationale, not a claim about private mental state. If no
 invited NPC joins, it says that only the caller attended and that no invitee
 joined; unavailable responses remain distinct from declines and expose no
-provider error.
+provider error. Instead, manual output uses one fixed diagnostic category:
+provider unavailable, invalid structured response, or invalid decision.
+The category is diagnostic only and does not retry or repair a model response.
 `Majority proposal: None` then means no strict majority was available, not that
 the model changed the world.
 
