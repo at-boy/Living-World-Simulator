@@ -42,13 +42,28 @@ implementation work. They describe the next council-quality tasks:
    - Add opt-in safe diagnostic context output only: filtered `NPCContext` and
      offered actions, never raw world state, IDs, hidden records, or provider
      secrets.
+4. **Task 13k — settlement-wide council scenario**
+   - Add a shared manual scenario catalog and a concern recognized as requiring
+     a town decision rather than originating as the caller's personal issue.
+   - Keep the caller as an engine-selected coordinator, not an authoritative
+     representative of consensus or owner of the agenda.
+5. **Task 13l — opposing-groups council scenario**
+   - Demonstrate eligible NPCs with opposed and cross-cutting affiliations,
+     several plausible actions, and no forced model decision.
+   - Defer factions, voting weights, reputation effects, and political
+     consequences.
+6. **Task 13m — cognition-shaped council scenario**
+   - Seed holder-scoped observations, memories, experiences, beliefs, and
+     social knowledge through existing manager-owned interfaces.
+   - Use the safe context trace to prove per-NPC isolation while allowing those
+     interpretations to influence, but never predetermine, opinions.
 
-The plan ordering in `docs/subagent_execution_plan/README.md` places 13h, 13i,
-and 13j before the remaining Task 13a HTTP-inspection coverage and Task 14
-release closeout.
+The plan ordering in `docs/subagent_execution_plan/README.md` places 13h–13m
+before the remaining Task 13a HTTP-inspection coverage and Task 14 release
+closeout.
 
 **The user explicitly requested that no task be started yet.** Wait for a new
-instruction before delegating or implementing Tasks 13h–13j.
+instruction before delegating or implementing Tasks 13h–13m.
 
 ## Council decisions already established
 
@@ -93,6 +108,11 @@ The user also observed these limitations, which are the reason for 13h–13j:
 fixed turn order, too-short debate, an unnatural caller opening, and an
 underconstrained one-action scenario that makes votes predetermined.
 
+The user additionally requested a small manual scenario suite. Tasks 13k–13m
+separate a settlement-origin issue, opposing group interests, and opinions
+shaped by private cognitive histories so each can be reviewed as an isolated
+task without expanding Task 13j silently.
+
 ## Orchestration preferences
 
 - The user prefers task plans and prompts to be saved in the repository so they
@@ -109,5 +129,5 @@ underconstrained one-action scenario that makes votes predetermined.
 ## Next work after the pause is lifted
 
 Read the task specifications and saved prompts before action. The anticipated
-sequence is 13h -> 13i -> 13j -> 13a -> 14, subject to user direction and any
-needed plan amendments.
+sequence is 13h -> 13i -> 13j -> 13k -> 13l -> 13m -> 13a -> 14, subject to
+user direction and any needed plan amendments.

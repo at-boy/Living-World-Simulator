@@ -54,10 +54,12 @@ remain a proposal until validated and executed by the action gateway.
 
 ## Immediate state
 
-Tasks 13h, 13i, and 13j have been documented as follow-up work before Task 13a
-and Task 14. **Do not start, delegate, or implement any of them until the user
-explicitly tells you to resume the tasks.** Their intent and current project
-state are in `docs/orchestrator_handoff/continuation_brief.md`.
+Tasks 13h through 13m have been documented as follow-up work before Task 13a
+and Task 14. Tasks 13k–13m form a manual scenario suite covering a
+settlement-wide issue, opposing affiliations, and cognition-shaped opinions.
+**Do not start, delegate, or implement any of them until the user explicitly
+tells you to resume the tasks.** Their intent and current project state are in
+`docs/orchestrator_handoff/continuation_brief.md`.
 
 When the user asks to continue, begin with the earliest approved task after
 rechecking the current worktree and its plan/prompt.

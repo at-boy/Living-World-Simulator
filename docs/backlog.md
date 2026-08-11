@@ -58,6 +58,10 @@ this completed scope.
 - NPC information boundary enforcement
 - NPC-only context filtering for perception and memory retrieval
 - LLM reasoning without direct world-truth authority
+- Manual local-model council scenarios are scheduled to demonstrate a
+  settlement-wide concern, opposed affiliations, and opinions shaped by
+  holder-scoped cognitive histories. These remain opt-in demonstrations rather
+  than new governance or world-mutation systems.
 
 ---
 

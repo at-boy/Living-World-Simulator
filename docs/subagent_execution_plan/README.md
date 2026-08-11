@@ -59,8 +59,11 @@ NPC interpretation until a simulation-owned handler validates an action.
 26. [13h Deterministic council turn rotation](13h_deterministic_council_turn_rotation.md)
 27. [13i NPC dialogue opening guidance](13i_npc_dialogue_opening_guidance.md)
 28. [13j Manual council scenario and safe context tracing](13j_manual_council_scenario_and_context_tracing.md)
-29. [13a HTTP inspection coverage for v0.4–v0.5](13a_http_inspection_coverage.md)
-30. [14 v0.5 release closeout](14_v05_release_closeout.md)
+29. [13k Settlement-wide council scenario](13k_settlement_council_scenario.md)
+30. [13l Opposing-groups council scenario](13l_opposing_groups_council_scenario.md)
+31. [13m Cognition-shaped council scenario](13m_cognition_shaped_council_scenario.md)
+32. [13a HTTP inspection coverage for v0.4–v0.5](13a_http_inspection_coverage.md)
+33. [14 v0.5 release closeout](14_v05_release_closeout.md)
 
 ## Deferred post-v0.5 task candidates
 

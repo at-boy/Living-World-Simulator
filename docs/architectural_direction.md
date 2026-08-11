@@ -62,6 +62,13 @@ Important principles:
 -   Cognitive Consolidation occurs during NPC sleep and processes the
     previous day's cognitive material.
 -   LLMs reason and propose; the simulation remains authoritative.
+-   Shared agendas do not imply shared conclusions. Different NPCs may reason
+    from the same allowed agenda and action vocabulary using different
+    holder-scoped observations, memories, beliefs, experiences, and social
+    knowledge.
+-   Convening a council requires an engine-recognized caller/coordinator under
+    the current API, but a settlement-wide issue need not be represented as
+    that caller's personal idea or preferred outcome.
 -   NPC-facing LLMs receive only filtered perception, memory, belief,
     experience and retrieval results. They do not receive raw world
     attributes, hidden engine identifiers, or direct access to simulation
