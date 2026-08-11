@@ -73,6 +73,12 @@ separate milestone decision and must not delay Task 14.
 1. [15 Read-only World Inspector UI architecture and vertical slice](15_world_inspector_ui.md)
 2. [15a Spatial world-layout inspection contract and visualization](15a_spatial_world_inspection.md)
 
+The broader proposed milestone sequence for progressing from a founding party
+to an evolving town and regional simulation is documented in the
+[post-v0.5 settlement-evolution roadmap](../post_v05_settlement_evolution_roadmap.md).
+Its v0.6 work must be decomposed into isolated numbered plans and prompts only
+after the milestone is explicitly authorized.
+
 ## Delivery rule for every task
 
 The assigned subagent writes or updates its specified tests and examples,

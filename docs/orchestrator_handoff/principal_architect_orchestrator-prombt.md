@@ -54,13 +54,13 @@ remain a proposal until validated and executed by the action gateway.
 
 ## Immediate state
 
-Tasks 13h through 13m are implemented, reviewed, validated, reported, and
-committed. Their manual scenario suite covers a settlement-wide issue,
-opposing affiliations, and cognition-shaped opinions with safe holder-scoped
-context tracing. The remaining planned work is Task 13a followed by Task 14.
-**Do not start or delegate Task 13a until the user explicitly authorizes the
-next task.** The completed work and current validation baseline are in
-`docs/orchestrator_handoff/continuation_brief.md`.
+Tasks 13h through 13m and Task 13a are implemented, reviewed, validated,
+reported, and committed. HTTP inspection usage is documented. The remaining
+v0.5 work is Task 14 release closeout. **Do not start or delegate Task 14 until
+the user explicitly authorizes it.** A proposed post-v0.5 settlement-evolution
+roadmap is documented, but it is not authorized implementation work and must
+not expand release closeout. The completed work and current validation baseline
+are in `docs/orchestrator_handoff/continuation_brief.md`.
 
 When the user asks to continue, begin with the earliest approved task after
 rechecking the current worktree and its plan/prompt.

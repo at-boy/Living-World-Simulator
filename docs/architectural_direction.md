@@ -28,6 +28,23 @@ The intended progression is:
         ↓
     New world state
 
+For post-v0.5 autonomous settlement development, a parallel engine-owned
+planning loop is intended:
+
+    Scenario mandate / settlement need
+        ↓
+    Persistent goal and objective graph
+        ↓
+    NPC-visible interpretation and proposed priority
+        ↓
+    Validated work assignment / domain action
+        ↓
+    Systems consume time and resources
+        ↓
+    Events and objective evidence
+        ↓
+    Engine evaluates goal and settlement-stage progress
+
 Important principles:
 
 -   Observation is not an Event.
@@ -62,6 +79,15 @@ Important principles:
 -   Cognitive Consolidation occurs during NPC sleep and processes the
     previous day's cognitive material.
 -   LLMs reason and propose; the simulation remains authoritative.
+-   Goals, objective completion, and settlement-stage promotion are
+    authoritative engine state. LLMs may propose means or priorities but may
+    not declare them achieved.
+-   A goal known by an NPC is an interpretation of an engine-recognized mandate
+    or personal intention, not permission to expose the goal's hidden criteria,
+    internal IDs, or exact world-state evidence.
+-   Off-map homelands and markets may be represented by deliberately partial
+    engine-owned interfaces. They must not masquerade as fully simulated places
+    or leak hidden outcome probabilities to NPCs.
 -   Shared agendas do not imply shared conclusions. Different NPCs may reason
     from the same allowed agenda and action vocabulary using different
     holder-scoped observations, memories, beliefs, experiences, and social

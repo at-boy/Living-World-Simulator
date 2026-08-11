@@ -64,9 +64,19 @@ preparation path. Its first delivery then required one correction so the
 holder-scoped NPC-relationship record actually reached Rhea's filtered context
 through a manual-only retrieval adapter.
 
-The remaining sequence is Task 13a HTTP-inspection coverage followed by Task 14
-release closeout. Neither has been started under the authorization for Tasks
-13h–13m.
+Task 13a HTTP-inspection coverage is implemented, reviewed, validated,
+reported, and committed. A separate practical guide at
+`docs/http_inspection_api.md` documents startup, integration, routes, and the
+privileged information boundary. Task 14 release closeout has not been started.
+
+The user has also requested a post-v0.5 path toward launching an unattended
+founding-settlement simulation that may grow into a town and beyond. The
+proposed milestone sequence is documented in
+`docs/post_v05_settlement_evolution_roadmap.md`. It includes engine-owned goals
+and objective graphs, deliberately partial off-map homelands/markets, needs,
+work execution, development stages, population continuity, governance, and
+regional growth. These are roadmap candidates, not authorized implementation
+tasks, and must not expand Task 14.
 
 ## Council decisions already established
 
@@ -131,6 +141,8 @@ task without expanding Task 13j silently.
 
 ## Next work
 
-Wait for user authorization before starting Task 13a. Then read its
-specification, recheck the clean worktree, and proceed one isolated task at a
-time: 13a -> 14, subject to user direction and any needed plan amendments.
+Wait for user authorization before starting Task 14. Review its specification
+and current release state before delegation. Do not start post-v0.5
+implementation from the settlement-evolution roadmap until the user explicitly
+selects and authorizes a milestone; first decompose that milestone into
+isolated numbered plans and saved prompts.

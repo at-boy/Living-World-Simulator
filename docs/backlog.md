@@ -69,6 +69,22 @@ this completed scope.
 
 These are intentionally out of scope for the current milestone.
 
+- **Autonomous settlement evolution roadmap:** a staged post-v0.5 program for
+  reproducible scenarios, engine-owned goals, off-map external references,
+  needs and maintenance, work execution, settlement-to-town development,
+  population continuity, governance, and regional growth. The agreed direction
+  and sequencing are recorded in
+  `docs/post_v05_settlement_evolution_roadmap.md`; individual implementation
+  tasks remain inactive until explicitly authorized.
+- **Founding mandates and objective graphs:** initial settlers may arrive with
+  personal and collective goals such as securing water, building shelter,
+  establishing food production, or opening a trade route. Completion,
+  progress, and failure are engine-owned and evidence-based, never LLM claims.
+- **Off-map external-world references:** a homeland or distant market may exist
+  only through a deliberately limited trade, travel, or communication
+  interface. It must not imply a secretly complete simulated place and must be
+  promotable through an explicit future on-map migration contract.
+
 - Births
 - Childhood and apprenticeships
 - Old age
