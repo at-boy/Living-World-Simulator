@@ -96,7 +96,7 @@ engine-owned `active_activity` is `"sleeping"`.
 **Purpose**
 
 Represent holder-scoped NPC interpretations: `Memory`, `Experience`, `Belief`,
-and `NPCRelationship`.
+`NPCRelationship`, and `Knowledge`.
 
 **Owns**
 
@@ -112,6 +112,24 @@ and `NPCRelationship`.
 
 `CognitiveSalience` is important at `importance >= 0.6`; an explicitly core
 record requires `importance >= 0.8`.
+
+## Knowledge
+
+**Purpose**
+
+Record a holder-scoped, source-attributed claim an NPC has heard or learned.
+
+**Owns**
+
+- NPC-readable statement and source description
+- salience
+- internal observation, memory, and experience provenance links
+
+**Does Not Own**
+
+- authoritative world truth
+- raw simulation attributes, engine IDs in visible prose, or event internals
+- belief confidence or inference
 
 ---
 

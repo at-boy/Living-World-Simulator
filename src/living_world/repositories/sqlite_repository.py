@@ -12,6 +12,7 @@ from living_world.core.belief import Belief, BeliefHistoryEntry, BeliefStatus
 from living_world.core.entity import Entity
 from living_world.core.event import Event
 from living_world.core.experience import Experience, ExperienceHistoryEntry
+from living_world.core.knowledge import Knowledge
 from living_world.core.memory import CognitiveSalience, Memory
 from living_world.core.npc_relationship import NPCRelationship
 from living_world.core.observation import Observation
@@ -28,6 +29,7 @@ Record = (
     | Experience
     | Memory
     | NPCRelationship
+    | Knowledge
 )
 RecordType = TypeVar("RecordType", bound=Record)
 
@@ -148,6 +150,9 @@ def _serialize_world(state: WorldState) -> dict[str, object]:
         "npc_relationships": [
             _serialize_npc_relationship(relationship)
             for relationship in state.npc_relationships.values()
+        ],
+        "knowledge": [
+            _serialize_knowledge(knowledge) for knowledge in state.knowledge.values()
         ],
     }
 
@@ -294,6 +299,22 @@ def _serialize_npc_relationship(relationship: NPCRelationship) -> dict[str, obje
     }
 
 
+def _serialize_knowledge(knowledge: Knowledge) -> dict[str, object]:
+    return {
+        "id": knowledge.id,
+        "tick": knowledge.tick,
+        "holder_id": knowledge.holder_id,
+        "subject_id": knowledge.subject_id,
+        "statement": knowledge.statement,
+        "source_description": knowledge.source_description,
+        "salience": _serialize_salience(knowledge.salience),
+        "supporting_observations": list(knowledge.supporting_observations),
+        "supporting_memories": list(knowledge.supporting_memories),
+        "supporting_experiences": list(knowledge.supporting_experiences),
+        "metadata": _knowledge_metadata_as_json(knowledge.metadata),
+    }
+
+
 def _serialize_salience(salience: CognitiveSalience) -> dict[str, object]:
     return {"importance": salience.importance, "is_core": salience.is_core}
 
@@ -316,6 +337,9 @@ def _deserialize_world(payload: object) -> WorldState:
     state.memories = _records(payload_mapping.get("memories", []), _deserialize_memory)
     state.npc_relationships = _records(
         payload_mapping.get("npc_relationships", []), _deserialize_npc_relationship
+    )
+    state.knowledge = _records(
+        payload_mapping.get("knowledge", []), _deserialize_knowledge
     )
     return state
 
@@ -460,6 +484,28 @@ def _deserialize_npc_relationship(value: Mapping[str, object]) -> NPCRelationshi
         salience=_deserialize_salience(value.get("salience")),
         source_observation_ids=_strings(value["source_observation_ids"]),
     )
+
+
+def _deserialize_knowledge(value: Mapping[str, object]) -> Knowledge:
+    return Knowledge(
+        id=_string(value["id"]),
+        tick=_integer(value["tick"]),
+        holder_id=_string(value["holder_id"]),
+        subject_id=_string(value["subject_id"]),
+        statement=_string(value["statement"]),
+        source_description=_string(value["source_description"]),
+        salience=_deserialize_salience(value.get("salience")),
+        supporting_observations=_strings(value["supporting_observations"]),
+        supporting_memories=_strings(value["supporting_memories"]),
+        supporting_experiences=_strings(value["supporting_experiences"]),
+        metadata=_mapping(value["metadata"]),
+    )
+
+
+def _knowledge_metadata_as_json(metadata: Mapping[str, object]) -> dict[str, object]:
+    """Return recursively frozen knowledge metadata as JSON-safe mutable values."""
+
+    return _event_attributes_as_json(metadata)
 
 
 def _deserialize_salience(

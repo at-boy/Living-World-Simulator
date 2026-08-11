@@ -20,6 +20,7 @@ Everything that happens is an Event.
 - Belief
 - Experience
 - NPCRelationship
+- Knowledge
 - System
 
 These are the only concepts understood by the simulation engine.
@@ -159,6 +160,12 @@ belief is a holder-scoped proposition that may be wrong. `NPCRelationship` is
 likewise an NPC's interpretation, not a generic graph `Relationship`. These
 records use `CognitiveSalience`: importance at or above `0.6` is important;
 core is an explicit state requiring importance at or above `0.8`.
+
+`Knowledge` is a separate, holder-scoped claim with NPC-readable source
+attribution: it records what an NPC has heard or learned, not what the engine
+asserts is true. Its statement and source description remain visible prose;
+internal observation, memory, and experience identifiers are provenance links
+only. Knowledge may be incomplete, stale, or false.
 
 `CognitiveConsolidationSystem` runs after `ScheduleSystem`. It processes only
 entities whose engine-owned `active_activity` is `"sleeping"`. A cognitive day

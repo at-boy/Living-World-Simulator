@@ -1,3 +1,4 @@
+import json
 import sqlite3
 from collections.abc import MutableMapping
 from dataclasses import FrozenInstanceError
@@ -10,6 +11,7 @@ from living_world.core.belief import Belief, BeliefStatus
 from living_world.core.entity import Entity
 from living_world.core.event import Event
 from living_world.core.experience import Experience
+from living_world.core.knowledge import Knowledge
 from living_world.core.memory import CognitiveSalience, Memory
 from living_world.core.npc_relationship import NPCRelationship
 from living_world.core.observation import Observation
@@ -40,6 +42,7 @@ def test_sqlite_repository_round_trips_all_world_records(tmp_path: Path) -> None
     assert loaded.experiences == state.experiences
     assert loaded.memories == state.memories
     assert loaded.npc_relationships == state.npc_relationships
+    assert loaded.knowledge == state.knowledge
 
 
 def test_loaded_history_records_remain_immutable(tmp_path: Path) -> None:
@@ -79,6 +82,29 @@ def test_loaded_history_records_remain_immutable(tmp_path: Path) -> None:
         loaded.memories["memory-1"].summary = "changed"
     with pytest.raises(FrozenInstanceError):
         loaded.npc_relationships["npc-relationship-1"].summary = "changed"
+    with pytest.raises(FrozenInstanceError):
+        loaded.knowledge["knowledge-1"].statement = "changed"
+
+
+def test_sqlite_repository_loads_legacy_snapshot_without_knowledge(
+    tmp_path: Path,
+) -> None:
+    database_path = tmp_path / "world.sqlite3"
+    repository = SQLiteRepository(str(database_path))
+    repository.save_world(_world_state())
+
+    with sqlite3.connect(database_path) as connection:
+        payload = connection.execute(
+            "SELECT payload FROM world_snapshots WHERE id = 1"
+        ).fetchone()[0]
+        legacy_payload = json.loads(payload)
+        del legacy_payload["knowledge"]
+        connection.execute(
+            "UPDATE world_snapshots SET payload = ? WHERE id = 1",
+            (json.dumps(legacy_payload),),
+        )
+
+    assert repository.load_world().knowledge == {}
 
 
 def test_malformed_snapshot_raises_without_returning_partial_state(
@@ -225,6 +251,24 @@ def _world_state() -> WorldState:
                 summary="I find the road dependable.",
                 salience=CognitiveSalience(importance=0.6),
                 source_observation_ids=("observation-1",),
+            )
+        },
+        knowledge={
+            "knowledge-1": Knowledge(
+                id="knowledge-1",
+                tick=6,
+                holder_id="entity-1",
+                subject_id="entity-2",
+                statement="The old road may be difficult to cross.",
+                source_description="A traveller mentioned it.",
+                salience=CognitiveSalience(importance=0.6),
+                supporting_observations=("observation-1",),
+                supporting_memories=("memory-1",),
+                supporting_experiences=("experience-1",),
+                metadata={
+                    "heard_at": {"location": "the market"},
+                    "witnesses": ["traveller"],
+                },
             )
         },
     )

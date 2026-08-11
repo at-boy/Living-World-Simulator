@@ -4,6 +4,7 @@ from living_world.core.belief import Belief
 from living_world.core.entity import Entity
 from living_world.core.event import Event
 from living_world.core.experience import Experience
+from living_world.core.knowledge import Knowledge
 from living_world.core.memory import Memory
 from living_world.core.npc_relationship import NPCRelationship
 from living_world.core.observation import Observation
@@ -31,3 +32,5 @@ class WorldState:
     memories: dict[str, Memory] = field(default_factory=dict)
 
     npc_relationships: dict[str, NPCRelationship] = field(default_factory=dict)
+
+    knowledge: dict[str, Knowledge] = field(default_factory=dict)

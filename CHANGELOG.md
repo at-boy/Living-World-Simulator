@@ -4,6 +4,11 @@
 
 ### Added
 
+- Immutable holder-scoped `Knowledge` claims with NPC-readable source
+  attribution and internal provenance links.
+- SQLite persistence, legacy-load compatibility, engine composition, and an
+  executable NPC knowledge example.
+
 - Immutable holder-scoped `Memory` and `NPCRelationship` cognitive records,
   with salience and internal observation provenance.
 - Sleep-only, deterministic 24-tick cognitive consolidation that derives

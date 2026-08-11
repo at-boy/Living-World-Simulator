@@ -1,3 +1,4 @@
+from living_world.core.memory import CognitiveSalience
 from living_world.simulation.simulation_engine import SimulationEngine
 from living_world.state.world_state import WorldState
 from living_world.systems.simulation_system import SimulationSystem
@@ -51,3 +52,17 @@ def test_engine_exposes_observation_manager() -> None:
 
     assert observation.id == "observation_000001"
     assert engine.observations.get(observation.id) is observation
+
+
+def test_engine_exposes_knowledge_manager() -> None:
+    engine = SimulationEngine()
+
+    knowledge = engine.knowledge.record(
+        holder_id="entity_000001",
+        subject_id="entity_000002",
+        statement="The route is difficult to cross.",
+        source_description="A traveller mentioned it.",
+        salience=CognitiveSalience(importance=0.5),
+    )
+
+    assert engine.knowledge.get(knowledge.id) is knowledge

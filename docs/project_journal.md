@@ -388,3 +388,12 @@ The inspection view returns detached JSON-safe values in deterministic record
 identifier order. It remains explicitly separate from `NPCContextAssembler`
 and every NPC-facing cognition boundary: authoritative data may be inspected
 by an operator, but it does not become NPC knowledge.
+
+## NPC Knowledge
+
+`Knowledge` now records a distinct NPC-held claim with human-readable source
+attribution. It is neither retained perception (`Memory`), learned experience
+(`Experience`), nor an inference (`Belief`), and it is never authoritative
+world truth. Observation, memory, and experience record identifiers remain
+internal provenance rather than visible NPC text. This keeps later retrieval
+and context assembly constrained to NPC-valid cognitive records.

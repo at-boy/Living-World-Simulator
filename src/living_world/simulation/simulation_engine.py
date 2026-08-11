@@ -11,6 +11,7 @@ from living_world.managers.definition_manager import DefinitionManager
 from living_world.managers.entity_manager import EntityManager
 from living_world.managers.event_manager import EventManager
 from living_world.managers.experience_manager import ExperienceManager
+from living_world.managers.knowledge_manager import KnowledgeManager
 from living_world.managers.memory_manager import MemoryManager
 from living_world.managers.npc_relationship_manager import NPCRelationshipManager
 from living_world.managers.observation_manager import ObservationManager
@@ -71,6 +72,10 @@ class SimulationEngine:
         )
 
         self._memories = MemoryManager(
+            self._state,
+        )
+
+        self._knowledge = KnowledgeManager(
             self._state,
         )
 
@@ -203,6 +208,10 @@ class SimulationEngine:
     @property
     def memories(self) -> MemoryManager:
         return self._memories
+
+    @property
+    def knowledge(self) -> KnowledgeManager:
+        return self._knowledge
 
     @property
     def npc_relationships(self) -> NPCRelationshipManager:
