@@ -6,6 +6,8 @@
   attendance delegation, and action-gateway majority proposals.
 - Clarify manual Ollama and llama.cpp council output by marking the caller,
   distinguishing absent invitees, and documenting valid repeatable outcomes.
+- Add filtered, ephemeral council invitation feedback for each invitee's
+  attendance proposal without exposing provider errors or creating world state.
 
 ## v0.2.3 (Unreleased)
 

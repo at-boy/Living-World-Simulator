@@ -600,4 +600,5 @@ order, and report PASS or FAIL. A failure stops the command.
 # Council
 
 An engine-coordinated bounded discussion, not a persistent governance object or
-source of authority.
+source of authority. Its invitation feedback is transient filtered diagnostic
+output, not a governance or cognitive record.

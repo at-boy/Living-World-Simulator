@@ -6,7 +6,11 @@ import pytest
 
 from living_world.cognition.action_resolution import NPCActionResolver
 from living_world.cognition.conversation import ConversationService
-from living_world.cognition.council import CouncilAgenda, CouncilCall, CouncilService
+from living_world.cognition.council import (
+    CouncilAgenda,
+    CouncilCall,
+    CouncilService,
+)
 from living_world.cognition.decision_engine import DecisionEngine
 from living_world.cognition.meeting import MeetingService
 from living_world.cognition.npc_cognition_client import (

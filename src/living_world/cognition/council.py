@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections import Counter
 from collections.abc import Mapping
 from dataclasses import dataclass, field
+from enum import StrEnum
 from types import MappingProxyType
 
 from living_world.cognition.action_resolution import (
@@ -82,6 +83,32 @@ class CouncilAttendance:
             raise ValueError("attending participants cannot delegate to a majority.")
 
 
+class CouncilInvitationStatus(StrEnum):
+    """The safe outcome category for one NPC council invitation."""
+
+    ATTENDING = "attending"
+    DECLINED = "declined"
+    NO_SELECTION = "no_selection"
+    UNAVAILABLE = "unavailable"
+
+
+@dataclass(frozen=True, slots=True)
+class CouncilInvitationFeedback:
+    """Ephemeral, filtered submission made in response to an invitation."""
+
+    participant_label: str
+    status: CouncilInvitationStatus
+    spoken_text: str | None
+    rationale: str | None
+
+    def __post_init__(self) -> None:
+        _prose(self.participant_label, "participant_label")
+        if not isinstance(self.status, CouncilInvitationStatus):
+            raise TypeError("status must be a CouncilInvitationStatus.")
+        _optional_prose(self.spoken_text, "spoken_text")
+        _optional_prose(self.rationale, "rationale")
+
+
 @dataclass(frozen=True, slots=True)
 class CouncilResult:
     """Bounded social result plus the ordinary action-gateway result."""
@@ -90,6 +117,7 @@ class CouncilResult:
     conversation: ConversationResult
     majority_proposal: ActionRequest | None
     resolutions: tuple[ActionResolution, ...]
+    invitation_feedback: tuple[CouncilInvitationFeedback, ...] = ()
 
     def __post_init__(self) -> None:
         if not isinstance(self.attendance, tuple) or not all(
@@ -106,6 +134,13 @@ class CouncilResult:
             isinstance(item, ActionResolution) for item in self.resolutions
         ):
             raise TypeError("resolutions must be a tuple of ActionResolution values.")
+        if not isinstance(self.invitation_feedback, tuple) or not all(
+            isinstance(item, CouncilInvitationFeedback)
+            for item in self.invitation_feedback
+        ):
+            raise TypeError(
+                "invitation_feedback must be a tuple of CouncilInvitationFeedback values."
+            )
 
 
 class _AttendanceHandler:
@@ -180,6 +215,7 @@ class CouncilService:
         attendance: list[CouncilAttendance] = [
             CouncilAttendance(labels[call.caller_id], True, False)
         ]
+        feedback: list[CouncilInvitationFeedback] = []
         attending = [call.caller_id]
         invitation = self._contexts.validate_conversation_prose(
             f"Council invitation from {labels[call.caller_id]}: {call.agenda.topic}"
@@ -190,16 +226,20 @@ class CouncilService:
                 capability_descriptions=self_knowledge.get(invitee_id, ()),
                 conversation_history=(invitation,),
             )
+            decision = None
             try:
                 decision = self._decisions.decide(context, attendance_actions)
             except NPCCognitionClientError:
                 request = None
+                status = CouncilInvitationStatus.UNAVAILABLE
             except (TypeError, ValueError):
                 # This narrow decision boundary treats an invalid direct client
                 # response as unavailable, without masking engine validation.
                 request = None
+                status = CouncilInvitationStatus.UNAVAILABLE
             else:
                 request = decision.action_request
+                status = CouncilInvitationStatus.NO_SELECTION
             resolution = (
                 ActionResolution(False, "No attendance selection.")
                 if request is None
@@ -215,8 +255,24 @@ class CouncilService:
                 and request is not None
                 and request.action_key == "decline_council"
             )
+            if is_attending:
+                status = CouncilInvitationStatus.ATTENDING
+            elif delegates:
+                status = CouncilInvitationStatus.DECLINED
             attendance.append(
                 CouncilAttendance(labels[invitee_id], is_attending, delegates)
+            )
+            feedback.append(
+                CouncilInvitationFeedback(
+                    labels[invitee_id],
+                    status,
+                    self._safe_feedback_prose(
+                        None if decision is None else decision.spoken_text
+                    ),
+                    self._safe_feedback_prose(
+                        None if request is None else request.rationale
+                    ),
+                )
             )
             if is_attending:
                 attending.append(invitee_id)
@@ -226,6 +282,7 @@ class CouncilService:
                 ConversationResult(turns=(), resolutions=()),
                 None,
                 (),
+                tuple(feedback),
             )
         schedule = self._schedule(
             call.called_speaker_ids, tuple(attending), call.max_rounds
@@ -253,7 +310,19 @@ class CouncilService:
             if majority is None
             else (self._resolver.resolve(actor_id=call.caller_id, request=majority),)
         )
-        return CouncilResult(tuple(attendance), conversation, majority, resolutions)
+        return CouncilResult(
+            tuple(attendance), conversation, majority, resolutions, tuple(feedback)
+        )
+
+    def _safe_feedback_prose(self, prose: object) -> str | None:
+        """Return displayable submitted prose, without surfacing validation details."""
+
+        if prose is None:
+            return None
+        try:
+            return self._contexts.validate_conversation_prose(prose)
+        except (TypeError, ValueError):
+            return None
 
     def _validate_eligible(
         self,
@@ -362,6 +431,11 @@ def _prose(value: object, field_name: str) -> None:
         raise TypeError(f"{field_name} must be a string.")
     if not value.strip():
         raise ValueError(f"{field_name} cannot be empty.")
+
+
+def _optional_prose(value: object, field_name: str) -> None:
+    if value is not None:
+        _prose(value, field_name)
 
 
 def _turns(value: object) -> None:

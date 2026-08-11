@@ -20,6 +20,8 @@ from living_world.cognition.council import (
     CouncilAgenda,
     CouncilAttendance,
     CouncilCall,
+    CouncilInvitationFeedback,
+    CouncilInvitationStatus,
     CouncilResult,
     CouncilService,
 )
@@ -61,6 +63,8 @@ __all__ = [
     "CouncilAgenda",
     "CouncilAttendance",
     "CouncilCall",
+    "CouncilInvitationFeedback",
+    "CouncilInvitationStatus",
     "CouncilResult",
     "CouncilService",
     "DecisionEngine",

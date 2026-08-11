@@ -14,7 +14,12 @@ from living_world.cognition.conversation import (
     ConversationResult,
     ConversationTurn,
 )
-from living_world.cognition.council import CouncilAttendance, CouncilResult
+from living_world.cognition.council import (
+    CouncilAttendance,
+    CouncilInvitationFeedback,
+    CouncilInvitationStatus,
+    CouncilResult,
+)
 from living_world.cognition.npc_cognition_client import ActionRequest
 
 _EXAMPLE_PATHS = (
@@ -81,6 +86,42 @@ def test_invited_attendee_dialogue_and_proposal_remain_visible(path: Path) -> No
     assert "- Bryn: wait (Waiting preserves supplies.)" in output
     assert "Majority proposal: ActionRequest(" in output
     assert "Gateway resolution: ActionResolution(" in output
+
+
+@pytest.mark.parametrize("path", _EXAMPLE_PATHS)
+def test_invitation_feedback_renders_each_invitee_without_caller(path: Path) -> None:
+    module = _load_example(path)
+    result = CouncilResult(
+        (
+            CouncilAttendance("Aster", True, False),
+            CouncilAttendance("Bryn", False, True),
+            CouncilAttendance("Cato", False, False),
+        ),
+        ConversationResult((), ()),
+        None,
+        (),
+        (
+            CouncilInvitationFeedback(
+                "Bryn",
+                CouncilInvitationStatus.DECLINED,
+                "I must remain at the gate.",
+                "Please count my delegation.",
+            ),
+            CouncilInvitationFeedback(
+                "Cato", CouncilInvitationStatus.UNAVAILABLE, None, None
+            ),
+        ),
+    )
+
+    output = module.format_council_result(result)
+
+    assert "Invitation feedback" in output
+    assert "- Bryn: declined" in output
+    assert "statement: I must remain at the gate." in output
+    assert "rationale: Please count my delegation." in output
+    assert "- Cato: unavailable" in output
+    assert "No displayable text was supplied." in output
+    assert "- Aster: " not in output
 
 
 @pytest.mark.parametrize("path", _EXAMPLE_PATHS)

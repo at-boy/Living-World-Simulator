@@ -87,9 +87,7 @@ def format_council_result(result: CouncilResult) -> str:
         delegation = (
             "; delegates to majority" if attendance.delegates_to_majority else ""
         )
-        lines.append(
-            f"- {attendance.participant_label} ({role}): {status}{delegation}"
-        )
+        lines.append(f"- {attendance.participant_label} ({role}): {status}{delegation}")
 
     caller_only = (
         bool(result.attendance)
@@ -98,6 +96,16 @@ def format_council_result(result: CouncilResult) -> str:
     )
     if caller_only:
         lines.append("Only the caller attended; no invited NPC joined.")
+
+    lines.extend(("", "Invitation feedback"))
+    for feedback in result.invitation_feedback:
+        lines.append(f"- {feedback.participant_label}: {feedback.status.value}")
+        if feedback.spoken_text is not None:
+            lines.append(f"  statement: {feedback.spoken_text}")
+        if feedback.rationale is not None:
+            lines.append(f"  rationale: {feedback.rationale}")
+        if feedback.spoken_text is None and feedback.rationale is None:
+            lines.append("  No displayable text was supplied.")
 
     lines.extend(("", "Debate"))
     if result.conversation.turns:

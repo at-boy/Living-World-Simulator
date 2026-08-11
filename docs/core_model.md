@@ -391,4 +391,8 @@ describe a location; there is no location-specific runtime type or registry.
 
 A council is an ephemeral agenda-driven composition of meeting coordination.
 Eligible members may attend or decline; only a strict attendee-majority proposal
-is offered to the normal simulation action gateway.
+is offered to the normal simulation action gateway. Each result may also carry
+an ephemeral, operator-visible invitation-feedback trace in invitee order. It
+records only the resolver outcome and filtered submitted statement/rationale;
+it is not supplied to another NPC, retrieval, context assembly, cognition,
+governance, an event, memory, or world state.

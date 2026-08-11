@@ -126,10 +126,14 @@ may nevertheless decline, abstain, or fail to return schema-valid JSON. Such a
 response is non-authoritative and does not change the world.
 
 Each manual council example prints attendance, identifying the always-attending
-caller separately from invited NPCs, visible debate turns, collected agenda
-votes/proposals, the majority proposal, and any resulting gateway resolution.
-If no invited NPC joins, it says that only the caller attended and that no
-invitee joined; it does not expose why a particular invitee was absent.
+caller separately from invited NPCs, invitation feedback for each invitee,
+visible debate turns, collected agenda votes/proposals, the majority proposal,
+and any resulting gateway resolution. Invitation feedback is an ephemeral
+filtered record of the NPC's submitted attendance proposal: its status and any
+safe statement or rationale, not a claim about private mental state. If no
+invited NPC joins, it says that only the caller attended and that no invitee
+joined; unavailable responses remain distinct from declines and expose no
+provider error.
 `Majority proposal: None` then means no strict majority was available, not that
 the model changed the world.
 

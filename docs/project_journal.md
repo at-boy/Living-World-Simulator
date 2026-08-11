@@ -492,3 +492,10 @@ from invitees. A caller-only result means no invited NPC joined, without
 claiming a reason that the safe result does not provide. Equivalent constrained
 requests may produce identical outcomes on successive runs because the
 examples use provider/model sampling defaults and do not promise variation.
+
+Council results also expose a transient invitation-feedback trace in invitee
+order. It distinguishes accepted attendance, accepted decline, no selection,
+and unavailable output while showing only prose that passes the NPC conversation
+boundary. Existing council validation makes a resolver-rejected invitation
+unreachable, so the trace does not invent a new rejection rule. It creates no
+governance, cognition, event, or persistence record.

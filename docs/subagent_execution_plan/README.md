@@ -51,8 +51,9 @@ NPC interpretation until a simulation-owned handler validates an action.
 18. [12a NPC meeting coordination and directed dialogue](12a_npc_meeting_coordination.md)
 19. [13 Council meetings](13_council_meetings.md)
 20. [13b Manual council-example observability](13b_manual_council_example_observability.md)
-21. [13a HTTP inspection coverage for v0.4–v0.5](13a_http_inspection_coverage.md)
-22. [14 v0.5 release closeout](14_v05_release_closeout.md)
+21. [13c Council invitation-feedback trace](13c_council_invitation_feedback.md)
+22. [13a HTTP inspection coverage for v0.4–v0.5](13a_http_inspection_coverage.md)
+23. [14 v0.5 release closeout](14_v05_release_closeout.md)
 
 ## Deferred post-v0.5 task candidates
 
