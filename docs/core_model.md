@@ -195,6 +195,9 @@ Current generic systems include:
 - `TradeSystem`, which transfers the configured resource and amount of a
   `trade` relationship only when its endpoints have an existing `road`
   relationship and the source has sufficient quantity.
+- `ScheduleSystem`, which derives a generic NPC entity's engine-owned
+  `active_activity` from validated inclusive-start, exclusive-end schedule
+  entries and records only material activity transitions.
 
 Regions and terrain are ordinary entities. A `contains` relationship may link
 a region to terrain it contains, while `adjacent` may link peer entities. These
@@ -233,6 +236,37 @@ The engine assigns no semantic meaning to progress values. Higher-level
 systems interpret progress according to their own requirements.
 
 Systems mutate the world exclusively through managers.
+
+### NPC identity, schedule, and occupation attributes
+
+An NPC remains a generic `Entity`; it has no NPC runtime subclass or separate
+state registry. The validated `NPCIdentity`, `Occupation`, and `ScheduleEntry`
+value objects are conversion boundaries for these JSON-compatible entity
+attributes:
+
+```python
+{
+    "npc_identity": {
+        "name": "Mira",
+        "description": "A dependable village woodcutter.",
+        "capability_descriptions": ["Experienced woodcutter"],
+    },
+    "occupation": {
+        "title": "Woodcutter",
+        "description": "Harvests and prepares timber for the settlement.",
+    },
+    "schedule": [
+        {"start_tick": 0, "end_tick": 8, "activity": "resting"},
+    ],
+    "active_activity": "resting",
+}
+```
+
+`ScheduleSystem` owns the runtime `active_activity` status and changes it only
+through `EntityManager`, recording `npc_activity_changed` through
+`EventManager`. Identity and occupation are presentation/domain data; their
+prose capability descriptions are not numeric engine skills. These attributes
+are not cognition inputs and do not grant an NPC direct access to world state.
 
 The scheduler is responsible only for calling `step(state)` in registration
 order and advancing the simulation tick.

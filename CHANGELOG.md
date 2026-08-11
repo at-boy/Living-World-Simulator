@@ -4,6 +4,10 @@
 
 ### Added
 
+- Validated `NPCIdentity`, `Occupation`, and `ScheduleEntry` value objects
+  with JSON-compatible generic entity-attribute forms.
+- Deterministic `ScheduleSystem` activity transitions with immutable
+  `npc_activity_changed` history and an executable NPC schedule example.
 - v0.3 settlement systems for construction, capacity-bounded housing,
   recipe-based production, road-gated trade, and non-negative resource
   operations.

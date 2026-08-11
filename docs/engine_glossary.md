@@ -42,6 +42,31 @@ Runtime instance created from a Definition.
 Locations are entities whose definitions describe locations. They do not have a
 separate runtime class or collection.
 
+### NPC attribute conventions
+
+An NPC is an ordinary entity carrying validated `npc_identity`, `occupation`,
+and `schedule` attributes. `active_activity` is engine-owned runtime status,
+not a memory, belief, observation, experience, or direct NPC cognition input.
+`NPCIdentity` contains prose capability descriptions only; numerical skills
+remain authoritative entity attributes and are not represented by identity.
+
+## ScheduleSystem
+
+**Purpose**
+
+Derive an NPC entity's current activity from its validated schedule.
+
+**Responsibilities**
+
+- use inclusive `start_tick` and exclusive `end_tick` intervals
+- update `active_activity` only through `EntityManager`
+- record material changes as `npc_activity_changed` through `EventManager`
+
+**Does Not Own**
+
+- an NPC-specific entity type or state store
+- perception, memory, belief, experience, or LLM context
+
 ---
 
 ## Relationship

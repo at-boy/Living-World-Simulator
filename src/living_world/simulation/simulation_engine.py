@@ -20,6 +20,7 @@ from living_world.systems.population_system import PopulationSystem
 from living_world.systems.production_system import ProductionSystem
 from living_world.systems.progress_system import ProgressSystem
 from living_world.systems.resource_system import ResourceSystem
+from living_world.systems.schedule_system import ScheduleSystem
 from living_world.systems.settlement_system import SettlementSystem
 from living_world.systems.simulation_system import SimulationSystem
 from living_world.systems.trade_system import TradeSystem
@@ -130,6 +131,12 @@ class SimulationEngine:
                 self._entities,
                 self._events,
                 self._resources,
+            )
+        )
+        self.register_system(
+            ScheduleSystem(
+                self._entities,
+                self._events,
             )
         )
 

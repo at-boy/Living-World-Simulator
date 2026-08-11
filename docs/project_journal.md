@@ -9,6 +9,17 @@ engineering milestones and lessons learned.
 
 # 2026-08-10
 
+## NPC Identity, Schedules, and Occupations
+
+NPC identity, occupation, and schedules are now validated domain values stored
+as JSON-compatible attributes on ordinary entities. This preserves the generic
+property-graph runtime: there is no NPC entity subclass, separate NPC store, or
+special persistence path. `ScheduleSystem` uses the managers already owned by
+the engine to derive the current activity at each tick and records only
+material transitions as immutable events. Presentation capabilities remain
+prose descriptions; numerical skill values remain authoritative engine data
+and do not enter the identity model or NPC cognition context.
+
 ## Settlement Economy
 
 The v0.3 settlement milestone remains a composition of generic graph and

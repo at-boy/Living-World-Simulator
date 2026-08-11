@@ -30,14 +30,13 @@ this completed scope.
 
 ## v0.4 – NPC System
 
-- NPC identity
+- NPC identity, schedules, and occupations are implemented as validated
+  JSON-compatible attributes on generic entities.
 - Memory
 - Experience
 - Belief
 - Relationships
 - Knowledge
-- Schedules
-- Occupations
 - Cognitive consolidation
 - Experience-to-belief candidate generation
 
