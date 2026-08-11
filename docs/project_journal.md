@@ -544,3 +544,9 @@ the council's round limit. Explicit engine calls still take precedence. The
 offset is ephemeral scheduling input, never NPC context, cognitive state,
 authority, or model-selected output; policy for deriving it from deterministic
 simulation state remains deferred.
+
+Shared local-cognition guidance now treats a topic or agenda without labelled
+prior dialogue as context rather than an utterance to acknowledge. It asks an
+NPC to begin with a direct position, then limits any reply to labelled visible
+turns once they exist. This changes no context assembly, response schema,
+parser acceptance, proposal authority, or generated model text after the fact.

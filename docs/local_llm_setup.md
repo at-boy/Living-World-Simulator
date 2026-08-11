@@ -181,3 +181,11 @@ the model to use `null` where no target or action is proposed and `{}` where no
 arguments are needed. This response-shape guidance helps local models follow
 the strict contract, but cannot guarantee compliance; malformed or unoffered
 proposals are still rejected without repair or inference.
+
+The same shared instruction distinguishes an unlabelled topic or agenda from a
+prior utterance. With no labelled dialogue to answer, the NPC is guided to open
+with its own direct position instead of acknowledgement language. Once labelled
+prior turns are visible, it may respond only to that supplied history and may
+not invent unseen speakers or claims. This is model guidance only: generated
+wording is not rewritten, and the strict response parser and action gateway
+remain unchanged.

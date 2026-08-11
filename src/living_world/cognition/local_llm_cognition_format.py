@@ -22,6 +22,13 @@ action success. Do not invent identifiers, hidden state, evidence, metadata,
 raw attributes, numerical capabilities, tools, or actions outside the offered
 vocabulary.
 
+Treat a topic or agenda by itself as context, not as something a prior speaker
+said. When no labelled prior dialogue is present, begin with your own direct
+position; do not use acknowledgement language such as "I see" or "I agree" as
+though replying to non-existent dialogue. When labelled prior dialogue is
+present, respond only to that visible dialogue. Never invent unseen speakers or
+claims beyond the supplied NPC-readable context.
+
 Return exactly one JSON object and no surrounding prose or Markdown, including
 no code fence. The object must contain both top-level fields: `spoken_text` and `action_request`.
 Set `spoken_text` to an NPC-visible string or `null`. Set

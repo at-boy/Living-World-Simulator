@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Guide local NPC cognition to open directly when given only a topic or agenda,
+  while limiting replies to labelled visible dialogue once prior turns exist.
 - Strengthen local NPC cognition response-shape guidance with a bare-JSON
   checklist and schema-compliant templates while retaining strict validation.
 - Add an engine-owned offset for deterministic rotation of automatic council

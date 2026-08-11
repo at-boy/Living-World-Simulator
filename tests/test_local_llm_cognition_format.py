@@ -9,12 +9,16 @@ from living_world.cognition.local_llm_cognition_format import (
 
 
 def test_system_instructions_specify_complete_generic_response_shape() -> None:
+    normalized_instructions = " ".join(SYSTEM_INSTRUCTIONS.split())
     for required_text in (
         "exactly one JSON object",
         "no surrounding prose or Markdown",
         "`spoken_text` and `action_request`",
         "`action_key`, `target_label`, `rationale`, and `arguments`",
         "use `{}` when no arguments are needed",
+        "topic or agenda by itself as context",
+        "begin with your own direct position",
+        "respond only to that visible dialogue",
         '"spoken_text": "<NPC-visible string or null>"',
         '"action_key": "<supplied action key>"',
         '"target_label": "<supplied target label or null>"',
@@ -22,7 +26,7 @@ def test_system_instructions_specify_complete_generic_response_shape() -> None:
         '"arguments": {"<argument name>": "<string value>"}',
         '"action_request": null',
     ):
-        assert required_text in SYSTEM_INSTRUCTIONS
+        assert required_text in normalized_instructions
 
     for forbidden_text in (
         "inspect",
