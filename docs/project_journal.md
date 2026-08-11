@@ -486,3 +486,9 @@ council policy.
 
 Council discussion now composes meeting coordination and the ordinary action
 gateway. It is not an authoritative governance system.
+
+The optional local-model council examples label the guaranteed caller apart
+from invitees. A caller-only result means no invited NPC joined, without
+claiming a reason that the safe result does not provide. Equivalent constrained
+requests may produce identical outcomes on successive runs because the
+examples use provider/model sampling defaults and do not promise variation.

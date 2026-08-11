@@ -125,11 +125,17 @@ They show five differentiated, attendance-friendly perspectives; a real model
 may nevertheless decline, abstain, or fail to return schema-valid JSON. Such a
 response is non-authoritative and does not change the world.
 
-Each manual council example prints attendance, visible debate turns, collected
-agenda votes/proposals, the majority proposal, and any resulting gateway
-resolution. If every invitee declines or returns an unusable response, it
-prints that no debate was held; `Majority proposal: None` then means no strict
-majority was available, not that the model changed the world.
+Each manual council example prints attendance, identifying the always-attending
+caller separately from invited NPCs, visible debate turns, collected agenda
+votes/proposals, the majority proposal, and any resulting gateway resolution.
+If no invited NPC joins, it says that only the caller attended and that no
+invitee joined; it does not expose why a particular invitee was absent.
+`Majority proposal: None` then means no strict majority was available, not that
+the model changed the world.
+
+Identical outcomes from successive local-model runs are valid. The examples
+send equivalent constrained requests and rely on the provider and model's
+sampling defaults; they do not promise varied or random results.
 
 ## NPC Cognition Configuration
 

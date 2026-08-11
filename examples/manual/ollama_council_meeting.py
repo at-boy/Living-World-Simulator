@@ -2,7 +2,12 @@
 
 from living_world.cognition.action_resolution import NPCActionResolver
 from living_world.cognition.conversation import ConversationService
-from living_world.cognition.council import CouncilAgenda, CouncilCall, CouncilService
+from living_world.cognition.council import (
+    CouncilAgenda,
+    CouncilCall,
+    CouncilResult,
+    CouncilService,
+)
 from living_world.cognition.decision_engine import DecisionEngine
 from living_world.cognition.meeting import MeetingService
 from living_world.cognition.npc_cognition_client import ActionOption
@@ -66,34 +71,57 @@ def _run(client: OllamaCognitionClient) -> None:
             },
         )
     )
-    print("Attendance")
-    for attendance in result.attendance:
+    print(format_council_result(result))
+
+
+def format_council_result(result: CouncilResult) -> str:
+    """Render the safe, operator-facing result of one council call."""
+
+    if not isinstance(result, CouncilResult):
+        raise TypeError("result must be a CouncilResult.")
+
+    lines = ["Attendance"]
+    for index, attendance in enumerate(result.attendance):
+        role = "caller" if index == 0 else "invitee"
         status = "attending" if attendance.attending else "not attending"
         delegation = (
             "; delegates to majority" if attendance.delegates_to_majority else ""
         )
-        print(f"- {attendance.participant_label}: {status}{delegation}")
+        lines.append(
+            f"- {attendance.participant_label} ({role}): {status}{delegation}"
+        )
 
-    print("\nDebate")
+    caller_only = (
+        bool(result.attendance)
+        and result.attendance[0].attending
+        and not any(attendance.attending for attendance in result.attendance[1:])
+    )
+    if caller_only:
+        lines.append("Only the caller attended; no invited NPC joined.")
+
+    lines.extend(("", "Debate"))
     if result.conversation.turns:
         for turn in result.conversation.turns:
-            print(f"{turn.speaker_label}: {turn.utterance}")
+            lines.append(f"{turn.speaker_label}: {turn.utterance}")
+    elif caller_only:
+        lines.append("No debate was held because no invited NPC joined.")
     else:
-        print("No invitee attended, so no debate was held.")
+        lines.append("No debate was held.")
 
-    print("\nVotes / proposals")
+    lines.extend(("", "Votes / proposals"))
     if result.conversation.proposals:
         for proposal in result.conversation.proposals:
             request = proposal.action_request
-            print(
+            lines.append(
                 f"- {proposal.speaker_label}: {request.action_key} ({request.rationale})"
             )
     else:
-        print("No agenda proposal was cast.")
+        lines.append("No agenda proposal was cast.")
 
-    print(f"\nMajority proposal: {result.majority_proposal}")
+    lines.append(f"\nMajority proposal: {result.majority_proposal}")
     if result.resolutions:
-        print(f"Gateway resolution: {result.resolutions[0]}")
+        lines.append(f"Gateway resolution: {result.resolutions[0]}")
+    return "\n".join(lines)
 
 
 if __name__ == "__main__":
