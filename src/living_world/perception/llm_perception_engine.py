@@ -1,7 +1,5 @@
 """LLM-backed perception with an engine-owned observation boundary."""
 
-import re
-
 from living_world.core.observation import Observation
 from living_world.perception.deterministic_perception_engine import (
     DeterministicPerceptionEngine,
@@ -12,6 +10,10 @@ from living_world.perception.llm_perception_client import (
     LLMPerceptionInvalidResponseError,
     LLMPerceptionRequest,
     LLMPerceptionResponse,
+)
+from living_world.perception.npc_perception_boundary import (
+    DefaultNPCPerceptionBoundary,
+    NPCPerceptionBoundary,
 )
 from living_world.perception.perception_context import PerceptionContext
 from living_world.perception.perception_engine import PerceptionEngine
@@ -25,9 +27,13 @@ class LLMPerceptionEngine:
         client: LLMPerceptionClient,
         *,
         fallback_engine: PerceptionEngine | None = None,
+        boundary: NPCPerceptionBoundary | None = None,
     ) -> None:
         self._client = client
         self._fallback_engine = fallback_engine or DeterministicPerceptionEngine()
+        self._boundary = (
+            DefaultNPCPerceptionBoundary() if boundary is None else boundary
+        )
 
     def perceive(self, context: PerceptionContext) -> Observation:
         """Produce an observation without granting model output world authority."""
@@ -42,11 +48,11 @@ class LLMPerceptionEngine:
             return self._fallback(context, failure="provider_error")
 
         try:
-            self._validate_response(response, context)
+            self._validate_response(response)
         except (TypeError, ValueError):
             return self._fallback(context, failure="invalid_response")
 
-        return Observation(
+        observation = Observation(
             id="",
             tick=context.tick,
             observer=context.observer.id,
@@ -60,6 +66,11 @@ class LLMPerceptionEngine:
                 "fallback_used": False,
             },
         )
+        try:
+            self._boundary.visible_description(observation, context=context)
+        except (TypeError, ValueError):
+            return self._fallback(context, failure="invalid_response")
+        return observation
 
     @staticmethod
     def _build_request(context: PerceptionContext) -> LLMPerceptionRequest:
@@ -85,7 +96,7 @@ class LLMPerceptionEngine:
                 "LLM perception failed and deterministic fallback could not run."
             ) from error
 
-        return Observation(
+        observation = Observation(
             id=fallback.id,
             tick=fallback.tick,
             observer=fallback.observer,
@@ -100,12 +111,16 @@ class LLMPerceptionEngine:
                 "failure": failure,
             },
         )
+        try:
+            self._boundary.visible_description(observation, context=context)
+        except (TypeError, ValueError) as error:
+            raise LLMPerceptionFallbackError(
+                "LLM perception failed and deterministic fallback was unsafe."
+            ) from error
+        return observation
 
     @staticmethod
-    def _validate_response(
-        response: object,
-        context: PerceptionContext,
-    ) -> None:
+    def _validate_response(response: object) -> None:
         if not isinstance(response, LLMPerceptionResponse):
             raise TypeError("Perception provider returned an invalid response.")
 
@@ -114,44 +129,6 @@ class LLMPerceptionEngine:
 
         if not 0.0 <= response.confidence <= 1.0:
             raise ValueError("Perception confidence must be between 0.0 and 1.0.")
-
-        forbidden_values = (
-            context.observer.id,
-            context.subject.id,
-            *(
-                str(value)
-                for value in context.subject.attributes.values()
-                if isinstance(value, (int, float)) and not isinstance(value, bool)
-            ),
-            *(
-                str(value)
-                for value in context.capabilities.values()
-                if isinstance(value, (int, float)) and not isinstance(value, bool)
-            ),
-        )
-
-        for value in forbidden_values:
-            if LLMPerceptionEngine._contains_exact_value(response.description, value):
-                raise ValueError("Perception description exposes engine-only data.")
-
-    @staticmethod
-    def _contains_exact_value(description: str, value: str) -> bool:
-        if value.startswith("entity_"):
-            return value in description
-
-        if value.replace(".", "", 1).isdigit():
-            return bool(
-                re.search(rf"(?<![0-9.]){re.escape(value)}(?![0-9.])", description)
-            )
-
-        if value.replace("_", "").isalnum():
-            return bool(
-                re.search(
-                    rf"(?<![A-Za-z0-9_]){re.escape(value)}(?![A-Za-z0-9_])", description
-                )
-            )
-
-        return value in description
 
 
 class LLMPerceptionFallbackError(RuntimeError):

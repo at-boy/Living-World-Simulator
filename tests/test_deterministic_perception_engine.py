@@ -1,9 +1,22 @@
+import pytest
+
 from living_world.core.entity import Entity
 from living_world.perception.deterministic_perception_engine import (
     DeterministicPerceptionEngine,
 )
+from living_world.perception.npc_perception_boundary import NPCPerceptionBoundary
 from living_world.perception.perception_context import PerceptionContext
 from living_world.state.world_state import WorldState
+
+
+class RejectingBoundary:
+    def visible_description(
+        self,
+        observation: object,
+        *,
+        context: PerceptionContext | None = None,
+    ) -> str:
+        raise ValueError("unsafe perception")
 
 
 def make_context(
@@ -138,3 +151,10 @@ def test_perception_is_deterministic() -> None:
     assert first.confidence == second.confidence
     assert first.evidence == second.evidence
     assert first.metadata == second.metadata
+
+
+def test_deterministic_engine_fails_closed_when_boundary_rejects_output() -> None:
+    boundary: NPCPerceptionBoundary = RejectingBoundary()
+
+    with pytest.raises(ValueError, match="unsafe perception"):
+        DeterministicPerceptionEngine(boundary).perceive(make_context(woodcraft=80))

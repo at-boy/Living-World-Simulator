@@ -4,6 +4,12 @@
 
 ### Added
 
+- Mandatory `NPCPerceptionBoundary` validation for deterministic and local-LLM
+  perception outputs, including nested protected-value, internal-ID, raw
+  attribute, hidden-state, metadata, and engine-object protections.
+- NPC context assembly now projects current perceptions solely through that
+  boundary and never reads observation evidence or metadata.
+
 - Deterministic holder-scoped cognitive retrieval and an NPC context assembly
   contract with no holder IDs or raw capability mappings.
 - Mandatory NPC information-boundary validation for returned context,

@@ -20,6 +20,8 @@ class LLMPerceptionRequest:
 
     This value deliberately excludes runtime objects and internal entity
     identifiers. A provider receives only data needed to describe a perception.
+    It is simulation machinery input and is not an NPC cognition request or an
+    NPC context value.
     """
 
     observer_name: str

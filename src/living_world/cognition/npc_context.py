@@ -11,6 +11,10 @@ from living_world.cognition.retrieval import (
     RetrievalQuery,
     RetrievedCognition,
 )
+from living_world.perception.npc_perception_boundary import (
+    DefaultNPCPerceptionBoundary,
+    NPCPerceptionBoundary,
+)
 from living_world.state.world_state import WorldState
 
 
@@ -33,12 +37,18 @@ class NPCContextAssembler:
         state: WorldState,
         retriever: CognitiveRetriever | None = None,
         boundary: NPCInformationBoundary | None = None,
+        perception_boundary: NPCPerceptionBoundary | None = None,
     ) -> None:
         self._state = state
         self._retriever = (
             DeterministicCognitiveRetriever(state) if retriever is None else retriever
         )
         self._boundary = NPCInformationBoundary(state) if boundary is None else boundary
+        self._perception_boundary = (
+            DefaultNPCPerceptionBoundary()
+            if perception_boundary is None
+            else perception_boundary
+        )
 
     def assemble(
         self,
@@ -62,7 +72,7 @@ class NPCContextAssembler:
 
         default_query = RetrievalQuery(holder_id=holder_id)
         current_perceptions = tuple(
-            observation.description
+            self._perception_boundary.visible_description(observation)
             for observation in sorted(
                 (
                     observation

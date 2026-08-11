@@ -1,11 +1,20 @@
 from collections.abc import Mapping
 
 from living_world.core.observation import Observation
+from living_world.perception.npc_perception_boundary import (
+    DefaultNPCPerceptionBoundary,
+    NPCPerceptionBoundary,
+)
 from living_world.perception.perception_context import PerceptionContext
 
 
 class DeterministicPerceptionEngine:
     """Produces deterministic observations from world state and capabilities."""
+
+    def __init__(self, boundary: NPCPerceptionBoundary | None = None) -> None:
+        self._boundary = (
+            DefaultNPCPerceptionBoundary() if boundary is None else boundary
+        )
 
     def perceive(
         self,
@@ -41,7 +50,7 @@ class DeterministicPerceptionEngine:
             "engine": "deterministic",
         }
 
-        return Observation(
+        observation = Observation(
             id="",
             tick=context.tick,
             observer=context.observer.id,
@@ -51,6 +60,8 @@ class DeterministicPerceptionEngine:
             evidence=evidence,
             metadata=metadata,
         )
+        self._boundary.visible_description(observation, context=context)
+        return observation
 
     @staticmethod
     def _numeric_capability(

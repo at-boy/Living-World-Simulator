@@ -28,6 +28,8 @@ def test_request_preserves_only_curated_perception_data() -> None:
     assert not hasattr(request, "world_state")
     assert not hasattr(request, "observer_id")
     assert not hasattr(request, "subject_id")
+    assert not hasattr(request, "current_perceptions")
+    assert not hasattr(request, "retrieved_information")
 
 
 def test_request_mappings_are_immutable() -> None:

@@ -465,6 +465,14 @@ The perception LLM is not the NPC.
 
 It is part of the simulation machinery that produces what the NPC perceives.
 
+The implementation enforces this translation boundary twice. Perception
+engines validate a produced `Observation.description` against their
+engine-only `PerceptionContext`, including protected nested numeric values and
+internal IDs. `NPCContextAssembler` then asks the same boundary only for the
+visible description; it neither receives `PerceptionContext` nor reads an
+observation's evidence or metadata. Thus engine debugging evidence may remain
+on an observation without becoming NPC cognition.
+
 ---
 
 # Deterministic and LLM Perception

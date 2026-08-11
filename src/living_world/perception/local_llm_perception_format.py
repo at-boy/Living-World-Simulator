@@ -14,7 +14,8 @@ SYSTEM_INSTRUCTIONS = """You are a simulation perception subsystem, not an NPC.
 Describe only what the observer could perceive about the subject. Return JSON
 matching the supplied schema with a concise NPC-readable description and a
 confidence from 0.0 to 1.0. Do not include internal entity identifiers, exact
-numeric values, raw attribute names, hidden state, actions, or explanations."""
+numeric values, raw attribute notation, evidence, metadata, hidden state,
+engine objects, actions, or explanations."""
 
 RESPONSE_SCHEMA: dict[str, object] = {
     "type": "object",

@@ -31,7 +31,7 @@ class NPCPerceptionBoundary(Protocol):
         self,
         observation: Observation,
         *,
-        context: PerceptionContext,
+        context: PerceptionContext | None = None,
     ) -> str: ...
 
 class DefaultNPCPerceptionBoundary:
@@ -39,20 +39,48 @@ class DefaultNPCPerceptionBoundary:
         self,
         observation: Observation,
         *,
-        context: PerceptionContext,
+        context: PerceptionContext | None = None,
     ) -> str: ...
+
+class DeterministicPerceptionEngine:
+    def __init__(self, boundary: NPCPerceptionBoundary | None = None) -> None: ...
+    def perceive(self, context: PerceptionContext) -> Observation: ...
+
+class LLMPerceptionEngine:
+    def __init__(
+        self,
+        client: LLMPerceptionClient,
+        *,
+        fallback_engine: PerceptionEngine | None = None,
+        boundary: NPCPerceptionBoundary | None = None,
+    ) -> None: ...
+    def perceive(self, context: PerceptionContext) -> Observation: ...
+
+class NPCContextAssembler:
+    def __init__(
+        self,
+        state: WorldState,
+        retriever: CognitiveRetriever | None = None,
+        boundary: NPCInformationBoundary | None = None,
+        perception_boundary: NPCPerceptionBoundary | None = None,
+    ) -> None: ...
 ```
 
 - `visible_description()` validates and returns only the NPC-readable
-  observation description. It rejects internal entity IDs, exact numeric values
-  from protected attributes/capabilities, raw attribute notation, evidence,
-  metadata, hidden state, and engine object names.
+  observation description. It always rejects observation internal IDs, raw
+  attribute notation, evidence/metadata vocabulary, hidden-state wording, and
+  engine object names. When the optional engine-only `context` is supplied, it
+  also rejects its observer/subject IDs and exact numeric values from protected
+  attributes/capabilities, including nested values.
 - `DeterministicPerceptionEngine` and `LLMPerceptionEngine` both validate their
-  produced observation through this boundary before returning it. The LLM
-  engine retains its deterministic fallback behavior.
+  produced observation through this boundary with their `PerceptionContext`
+  before returning it. The LLM engine retains its deterministic fallback
+  behavior and validates the fallback output through the same boundary.
 - `NPCContextAssembler` obtains current perceptions exclusively through
-  `NPCPerceptionBoundary.visible_description()`; it must never read
-  `Observation.evidence` or `Observation.metadata`.
+  `NPCPerceptionBoundary.visible_description(observation)` with no context; it
+  must never retain/read `PerceptionContext`, `Observation.evidence`, or
+  `Observation.metadata`. Add an optional boundary constructor dependency to
+  `NPCContextAssembler`, defaulting to `DefaultNPCPerceptionBoundary`.
 - The LLM perception request may remain a curated engine-side translation
   request containing attributes, as documented. It is not NPC cognition and
   must never be reused as an NPC-context or cognition-client request.

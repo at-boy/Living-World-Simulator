@@ -144,6 +144,9 @@ an observation. Observations are recorded through `ObservationManager`.
 The observation description represents the perceiver's interpretation,
 while internal evidence may retain objective simulator data for debugging
 and provenance without exposing that data as the NPC-facing perception.
+`NPCPerceptionBoundary` validates the description before an observation leaves
+the perception engine and again when it is projected into `NPCContext`; the
+latter path has no access to the observation's evidence or metadata.
 
 History represents objective facts about the world and recorded
 perceptions of the world, forming the foundation for future systems such

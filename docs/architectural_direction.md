@@ -34,6 +34,10 @@ Important principles:
 -   Observation is a perception, not a raw attribute dump.
 -   Internal evidence may be retained for debugging, but raw world data
     is not automatically exposed to an NPC.
+-   `NPCPerceptionBoundary` validates an observation's visible prose before
+    cognition can receive it. Engine-side perception validation may use
+    `PerceptionContext`; later context assembly must use only the observation
+    description, never its evidence, metadata, or engine context.
 -   Memories, beliefs and experiences are NPC-specific cognitive
     records.
 -   Experience is not a synonym for memory or belief. It represents the

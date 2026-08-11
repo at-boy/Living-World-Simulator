@@ -9,6 +9,18 @@ engineering milestones and lessons learned.
 
 # 2026-08-10
 
+## Perception-Boundary Enforcement
+
+Perception now has an executable translation boundary rather than relying on
+provider instructions alone. Both deterministic and LLM-backed engines validate
+the NPC-readable observation description with their private
+`PerceptionContext`; protected nested values and identifiers cannot be repeated
+as visible prose. Unsafe LLM output falls back deterministically, while an
+unsafe fallback fails closed. Later NPC-context assembly repeats only the
+description validation and has no engine context, evidence, or metadata access.
+The curated request sent to a perception provider remains simulation machinery,
+not an NPC cognition request.
+
 ## Cognitive Records and Sleep Consolidation
 
 The v0.4 cognitive model now distinguishes immutable, holder-scoped memories,

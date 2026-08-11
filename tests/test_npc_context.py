@@ -8,6 +8,20 @@ from living_world.core.observation import Observation
 from living_world.state.world_state import WorldState
 
 
+class RecordingPerceptionBoundary:
+    def __init__(self) -> None:
+        self.contexts: list[object] = []
+
+    def visible_description(
+        self,
+        observation: Observation,
+        *,
+        context: object | None = None,
+    ) -> str:
+        self.contexts.append(context)
+        return observation.description
+
+
 def make_state() -> WorldState:
     state = WorldState()
     state.entities["npc_1"] = Entity(
@@ -96,3 +110,34 @@ def test_assembler_requires_prose_capabilities_and_applies_perception_limit() ->
     )
 
     assert context.current_perceptions == ()
+
+
+def test_assembler_projects_perceptions_without_engine_context_or_evidence() -> None:
+    boundary = RecordingPerceptionBoundary()
+    state = make_state()
+
+    context = NPCContextAssembler(
+        state,
+        perception_boundary=boundary,
+    ).assemble(holder_id="npc_1")
+
+    assert context.current_perceptions == ("The old oak looks healthy.",)
+    assert boundary.contexts == [None]
+    assert "92" not in context.current_perceptions[0]
+
+
+def test_assembler_rejects_unsafe_direct_observation_descriptions() -> None:
+    state = make_state()
+    state.observations["observation_1"] = Observation(
+        id="observation_1",
+        tick=2,
+        observer="npc_1",
+        subject="tree_1",
+        description="The oak has wood=120.",
+        confidence=0.8,
+        evidence={"wood": 120},
+        metadata={},
+    )
+
+    with pytest.raises(ValueError, match="raw attribute"):
+        NPCContextAssembler(state).assemble(holder_id="npc_1")

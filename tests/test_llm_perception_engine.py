@@ -61,6 +61,20 @@ class FailingFallbackEngine:
         raise RuntimeError("Fallback failure.")
 
 
+class UnsafeFallbackEngine:
+    def perceive(self, context: PerceptionContext) -> Observation:
+        return Observation(
+            id="",
+            tick=context.tick,
+            observer=context.observer.id,
+            subject=context.subject.id,
+            description="The oak has wood=120.",
+            confidence=0.3,
+            evidence={},
+            metadata={},
+        )
+
+
 def make_context() -> PerceptionContext:
     observer = Entity(
         id="entity_000001",
@@ -149,6 +163,11 @@ def test_client_receives_curated_data_not_runtime_objects_or_identifiers() -> No
         ),
         LLMPerceptionResponse(
             description="The Old Oak has 120 units of wood.",
+            confidence=0.8,
+        ),
+        LLMPerceptionResponse(description="The Old Oak has wood=120.", confidence=0.8),
+        LLMPerceptionResponse(
+            description="The hidden state says the Old Oak is healthy.",
             confidence=0.8,
         ),
     ],
@@ -247,4 +266,14 @@ def test_raises_dedicated_error_when_fallback_cannot_produce_an_observation() ->
         LLMPerceptionFallbackError,
         match="deterministic fallback could not run",
     ):
+        engine.perceive(make_context())
+
+
+def test_raises_dedicated_error_when_fallback_output_is_unsafe() -> None:
+    engine = LLMPerceptionEngine(
+        FailingLLMPerceptionClient(),
+        fallback_engine=UnsafeFallbackEngine(),
+    )
+
+    with pytest.raises(LLMPerceptionFallbackError, match="fallback was unsafe"):
         engine.perceive(make_context())
