@@ -1,6 +1,5 @@
 from living_world.core.definition import Definition
 from living_world.simulation.simulation_engine import SimulationEngine
-from living_world.systems.progress_system import ProgressSystem
 
 
 def create_engine() -> SimulationEngine:
@@ -9,12 +8,6 @@ def create_engine() -> SimulationEngine:
     engine.definitions.register(
         Definition(
             key="progress_test",
-        )
-    )
-
-    engine.register_system(
-        ProgressSystem(
-            engine.entities,
         )
     )
 

@@ -13,10 +13,16 @@ from living_world.managers.resource_definition_manager import ResourceDefinition
 from living_world.repositories.graph_repository import GraphRepository
 from living_world.simulation.simulation_scheduler import SimulationScheduler
 from living_world.state.world_state import WorldState
+from living_world.systems.construction_system import ConstructionSystem
+from living_world.systems.housing_system import HousingSystem
 from living_world.systems.organization_system import OrganizationSystem
 from living_world.systems.population_system import PopulationSystem
+from living_world.systems.production_system import ProductionSystem
+from living_world.systems.progress_system import ProgressSystem
+from living_world.systems.resource_system import ResourceSystem
 from living_world.systems.settlement_system import SettlementSystem
 from living_world.systems.simulation_system import SimulationSystem
+from living_world.systems.trade_system import TradeSystem
 from living_world.systems.weather_system import WeatherSystem
 
 
@@ -61,6 +67,8 @@ class SimulationEngine:
             self._state,
         )
 
+        self._resources = ResourceSystem()
+
         self.register_system(
             WeatherSystem(
                 self._definitions,
@@ -87,6 +95,41 @@ class SimulationEngine:
                 self._definitions,
                 self._entities,
                 self._events,
+            )
+        )
+        self.register_system(
+            ProgressSystem(
+                self._entities,
+            )
+        )
+        self.register_system(
+            ConstructionSystem(
+                self._definitions,
+                self._entities,
+                self._events,
+                self._resources,
+            )
+        )
+        self.register_system(
+            HousingSystem(
+                self._definitions,
+                self._entities,
+                self._events,
+            )
+        )
+        self.register_system(
+            ProductionSystem(
+                self._definitions,
+                self._entities,
+                self._events,
+                self._resources,
+            )
+        )
+        self.register_system(
+            TradeSystem(
+                self._entities,
+                self._events,
+                self._resources,
             )
         )
 

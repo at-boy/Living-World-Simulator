@@ -183,6 +183,18 @@ Current generic systems include:
 - `SettlementSystem`, which derives an opt-in settlement's `is_located` and
   `owner_count` from one outgoing `located_in` relationship and incoming
   `owns` relationships.
+- `ConstructionSystem`, which marks an opt-in entity constructed only after
+  generic bounded progress has reached `progress_max` and its entity-held
+  `construction_requirements` can be consumed through `ResourceSystem`.
+- `HousingSystem`, which derives `housing_allocated` for completed opt-in
+  dwellings from incoming `housed_in` relationships, bounded by
+  `housing_capacity`.
+- `ProductionSystem`, which applies an opt-in entity's
+  `production_inputs` and `production_outputs` recipe through
+  `ResourceSystem`.
+- `TradeSystem`, which transfers the configured resource and amount of a
+  `trade` relationship only when its endpoints have an existing `road`
+  relationship and the source has sufficient quantity.
 
 Regions and terrain are ordinary entities. A `contains` relationship may link
 a region to terrain it contains, while `adjacent` may link peer entities. These
@@ -197,6 +209,18 @@ its location. The organization and settlement systems ignore malformed or
 ambiguous graph patterns. Material summary changes are recorded as
 `organization_membership_changed`, `settlement_location_changed`, or
 `settlement_ownership_changed` events.
+
+Settlement-economy conventions remain graph and attribute vocabulary rather
+than specialized runtime types. A `road` connects two entities in either
+direction and is always created by `RelationshipManager`; it is never created
+or edited by a simulation system. A `trade` relationship points from resource
+source to recipient and supplies non-negative integer `amount` and non-empty
+string `resource` attributes. `housed_in` points from a resident to a completed
+dwelling. Construction, production, and trade use `ResourceSystem`, whose
+quantities are non-negative integers and whose failed transfers leave both
+endpoints unchanged. Material outcomes are recorded respectively as
+`construction_completed`, `housing_allocation_changed`, `production_completed`,
+and `trade_completed`.
 
 The engine assigns no semantic meaning to these mechanisms. Higher-level
 systems interpret them according to their own requirements.

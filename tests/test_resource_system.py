@@ -1,3 +1,5 @@
+import pytest
+
 from living_world.core.definition import Definition
 from living_world.core.entity import Entity
 from living_world.simulation.simulation_engine import SimulationEngine
@@ -154,3 +156,28 @@ def test_add_creates_resources_dictionary() -> None:
         )
         == 5
     )
+
+
+def test_resource_operations_reject_negative_quantities() -> None:
+    engine = create_engine()
+    entity = create_entity(engine)
+    resources = ResourceSystem()
+
+    with pytest.raises(ValueError, match="cannot be negative"):
+        resources.set(entity, "wood", -1)
+    with pytest.raises(ValueError, match="cannot be negative"):
+        resources.remove(entity, "wood", 1)
+
+
+def test_transfer_rejects_insufficient_source_without_partial_change() -> None:
+    engine = create_engine()
+    source = create_entity(engine)
+    target = create_entity(engine)
+    resources = ResourceSystem()
+    resources.set(source, "wood", 1)
+
+    with pytest.raises(ValueError, match="cannot be negative"):
+        resources.transfer(source, target, "wood", 2)
+
+    assert resources.get(source, "wood") == 1
+    assert resources.get(target, "wood") == 0

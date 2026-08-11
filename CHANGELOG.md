@@ -4,6 +4,11 @@
 
 ### Added
 
+- v0.3 settlement systems for construction, capacity-bounded housing,
+  recipe-based production, road-gated trade, and non-negative resource
+  operations.
+- Executable YAML-backed settlement economy example.
+
 - Property-graph organization and settlement foundations using `member_of`,
   `owns`, and `located_in` relationship conventions.
 - Deterministic organization membership and settlement location/ownership
@@ -36,6 +41,9 @@
 - Manual real-server examples using Qwen3-4B Q4_K_M.
 
 ### Changed
+
+- `ResourceSystem` now rejects negative quantities and guarantees failed
+  transfers leave both resource holders unchanged.
 
 - Event attribute trees are now recursively immutable and detached from caller
   input, including after SQLite persistence round trips.

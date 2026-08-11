@@ -9,6 +9,18 @@ engineering milestones and lessons learned.
 
 # 2026-08-10
 
+## Settlement Economy
+
+The v0.3 settlement milestone remains a composition of generic graph and
+attribute mechanisms. Construction uses existing bounded progress plus
+entity-held material requirements, while housing derives allocation from
+`housed_in` edges only after construction. Production and road-gated trade use
+the shared `ResourceSystem`; it now protects non-negative quantities and makes
+an insufficient transfer atomic from the callers' perspective. Roads, trades,
+and dwellings remain ordinary relationships and entities, not specialized
+runtime models. Every material outcome records an immutable event in stable
+system and identifier order.
+
 ## Immutable Event Attributes
 
 Events now freeze their entire attribute tree at construction time. Nested

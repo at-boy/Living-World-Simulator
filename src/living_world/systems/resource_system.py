@@ -33,6 +33,7 @@ class ResourceSystem(SimulationSystem):
         resource: str,
         quantity: int,
     ) -> None:
+        self._validate_quantity(quantity)
         resources = self._resources(entity)
 
         resources[resource] = quantity
@@ -43,6 +44,7 @@ class ResourceSystem(SimulationSystem):
         resource: str,
         amount: int,
     ) -> None:
+        self._validate_amount(amount)
         quantity = self.get(
             entity,
             resource,
@@ -60,10 +62,14 @@ class ResourceSystem(SimulationSystem):
         resource: str,
         amount: int,
     ) -> None:
+        self._validate_amount(amount)
         quantity = self.get(
             entity,
             resource,
         )
+
+        if amount > quantity:
+            raise ValueError("Resource quantity cannot be negative.")
 
         self.set(
             entity,
@@ -78,6 +84,12 @@ class ResourceSystem(SimulationSystem):
         resource: str,
         amount: int,
     ) -> None:
+        self._validate_amount(amount)
+        source_quantity = self.get(source, resource)
+
+        if amount > source_quantity:
+            raise ValueError("Resource quantity cannot be negative.")
+
         self.remove(
             source,
             resource,
@@ -121,4 +133,21 @@ class ResourceSystem(SimulationSystem):
         if not isinstance(value, int):
             raise TypeError(f"Resource '{resource}' must be an integer.")
 
+        if value < 0:
+            raise ValueError(f"Resource '{resource}' cannot be negative.")
+
         return value
+
+    def _validate_quantity(self, quantity: int) -> None:
+        if not isinstance(quantity, int) or isinstance(quantity, bool):
+            raise TypeError("Resource quantity must be an integer.")
+
+        if quantity < 0:
+            raise ValueError("Resource quantity cannot be negative.")
+
+    def _validate_amount(self, amount: int) -> None:
+        if not isinstance(amount, int) or isinstance(amount, bool):
+            raise TypeError("Resource amount must be an integer.")
+
+        if amount < 0:
+            raise ValueError("Resource amount cannot be negative.")

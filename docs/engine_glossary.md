@@ -66,6 +66,11 @@ Runtime connection between two Entities.
 - `member_of`: source member to target organization
 - `owns`: source owner to target settlement
 - `located_in`: source settlement to target location
+- `road`: connects its two endpoint entities; direction has no road-network
+  meaning and only `RelationshipManager` may create it
+- `housed_in`: source resident to target dwelling
+- `trade`: source resource holder to target recipient, with `resource` and
+  `amount` attributes
 
 These are domain conventions interpreted by systems, not relationship runtime
 types or bespoke domain objects.
@@ -298,6 +303,56 @@ The system understands progress as a generic concept rather than any
 specific domain such as construction or farming.
 
 Other systems interpret the meaning of progress.
+
+---
+
+## ResourceSystem
+
+**Purpose**
+
+Own generic resource quantities stored in an entity's `resources` attribute.
+
+**Guarantees**
+
+- quantities and operation amounts are non-negative integers
+- failed removals and transfers do not make quantities negative
+- transfer validates the source before mutating either endpoint
+
+---
+
+## ConstructionSystem
+
+**Purpose**
+
+Interpret completed generic progress as construction after consuming an
+entity's `construction_requirements` through `ResourceSystem`.
+
+---
+
+## HousingSystem
+
+**Purpose**
+
+Interpret completed dwellings and summarize incoming `housed_in` relationships
+into capacity-bounded `housing_allocated` state.
+
+---
+
+## ProductionSystem
+
+**Purpose**
+
+Interpret opt-in `production_inputs` and `production_outputs` recipes through
+`ResourceSystem`.
+
+---
+
+## TradeSystem
+
+**Purpose**
+
+Transfer the configured resource of a `trade` relationship only between
+endpoints connected by an existing `road` relationship.
 
 ## SimulationEngine
 

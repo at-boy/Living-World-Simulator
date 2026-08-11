@@ -19,14 +19,12 @@ deliberately postponed until the appropriate milestone.
 
 ---
 
-## v0.3 – Settlement Simulation
+## Completed v0.3 – Settlement Simulation
 
-- Construction
-- Roads
-- Housing
-- Economy
-- Production
-- Trade
+Construction, roads, housing, economy, production, and trade are implemented
+through generic entities, relationships, resources, progress, systems, and
+events. Further settlement features belong in a future milestone rather than
+this completed scope.
 
 ---
 
