@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Expand both opt-in local council examples into longer five-NPC scenarios with
+  three agenda choices, deterministic turn rotation, opaque engine IDs, an
+  accepted no-mutation gateway demonstration, and an opt-in safe request trace.
+- Add a request-only cognition-client decorator that records filtered
+  `NPCContext` and offered actions without retaining provider responses/errors.
 - Guide local NPC cognition to open directly when given only a topic or agenda,
   while limiting replies to labelled visible dialogue once prior turns exist.
 - Strengthen local NPC cognition response-shape guidance with a bare-JSON

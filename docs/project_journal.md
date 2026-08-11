@@ -7,6 +7,25 @@ engineering milestones and lessons learned.
 
 ---
 
+# 2026-08-11
+
+## Manual Council Scenario and Safe Request Trace
+
+The Ollama and llama.cpp council demonstrations now use opaque engine IDs and
+offer five differentiated NPCs three qualitative approaches to a risky
+journey. A longer bounded discussion begins at a nonzero deterministic turn
+offset. Its manual-only action handler demonstrates an accepted proposal
+through the ordinary gateway while deliberately performing no state mutation;
+it is not a production world primitive.
+
+An opt-in recording decorator captures only the already-filtered `NPCContext`
+and offered `ActionOption` tuple before each provider call. The manual
+`--show-context` output passes those values through the production serializer.
+Provider responses, exceptions, transports, world state, internal IDs, hidden
+records, and secrets are neither retained nor rendered. This gives operators a
+useful boundary trace without widening what reaches the model or what survives
+afterward.
+
 # 2026-08-10
 
 ## Local Cognition Response Shape Guidance

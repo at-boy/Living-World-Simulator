@@ -41,6 +41,10 @@ from living_world.cognition.npc_cognition_client import (
 )
 from living_world.cognition.npc_context import NPCContext, NPCContextAssembler
 from living_world.cognition.ollama_cognition_client import OllamaCognitionClient
+from living_world.cognition.recording_cognition_client import (
+    RecordedCognitionRequest,
+    RecordingCognitionClient,
+)
 from living_world.cognition.retrieval import (
     CognitiveRetriever,
     DeterministicCognitiveRetriever,
@@ -89,6 +93,8 @@ __all__ = [
     "NPCDecision",
     "NPCInformationBoundary",
     "OllamaCognitionClient",
+    "RecordedCognitionRequest",
+    "RecordingCognitionClient",
     "RetrievalQuery",
     "RetrievedCognition",
     "SleepCognitiveConsolidator",

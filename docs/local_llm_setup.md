@@ -55,6 +55,13 @@ The opt-in five-NPC council demonstration uses the same loopback server:
 PYTHONPATH=src .venv/bin/python examples/manual/ollama_council_meeting.py
 ```
 
+Add `--show-context` to print the filtered `NPCContext` and offered action
+vocabulary recorded before each provider call:
+
+```bash
+PYTHONPATH=src .venv/bin/python examples/manual/ollama_council_meeting.py --show-context
+```
+
 `OllamaPerceptionClient` defaults to `http://127.0.0.1:11434` and rejects
 non-loopback URLs. It sends `think: false` so Qwen3 returns the required JSON
 in the response field rather than its separate thinking field. See the official
@@ -94,6 +101,12 @@ The corresponding five-NPC council demonstration is:
 PYTHONPATH=src .venv/bin/python examples/manual/llama_cpp_council_meeting.py
 ```
 
+The same safe request trace is available explicitly:
+
+```bash
+PYTHONPATH=src .venv/bin/python examples/manual/llama_cpp_council_meeting.py --show-context
+```
+
 `LlamaCppPerceptionClient` defaults to `http://127.0.0.1:8080` and rejects
 non-loopback URLs. llama.cpp exposes OpenAI-compatible chat-completion routes
 and structured JSON response support. See the official
@@ -121,9 +134,18 @@ transports and do not require a model server; the manual examples are optional
 smoke tests for a locally running server.
 
 The council demonstrations are deliberately opt-in and are not part of `make`.
-They show five differentiated, attendance-friendly perspectives; a real model
-may nevertheless decline, abstain, or fail to return schema-valid JSON. Such a
-response is non-authoritative and does not change the world.
+They show five differentiated, attendance-friendly perspectives considering
+three qualitative journey alternatives over a longer, deterministically
+rotated discussion. A manual-only gateway handler can accept a selected
+alternative while explicitly leaving world state unchanged. A real model may
+nevertheless decline, abstain, choose any offered alternative, or fail to
+return schema-valid JSON. Such a response is non-authoritative.
+
+The optional context trace records only each already-filtered request before
+the provider call and renders it through the production request serializer. It
+never records or prints raw model responses, exception text, HTTP payloads,
+`WorldState`, internal engine IDs, hidden cognitive records, or credentials.
+Normal output remains concise when the flag is absent.
 
 Each council invitation explicitly directs an invitee to return exactly one
 offered attendance action in `action_request`, with a short NPC-visible reason

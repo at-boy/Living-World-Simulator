@@ -1,6 +1,8 @@
-"""Opt-in five-NPC council smoke example for a loopback llama.cpp server."""
+"""Opt-in five-NPC council scenario for a loopback llama.cpp server."""
 
-from living_world.cognition.action_resolution import NPCActionResolver
+import argparse
+
+from living_world.cognition.action_resolution import ActionResolution, NPCActionResolver
 from living_world.cognition.conversation import ConversationService
 from living_world.cognition.council import (
     CouncilAgenda,
@@ -11,9 +13,18 @@ from living_world.cognition.council import (
 )
 from living_world.cognition.decision_engine import DecisionEngine
 from living_world.cognition.llama_cpp_cognition_client import LlamaCppCognitionClient
+from living_world.cognition.local_llm_cognition_format import serialize_decision_request
 from living_world.cognition.meeting import MeetingService
-from living_world.cognition.npc_cognition_client import ActionOption
+from living_world.cognition.npc_cognition_client import (
+    ActionOption,
+    ActionRequest,
+    NPCCognitionClient,
+)
 from living_world.cognition.npc_context import NPCContextAssembler
+from living_world.cognition.recording_cognition_client import (
+    RecordedCognitionRequest,
+    RecordingCognitionClient,
+)
 from living_world.core.entity import Entity
 from living_world.core.relationship import Relationship
 from living_world.simulation.simulation_engine import SimulationEngine
@@ -22,57 +33,111 @@ PERSPECTIVES: tuple[tuple[str, str], ...] = (
     ("Aster", "I favour careful preparation before travel."),
     ("Bryn", "I favour a swift route while daylight lasts."),
     ("Cato", "I favour conserving supplies for later."),
-    ("Dara", "I favour listening to every concern first."),
-    ("Eris", "I favour a bold route that benefits the settlement."),
+    ("Dara", "I favour preparing first so every concern can shape the plan."),
+    ("Eris", "I favour the bold daybreak route that benefits the settlement."),
 )
+PARTICIPANT_IDS = tuple(f"entity_{number}" for number in range(401, 406))
+ORGANIZATION_ID = "organization_301"
+MAX_ROUNDS = 15
+TURN_ORDER_OFFSET = 2
+ACTIONS = (
+    ActionOption("prepare_then_travel", "Prepare supplies before taking the journey."),
+    ActionOption("travel_at_daybreak", "Take the quickest route at daybreak."),
+    ActionOption("postpone_journey", "Postpone the journey and conserve supplies."),
+)
+
+
+class ManualCouncilActionHandler:
+    """Accept offered demonstration choices without mutating simulation state."""
+
+    def supports(self, action_key: str) -> bool:
+        return action_key in {action.key for action in ACTIONS}
+
+    def validate(self, *, actor_id: str, request: ActionRequest) -> ActionResolution:
+        return ActionResolution(
+            True, "Manual council choice is valid for demonstration."
+        )
+
+    def apply(self, *, actor_id: str, request: ActionRequest) -> ActionResolution:
+        return ActionResolution(
+            True, "Accepted for demonstration; world state unchanged."
+        )
 
 
 def main() -> None:
     """Run an opt-in five-NPC council through the loopback llama.cpp client."""
 
-    _run(LlamaCppCognitionClient(model="qwen3-4b-q4-k-m"))
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--show-context", action="store_true", help="print filtered model requests"
+    )
+    args = parser.parse_args()
+    _run(
+        LlamaCppCognitionClient(model="qwen3-4b-q4-k-m"),
+        show_context=args.show_context,
+    )
 
 
-def _run(client: LlamaCppCognitionClient) -> None:
+def _run(client: NPCCognitionClient, *, show_context: bool = False) -> None:
+    recording_client = RecordingCognitionClient(client)
     engine = SimulationEngine()
-    engine.state.entities["council"] = Entity("council", "organization", "Council")
-    ids: list[str] = []
-    for index, (name, _) in enumerate(PERSPECTIVES, start=1):
-        identifier = f"npc_{index}"
-        ids.append(identifier)
+    engine.state.entities[ORGANIZATION_ID] = Entity(
+        ORGANIZATION_ID, "organization", "Council"
+    )
+    for index, (identifier, (name, _)) in enumerate(
+        zip(PARTICIPANT_IDS, PERSPECTIVES, strict=True), start=1
+    ):
         engine.state.entities[identifier] = Entity(identifier, "npc", name)
-        engine.state.relationships[f"membership_{index}"] = Relationship(
-            f"membership_{index}", "member_of", identifier, "council"
+        relationship_id = f"relationship_{index + 500}"
+        engine.state.relationships[relationship_id] = Relationship(
+            relationship_id, "member_of", identifier, ORGANIZATION_ID
         )
-    actions = (ActionOption("wait", "Support a patient non-authoritative pause."),)
     assembler = NPCContextAssembler(engine.state)
-    decisions = DecisionEngine(client)
+    decisions = DecisionEngine(recording_client)
+    resolver = NPCActionResolver(ACTIONS, (ManualCouncilActionHandler(),))
     conversation = ConversationService(
-        assembler, decisions, NPCActionResolver(actions), engine.observations, actions
+        assembler, decisions, resolver, engine.observations, ACTIONS
     )
     council = CouncilService(
         MeetingService(conversation),
         assembler,
         decisions,
-        NPCActionResolver(actions),
+        resolver,
         engine.state,
     )
     result = council.convene(
         call=CouncilCall(
-            ids[0],
-            "council",
-            tuple(ids[1:]),
+            PARTICIPANT_IDS[0],
+            ORGANIZATION_ID,
+            PARTICIPANT_IDS[1:],
             CouncilAgenda(
-                "whether the settlement should delay a risky journey", actions
+                "how the settlement should approach a necessary risky journey", ACTIONS
             ),
-            5,
+            MAX_ROUNDS,
             participant_self_knowledge={
                 identifier: (perspective,)
-                for identifier, (_, perspective) in zip(ids, PERSPECTIVES, strict=True)
+                for identifier, (_, perspective) in zip(
+                    PARTICIPANT_IDS, PERSPECTIVES, strict=True
+                )
             },
+            turn_order_offset=TURN_ORDER_OFFSET,
         )
     )
     print(format_council_result(result))
+    if show_context:
+        print(format_context_trace(recording_client.recorded_requests))
+
+
+def format_context_trace(requests: tuple[RecordedCognitionRequest, ...]) -> str:
+    """Render only serialized, already-filtered cognition request inputs."""
+
+    lines = ["", "Filtered cognition request context"]
+    for index, recorded in enumerate(requests, start=1):
+        lines.append(
+            f"Request {index}: "
+            f"{serialize_decision_request(recorded.context, recorded.actions)}"
+        )
+    return "\n".join(lines)
 
 
 def format_council_result(result: CouncilResult) -> str:
