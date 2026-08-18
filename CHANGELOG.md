@@ -4,6 +4,10 @@
 
 ### Added
 
+- Add deliberately partial external-world references with manager-owned contact
+  lifecycle, immutable events, schema-v4 persistence, privileged inspection,
+  and a separate qualitative NPC-safe interpretation.
+
 - Implement frozen spatial point/bounds placement records, manager-owned
   lifecycle and events, guarded entity removal, schema-v3 persistence,
   canonical queries, and detached privileged HTTP inspection.

@@ -9,6 +9,15 @@ engineering milestones and lessons learned.
 
 # 2026-08-18
 
+## Partial External-World References
+
+Task 17 adds deliberately partial off-map references as frozen, manager-owned
+engine records. Exact capacity, delay, cost, reliability, goods policy, IDs,
+and privileged inspection remain outside NPC context; the only reusable
+NPC-facing form is fixed qualitative name/role/contact prose. Schema 4 preserves
+these anchors while legacy snapshots default them to empty. Dispatch, remote
+simulation, and trade transfer remain deferred to their documented tasks.
+
 ## Spatial Domain, Persistence, and Inspection
 
 Task 15b implements ADR-0016 as dedicated spatial state rather than coordinate

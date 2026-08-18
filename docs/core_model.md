@@ -435,6 +435,14 @@ spatially unknown, and privileged inspection returns detached exact geometry.
 No placement or coordinate enters NPC context; later perception owns any
 qualitative relative description. See ADR-0016.
 
+## External-world references
+
+Off-map anchors are dedicated frozen records owned by their lifecycle manager,
+not generic entities or secretly simulated places. They hold exact engine
+trade/contact policy and persist in SQLite schema 4. Operator inspection may
+show the full detached record; NPC-facing use is a separate qualitative DTO
+and is not automatically added to context. See ADR-0017.
+
 # Councils
 
 A council is an ephemeral agenda-driven composition of meeting coordination.

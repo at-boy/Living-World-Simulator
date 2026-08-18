@@ -18,6 +18,7 @@ from living_world.core.npc_relationship import NPCRelationship
 from living_world.core.observation import Observation
 from living_world.core.relationship import Relationship
 from living_world.core.run_metadata import RunMetadata
+from living_world.external_world.model import ContactState, ExternalWorldReference
 from living_world.managers.event_manager import EventManager
 from living_world.spatial.manager import SpatialManager, placement_order_key
 from living_world.spatial.model import (
@@ -29,8 +30,8 @@ from living_world.spatial.model import (
 )
 from living_world.state.world_state import WorldState
 
-_SCHEMA_VERSION = 3
-_SUPPORTED_SCHEMA_VERSIONS = frozenset({1, 2, 3})
+_SCHEMA_VERSION = 4
+_SUPPORTED_SCHEMA_VERSIONS = frozenset({1, 2, 3, 4})
 Record = (
     Entity
     | Relationship
@@ -41,6 +42,7 @@ Record = (
     | Memory
     | NPCRelationship
     | Knowledge
+    | ExternalWorldReference
 )
 RecordType = TypeVar("RecordType", bound=Record)
 
@@ -152,6 +154,12 @@ def _serialize_world(state: WorldState) -> dict[str, object]:
             _serialize_placement(placement)
             for placement in sorted(state.placements.values(), key=placement_order_key)
         ],
+        "external_world_references": [
+            _serialize_external_world_reference(reference)
+            for reference in sorted(
+                state.external_world_references.values(), key=lambda item: item.id
+            )
+        ],
         "events": [_serialize_event(event) for event in state.events.values()],
         "observations": [
             _serialize_observation(observation)
@@ -243,6 +251,24 @@ def _serialize_event(event: Event) -> dict[str, object]:
         "kind": event.kind,
         "subject_id": event.subject_id,
         "attributes": _event_attributes_as_json(event.attributes),
+    }
+
+
+def _serialize_external_world_reference(
+    reference: ExternalWorldReference,
+) -> dict[str, object]:
+    return {
+        "id": reference.id,
+        "name": reference.name,
+        "role": reference.role,
+        "allowed_imports": list(reference.allowed_imports),
+        "allowed_exports": list(reference.allowed_exports),
+        "capacity": reference.capacity,
+        "delay_ticks": reference.delay_ticks,
+        "cost_per_unit": reference.cost_per_unit,
+        "reliability": reference.reliability,
+        "contact_state": reference.contact_state.value,
+        "created_tick": reference.created_tick,
     }
 
 
@@ -390,6 +416,20 @@ def _deserialize_world(payload: object, *, schema_version: int) -> WorldState:
         if schema_version >= 3
         else {}
     )
+    state.external_world_references = (
+        _records(
+            payload_mapping.get("external_world_references", []),
+            _deserialize_external_world_reference,
+        )
+        if schema_version >= 4
+        else {}
+    )
+    normalized_reference_names = {
+        reference.name.strip().casefold()
+        for reference in state.external_world_references.values()
+    }
+    if len(normalized_reference_names) != len(state.external_world_references):
+        raise ValueError("Persisted external reference names must be unique.")
     state.events = _records(payload_mapping["events"], _deserialize_event)
     state.observations = _records(
         payload_mapping["observations"], _deserialize_observation
@@ -506,6 +546,24 @@ def _deserialize_event(value: Mapping[str, object]) -> Event:
         kind=_string(value["kind"]),
         subject_id=_optional_string(value["subject_id"]),
         attributes=_mapping(value["attributes"]),
+    )
+
+
+def _deserialize_external_world_reference(
+    value: Mapping[str, object],
+) -> ExternalWorldReference:
+    return ExternalWorldReference(
+        id=_string(value["id"]),
+        name=_string(value["name"]),
+        role=_string(value["role"]),
+        allowed_imports=_strings(value["allowed_imports"]),
+        allowed_exports=_strings(value["allowed_exports"]),
+        capacity=_integer(value["capacity"]),
+        delay_ticks=_integer(value["delay_ticks"]),
+        cost_per_unit=_integer(value["cost_per_unit"]),
+        reliability=_number(value["reliability"]),
+        contact_state=ContactState(_string(value["contact_state"])),
+        created_tick=_integer(value["created_tick"]),
     )
 
 

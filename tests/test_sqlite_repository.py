@@ -133,7 +133,7 @@ def test_unsupported_schema_version_raises_without_returning_partial_state(
     repository.save_world(_world_state())
     with sqlite3.connect(database_path) as connection:
         connection.execute(
-            "UPDATE world_snapshots SET schema_version = ? WHERE id = 1", (4,)
+            "UPDATE world_snapshots SET schema_version = ? WHERE id = 1", (5,)
         )
 
     with pytest.raises(RepositoryLoadError, match="Unsupported world schema version"):
