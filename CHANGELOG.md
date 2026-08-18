@@ -4,6 +4,9 @@
 
 ### Added
 
+- Implement frozen spatial point/bounds placement records, manager-owned
+  lifecycle and events, guarded entity removal, schema-v3 persistence,
+  canonical queries, and detached privileged HTTP inspection.
 - Define ADR-0016's canonical local integer-coordinate point/bounds placement
   contract, containment and overlap rules, deterministic ordering, persistence
   migration, privileged inspection, and NPC information boundary.

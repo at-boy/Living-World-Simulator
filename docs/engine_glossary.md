@@ -694,6 +694,9 @@ The sole lifecycle owner for placement creation, atomic replacement,
 unplacement, removal, containment/overlap validation, deterministic queries,
 and immutable spatial events.
 
+It also implements the typed entity-removal guard used by `EntityManager`, so
+entities cannot be removed while placement state or contained children remain.
+
 # Spatial inspection
 
 A privileged detached projection of exact placement geometry. It may expose

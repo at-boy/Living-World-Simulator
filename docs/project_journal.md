@@ -9,6 +9,20 @@ engineering milestones and lessons learned.
 
 # 2026-08-18
 
+## Spatial Domain, Persistence, and Inspection
+
+Task 15b implements ADR-0016 as dedicated spatial state rather than coordinate
+attributes. `SpatialManager` validates live entities, explicit containment,
+descendant-safe replacement, mutual overlap permission, and leaf-first removal
+before committing a frozen placement plus one immutable lifecycle event. A
+narrow entity-removal guard prevents stale placement references without giving
+`EntityManager` authority over spatial mutation.
+
+SQLite schema version 3 persists placed and explicitly unplaced records while
+loading older worlds as spatially unknown. Exact geometry is available only as
+detached, canonically ordered privileged inspection. NPC context remains
+unchanged and receives no coordinates or inspection payload.
+
 ## Canonical Two-Dimensional Spatial Contract
 
 ADR-0016 establishes one deliberately abstract local integer plane before any

@@ -32,6 +32,7 @@ from living_world.scenarios.scenario import (
     YAMLScenarioLoader,
 )
 from living_world.simulation.simulation_scheduler import SimulationScheduler
+from living_world.spatial.manager import SpatialManager
 from living_world.state.world_state import WorldState
 from living_world.systems.construction_system import ConstructionSystem
 from living_world.systems.housing_system import HousingSystem
@@ -60,18 +61,21 @@ class SimulationEngine:
 
         self._scenarios = ScenarioRuntimeManager(self._state, self._definitions)
 
+        self._events = EventManager(
+            self._state,
+        )
+
+        self._spatial = SpatialManager(self._state, self._events)
+
         self._entities = EntityManager(
             self._state,
             self._definitions,
+            self._spatial,
         )
 
         self._relationships = RelationshipManager(
             self._state,
             self._entities,
-        )
-
-        self._events = EventManager(
-            self._state,
         )
 
         self._observations = ObservationManager(
@@ -207,6 +211,10 @@ class SimulationEngine:
     @property
     def relationships(self) -> RelationshipManager:
         return self._relationships
+
+    @property
+    def spatial(self) -> SpatialManager:
+        return self._spatial
 
     @property
     def events(self) -> EventManager:

@@ -62,6 +62,7 @@ composed world without opening a network port.
 | `GET /world/definitions` | Entity definitions |
 | `GET /world/resources` | Resource definitions |
 | `GET /world/relationships` | World relationships |
+| `GET /world/placements` | Canonically ordered exact spatial placements |
 | `GET /world/events` | World events |
 | `GET /world/npcs` | NPC identity, occupation, schedule, and active activity presentation |
 | `GET /world/observations` | Persisted observations |
@@ -71,9 +72,10 @@ composed world without opening a network port.
 | `GET /world/experiences` | Persisted experiences, history, and provenance |
 | `GET /world/cognitive-history/{holder_id}` | Holder-scoped cognitive records, or `404` if the holder is unknown |
 
-Collection routes return `[]` when no records exist. Collections are ordered
-deterministically by record identifier. A known holder with no cognitive
-records receives a response whose category collections are empty.
+Collection routes return `[]` when no records exist. Existing record
+collections are ordered deterministically by record identifier; placements use
+ADR-0016's canonical container/geometry/entity order. A known holder with no
+cognitive records receives a response whose category collections are empty.
 
 `/world` includes a `run` object for scenario-bound worlds and `null` for
 legacy or manually composed worlds. The fingerprint and seed are privileged
@@ -98,3 +100,13 @@ prompts, `NPCContext`, cognitive retrieval, perception, or cognition clients.
 The API is GET-only and does not step or mutate the simulation. Conversations,
 meetings, councils, invitation feedback, and action-resolution return values
 are ephemeral and therefore have no inspection routes.
+
+# Spatial placements
+
+`GET /world/placements` returns the dedicated spatial placement collection in
+canonical container/geometry/entity order. Each detached record contains the
+entity ID, optional containing entity ID, geometry (`null`, point, or bounds),
+optional bounds kind, and overlap policy. `/world` includes `placement_count`.
+
+This is privileged exact engine geometry. It is not an NPC perception or
+context payload and must not be passed to cognition.
