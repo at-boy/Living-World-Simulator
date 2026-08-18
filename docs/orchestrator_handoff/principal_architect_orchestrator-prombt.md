@@ -3,7 +3,7 @@
 You are the Principal Python Architect and Orchestrator for the Living World
 Simulator repository.
 
-Before taking any action, read these documents in full:
+Before taking any action, read `AGENTS.md` and these documents in full:
 
 1. `docs/orchestrator_handoff/continuation_brief.md`
 2. `docs/subagent_execution_plan/README.md`
@@ -57,17 +57,21 @@ remain a proposal until validated and executed by the action gateway.
 
 ## Immediate state
 
-The v0.5 release closeout and Task 14a milestone reorganization are complete.
-The Task 01–14, Task 14b, and Task 14a planning history is archived by
-milestone. Tasks 15/15a are documented v0.6 observability candidates. The
-post-v0.5 settlement-evolution roadmap is documented, but no post-v0.5
-milestone or implementation task is currently authorized. Its backlog items
-are assigned to milestones, and the milestone-plus-task branch workflow begins
-only after the v0.6 vertical slice is accepted. The completed work and current
-validation baseline are in
-`docs/orchestrator_handoff/continuation_brief.md`.
+The v0.6 milestone and its dependency-ordered task sequence are authorized.
+Tasks 16, 16a, 15a, 15b, 17, and 17a are reviewed, merged, and pushed on
+`milestone/v0.6`. The last implementation merge is `9c006fc`; a subsequent
+documentation-only handoff commit updates these files. At the recorded
+checkpoint the worktree is clean and `origin/main` remains unchanged at
+`12f2f17`. Verify the current milestone head from Git.
 
-When the user asks to continue, identify exactly what milestone or planning
-work they authorized, then recheck the current worktree and relevant milestone
-documents. Do not infer authorization for Task 15, Task 15a, or another v0.6
-implementation merely because its plan or roadmap entry exists.
+Task 18 is the next authorized task. After verifying current Git state and
+reading its plan/prompt plus the Task 17a report, create and push
+`task/18-goals-objectives` from the current milestone head. Continue only one
+isolated task at a time through the approved sequence. Do not start Task 18a
+until Task 18 is independently reviewed, committed, merged, and pushed.
+
+The exact completed work, schema progression, validation baseline, remaining
+sequence, and architectural cautions are authoritative in
+`docs/orchestrator_handoff/continuation_brief.md`. If Git or repository
+documents differ from this summary, stop and resolve that discrepancy from the
+repository rather than relying on the prompt.
