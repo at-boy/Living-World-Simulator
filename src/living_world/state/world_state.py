@@ -10,6 +10,7 @@ from living_world.core.npc_relationship import NPCRelationship
 from living_world.core.observation import Observation
 from living_world.core.relationship import Relationship
 from living_world.core.run_metadata import RunMetadata
+from living_world.spatial.model import Placement
 
 
 @dataclass(slots=True)
@@ -23,6 +24,8 @@ class WorldState:
     entities: dict[str, Entity] = field(default_factory=dict)
 
     relationships: dict[str, Relationship] = field(default_factory=dict)
+
+    placements: dict[str, Placement] = field(default_factory=dict)
 
     events: dict[str, Event] = field(default_factory=dict)
 

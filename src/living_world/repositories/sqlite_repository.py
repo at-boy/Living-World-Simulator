@@ -18,10 +18,19 @@ from living_world.core.npc_relationship import NPCRelationship
 from living_world.core.observation import Observation
 from living_world.core.relationship import Relationship
 from living_world.core.run_metadata import RunMetadata
+from living_world.managers.event_manager import EventManager
+from living_world.spatial.manager import SpatialManager, placement_order_key
+from living_world.spatial.model import (
+    Bounds,
+    BoundsKind,
+    OverlapPolicy,
+    Placement,
+    Point,
+)
 from living_world.state.world_state import WorldState
 
-_SCHEMA_VERSION = 2
-_SUPPORTED_SCHEMA_VERSIONS = frozenset({1, 2})
+_SCHEMA_VERSION = 3
+_SUPPORTED_SCHEMA_VERSIONS = frozenset({1, 2, 3})
 Record = (
     Entity
     | Relationship
@@ -82,7 +91,7 @@ class SQLiteRepository:
 
         try:
             decoded_payload = json.loads(payload)
-            return _deserialize_world(decoded_payload)
+            return _deserialize_world(decoded_payload, schema_version=schema_version)
         except (TypeError, ValueError, KeyError) as exc:
             raise RepositoryLoadError("Persisted world data is malformed.") from exc
 
@@ -139,6 +148,10 @@ def _serialize_world(state: WorldState) -> dict[str, object]:
             _serialize_relationship(relationship)
             for relationship in state.relationships.values()
         ],
+        "placements": [
+            _serialize_placement(placement)
+            for placement in sorted(state.placements.values(), key=placement_order_key)
+        ],
         "events": [_serialize_event(event) for event in state.events.values()],
         "observations": [
             _serialize_observation(observation)
@@ -191,6 +204,35 @@ def _serialize_relationship(relationship: Relationship) -> dict[str, object]:
         "attributes": dict(relationship.attributes),
         "created_tick": relationship.created_tick,
         "destroyed_tick": relationship.destroyed_tick,
+    }
+
+
+def _serialize_placement(placement: Placement) -> dict[str, object]:
+    geometry: dict[str, object] | None
+    if isinstance(placement.geometry, Point):
+        geometry = {
+            "kind": "point",
+            "x": placement.geometry.x,
+            "y": placement.geometry.y,
+        }
+    elif isinstance(placement.geometry, Bounds):
+        geometry = {
+            "kind": "bounds",
+            "x": placement.geometry.x,
+            "y": placement.geometry.y,
+            "width": placement.geometry.width,
+            "height": placement.geometry.height,
+        }
+    else:
+        geometry = None
+    return {
+        "entity_id": placement.entity_id,
+        "geometry": geometry,
+        "containing_entity_id": placement.containing_entity_id,
+        "bounds_kind": (
+            None if placement.bounds_kind is None else placement.bounds_kind.value
+        ),
+        "overlap_policy": placement.overlap_policy.value,
     }
 
 
@@ -333,7 +375,7 @@ def _serialize_salience(salience: CognitiveSalience) -> dict[str, object]:
     return {"importance": salience.importance, "is_core": salience.is_core}
 
 
-def _deserialize_world(payload: object) -> WorldState:
+def _deserialize_world(payload: object, *, schema_version: int) -> WorldState:
     payload_mapping = _mapping(payload)
     state = WorldState(
         tick=_integer(payload_mapping["tick"]),
@@ -342,6 +384,11 @@ def _deserialize_world(payload: object) -> WorldState:
     state.entities = _records(payload_mapping["entities"], _deserialize_entity)
     state.relationships = _records(
         payload_mapping["relationships"], _deserialize_relationship
+    )
+    state.placements = (
+        _placements(payload_mapping.get("placements", []))
+        if schema_version >= 3
+        else {}
     )
     state.events = _records(payload_mapping["events"], _deserialize_event)
     state.observations = _records(
@@ -358,6 +405,7 @@ def _deserialize_world(payload: object) -> WorldState:
     state.knowledge = _records(
         payload_mapping.get("knowledge", []), _deserialize_knowledge
     )
+    SpatialManager(state, EventManager(state)).validate_loaded_state()
     return state
 
 
@@ -406,6 +454,48 @@ def _deserialize_relationship(value: Mapping[str, object]) -> Relationship:
         attributes=dict(_mapping(value["attributes"])),
         created_tick=_integer(value["created_tick"]),
         destroyed_tick=_optional_integer(value["destroyed_tick"]),
+    )
+
+
+def _placements(values: object) -> dict[str, Placement]:
+    placements = [_deserialize_placement(_mapping(value)) for value in _list(values)]
+    result = {placement.entity_id: placement for placement in placements}
+    if len(result) != len(placements):
+        raise ValueError("Persisted placement entity identifiers must be unique.")
+    return result
+
+
+def _deserialize_placement(value: Mapping[str, object]) -> Placement:
+    geometry_value = value["geometry"]
+    geometry: Point | Bounds | None
+    if geometry_value is None:
+        geometry = None
+    else:
+        geometry_mapping = _mapping(geometry_value)
+        kind = _string(geometry_mapping["kind"])
+        if kind == "point":
+            geometry = Point(
+                _integer(geometry_mapping["x"]),
+                _integer(geometry_mapping["y"]),
+            )
+        elif kind == "bounds":
+            geometry = Bounds(
+                _integer(geometry_mapping["x"]),
+                _integer(geometry_mapping["y"]),
+                _integer(geometry_mapping["width"]),
+                _integer(geometry_mapping["height"]),
+            )
+        else:
+            raise ValueError(f"Unknown persisted geometry kind '{kind}'.")
+    bounds_kind_value = _optional_string(value["bounds_kind"])
+    return Placement(
+        entity_id=_string(value["entity_id"]),
+        geometry=geometry,
+        containing_entity_id=_optional_string(value["containing_entity_id"]),
+        bounds_kind=(
+            None if bounds_kind_value is None else BoundsKind(bounds_kind_value)
+        ),
+        overlap_policy=OverlapPolicy(_string(value["overlap_policy"])),
     )
 
 

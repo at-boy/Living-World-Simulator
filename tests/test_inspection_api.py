@@ -25,6 +25,7 @@ from living_world.core.relationship import Relationship
 from living_world.core.resource_definition import ResourceDefinition
 from living_world.core.run_metadata import RunMetadata
 from living_world.simulation.simulation_engine import SimulationEngine
+from living_world.spatial import Point
 
 
 @dataclass(frozen=True, slots=True)
@@ -276,6 +277,7 @@ def test_inspection_endpoints_return_authoritative_snapshots_in_id_order() -> No
         "run": None,
         "entity_count": 2,
         "relationship_count": 2,
+        "placement_count": 0,
         "event_count": 2,
         "observation_count": 2,
         "memory_count": 2,
@@ -287,6 +289,7 @@ def test_inspection_endpoints_return_authoritative_snapshots_in_id_order() -> No
         "resource_definition_count": 2,
     }
     assert client.get("/world/run").status_code == 404
+    assert client.get("/world/placements").json() == []
     assert [record["id"] for record in client.get("/world/entities").json()] == [
         "entity_000001",
         "entity_000002",
@@ -444,6 +447,7 @@ def test_empty_inspection_collections_return_arrays() -> None:
         "/world/knowledge",
         "/world/beliefs",
         "/world/experiences",
+        "/world/placements",
     ):
         response = client.get(endpoint)
         assert response.status_code == 200
@@ -466,12 +470,34 @@ def test_run_metadata_is_detached_privileged_inspection() -> None:
     assert engine.state.run_metadata == RunMetadata("oakford", 1, 42, "abc123")
 
 
+def test_spatial_inspection_endpoint_returns_detached_geometry() -> None:
+    engine = SimulationEngine()
+    engine.definitions.register(Definition("thing"))
+    entity = engine.entities.create(definition_key="thing", name="Thing")
+    engine.spatial.place(entity_id=entity.id, geometry=Point(2, 3))
+    client = ASGIClient(create_app(engine))
+
+    payload = client.get("/world/placements").json()
+    assert payload == [
+        {
+            "entity_id": entity.id,
+            "geometry": {"kind": "point", "x": 2, "y": 3},
+            "containing_entity_id": None,
+            "bounds_kind": None,
+            "overlap_policy": "reject",
+        }
+    ]
+    payload[0]["geometry"]["x"] = 99
+    assert engine.spatial.get(entity.id).geometry == Point(2, 3)
+
+
 def test_world_inspector_protocol_declares_the_complete_surface() -> None:
     inspector: WorldInspector = EngineWorldInspector(SimulationEngine())
 
     assert inspector.npcs() == ()
     assert inspector.memories() == ()
     assert inspector.knowledge() == ()
+    assert inspector.placements() == ()
     assert inspector.cognitive_history("missing") is None
 
 

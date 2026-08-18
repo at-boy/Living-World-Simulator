@@ -10,6 +10,7 @@ from typing import Protocol, cast
 from fastapi.encoders import jsonable_encoder
 
 from living_world.simulation.simulation_engine import SimulationEngine
+from living_world.spatial.manager import placement_snapshot
 
 
 class WorldInspector(Protocol):
@@ -30,6 +31,8 @@ class WorldInspector(Protocol):
     def resources(self) -> tuple[Mapping[str, object], ...]: ...
 
     def relationships(self) -> tuple[Mapping[str, object], ...]: ...
+
+    def placements(self) -> tuple[Mapping[str, object], ...]: ...
 
     def events(self) -> tuple[Mapping[str, object], ...]: ...
 
@@ -61,6 +64,7 @@ class EngineWorldInspector:
             "run": self.run_metadata(),
             "entity_count": len(state.entities),
             "relationship_count": len(state.relationships),
+            "placement_count": len(state.placements),
             "event_count": len(state.events),
             "observation_count": len(state.observations),
             "memory_count": len(state.memories),
@@ -108,6 +112,17 @@ class EngineWorldInspector:
 
     def relationships(self) -> tuple[Mapping[str, object], ...]:
         return self._records(self._engine.state.relationships)
+
+    def placements(self) -> tuple[Mapping[str, object], ...]:
+        return tuple(
+            {
+                "entity_id": placement.entity_id,
+                **cast(
+                    dict[str, object], _snapshot_value(placement_snapshot(placement))
+                ),
+            }
+            for placement in self._engine.spatial.all()
+        )
 
     def events(self) -> tuple[Mapping[str, object], ...]:
         return self._records(self._engine.state.events)

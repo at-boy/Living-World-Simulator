@@ -427,13 +427,14 @@ unplaced state. Bounded placements distinguish areas from structures and carry
 a typed sibling-overlap policy. An optional container must be a live entity
 with bounds, and child geometry must lie fully inside it.
 
-The spatial manager alone creates, atomically replaces, unplaces, and removes
-placements. It validates entities, containment, cycles, and mutual overlap
-permission before recording one immutable event. Queries use canonical
+The implemented spatial manager alone creates, atomically replaces, unplaces,
+and removes placements. It validates entities, containment, cycles, and mutual
+overlap permission before recording one immutable event. Queries use canonical
 container/geometry/entity ordering. SQLite migration treats legacy entities as
 spatially unknown, and privileged inspection returns detached exact geometry.
 No placement or coordinate enters NPC context; later perception owns any
 qualitative relative description. See ADR-0016.
+
 # Councils
 
 A council is an ephemeral agenda-driven composition of meeting coordination.
