@@ -79,6 +79,8 @@ an approved task plan and saved prompt.
 
 The versioned scenario/run identity foundation is implemented in Task 16, and
 Task 16a adds checkpoint execution plus continuous/bounded operator control.
+ADR-0016 fixes the canonical local spatial contract for Task 15b; pathfinding,
+terrain, motion, and regional-scale geography remain deferred.
 
 - Births
 - Childhood and apprenticeships

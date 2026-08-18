@@ -4,6 +4,9 @@
 
 ### Added
 
+- Define ADR-0016's canonical local integer-coordinate point/bounds placement
+  contract, containment and overlap rules, deterministic ordering, persistence
+  migration, privileged inspection, and NPC information boundary.
 - Add the supported `living-world run` headless command and typed runner for
   bounded or explicit continuous execution, atomic checkpointing, compatible
   resume, graceful SIGINT, stable summaries, and classified failure exits.

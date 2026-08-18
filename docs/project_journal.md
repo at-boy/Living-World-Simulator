@@ -9,6 +9,19 @@ engineering milestones and lessons learned.
 
 # 2026-08-18
 
+## Canonical Two-Dimensional Spatial Contract
+
+ADR-0016 establishes one deliberately abstract local integer plane before any
+spatial runtime or inspector is implemented. Points and positive half-open
+bounds are authoritative placement values; explicit containment and mutual
+typed overlap permission replace coordinate-like entity attributes or hidden
+automatic packing. Canonical ordering and legacy-unplaced migration make the
+future Task 15b implementation deterministic.
+
+Exact geometry remains operator-only engine truth. NPC-facing spatial meaning
+must later be perceived as qualitative, holder-scoped relative prose rather
+than copied from inspection DTOs or raw coordinates.
+
 ## Bounded Runner, Checkpointing, and Resume
 
 The v0.6 operator path now runs a scenario through a typed service behind the
