@@ -21,6 +21,13 @@ def create_app(engine: SimulationEngine) -> FastAPI:
     async def world_tick() -> dict[str, int]:
         return {"tick": inspector.tick()}
 
+    @application.get("/world/run")
+    async def world_run() -> Mapping[str, object]:
+        snapshot = inspector.run_metadata()
+        if snapshot is None:
+            raise HTTPException(status_code=404, detail="Run metadata not found.")
+        return snapshot
+
     @application.get("/world")
     async def world_summary() -> Mapping[str, object]:
         return inspector.world_summary()

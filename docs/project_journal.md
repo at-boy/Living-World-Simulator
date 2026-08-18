@@ -7,6 +7,23 @@ engineering milestones and lessons learned.
 
 ---
 
+# 2026-08-18
+
+## Scenario and Deterministic Run Contract
+
+The first v0.6 capability separates reproducible scenario configuration from
+authoritative runtime state. A strict YAML document names definitions and an
+initial graph with public local labels; managers still generate every runtime
+identity. Persisted run metadata binds the world to the scenario key, seed, and
+full configuration fingerprint, so resume reloads the same definitions and
+fails before stepping if configuration changed. Legacy v0.5 snapshots remain
+loadable but are not silently assigned a scenario history they never had.
+
+Run metadata is exposed only through privileged inspection. It has no route to
+perception, retrieval, `NPCContext`, cognition, or action resolution.
+
+---
+
 # 2026-08-12
 
 ## v0.5 Release Closeout

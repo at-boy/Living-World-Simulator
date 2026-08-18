@@ -26,6 +26,11 @@ from living_world.managers.observation_manager import ObservationManager
 from living_world.managers.relationship_manager import RelationshipManager
 from living_world.managers.resource_definition_manager import ResourceDefinitionManager
 from living_world.repositories.graph_repository import GraphRepository
+from living_world.scenarios.runtime import ScenarioRuntimeManager
+from living_world.scenarios.scenario import (
+    LoadedScenario,
+    YAMLScenarioLoader,
+)
 from living_world.simulation.simulation_scheduler import SimulationScheduler
 from living_world.state.world_state import WorldState
 from living_world.systems.construction_system import ConstructionSystem
@@ -52,6 +57,8 @@ class SimulationEngine:
         self._definitions = DefinitionManager()
 
         self._resource_definitions = ResourceDefinitionManager()
+
+        self._scenarios = ScenarioRuntimeManager(self._state, self._definitions)
 
         self._entities = EntityManager(
             self._state,
@@ -237,6 +244,14 @@ class SimulationEngine:
         definitions = YAMLWorldDefinitionLoader().load(path)
         self._definitions.register_many(definitions)
         return definitions
+
+    def load_scenario(self, path: Path) -> LoadedScenario:
+        """Load, validate, and idempotently bind one scenario to this world."""
+
+        scenario = YAMLScenarioLoader().load(path)
+        definitions = YAMLWorldDefinitionLoader().load(scenario.definition_path)
+        self._scenarios.bind(scenario, definitions)
+        return scenario
 
     def resolve_npc_action(
         self,

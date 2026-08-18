@@ -37,6 +37,13 @@ Current registries include:
 - DefinitionManager
 - ResourceDefinitionManager
 
+`RunMetadata` binds a persisted world to a versioned scenario key, seed, and
+configuration fingerprint. `SimulationEngine.load_scenario(path)` reloads the
+scenario's definition vocabulary, verifies compatibility on resume, and uses
+entity and relationship managers to instantiate a fresh initial graph exactly
+once. Scenario-local labels are configuration conveniences, not runtime IDs or
+NPC-visible knowledge.
+
 World-definition YAML is an input format for Definition vocabulary, not a
 serialized `WorldState`. `SimulationEngine.load_definitions(path)` validates a
 strict document containing only ordered definitions, their initial attributes,
@@ -84,6 +91,10 @@ are never exposed to runtime callers.
 `SimulationEngine(repository)` loads through the repository during composition.
 Call `save_world()` to persist the current snapshot. Omitting a repository
 retains the existing in-memory engine behavior.
+
+SQLite schema version 2 adds optional run metadata. Schema-version-1 v0.5
+snapshots remain loadable as unbound legacy worlds and are written as the
+current schema on their next save.
 
 ## Privileged inspection
 

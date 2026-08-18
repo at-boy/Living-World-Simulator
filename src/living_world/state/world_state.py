@@ -9,6 +9,7 @@ from living_world.core.memory import Memory
 from living_world.core.npc_relationship import NPCRelationship
 from living_world.core.observation import Observation
 from living_world.core.relationship import Relationship
+from living_world.core.run_metadata import RunMetadata
 
 
 @dataclass(slots=True)
@@ -16,6 +17,8 @@ class WorldState:
     """In-memory runtime snapshot owned and mutated through lifecycle managers."""
 
     tick: int = 0
+
+    run_metadata: RunMetadata | None = None
 
     entities: dict[str, Entity] = field(default_factory=dict)
 

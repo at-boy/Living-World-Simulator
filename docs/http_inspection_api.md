@@ -55,6 +55,7 @@ composed world without opening a network port.
 | --- | --- |
 | `GET /health` | Service status and version |
 | `GET /world/tick` | Current simulation tick |
+| `GET /world/run` | Scenario run metadata, or `404` for an unbound world |
 | `GET /world` | Counts for the principal world-state collections |
 | `GET /world/entities` | All entities |
 | `GET /world/entities/{entity_id}` | One entity, or `404` if unknown |
@@ -73,6 +74,10 @@ composed world without opening a network port.
 Collection routes return `[]` when no records exist. Collections are ordered
 deterministically by record identifier. A known holder with no cognitive
 records receives a response whose category collections are empty.
+
+`/world` includes a `run` object for scenario-bound worlds and `null` for
+legacy or manually composed worlds. The fingerprint and seed are privileged
+operator diagnostics and must never be copied into NPC-facing context.
 
 For example, after obtaining an NPC identifier from `/world/npcs`:
 
