@@ -4,6 +4,9 @@
 
 ### Added
 
+- Add the supported `living-world run` headless command and typed runner for
+  bounded or explicit continuous execution, atomic checkpointing, compatible
+  resume, graceful SIGINT, stable summaries, and classified failure exits.
 - Add a strict versioned YAML scenario contract with deterministic initial
   graph creation, persisted run identity/fingerprint, compatible definition
   reload on resume, and privileged read-only run inspection.

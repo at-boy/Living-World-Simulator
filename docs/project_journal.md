@@ -9,6 +9,20 @@ engineering milestones and lessons learned.
 
 # 2026-08-18
 
+## Bounded Runner, Checkpointing, and Resume
+
+The v0.6 operator path now runs a scenario through a typed service behind the
+`living-world run` command. Bounded execution remains the safe default;
+continuous execution is explicit and cooperatively stoppable. Successful ticks
+checkpoint complete snapshots at a configured cadence and at every clean exit,
+while a failed tick never replaces the last valid snapshot. Resume reuses the
+Task 16 identity and definition checks before advancing.
+
+The command prints only stable run identity/status/tick/stop fields and maps
+configuration, compatibility, persistence, and simulation failures to distinct
+exit codes. It does not expose raw state or connect operator configuration to
+NPC context.
+
 ## Scenario and Deterministic Run Contract
 
 The first v0.6 capability separates reproducible scenario configuration from
