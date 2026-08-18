@@ -85,6 +85,8 @@ regional-scale geography remain deferred.
 ADR-0017 and Task 17 implement partial off-map references, deterministic contact
 state, schema-v4 persistence, privileged inspection, and a filtered qualitative
 interpretation. Dispatch and trade transfer remain assigned to Task 17a.
+Task 17a now implements deterministic durable dispatches and safe offered-label
+proposals; generic work, objectives, and remote-place simulation remain deferred.
 
 - Births
 - Childhood and apprenticeships

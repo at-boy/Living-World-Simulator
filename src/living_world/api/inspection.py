@@ -36,6 +36,8 @@ class WorldInspector(Protocol):
 
     def external_world_references(self) -> tuple[Mapping[str, object], ...]: ...
 
+    def external_dispatches(self) -> tuple[Mapping[str, object], ...]: ...
+
     def events(self) -> tuple[Mapping[str, object], ...]: ...
 
     def npcs(self) -> tuple[Mapping[str, object], ...]: ...
@@ -68,6 +70,7 @@ class EngineWorldInspector:
             "relationship_count": len(state.relationships),
             "placement_count": len(state.placements),
             "external_world_reference_count": len(state.external_world_references),
+            "external_dispatch_count": len(state.external_dispatches),
             "event_count": len(state.events),
             "observation_count": len(state.observations),
             "memory_count": len(state.memories),
@@ -129,6 +132,9 @@ class EngineWorldInspector:
 
     def external_world_references(self) -> tuple[Mapping[str, object], ...]:
         return self._records(self._engine.state.external_world_references)
+
+    def external_dispatches(self) -> tuple[Mapping[str, object], ...]:
+        return self._records(self._engine.state.external_dispatches)
 
     def events(self) -> tuple[Mapping[str, object], ...]:
         return self._records(self._engine.state.events)

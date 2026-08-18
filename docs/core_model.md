@@ -443,6 +443,12 @@ trade/contact policy and persist in SQLite schema 4. Operator inspection may
 show the full detached record; NPC-facing use is a separate qualitative DTO
 and is not automatically added to context. See ADR-0017.
 
+External dispatches are frozen durable records owned by a dedicated manager.
+They reserve local resources atomically and advance through a deterministic
+seeded scheduler system. Exact policy remains privileged; the separate safe
+perception is qualitative and holder-neutral until a later perception path
+establishes NPC knowledge. See ADR-0018.
+
 # Councils
 
 A council is an ephemeral agenda-driven composition of meeting coordination.

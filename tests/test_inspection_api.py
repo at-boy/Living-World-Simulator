@@ -279,6 +279,7 @@ def test_inspection_endpoints_return_authoritative_snapshots_in_id_order() -> No
         "relationship_count": 2,
         "placement_count": 0,
         "external_world_reference_count": 0,
+        "external_dispatch_count": 0,
         "event_count": 2,
         "observation_count": 2,
         "memory_count": 2,
@@ -450,6 +451,7 @@ def test_empty_inspection_collections_return_arrays() -> None:
         "/world/experiences",
         "/world/placements",
         "/world/external-references",
+        "/world/external-dispatches",
     ):
         response = client.get(endpoint)
         assert response.status_code == 200
@@ -501,6 +503,7 @@ def test_world_inspector_protocol_declares_the_complete_surface() -> None:
     assert inspector.knowledge() == ()
     assert inspector.placements() == ()
     assert inspector.external_world_references() == ()
+    assert inspector.external_dispatches() == ()
     assert inspector.cognitive_history("missing") is None
 
 

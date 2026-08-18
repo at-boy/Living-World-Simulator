@@ -4,6 +4,10 @@
 
 ### Added
 
+- Add durable deterministic external dispatches with resource reservation,
+  immutable lifecycle events, offered-label gateway handling, schema-v5
+  persistence, privileged inspection, and qualitative safe results.
+
 - Add deliberately partial external-world references with manager-owned contact
   lifecycle, immutable events, schema-v4 persistence, privileged inspection,
   and a separate qualitative NPC-safe interpretation.

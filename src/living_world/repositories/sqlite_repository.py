@@ -18,6 +18,11 @@ from living_world.core.npc_relationship import NPCRelationship
 from living_world.core.observation import Observation
 from living_world.core.relationship import Relationship
 from living_world.core.run_metadata import RunMetadata
+from living_world.external_world.dispatch import (
+    DispatchDirection,
+    DispatchStatus,
+    ExternalDispatch,
+)
 from living_world.external_world.model import ContactState, ExternalWorldReference
 from living_world.managers.event_manager import EventManager
 from living_world.spatial.manager import SpatialManager, placement_order_key
@@ -30,8 +35,8 @@ from living_world.spatial.model import (
 )
 from living_world.state.world_state import WorldState
 
-_SCHEMA_VERSION = 4
-_SUPPORTED_SCHEMA_VERSIONS = frozenset({1, 2, 3, 4})
+_SCHEMA_VERSION = 5
+_SUPPORTED_SCHEMA_VERSIONS = frozenset({1, 2, 3, 4, 5})
 Record = (
     Entity
     | Relationship
@@ -43,6 +48,7 @@ Record = (
     | NPCRelationship
     | Knowledge
     | ExternalWorldReference
+    | ExternalDispatch
 )
 RecordType = TypeVar("RecordType", bound=Record)
 
@@ -160,6 +166,12 @@ def _serialize_world(state: WorldState) -> dict[str, object]:
                 state.external_world_references.values(), key=lambda item: item.id
             )
         ],
+        "external_dispatches": [
+            _serialize_external_dispatch(dispatch)
+            for dispatch in sorted(
+                state.external_dispatches.values(), key=lambda item: item.id
+            )
+        ],
         "events": [_serialize_event(event) for event in state.events.values()],
         "observations": [
             _serialize_observation(observation)
@@ -269,6 +281,23 @@ def _serialize_external_world_reference(
         "reliability": reference.reliability,
         "contact_state": reference.contact_state.value,
         "created_tick": reference.created_tick,
+    }
+
+
+def _serialize_external_dispatch(dispatch: ExternalDispatch) -> dict[str, object]:
+    return {
+        "id": dispatch.id,
+        "source_entity_id": dispatch.source_entity_id,
+        "reference_id": dispatch.reference_id,
+        "direction": dispatch.direction.value,
+        "good": dispatch.good,
+        "quantity": dispatch.quantity,
+        "reserved_good": dispatch.reserved_good,
+        "reserved_cost": dispatch.reserved_cost,
+        "status": dispatch.status.value,
+        "created_tick": dispatch.created_tick,
+        "departure_tick": dispatch.departure_tick,
+        "resolution_tick": dispatch.resolution_tick,
     }
 
 
@@ -430,6 +459,30 @@ def _deserialize_world(payload: object, *, schema_version: int) -> WorldState:
     }
     if len(normalized_reference_names) != len(state.external_world_references):
         raise ValueError("Persisted external reference names must be unique.")
+    state.external_dispatches = (
+        _records(
+            payload_mapping.get("external_dispatches", []),
+            _deserialize_external_dispatch,
+        )
+        if schema_version >= 5
+        else {}
+    )
+    for dispatch in state.external_dispatches.values():
+        reference = state.external_world_references.get(dispatch.reference_id)
+        if reference is None:
+            raise ValueError("Persisted dispatch reference must exist.")
+        source = state.entities.get(dispatch.source_entity_id)
+        if source is None or source.destroyed_tick is not None:
+            raise ValueError("Persisted dispatch source must be live.")
+        allowed = (
+            reference.allowed_imports
+            if dispatch.direction is DispatchDirection.OUTBOUND
+            else reference.allowed_exports
+        )
+        if dispatch.good not in allowed or dispatch.quantity > reference.capacity:
+            raise ValueError("Persisted dispatch violates reference policy.")
+        if dispatch.reserved_cost != dispatch.quantity * reference.cost_per_unit:
+            raise ValueError("Persisted dispatch cost does not match reference policy.")
     state.events = _records(payload_mapping["events"], _deserialize_event)
     state.observations = _records(
         payload_mapping["observations"], _deserialize_observation
@@ -564,6 +617,23 @@ def _deserialize_external_world_reference(
         reliability=_number(value["reliability"]),
         contact_state=ContactState(_string(value["contact_state"])),
         created_tick=_integer(value["created_tick"]),
+    )
+
+
+def _deserialize_external_dispatch(value: Mapping[str, object]) -> ExternalDispatch:
+    return ExternalDispatch(
+        id=_string(value["id"]),
+        source_entity_id=_string(value["source_entity_id"]),
+        reference_id=_string(value["reference_id"]),
+        direction=DispatchDirection(_string(value["direction"])),
+        good=_string(value["good"]),
+        quantity=_integer(value["quantity"]),
+        reserved_good=_integer(value["reserved_good"]),
+        reserved_cost=_integer(value["reserved_cost"]),
+        status=DispatchStatus(_string(value["status"])),
+        created_tick=_integer(value["created_tick"]),
+        departure_tick=_optional_integer(value["departure_tick"]),
+        resolution_tick=_optional_integer(value["resolution_tick"]),
     )
 
 

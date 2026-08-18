@@ -63,6 +63,10 @@ def create_app(engine: SimulationEngine) -> FastAPI:
     async def external_world_references() -> tuple[Mapping[str, object], ...]:
         return inspector.external_world_references()
 
+    @application.get("/world/external-dispatches")
+    async def external_dispatches() -> tuple[Mapping[str, object], ...]:
+        return inspector.external_dispatches()
+
     @application.get("/world/events")
     async def events() -> tuple[Mapping[str, object], ...]:
         return inspector.events()

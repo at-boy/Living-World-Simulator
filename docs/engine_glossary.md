@@ -714,3 +714,19 @@ remote place.
 The sole lifecycle owner for reference creation, contact transitions,
 immutable events, deterministic queries, and filtered qualitative NPC
 interpretations.
+
+# ExternalDispatch
+
+A frozen durable record of one validated exchange with a partial off-map
+reference, including engine-only reservation and lifecycle state.
+
+# ExternalDispatchManager
+
+The sole owner of dispatch validation, local resource reservation/restoration,
+lifecycle transitions, immutable events, deterministic queries, and safe result
+perceptions.
+
+# ExternalDispatchSystem
+
+The scheduler system that departs pending dispatches and resolves elapsed
+transit deterministically from persisted seed and anchor policy.
