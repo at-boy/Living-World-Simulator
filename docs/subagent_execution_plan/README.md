@@ -56,8 +56,10 @@ The historical execution order and all associated artifacts are indexed below.
 
 ## v0.6 authorized milestone
 
-- **15 Read-only World Inspector UI:** [plan](v0_6/15_world_inspector_ui.md)
-- **15a Spatial inspection:** [plan](v0_6/15a_spatial_world_inspection.md)
+- **15 Read-only World Inspector UI:** [plan](v0_6/15_world_inspector_ui.md), [prompt](v0_6/15_world_inspector_ui-prombt.md)
+- **15a Spatial contract ADR:** [plan](v0_6/15a_spatial_world_inspection.md), [prompt](v0_6/15a_spatial_world_inspection-prombt.md)
+- **15b Spatial domain/persistence/inspection:** [plan](v0_6/15b_spatial_domain_persistence_inspection.md), [prompt](v0_6/15b_spatial_domain_persistence_inspection-prombt.md)
+- **15c Spatial Inspector view:** [plan](v0_6/15c_spatial_inspector_view.md), [prompt](v0_6/15c_spatial_inspector_view-prombt.md)
 
 The milestone is authorized on `milestone/v0.6`. Implementation still proceeds
 one documented, reviewed task branch at a time. Current additional plans:

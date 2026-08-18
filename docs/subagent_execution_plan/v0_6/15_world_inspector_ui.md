@@ -1,59 +1,41 @@
-# 15 — Read-only World Inspector UI architecture and vertical slice
+# 15 — FastAPI-hosted read-only World Inspector
 
-## Status
+## Status and dependencies
 
-Deferred post-v0.5 candidate. Activate only after v0.5 is released and a
-frontend deployment stack is selected by the project owner.
+Authorized after Tasks 17–22 and 21 have supplied their inspection endpoints.
+Execute on `task/15-world-inspector-ui` from the current milestone branch.
+Task 15c depends on its reviewed merge.
 
-## Task Description
+## Task description
 
-Provide an operator-facing web UI that consumes the existing read-only HTTP
-inspection API to make a running world understandable: current-state views,
-entity detail, time/tick display, resource/relationship/event history, and
-deterministic charts. It is an observability client, not a simulation client.
+Serve a same-origin, dependency-light HTML/CSS/JavaScript inspector from
+FastAPI. It is an operator observability client, never a simulation,
+administration, NPC, or LLM API. No Node toolchain or frontend framework is
+introduced.
 
-## Context Needed
+## Interface and behavior
 
-- Know `src/living_world/api/inspection.py`, `src/living_world/api/server.py`,
-  Task 03a, and Task 13a inspection endpoints.
-- Create a dedicated frontend application only after its framework, packaging,
-  build, and serving approach are agreed in an ADR.
-- Add UI tests appropriate to that selected stack plus API-contract fixtures;
-  update operator/API documentation and create a task report.
+- Serve static assets and one documented inspector route from the existing app.
+- Consume only documented `GET`, `HEAD`, and `OPTIONS` inspection endpoints.
+- Show world/tick, entities, relationships, resources, events/history, needs,
+  goals/objectives, work, external dispatches, and settlement stage.
+- Provide deterministic ordering, accessible navigation, entity drill-down,
+  and explicit loading, empty, malformed-response, 404, and unavailable states.
+- Keep spatial rendering out of this task; Task 15c owns the map.
 
-## Interface Contract
+## Allowed files and tests
 
-- The UI issues HTTP `GET`, `HEAD`, and `OPTIONS` requests only to the
-  inspection API. It has no simulation mutation endpoint, WebSocket command
-  channel, local `WorldState`, manager, repository, or LLM integration.
-- It renders API response DTOs as detached operator views. It does not reuse
-  inspection responses as NPC retrieval, `NPCContext`, perception, or cognition
-  input.
-- Every chart uses a documented endpoint/schema and displays time/tick plus a
-  clear empty/loading/error state. Collection ordering is the API's
-  deterministic ordering; the UI does not manufacture world facts.
-- Entity, definition, resource, relationship, event/history, observation,
-  NPC, memory, belief, experience, knowledge, and cognitive-history views are
-  added only when their corresponding explicit inspection endpoint exists.
+- FastAPI server/inspection integration, new packaged static assets/templates,
+  focused UI/API contract tests, operator docs, packaging metadata if required,
+  changelog, journal, backlog, and Task 15 report.
+- Tests must prove the browser client contains no mutating request, inspection
+  DTOs are detached, static assets package correctly, and no inspector payload
+  reaches retrieval, `NPCContext`, cognition, or action resolution.
+- Do not add write routes, WebSockets, runtime managers in browser code, Node
+  dependencies, spatial-domain changes, or inferred world facts.
+- Run `make`, `make examples`, and `git diff --check`.
 
-## Test Criteria
+## Report
 
-- Contract tests prove the client makes no mutating request and handles empty,
-  404, malformed, and unavailable API responses without changing world state.
-- UI tests cover current world state, tick/time, entity drill-down, at least
-  one deterministic graph, and an event/history view using stable fixtures.
-- Tests prove inspection-only payloads have no path into `NPCContext`, LLM
-  clients, retrieval, or action resolution.
-
-## Boundary
-
-- Never add a write endpoint or treat the UI as an alternative simulation API.
-- Never expose the UI or inspection payloads to NPC/LLM code.
-- Any future administration capability is a separately authorized feature with
-  its own command/authentication/audit design.
-
-## Orchestrator Report
-
-Create `docs/subagent_execution_plan/v0_6/15_world_inspector_ui-report.md` when
-activated. Include selected stack/ADR, endpoints consumed, views/charts,
-read-only evidence, boundary evidence, tests, validation, and deferred work.
+Create `docs/subagent_execution_plan/v0_6/15_world_inspector_ui-report.md` with
+routes/assets, views, read-only evidence, tests, validation, and deferred work.
