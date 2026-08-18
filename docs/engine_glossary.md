@@ -702,3 +702,15 @@ entities cannot be removed while placement state or contained children remain.
 A privileged detached projection of exact placement geometry. It may expose
 internal entity IDs to operators but is never an NPC context or perception
 payload.
+
+# ExternalWorldReference
+
+A frozen, deliberately partial engine record for one off-map contact. It stores
+identity and exact deterministic trade/contact policy without simulating a
+remote place.
+
+# ExternalWorldReferenceManager
+
+The sole lifecycle owner for reference creation, contact transitions,
+immutable events, deterministic queries, and filtered qualitative NPC
+interpretations.

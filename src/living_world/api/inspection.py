@@ -34,6 +34,8 @@ class WorldInspector(Protocol):
 
     def placements(self) -> tuple[Mapping[str, object], ...]: ...
 
+    def external_world_references(self) -> tuple[Mapping[str, object], ...]: ...
+
     def events(self) -> tuple[Mapping[str, object], ...]: ...
 
     def npcs(self) -> tuple[Mapping[str, object], ...]: ...
@@ -65,6 +67,7 @@ class EngineWorldInspector:
             "entity_count": len(state.entities),
             "relationship_count": len(state.relationships),
             "placement_count": len(state.placements),
+            "external_world_reference_count": len(state.external_world_references),
             "event_count": len(state.events),
             "observation_count": len(state.observations),
             "memory_count": len(state.memories),
@@ -123,6 +126,9 @@ class EngineWorldInspector:
             }
             for placement in self._engine.spatial.all()
         )
+
+    def external_world_references(self) -> tuple[Mapping[str, object], ...]:
+        return self._records(self._engine.state.external_world_references)
 
     def events(self) -> tuple[Mapping[str, object], ...]:
         return self._records(self._engine.state.events)

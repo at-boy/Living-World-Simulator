@@ -63,6 +63,7 @@ composed world without opening a network port.
 | `GET /world/resources` | Resource definitions |
 | `GET /world/relationships` | World relationships |
 | `GET /world/placements` | Canonically ordered exact spatial placements |
+| `GET /world/external-references` | External anchors and exact engine policy |
 | `GET /world/events` | World events |
 | `GET /world/npcs` | NPC identity, occupation, schedule, and active activity presentation |
 | `GET /world/observations` | Persisted observations |
@@ -110,3 +111,10 @@ optional bounds kind, and overlap policy. `/world` includes `placement_count`.
 
 This is privileged exact engine geometry. It is not an NPC perception or
 context payload and must not be passed to cognition.
+
+# External-world references
+
+`GET /world/external-references` returns detached records in lexical ID order;
+`/world` includes `external_world_reference_count`. Internal IDs and exact
+goods, capacity, delay, cost, reliability, and contact state are privileged
+operator data and must never be copied into an NPC prompt or context.

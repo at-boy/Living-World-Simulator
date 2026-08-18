@@ -14,6 +14,7 @@ from living_world.cognition.meeting import MeetingRequest, MeetingService
 from living_world.cognition.npc_cognition_client import ActionRequest
 from living_world.core.definition import Definition
 from living_world.definitions.yaml_loader import YAMLWorldDefinitionLoader
+from living_world.external_world.manager import ExternalWorldReferenceManager
 from living_world.managers.belief_manager import BeliefManager
 from living_world.managers.definition_manager import DefinitionManager
 from living_world.managers.entity_manager import EntityManager
@@ -63,6 +64,10 @@ class SimulationEngine:
 
         self._events = EventManager(
             self._state,
+        )
+
+        self._external_world_references = ExternalWorldReferenceManager(
+            self._state, self._events
         )
 
         self._spatial = SpatialManager(self._state, self._events)
@@ -219,6 +224,10 @@ class SimulationEngine:
     @property
     def events(self) -> EventManager:
         return self._events
+
+    @property
+    def external_world_references(self) -> ExternalWorldReferenceManager:
+        return self._external_world_references
 
     @property
     def observations(

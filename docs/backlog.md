@@ -82,6 +82,9 @@ Task 16a adds checkpoint execution plus continuous/bounded operator control.
 ADR-0016's canonical local spatial contract and Task 15b's domain, persistence,
 and privileged inspection are implemented; pathfinding, terrain, motion, and
 regional-scale geography remain deferred.
+ADR-0017 and Task 17 implement partial off-map references, deterministic contact
+state, schema-v4 persistence, privileged inspection, and a filtered qualitative
+interpretation. Dispatch and trade transfer remain assigned to Task 17a.
 
 - Births
 - Childhood and apprenticeships
