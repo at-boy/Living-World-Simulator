@@ -76,6 +76,9 @@ one documented, reviewed task branch at a time. Current additional plans:
 - **20a Proposal-to-work gateway:** [plan](v0_6/20a_proposal_work_gateway.md), [prompt](v0_6/20a_proposal_work_gateway-prombt.md)
 - **20b Work execution:** [plan](v0_6/20b_work_execution.md), [prompt](v0_6/20b_work_execution-prombt.md)
 - **21 Settlement development stages:** [plan](v0_6/21_settlement_development_stages.md), [prompt](v0_6/21_settlement_development_stages-prombt.md)
+- **22 Recorded proposal tapes:** [plan](v0_6/22_recorded_proposal_tapes.md), [prompt](v0_6/22_recorded_proposal_tapes-prombt.md)
+- **23 Canonical founders acceptance:** [plan](v0_6/23_canonical_founders_acceptance.md), [prompt](v0_6/23_canonical_founders_acceptance-prombt.md)
+- **24 v0.6 release closeout:** [plan](v0_6/24_v06_release_closeout.md), [prompt](v0_6/24_v06_release_closeout-prombt.md)
 
 ## Delivery rule
 
