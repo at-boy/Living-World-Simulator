@@ -72,23 +72,23 @@ reported, and committed. A separate practical guide at
 privileged information boundary. Task 14 release closeout and its Task 14b
 version-consistency prerequisite are complete.
 
-The user has also requested a post-v0.5 path toward launching an unattended
+The user requested a post-v0.5 path toward launching an unattended
 founding-settlement simulation that may grow into a town and beyond. The
-proposed milestone sequence is documented in
+milestone sequence is documented in
 `docs/post_v05_settlement_evolution_roadmap.md`. It includes engine-owned goals
 and objective graphs, deliberately partial off-map homelands/markets, needs,
 work execution, development stages, population continuity, governance, and
-regional growth. These are roadmap candidates, not authorized implementation
-tasks. Their milestone placement records intent and dependency order rather
-than authorization.
+regional growth. v0.6 is now authorized through its isolated task sequence;
+v0.7 and later remain roadmap candidates. Milestone placement alone does not
+authorize later work.
 
 Every future idea currently in `docs/backlog.md` is assigned to a roadmap
-milestone or supporting track. After the v0.6 unattended founders scenario
-passes its acceptance target, development changes from reviewed commits on
-`main` to one `milestone/vX.Y` integration branch with short-lived
-`task/<task>-<slug>` branches. `main` remains the stable release line. This
-workflow decision is documented in `docs/development_workflow.md` and does not
-authorize any roadmap task.
+milestone or supporting track. The user subsequently authorized the complete
+v0.6 planning sequence and moved the milestone-plus-task branch workflow
+forward to v0.6. `milestone/v0.6` is the integration branch and each isolated
+task uses a pushed `task/<task>-<slug>` branch. The orchestrator may merge and
+push reviewed work to the milestone branch, but must not commit, merge, or push
+to `main`.
 
 ## Council decisions already established
 
@@ -153,9 +153,7 @@ task without expanding Task 13j silently.
 
 ## Next work
 
-Task 14a is complete and committed. No post-v0.5 implementation task or
-milestone is currently authorized. Wait for the user to select and authorize
-the next milestone or planning task. Before implementation, decompose the
-authorized milestone into isolated numbered plans and saved prompts in its
-milestone directory. Tasks 15 and 15a are documented v0.6 observability
-candidates, not automatically authorized implementation.
+Task 14a is complete and committed. The user has authorized the v0.6 milestone
+plan. Materialize its isolated plans and saved prompts, then execute one task at
+a time in the approved dependency order. The first implementation task is Task
+16 only after its planning artifacts are committed on `milestone/v0.6`.

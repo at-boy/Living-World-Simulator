@@ -51,7 +51,9 @@ future domain actions still require explicit simulation-owned handlers.
 
 ## Future Ideas
 
-These are intentionally out of scope for the current milestone.
+Items assigned to v0.6 move into active development only through the approved
+isolated v0.6 task sequence. Items assigned to later milestones remain out of
+scope.
 
 Every item below is placed in the milestone/track matrix in
 `docs/post_v05_settlement_evolution_roadmap.md`. That placement preserves the
@@ -64,7 +66,8 @@ an approved task plan and saved prompt.
   population continuity, governance, and regional growth. The agreed direction
   and sequencing are recorded in
   `docs/post_v05_settlement_evolution_roadmap.md`; individual implementation
-  tasks remain inactive until explicitly authorized.
+  v0.6 tasks are now authorized only through their isolated, dependency-ordered
+  plans; later-milestone portions remain inactive.
 - **Founding mandates and objective graphs:** initial settlers may arrive with
   personal and collective goals such as securing water, building shelter,
   establishing food production, or opening a trade route. Completion,

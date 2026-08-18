@@ -54,14 +54,16 @@ The historical execution order and all associated artifacts are indexed below.
 34. **14b Release version consistency:** [plan](initial_v0_2_3_to_v0_5/14b_release_version_consistency.md), [prompt](initial_v0_2_3_to_v0_5/14b_release_version_consistency-prombt.md), [report](initial_v0_2_3_to_v0_5/14b_release_version_consistency-report.md)
 35. **14a Milestone-plan reorganization:** [plan](initial_v0_2_3_to_v0_5/14a_milestone_plan_reorganization.md), [prompt](initial_v0_2_3_to_v0_5/14a_milestone_plan_reorganization-prombt.md), [report](initial_v0_2_3_to_v0_5/14a_milestone_plan_reorganization-report.md)
 
-## v0.6 candidates
+## v0.6 authorized milestone
 
 - **15 Read-only World Inspector UI:** [plan](v0_6/15_world_inspector_ui.md)
 - **15a Spatial inspection:** [plan](v0_6/15a_spatial_world_inspection.md)
 
-These are supporting observability candidates, not authorized implementation.
-Future v0.6 artifacts will be added to this index when their isolated tasks are
-planned and approved.
+The milestone is authorized on `milestone/v0.6`. Implementation still proceeds
+one documented, reviewed task branch at a time. Current additional plans:
+
+- **16 Scenario and deterministic run contract:** [plan](v0_6/16_scenario_run_contract.md), [prompt](v0_6/16_scenario_run_contract-prombt.md)
+- **16a Runner, checkpointing, and resume:** [plan](v0_6/16a_runner_checkpoint_resume.md), [prompt](v0_6/16a_runner_checkpoint_resume-prombt.md)
 
 ## Delivery rule
 

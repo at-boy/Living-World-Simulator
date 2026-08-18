@@ -46,8 +46,9 @@ not authorized merely because it exists.
 - Do not replace established architecture merely to simplify a new feature.
 - Managers own mutation, systems own behavior, and events are immutable.
 - Do not begin a milestone, task, branch, or implementation without explicit
-  authorization. In particular, plans for Tasks 15 and 15a do not authorize
-  their implementation.
+  authorization. v0.6 is currently authorized only through its documented,
+  dependency-ordered task sequence on `milestone/v0.6`; later milestones remain
+  unauthorized. Never commit, merge, or push v0.6 work to `main`.
 
 ## NPC information and authority boundary
 
