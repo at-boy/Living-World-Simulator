@@ -66,6 +66,8 @@ one documented, reviewed task branch at a time. Current additional plans:
 
 - **16 Scenario and deterministic run contract:** [plan](v0_6/16_scenario_run_contract.md), [prompt](v0_6/16_scenario_run_contract-prombt.md)
 - **16a Runner, checkpointing, and resume:** [plan](v0_6/16a_runner_checkpoint_resume.md), [prompt](v0_6/16a_runner_checkpoint_resume-prombt.md)
+- **17 External-world references:** [plan](v0_6/17_external_world_references.md), [prompt](v0_6/17_external_world_references-prombt.md)
+- **17a External dispatch lifecycle:** [plan](v0_6/17a_external_dispatch_lifecycle.md), [prompt](v0_6/17a_external_dispatch_lifecycle-prombt.md)
 
 ## Delivery rule
 
