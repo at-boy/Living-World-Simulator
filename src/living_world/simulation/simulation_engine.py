@@ -191,6 +191,12 @@ class SimulationEngine:
         return self._state
 
     @property
+    def persistence_enabled(self) -> bool:
+        """Return whether this engine can write durable world checkpoints."""
+
+        return self._repository is not None
+
+    @property
     def definitions(self) -> DefinitionManager:
         return self._definitions
 

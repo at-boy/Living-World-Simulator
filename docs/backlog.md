@@ -77,8 +77,8 @@ an approved task plan and saved prompt.
   interface. It must not imply a secretly complete simulated place and must be
   promotable through an explicit future on-map migration contract.
 
-The versioned scenario/run identity foundation is implemented in Task 16.
-Checkpoint execution and continuous/bounded operator control remain Task 16a.
+The versioned scenario/run identity foundation is implemented in Task 16, and
+Task 16a adds checkpoint execution plus continuous/bounded operator control.
 
 - Births
 - Childhood and apprenticeships
