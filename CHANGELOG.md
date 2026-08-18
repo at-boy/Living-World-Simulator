@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Added
+
+- Add a strict versioned YAML scenario contract with deterministic initial
+  graph creation, persisted run identity/fingerprint, compatible definition
+  reload on resume, and privileged read-only run inspection.
+- Add SQLite schema-version-2 snapshots while retaining schema-version-1 v0.5
+  loading as unbound legacy worlds.
+
 ## v0.5.0 - 2026-08-12
 
 ### Added

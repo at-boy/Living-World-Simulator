@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections.abc import Mapping
 from dataclasses import fields, is_dataclass
 from enum import Enum
-from typing import Protocol
+from typing import Protocol, cast
 
 from fastapi.encoders import jsonable_encoder
 
@@ -18,6 +18,8 @@ class WorldInspector(Protocol):
     def world_summary(self) -> Mapping[str, object]: ...
 
     def tick(self) -> int: ...
+
+    def run_metadata(self) -> Mapping[str, object] | None: ...
 
     def entities(self) -> tuple[Mapping[str, object], ...]: ...
 
@@ -56,6 +58,7 @@ class EngineWorldInspector:
         state = self._engine.state
         return {
             "tick": state.tick,
+            "run": self.run_metadata(),
             "entity_count": len(state.entities),
             "relationship_count": len(state.relationships),
             "event_count": len(state.events),
@@ -71,6 +74,14 @@ class EngineWorldInspector:
 
     def tick(self) -> int:
         return self._engine.state.tick
+
+    def run_metadata(self) -> Mapping[str, object] | None:
+        metadata = self._engine.state.run_metadata
+        return (
+            None
+            if metadata is None
+            else cast(Mapping[str, object], _snapshot_value(metadata))
+        )
 
     def entities(self) -> tuple[Mapping[str, object], ...]:
         return self._records(self._engine.state.entities)

@@ -17,9 +17,11 @@ from living_world.core.memory import CognitiveSalience, Memory
 from living_world.core.npc_relationship import NPCRelationship
 from living_world.core.observation import Observation
 from living_world.core.relationship import Relationship
+from living_world.core.run_metadata import RunMetadata
 from living_world.state.world_state import WorldState
 
-_SCHEMA_VERSION = 1
+_SCHEMA_VERSION = 2
+_SUPPORTED_SCHEMA_VERSIONS = frozenset({1, 2})
 Record = (
     Entity
     | Relationship
@@ -73,7 +75,7 @@ class SQLiteRepository:
             return WorldState()
 
         schema_version, payload = row
-        if schema_version != _SCHEMA_VERSION:
+        if schema_version not in _SUPPORTED_SCHEMA_VERSIONS:
             raise RepositoryLoadError(
                 f"Unsupported world schema version {schema_version!r}."
             )
@@ -131,6 +133,7 @@ class SQLiteRepository:
 def _serialize_world(state: WorldState) -> dict[str, object]:
     return {
         "tick": state.tick,
+        "run_metadata": _serialize_run_metadata(state.run_metadata),
         "entities": [_serialize_entity(entity) for entity in state.entities.values()],
         "relationships": [
             _serialize_relationship(relationship)
@@ -154,6 +157,17 @@ def _serialize_world(state: WorldState) -> dict[str, object]:
         "knowledge": [
             _serialize_knowledge(knowledge) for knowledge in state.knowledge.values()
         ],
+    }
+
+
+def _serialize_run_metadata(metadata: RunMetadata | None) -> dict[str, object] | None:
+    if metadata is None:
+        return None
+    return {
+        "scenario_key": metadata.scenario_key,
+        "schema_version": metadata.schema_version,
+        "seed": metadata.seed,
+        "configuration_fingerprint": metadata.configuration_fingerprint,
     }
 
 
@@ -321,7 +335,10 @@ def _serialize_salience(salience: CognitiveSalience) -> dict[str, object]:
 
 def _deserialize_world(payload: object) -> WorldState:
     payload_mapping = _mapping(payload)
-    state = WorldState(tick=_integer(payload_mapping["tick"]))
+    state = WorldState(
+        tick=_integer(payload_mapping["tick"]),
+        run_metadata=_deserialize_run_metadata(payload_mapping.get("run_metadata")),
+    )
     state.entities = _records(payload_mapping["entities"], _deserialize_entity)
     state.relationships = _records(
         payload_mapping["relationships"], _deserialize_relationship
@@ -342,6 +359,18 @@ def _deserialize_world(payload: object) -> WorldState:
         payload_mapping.get("knowledge", []), _deserialize_knowledge
     )
     return state
+
+
+def _deserialize_run_metadata(value: object) -> RunMetadata | None:
+    if value is None:
+        return None
+    mapping = _mapping(value)
+    return RunMetadata(
+        scenario_key=_string(mapping["scenario_key"]),
+        schema_version=_integer(mapping["schema_version"]),
+        seed=_integer(mapping["seed"]),
+        configuration_fingerprint=_string(mapping["configuration_fingerprint"]),
+    )
 
 
 def _records(

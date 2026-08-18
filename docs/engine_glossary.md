@@ -20,6 +20,35 @@ Template describing what may exist.
 
 ---
 
+## Scenario
+
+**Purpose**
+
+Versioned configuration that reproducibly seeds definition vocabulary and an
+initial entity/relationship graph.
+
+**Owns**
+
+- public scenario-local labels
+- deterministic seed
+- definition-document reference
+- initial graph and run defaults
+
+**Does Not Own**
+
+- runtime entity identifiers
+- simulation outcomes
+- NPC knowledge or action authority
+
+## RunMetadata
+
+**Purpose**
+
+Persist the scenario identity and configuration fingerprint required to verify
+a resumed world before simulation continues.
+
+---
+
 ## Entity
 
 **Purpose**

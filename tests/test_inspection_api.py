@@ -23,6 +23,7 @@ from living_world.core.npc_relationship import NPCRelationship
 from living_world.core.observation import Observation
 from living_world.core.relationship import Relationship
 from living_world.core.resource_definition import ResourceDefinition
+from living_world.core.run_metadata import RunMetadata
 from living_world.simulation.simulation_engine import SimulationEngine
 
 
@@ -272,6 +273,7 @@ def test_inspection_endpoints_return_authoritative_snapshots_in_id_order() -> No
     assert client.get("/world/tick").json() == {"tick": 0}
     assert client.get("/world").json() == {
         "tick": 0,
+        "run": None,
         "entity_count": 2,
         "relationship_count": 2,
         "event_count": 2,
@@ -284,6 +286,7 @@ def test_inspection_endpoints_return_authoritative_snapshots_in_id_order() -> No
         "definition_count": 2,
         "resource_definition_count": 2,
     }
+    assert client.get("/world/run").status_code == 404
     assert [record["id"] for record in client.get("/world/entities").json()] == [
         "entity_000001",
         "entity_000002",
@@ -445,6 +448,22 @@ def test_empty_inspection_collections_return_arrays() -> None:
         response = client.get(endpoint)
         assert response.status_code == 200
         assert response.json() == []
+
+
+def test_run_metadata_is_detached_privileged_inspection() -> None:
+    engine = SimulationEngine()
+    engine.state.run_metadata = RunMetadata("oakford", 1, 42, "abc123")
+    client = ASGIClient(create_app(engine))
+
+    payload = client.get("/world/run").json()
+    assert payload == {
+        "scenario_key": "oakford",
+        "schema_version": 1,
+        "seed": 42,
+        "configuration_fingerprint": "abc123",
+    }
+    payload["seed"] = 99
+    assert engine.state.run_metadata == RunMetadata("oakford", 1, 42, "abc123")
 
 
 def test_world_inspector_protocol_declares_the_complete_surface() -> None:

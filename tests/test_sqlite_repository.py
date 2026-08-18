@@ -16,6 +16,7 @@ from living_world.core.memory import CognitiveSalience, Memory
 from living_world.core.npc_relationship import NPCRelationship
 from living_world.core.observation import Observation
 from living_world.core.relationship import Relationship
+from living_world.core.run_metadata import RunMetadata
 from living_world.repositories.sqlite_repository import (
     RepositoryLoadError,
     RepositorySaveError,
@@ -28,12 +29,14 @@ from living_world.state.world_state import WorldState
 def test_sqlite_repository_round_trips_all_world_records(tmp_path: Path) -> None:
     repository = SQLiteRepository(str(tmp_path / "world.sqlite3"))
     state = _world_state()
+    state.run_metadata = RunMetadata("oakford", 1, 42, "fingerprint")
 
     repository.save_world(state)
 
     loaded = repository.load_world()
 
     assert loaded.tick == 7
+    assert loaded.run_metadata == state.run_metadata
     assert loaded.entities == state.entities
     assert loaded.relationships == state.relationships
     assert loaded.events == state.events
@@ -130,7 +133,7 @@ def test_unsupported_schema_version_raises_without_returning_partial_state(
     repository.save_world(_world_state())
     with sqlite3.connect(database_path) as connection:
         connection.execute(
-            "UPDATE world_snapshots SET schema_version = ? WHERE id = 1", (2,)
+            "UPDATE world_snapshots SET schema_version = ? WHERE id = 1", (3,)
         )
 
     with pytest.raises(RepositoryLoadError, match="Unsupported world schema version"):
