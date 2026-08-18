@@ -103,3 +103,18 @@ Important principles:
     experience and retrieval results. They do not receive raw world
     attributes, hidden engine identifiers, or direct access to simulation
     truth by default.
+
+## Canonical local space
+
+The v0.6 settlement uses one engine-owned abstract integer-coordinate plane.
+Frozen points place mobile or small entities; positive axis-aligned bounds
+place areas, settlements, and structures. A dedicated spatial manager owns
+placement lifecycle, containment, overlap validation, deterministic queries,
+and immutable spatial events. Coordinates are not generic entity attributes.
+
+Exact geometry is privileged simulation and inspection data. NPCs receive no
+raw coordinate field by default; later perception may derive holder-scoped,
+qualitative relative descriptions. Pathfinding, terrain, travel costs, and
+regional geography remain separate later decisions. ADR-0016 defines the
+binding geometry, containment, overlap, ordering, persistence, and migration
+contract.

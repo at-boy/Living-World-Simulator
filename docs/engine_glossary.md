@@ -671,3 +671,31 @@ source of authority. A strict attendee majority, or only unanimous explicit
 invitee declines, may supply one proposal to the ordinary action gateway;
 unavailable and no-selection replies never delegate. Its invitation feedback is
 transient filtered diagnostic output, not a governance or cognitive record.
+
+# Point
+
+An immutable integer `(x, y)` location for a mobile or spatially small entity
+on the engine's abstract local plane.
+
+# Bounds
+
+Immutable positive-width and positive-height axis-aligned cells using half-open
+containment. Bounds place areas, settlements, and structures.
+
+# Placement
+
+The authoritative spatial record for one entity: point, bounds, or explicit
+unplaced state; optional containing entity; bounds kind; and typed sibling-
+overlap policy. It is manager-owned and never inferred from attributes.
+
+# SpatialManager
+
+The sole lifecycle owner for placement creation, atomic replacement,
+unplacement, removal, containment/overlap validation, deterministic queries,
+and immutable spatial events.
+
+# Spatial inspection
+
+A privileged detached projection of exact placement geometry. It may expose
+internal entity IDs to operators but is never an NPC context or perception
+payload.
