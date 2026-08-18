@@ -72,6 +72,10 @@ one documented, reviewed task branch at a time. Current additional plans:
 - **18a Objective evaluation/events:** [plan](v0_6/18a_objective_evaluation_events.md), [prompt](v0_6/18a_objective_evaluation_events-prombt.md)
 - **19 Settlement needs/pressure:** [plan](v0_6/19_settlement_needs_pressure.md), [prompt](v0_6/19_settlement_needs_pressure-prombt.md)
 - **19a Consumption/maintenance:** [plan](v0_6/19a_consumption_maintenance_consequences.md), [prompt](v0_6/19a_consumption_maintenance_consequences-prombt.md)
+- **20 Work orders/reservations:** [plan](v0_6/20_work_orders_reservations.md), [prompt](v0_6/20_work_orders_reservations-prombt.md)
+- **20a Proposal-to-work gateway:** [plan](v0_6/20a_proposal_work_gateway.md), [prompt](v0_6/20a_proposal_work_gateway-prombt.md)
+- **20b Work execution:** [plan](v0_6/20b_work_execution.md), [prompt](v0_6/20b_work_execution-prombt.md)
+- **21 Settlement development stages:** [plan](v0_6/21_settlement_development_stages.md), [prompt](v0_6/21_settlement_development_stages-prombt.md)
 
 ## Delivery rule
 
