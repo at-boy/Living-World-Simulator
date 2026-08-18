@@ -69,6 +69,14 @@ class EntityManager:
         return entity_id in self._state.entities
 
     def remove(self, entity_id: str) -> None:
+        if any(
+            dispatch.source_entity_id == entity_id
+            for dispatch in self._state.external_dispatches.values()
+        ):
+            raise ValueError(
+                f"Entity '{entity_id}' cannot be removed while dispatch history "
+                "refers to it."
+            )
         if entity_id in self._state.placements or any(
             placement.containing_entity_id == entity_id
             for placement in self._state.placements.values()

@@ -9,6 +9,14 @@ engineering milestones and lessons learned.
 
 # 2026-08-18
 
+## Deterministic External Dispatch
+
+Task 17a builds a durable exchange lifecycle on partial external references.
+Manager-owned reservations and immutable events make failure atomic; a
+SHA-256-derived seed decision makes arrival/loss stable across replay and
+resume. NPC proposals choose only an offered qualitative label and cannot set
+IDs, quantities, timing, reliability, outcomes, or resources.
+
 ## Partial External-World References
 
 Task 17 adds deliberately partial off-map references as frozen, manager-owned

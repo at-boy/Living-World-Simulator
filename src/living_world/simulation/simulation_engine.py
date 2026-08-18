@@ -14,6 +14,8 @@ from living_world.cognition.meeting import MeetingRequest, MeetingService
 from living_world.cognition.npc_cognition_client import ActionRequest
 from living_world.core.definition import Definition
 from living_world.definitions.yaml_loader import YAMLWorldDefinitionLoader
+from living_world.external_world.dispatch_manager import ExternalDispatchManager
+from living_world.external_world.dispatch_system import ExternalDispatchSystem
 from living_world.external_world.manager import ExternalWorldReferenceManager
 from living_world.managers.belief_manager import BeliefManager
 from living_world.managers.definition_manager import DefinitionManager
@@ -112,6 +114,20 @@ class SimulationEngine:
         )
 
         self._resources = ResourceSystem()
+
+        self._external_dispatches = ExternalDispatchManager(
+            self._state,
+            self._entities,
+            self._external_world_references,
+            self._resources,
+            self._events,
+        )
+
+        self.register_system(
+            ExternalDispatchSystem(
+                self._external_dispatches, self._external_world_references
+            )
+        )
 
         self.register_system(
             WeatherSystem(
@@ -228,6 +244,10 @@ class SimulationEngine:
     @property
     def external_world_references(self) -> ExternalWorldReferenceManager:
         return self._external_world_references
+
+    @property
+    def external_dispatches(self) -> ExternalDispatchManager:
+        return self._external_dispatches
 
     @property
     def observations(

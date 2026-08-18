@@ -286,4 +286,4 @@ def test_schema_one_snapshot_loads_without_run_metadata_and_rewrites(
         version = connection.execute(
             "SELECT schema_version FROM world_snapshots WHERE id = 1"
         ).fetchone()[0]
-    assert version == 4
+    assert version == 5

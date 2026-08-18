@@ -64,6 +64,7 @@ composed world without opening a network port.
 | `GET /world/relationships` | World relationships |
 | `GET /world/placements` | Canonically ordered exact spatial placements |
 | `GET /world/external-references` | External anchors and exact engine policy |
+| `GET /world/external-dispatches` | Durable dispatch records and lifecycle |
 | `GET /world/events` | World events |
 | `GET /world/npcs` | NPC identity, occupation, schedule, and active activity presentation |
 | `GET /world/observations` | Persisted observations |
@@ -118,3 +119,7 @@ context payload and must not be passed to cognition.
 `/world` includes `external_world_reference_count`. Internal IDs and exact
 goods, capacity, delay, cost, reliability, and contact state are privileged
 operator data and must never be copied into an NPC prompt or context.
+
+`GET /world/external-dispatches` returns detached records in lexical ID order;
+`/world` includes `external_dispatch_count`. Source/reference IDs, reservations,
+ticks, and exact state are privileged and must not be used as NPC context.
