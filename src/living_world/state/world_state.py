@@ -12,6 +12,12 @@ from living_world.core.relationship import Relationship
 from living_world.core.run_metadata import RunMetadata
 from living_world.external_world.dispatch import ExternalDispatch
 from living_world.external_world.model import ExternalWorldReference
+from living_world.goals.model import (
+    GoalDefinition,
+    GoalState,
+    ObjectiveDefinition,
+    ObjectiveState,
+)
 from living_world.spatial.model import Placement
 
 
@@ -34,6 +40,11 @@ class WorldState:
     )
 
     external_dispatches: dict[str, ExternalDispatch] = field(default_factory=dict)
+
+    goal_definitions: dict[str, GoalDefinition] = field(default_factory=dict)
+    goal_states: dict[str, GoalState] = field(default_factory=dict)
+    objective_definitions: dict[str, ObjectiveDefinition] = field(default_factory=dict)
+    objective_states: dict[str, ObjectiveState] = field(default_factory=dict)
 
     events: dict[str, Event] = field(default_factory=dict)
 

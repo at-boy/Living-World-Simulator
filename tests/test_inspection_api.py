@@ -24,6 +24,14 @@ from living_world.core.observation import Observation
 from living_world.core.relationship import Relationship
 from living_world.core.resource_definition import ResourceDefinition
 from living_world.core.run_metadata import RunMetadata
+from living_world.goals import (
+    GoalDefinition,
+    GoalOwnerKind,
+    GoalStatus,
+    ObjectiveDefinition,
+    ProgressEvidence,
+    ResourceMinimumCriterion,
+)
 from living_world.simulation.simulation_engine import SimulationEngine
 from living_world.spatial import Point
 
@@ -280,6 +288,8 @@ def test_inspection_endpoints_return_authoritative_snapshots_in_id_order() -> No
         "placement_count": 0,
         "external_world_reference_count": 0,
         "external_dispatch_count": 0,
+        "goal_count": 0,
+        "objective_count": 0,
         "event_count": 2,
         "observation_count": 2,
         "memory_count": 2,
@@ -493,6 +503,136 @@ def test_spatial_inspection_endpoint_returns_detached_geometry() -> None:
     ]
     payload[0]["geometry"]["x"] = 99
     assert engine.spatial.get(entity.id).geometry == Point(2, 3)
+
+
+def test_goals_http_inspection_is_full_ordered_detached_and_npc_safe() -> None:
+    engine, client = make_client()
+    owner_id = "entity_000001"
+    for goal_id, objective_id, label in (
+        ("goal_b", "objective_b", "Second goal"),
+        ("goal_a", "objective_a", "First goal"),
+    ):
+        objective = ObjectiveDefinition(
+            objective_id,
+            f"{label} objective",
+            "Privileged objective purpose",
+            "Gather what the community needs.",
+            (ResourceMinimumCriterion("water", 2),),
+            deadline_tick=12,
+            priority=3,
+            authorized_action_categories=("gather",),
+        )
+        goal = GoalDefinition(
+            goal_id,
+            GoalOwnerKind.NPC,
+            owner_id,
+            label,
+            f"Operator tracks {objective_id}.",
+            "Help the community prepare.",
+            (objective_id,),
+            deadline_tick=20,
+            priority=4,
+            authorized_action_categories=("organize",),
+        )
+        engine.goals.create(goal, (objective,))
+    source_event_id = min(engine.state.events)
+    engine.goals.transition_goal(
+        "goal_a",
+        GoalStatus.ACTIVE,
+        ProgressEvidence(0, "Work began.", (source_event_id,)),
+    )
+
+    response = client.get("/world/goals")
+    assert response.status_code == 200
+    payload = response.json()
+    assert [record["definition"]["id"] for record in payload] == [
+        "goal_a",
+        "goal_b",
+    ]
+    first = payload[0]
+    assert first["definition"] == {
+        "id": "goal_a",
+        "owner_kind": "npc",
+        "owner_id": owner_id,
+        "label": "First goal",
+        "purpose": "Operator tracks objective_a.",
+        "npc_interpretation": "Help the community prepare.",
+        "objective_ids": ["objective_a"],
+        "deadline_tick": 20,
+        "priority": 4,
+        "authorized_action_categories": ["organize"],
+        "completion_criteria": [],
+        "failure_criteria": [],
+    }
+    assert first["state"] == {
+        "goal_id": "goal_a",
+        "status": "active",
+        "evidence": [
+            {
+                "tick": 0,
+                "description": "Work began.",
+                "source_event_ids": [source_event_id],
+            }
+        ],
+    }
+    assert first["objectives"] == [
+        {
+            "definition": {
+                "id": "objective_a",
+                "label": "First goal objective",
+                "purpose": "Privileged objective purpose",
+                "npc_interpretation": "Gather what the community needs.",
+                "completion_criteria": [{"resource": "water", "minimum": 2}],
+                "failure_criteria": [],
+                "dependencies": [],
+                "alternatives": [],
+                "deadline_tick": 12,
+                "priority": 3,
+                "authorized_action_categories": ["gather"],
+            },
+            "state": {
+                "objective_id": "objective_a",
+                "status": "inactive",
+                "evidence": [],
+            },
+        }
+    ]
+    payload[0]["definition"]["label"] = "Changed"
+    payload[0]["state"]["evidence"][0]["description"] = "Changed"
+    assert engine.state.goal_definitions["goal_a"].label == "First goal"
+    assert engine.state.goal_states["goal_a"].evidence[0].description == "Work began."
+
+    safe = engine.goals.npc_interpretation("goal_a")
+    assert (safe.label, safe.description) == (
+        "First goal",
+        "Help the community prepare.",
+    )
+    assert not any(
+        hasattr(safe, hidden)
+        for hidden in (
+            "id",
+            "owner_id",
+            "status",
+            "evidence",
+            "deadline_tick",
+            "completion_criteria",
+        )
+    )
+    context = NPCContextAssembler(engine.state).assemble(holder_id=owner_id)
+    npc_text = " ".join(
+        (
+            context.identity,
+            *context.self_knowledge,
+            *context.current_perceptions,
+            *(item.text for item in context.core_cognition),
+            *(item.text for item in context.retrieved_information),
+            *context.conversation_history,
+        )
+    )
+    assert "goal_a" not in npc_text
+    assert "objective_a" not in npc_text
+    assert "Operator tracks" not in npc_text
+    assert "Work began" not in npc_text
 
 
 def test_world_inspector_protocol_declares_the_complete_surface() -> None:

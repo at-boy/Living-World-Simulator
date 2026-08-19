@@ -17,6 +17,14 @@ from living_world.core.npc_relationship import NPCRelationship
 from living_world.core.observation import Observation
 from living_world.core.relationship import Relationship
 from living_world.core.run_metadata import RunMetadata
+from living_world.goals import (
+    GoalDefinition,
+    GoalOwnerKind,
+    GoalState,
+    ObjectiveDefinition,
+    ObjectiveState,
+    ResourceMinimumCriterion,
+)
 from living_world.repositories.sqlite_repository import (
     RepositoryLoadError,
     RepositorySaveError,
@@ -125,6 +133,42 @@ def test_malformed_snapshot_raises_without_returning_partial_state(
         repository.load_world()
 
 
+def test_schema_v6_load_rejects_duplicate_goal_labels_for_one_owner(
+    tmp_path: Path,
+) -> None:
+    repository = SQLiteRepository(str(tmp_path / "world.sqlite3"))
+    state = _world_state()
+    for suffix, label in (("a", "Found Home"), ("b", " found home ")):
+        objective_id = f"objective_{suffix}"
+        goal_id = f"goal_{suffix}"
+        state.objective_definitions[objective_id] = ObjectiveDefinition(
+            objective_id,
+            f"Objective {suffix.upper()}",
+            "Operator purpose",
+            "Prepare a safe home.",
+            (ResourceMinimumCriterion("wood", 1),),
+            authorized_action_categories=("work",),
+        )
+        state.objective_states[objective_id] = ObjectiveState(objective_id)
+        state.goal_definitions[goal_id] = GoalDefinition(
+            goal_id,
+            GoalOwnerKind.SETTLEMENT,
+            "entity-1",
+            label,
+            "Operator purpose",
+            "Help establish a home.",
+            (objective_id,),
+            authorized_action_categories=("work",),
+        )
+        state.goal_states[goal_id] = GoalState(goal_id)
+    repository.save_world(state)
+
+    with pytest.raises(RepositoryLoadError, match="malformed") as error:
+        repository.load_world()
+    assert error.value.__cause__ is not None
+    assert "unique per owner" in str(error.value.__cause__)
+
+
 def test_unsupported_schema_version_raises_without_returning_partial_state(
     tmp_path: Path,
 ) -> None:
@@ -133,7 +177,7 @@ def test_unsupported_schema_version_raises_without_returning_partial_state(
     repository.save_world(_world_state())
     with sqlite3.connect(database_path) as connection:
         connection.execute(
-            "UPDATE world_snapshots SET schema_version = ? WHERE id = 1", (6,)
+            "UPDATE world_snapshots SET schema_version = ? WHERE id = 1", (7,)
         )
 
     with pytest.raises(RepositoryLoadError, match="Unsupported world schema version"):

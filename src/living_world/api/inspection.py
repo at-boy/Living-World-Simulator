@@ -38,6 +38,8 @@ class WorldInspector(Protocol):
 
     def external_dispatches(self) -> tuple[Mapping[str, object], ...]: ...
 
+    def goals(self) -> tuple[Mapping[str, object], ...]: ...
+
     def events(self) -> tuple[Mapping[str, object], ...]: ...
 
     def npcs(self) -> tuple[Mapping[str, object], ...]: ...
@@ -71,6 +73,8 @@ class EngineWorldInspector:
             "placement_count": len(state.placements),
             "external_world_reference_count": len(state.external_world_references),
             "external_dispatch_count": len(state.external_dispatches),
+            "goal_count": len(state.goal_definitions),
+            "objective_count": len(state.objective_definitions),
             "event_count": len(state.events),
             "observation_count": len(state.observations),
             "memory_count": len(state.memories),
@@ -135,6 +139,30 @@ class EngineWorldInspector:
 
     def external_dispatches(self) -> tuple[Mapping[str, object], ...]:
         return self._records(self._engine.state.external_dispatches)
+
+    def goals(self) -> tuple[Mapping[str, object], ...]:
+        state = self._engine.state
+        return tuple(
+            cast(
+                Mapping[str, object],
+                _snapshot_value(
+                    {
+                        "definition": state.goal_definitions[goal_id],
+                        "state": state.goal_states[goal_id],
+                        "objectives": tuple(
+                            {
+                                "definition": state.objective_definitions[objective_id],
+                                "state": state.objective_states[objective_id],
+                            }
+                            for objective_id in state.goal_definitions[
+                                goal_id
+                            ].objective_ids
+                        ),
+                    }
+                ),
+            )
+            for goal_id in sorted(state.goal_definitions)
+        )
 
     def events(self) -> tuple[Mapping[str, object], ...]:
         return self._records(self._engine.state.events)

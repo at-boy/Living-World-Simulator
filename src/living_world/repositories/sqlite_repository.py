@@ -24,6 +24,22 @@ from living_world.external_world.dispatch import (
     ExternalDispatch,
 )
 from living_world.external_world.model import ContactState, ExternalWorldReference
+from living_world.goals import (
+    CapacityCriterion,
+    ConstructedCapabilityCriterion,
+    ExternalConnectionCriterion,
+    GoalDefinition,
+    GoalManager,
+    GoalOwnerKind,
+    GoalState,
+    GoalStatus,
+    ObjectiveDefinition,
+    ObjectiveState,
+    ProgressEvidence,
+    ResourceMinimumCriterion,
+    SettlementStageCriterion,
+    SustainedNeedCriterion,
+)
 from living_world.managers.event_manager import EventManager
 from living_world.spatial.manager import SpatialManager, placement_order_key
 from living_world.spatial.model import (
@@ -35,8 +51,8 @@ from living_world.spatial.model import (
 )
 from living_world.state.world_state import WorldState
 
-_SCHEMA_VERSION = 5
-_SUPPORTED_SCHEMA_VERSIONS = frozenset({1, 2, 3, 4, 5})
+_SCHEMA_VERSION = 6
+_SUPPORTED_SCHEMA_VERSIONS = frozenset({1, 2, 3, 4, 5, 6})
 Record = (
     Entity
     | Relationship
@@ -49,6 +65,10 @@ Record = (
     | Knowledge
     | ExternalWorldReference
     | ExternalDispatch
+    | GoalDefinition
+    | ObjectiveDefinition
+    | GoalState
+    | ObjectiveState
 )
 RecordType = TypeVar("RecordType", bound=Record)
 
@@ -170,6 +190,30 @@ def _serialize_world(state: WorldState) -> dict[str, object]:
             _serialize_external_dispatch(dispatch)
             for dispatch in sorted(
                 state.external_dispatches.values(), key=lambda item: item.id
+            )
+        ],
+        "goal_definitions": [
+            _serialize_goal(item)
+            for item in sorted(
+                state.goal_definitions.values(), key=lambda item: item.id
+            )
+        ],
+        "goal_states": [
+            _serialize_goal_state(item)
+            for item in sorted(
+                state.goal_states.values(), key=lambda item: item.goal_id
+            )
+        ],
+        "objective_definitions": [
+            _serialize_objective(item)
+            for item in sorted(
+                state.objective_definitions.values(), key=lambda item: item.id
+            )
+        ],
+        "objective_states": [
+            _serialize_objective_state(item)
+            for item in sorted(
+                state.objective_states.values(), key=lambda item: item.objective_id
             )
         ],
         "events": [_serialize_event(event) for event in state.events.values()],
@@ -298,6 +342,106 @@ def _serialize_external_dispatch(dispatch: ExternalDispatch) -> dict[str, object
         "created_tick": dispatch.created_tick,
         "departure_tick": dispatch.departure_tick,
         "resolution_tick": dispatch.resolution_tick,
+    }
+
+
+def _serialize_criterion(value: object) -> dict[str, object]:
+    if isinstance(value, ResourceMinimumCriterion):
+        return {
+            "kind": "resource_minimum",
+            "resource": value.resource,
+            "minimum": value.minimum,
+        }
+    if isinstance(value, ConstructedCapabilityCriterion):
+        return {
+            "kind": "constructed_capability",
+            "capability": value.capability,
+            "count": value.count,
+        }
+    if isinstance(value, CapacityCriterion):
+        return {
+            "kind": "capacity",
+            "capacity": value.capacity,
+            "minimum": value.minimum,
+        }
+    if isinstance(value, ExternalConnectionCriterion):
+        return {"kind": "external_connection", "role": value.role, "state": value.state}
+    if isinstance(value, SustainedNeedCriterion):
+        return {
+            "kind": "sustained_need",
+            "need": value.need,
+            "maximum": value.maximum,
+            "duration_ticks": value.duration_ticks,
+        }
+    if isinstance(value, SettlementStageCriterion):
+        return {"kind": "settlement_stage", "stage": value.stage}
+    raise TypeError("Unsupported goal criterion.")
+
+
+def _serialize_goal(value: GoalDefinition) -> dict[str, object]:
+    return {
+        "id": value.id,
+        "owner_kind": value.owner_kind.value,
+        "owner_id": value.owner_id,
+        "label": value.label,
+        "purpose": value.purpose,
+        "npc_interpretation": value.npc_interpretation,
+        "objective_ids": list(value.objective_ids),
+        "deadline_tick": value.deadline_tick,
+        "priority": value.priority,
+        "authorized_action_categories": list(value.authorized_action_categories),
+        "completion_criteria": [
+            _serialize_criterion(item) for item in value.completion_criteria
+        ],
+        "failure_criteria": [
+            _serialize_criterion(item) for item in value.failure_criteria
+        ],
+    }
+
+
+def _serialize_objective(value: ObjectiveDefinition) -> dict[str, object]:
+    return {
+        "id": value.id,
+        "label": value.label,
+        "purpose": value.purpose,
+        "npc_interpretation": value.npc_interpretation,
+        "completion_criteria": [
+            _serialize_criterion(item) for item in value.completion_criteria
+        ],
+        "failure_criteria": [
+            _serialize_criterion(item) for item in value.failure_criteria
+        ],
+        "dependencies": list(value.dependencies),
+        "alternatives": list(value.alternatives),
+        "deadline_tick": value.deadline_tick,
+        "priority": value.priority,
+        "authorized_action_categories": list(value.authorized_action_categories),
+    }
+
+
+def _serialize_evidence(value: ProgressEvidence) -> dict[str, object]:
+    return {
+        "tick": value.tick,
+        "description": value.description,
+        "source_event_ids": list(value.source_event_ids),
+    }
+
+
+def _serialize_goal_state(value: GoalState) -> dict[str, object]:
+    return {
+        "id": value.goal_id,
+        "goal_id": value.goal_id,
+        "status": value.status.value,
+        "evidence": [_serialize_evidence(item) for item in value.evidence],
+    }
+
+
+def _serialize_objective_state(value: ObjectiveState) -> dict[str, object]:
+    return {
+        "id": value.objective_id,
+        "objective_id": value.objective_id,
+        "status": value.status.value,
+        "evidence": [_serialize_evidence(item) for item in value.evidence],
     }
 
 
@@ -467,6 +611,30 @@ def _deserialize_world(payload: object, *, schema_version: int) -> WorldState:
         if schema_version >= 5
         else {}
     )
+    state.goal_definitions = (
+        _records(payload_mapping.get("goal_definitions", []), _deserialize_goal)
+        if schema_version >= 6
+        else {}
+    )
+    state.goal_states = (
+        _records(payload_mapping.get("goal_states", []), _deserialize_goal_state)
+        if schema_version >= 6
+        else {}
+    )
+    state.objective_definitions = (
+        _records(
+            payload_mapping.get("objective_definitions", []), _deserialize_objective
+        )
+        if schema_version >= 6
+        else {}
+    )
+    state.objective_states = (
+        _records(
+            payload_mapping.get("objective_states", []), _deserialize_objective_state
+        )
+        if schema_version >= 6
+        else {}
+    )
     for dispatch in state.external_dispatches.values():
         reference = state.external_world_references.get(dispatch.reference_id)
         if reference is None:
@@ -499,6 +667,7 @@ def _deserialize_world(payload: object, *, schema_version: int) -> WorldState:
         payload_mapping.get("knowledge", []), _deserialize_knowledge
     )
     SpatialManager(state, EventManager(state)).validate_loaded_state()
+    GoalManager(state, EventManager(state)).validate_loaded_state()
     return state
 
 
@@ -634,6 +803,86 @@ def _deserialize_external_dispatch(value: Mapping[str, object]) -> ExternalDispa
         created_tick=_integer(value["created_tick"]),
         departure_tick=_optional_integer(value["departure_tick"]),
         resolution_tick=_optional_integer(value["resolution_tick"]),
+    )
+
+
+def _deserialize_criterion(value: object) -> object:
+    item = _mapping(value)
+    kind = _string(item["kind"])
+    if kind == "resource_minimum":
+        return ResourceMinimumCriterion(
+            _string(item["resource"]), _integer(item["minimum"])
+        )
+    if kind == "constructed_capability":
+        return ConstructedCapabilityCriterion(
+            _string(item["capability"]), _integer(item["count"])
+        )
+    if kind == "capacity":
+        return CapacityCriterion(_string(item["capacity"]), _integer(item["minimum"]))
+    if kind == "external_connection":
+        return ExternalConnectionCriterion(
+            _string(item["role"]), _string(item["state"])
+        )
+    if kind == "sustained_need":
+        return SustainedNeedCriterion(
+            _string(item["need"]),
+            _number(item["maximum"]),
+            _integer(item["duration_ticks"]),
+        )
+    if kind == "settlement_stage":
+        return SettlementStageCriterion(_string(item["stage"]))
+    raise ValueError(f"Unknown goal criterion kind '{kind}'.")
+
+
+def _deserialize_goal(value: Mapping[str, object]) -> GoalDefinition:
+    return GoalDefinition(
+        id=_string(value["id"]),
+        owner_kind=GoalOwnerKind(_string(value["owner_kind"])),
+        owner_id=_string(value["owner_id"]),
+        label=_string(value["label"]),
+        purpose=_string(value["purpose"]),
+        npc_interpretation=_string(value["npc_interpretation"]),
+        objective_ids=_strings(value["objective_ids"]),
+        deadline_tick=_optional_integer(value["deadline_tick"]),
+        priority=_integer(value["priority"]),
+        authorized_action_categories=_strings(value["authorized_action_categories"]),
+        completion_criteria=tuple(
+            _deserialize_criterion(item)
+            for item in _list(value.get("completion_criteria", []))
+        ),  # type: ignore[arg-type]
+        failure_criteria=tuple(
+            _deserialize_criterion(item)
+            for item in _list(value.get("failure_criteria", []))
+        ),  # type: ignore[arg-type]
+    )
+
+
+def _deserialize_objective(value: Mapping[str, object]) -> ObjectiveDefinition:
+    return ObjectiveDefinition(id=_string(value["id"]), label=_string(value["label"]), purpose=_string(value["purpose"]), npc_interpretation=_string(value["npc_interpretation"]), completion_criteria=tuple(_deserialize_criterion(item) for item in _list(value["completion_criteria"])), failure_criteria=tuple(_deserialize_criterion(item) for item in _list(value["failure_criteria"])), dependencies=_strings(value["dependencies"]), alternatives=_strings(value["alternatives"]), deadline_tick=_optional_integer(value["deadline_tick"]), priority=_integer(value["priority"]), authorized_action_categories=_strings(value["authorized_action_categories"]))  # type: ignore[arg-type]
+
+
+def _deserialize_evidence(value: object) -> ProgressEvidence:
+    item = _mapping(value)
+    return ProgressEvidence(
+        _integer(item["tick"]),
+        _string(item["description"]),
+        _strings(item["source_event_ids"]),
+    )
+
+
+def _deserialize_goal_state(value: Mapping[str, object]) -> GoalState:
+    return GoalState(
+        _string(value["goal_id"]),
+        GoalStatus(_string(value["status"])),
+        tuple(_deserialize_evidence(item) for item in _list(value["evidence"])),
+    )
+
+
+def _deserialize_objective_state(value: Mapping[str, object]) -> ObjectiveState:
+    return ObjectiveState(
+        _string(value["objective_id"]),
+        GoalStatus(_string(value["status"])),
+        tuple(_deserialize_evidence(item) for item in _list(value["evidence"])),
     )
 
 

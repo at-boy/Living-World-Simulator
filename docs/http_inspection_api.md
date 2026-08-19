@@ -123,3 +123,8 @@ operator data and must never be copied into an NPC prompt or context.
 `GET /world/external-dispatches` returns detached records in lexical ID order;
 `/world` includes `external_dispatch_count`. Source/reference IDs, reservations,
 ticks, and exact state are privileged and must not be used as NPC context.
+# Goal inspection
+
+`GET /world/goals` returns a deterministic, detached privileged snapshot of
+goal definitions, lifecycle state, objectives, typed criteria, and evidence.
+This operator endpoint is not an NPC-context or mutation interface.

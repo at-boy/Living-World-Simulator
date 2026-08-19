@@ -474,3 +474,14 @@ engine calls. The cognition-shaped demonstration records holder-scoped
 observations, memories, experiences, beliefs, and social interpretations
 through their managers. Every NPC still receives only its filtered
 `NPCContext`; beliefs do not mutate world truth or select a proposal.
+# Engine-owned goals
+
+`WorldState` stores immutable goal and objective definitions separately from
+their immutable lifecycle state and progress evidence. `GoalManager` alone
+creates graphs and replaces state records. Criteria use six closed typed
+variants; Task 18 records but does not evaluate them.
+
+An NPC receives only `NPCGoalInterpretation(label, description)`. Definition
+IDs, owner IDs, criteria, evidence, deadlines, action policy, and authoritative
+status remain engine/inspection data. Both visible fields reject internal ID
+forms; operator-only purpose text remains unrestricted and privileged.

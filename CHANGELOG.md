@@ -4,6 +4,10 @@
 
 ### Added
 
+- Add immutable engine-owned goal/objective graphs, manager-owned lifecycle
+  state, schema-v6 persistence, privileged inspection, and explicit prose-only
+  NPC interpretations. Automatic evaluation remains deferred to Task 18a.
+
 - Add durable deterministic external dispatches with resource reservation,
   immutable lifecycle events, offered-label gateway handling, schema-v5
   persistence, privileged inspection, and qualitative safe results.
