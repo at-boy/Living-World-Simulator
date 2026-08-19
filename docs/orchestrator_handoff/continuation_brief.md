@@ -10,14 +10,15 @@ be changed.
 At this handoff checkpoint:
 
 - current branch: `milestone/v0.6`;
-- last implementation merge: `0fe099d` (`Merge Task 18 goals and objective graphs`);
-- current milestone head and `origin/milestone/v0.6`: `0fe099d` before the
+- last implementation merge: `033ed60` (`Merge Task 18a objective evaluation events`);
+- current milestone head and `origin/milestone/v0.6`: `033ed60` before the
   documentation-only planning update that may follow this brief;
 - `origin/main`: `12f2f17` and intentionally unchanged;
 - worktree: clean;
-- next authorized task: Task 18a on
-  `task/18a-objective-evaluation-events`;
-- no Task 18a branch or implementation has been started.
+- next authorized task: Task 15d on
+  `task/15d-npc-spatial-perception`;
+- Task 19 must not start before Task 15d is independently reviewed, merged,
+  and pushed.
 
 Always verify these statements with `git status --short`, `git branch -vv`, and
 recent history before acting. The repository is authoritative if external
@@ -38,6 +39,7 @@ reviewed, corrected where necessary, validated, committed, merged with
 | 17 | Partial external-world references and schema-v4 persistence | `c909d8a` |
 | 17a | Deterministic dispatch lifecycle, gateway, and schema-v5 persistence | `9c006fc` |
 | 18 | Engine-owned goals/objectives, schema-v6 persistence, inspection, and filtered interpretations | `0fe099d` |
+| 18a | Deterministic criterion evaluation, lifecycle transitions, and evidence | `033ed60` |
 
 Task reports under `docs/subagent_execution_plan/v0_6/` contain exact files,
 interfaces, review corrections, and validation evidence. ADR-0015 through
@@ -46,42 +48,41 @@ contracts.
 
 ## Current validation baseline
 
-The final reviewed Task 18 delivery passed:
+The final reviewed Task 18a delivery passed:
 
 | Command | Result |
 | --- | --- |
-| Focused Task 18 goal/persistence/inspection suite | 65 tests passed |
-| `make` | Ruff and Black passed; 547 pytest tests passed; examples 001–029 passed |
-| `make examples` | Examples 001–029 passed |
+| Focused Task 18a goal/evaluation/persistence/scenario/engine suite | 94 tests passed |
+| `make` | Ruff and Black passed; 569 pytest tests passed; examples 001–030 passed |
+| `make examples` | Examples 001–030 passed |
 | `git diff --check` | Passed |
 
 These results are a checkpoint, not a substitute for rerunning validation on
 future task branches.
 
-## Next task: Task 18a
+## Next task: Task 15d
 
-Task 18a is authorized because Task 18 is reviewed and merged. Its binding
+Task 15d is authorized because Tasks 15b and 18a are reviewed and merged. Its binding
 artifacts are:
 
-- `docs/subagent_execution_plan/v0_6/18a_objective_evaluation_events.md`
-- `docs/subagent_execution_plan/v0_6/18a_objective_evaluation_events-prombt.md`
+- `docs/subagent_execution_plan/v0_6/15d_npc_safe_spatial_perception.md`
+- `docs/subagent_execution_plan/v0_6/15d_npc_safe_spatial_perception-prombt.md`
 
-Create and push `task/18a-objective-evaluation-events` from the verified current
-`milestone/v0.6` head. Implement only deterministic criterion evaluation,
-stable graph lifecycle transitions/evidence, and engine composition. Needs and
-settlement-stage criteria remain registered-but-unavailable until Tasks 19 and
-21; work execution belongs to Tasks 20–20b.
+Create and push `task/15d-npc-spatial-perception` from the verified current
+`milestone/v0.6` head. Implement only qualitative translation of the explicitly
+selected observer, subject, authoritative placements, and caller-filtered
+direct road, plus the documented coordinate-leak boundary correction.
 
-Before implementation, reread Task 18's report, ADR-0019, the goal manager, and
-the schema-v6 persistence surface. The Task 18a plan and prompt now contain the
-binding evaluation semantics and exact allowed-file boundary. Amend both
-explicitly before any expansion.
+Before implementation, reread the Task 15b report, ADR-0016, the existing
+perception/context boundaries, and the Task 18a report. The Task 15d plan and
+prompt contain the binding translation semantics and exact allowed-file
+boundary. Amend both explicitly before any expansion.
 
 ## Remaining approved sequence
 
 Continue one reviewed task at a time in this order:
 
-1. Task 18a — deterministic objective evaluation.
+1. Task 15d — NPC-safe qualitative spatial and direct-road perception.
 2. Tasks 19 and 19a — needs, consumption, maintenance, and consequences.
 3. Tasks 20, 20a, and 20b — work records, proposal gateway, and execution.
 4. Task 21 — settlement development stages.

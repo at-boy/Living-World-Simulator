@@ -2,7 +2,8 @@
 
 ## Status and dependencies
 
-Authorized after reviewed Task 18a. Execute on `task/19-settlement-needs`.
+Authorized after reviewed Tasks 18a and 15d. Execute on
+`task/19-settlement-needs`.
 Task 19a depends on its reviewed merge.
 
 ## Task description
@@ -54,7 +55,7 @@ population, housing, and capacity.
   `tests/test_sqlite_repository.py`, `tests/test_inspection_api.py`, plus
   schema-version expectation updates in `tests/test_scenario_run_contract.py`
   and `tests/test_spatial_domain.py`
-- `examples/031_settlement_needs.py`
+- `examples/032_settlement_needs.py`
 - `CHANGELOG.md`, `docs/adr/ADR-0020-settlement-needs.md`,
   `docs/backlog.md`, `docs/core_model.md`, `docs/engine_glossary.md`,
   `docs/http_inspection_api.md`, and `docs/project_journal.md`
