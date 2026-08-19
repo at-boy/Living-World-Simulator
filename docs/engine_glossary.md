@@ -697,6 +697,19 @@ and immutable spatial events.
 It also implements the typed entity-removal guard used by `EntityManager`, so
 entities cannot be removed while placement state or contained children remain.
 
+# SpatialPerceptionEngine
+
+An engine-side implementation of `PerceptionEngine` that converts only a
+caller-selected observer, subject, authoritative placements, and optional
+caller-filtered direct road into deterministic containment and compass prose.
+It returns an unpersisted `Observation`; it does not enumerate visibility,
+expose geometry, find paths, or mutate world state.
+
+# SpatialPerceptionError
+
+A typed fail-closed error raised when the selected observer, subject,
+container, or placement cannot be matched to live authoritative spatial state.
+
 # Spatial inspection
 
 A privileged detached projection of exact placement geometry. It may expose

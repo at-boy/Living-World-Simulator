@@ -5,6 +5,7 @@ from living_world.cognition.retrieval import RetrievalQuery
 from living_world.core.entity import Entity
 from living_world.core.memory import CognitiveSalience, Memory
 from living_world.core.observation import Observation
+from living_world.spatial import Bounds, BoundsKind, Placement, Point
 from living_world.state.world_state import WorldState
 
 
@@ -166,3 +167,161 @@ def test_assembler_includes_only_validated_conversation_history() -> None:
             holder_id="npc_1",
             conversation_history=("The skill is 80.",),
         )
+
+
+@pytest.mark.parametrize(
+    "description",
+    (
+        "The well is at 47, 83.",
+        "The well is 47 steps east.",
+        "The well is at x 47.0 and y 83.00.",
+    ),
+)
+def test_assembler_revalidates_stored_spatial_observations(
+    description: str,
+) -> None:
+    state = make_state()
+    state.placements["npc_1"] = Placement("npc_1", Point(47, 83))
+    state.observations["observation_1"] = Observation(
+        id="observation_1",
+        tick=2,
+        observer="npc_1",
+        subject="well_1",
+        description=description,
+        confidence=0.8,
+        evidence={},
+        metadata={},
+    )
+
+    with pytest.raises(ValueError):
+        NPCContextAssembler(state).assemble(holder_id="npc_1")
+
+
+def test_assembler_keeps_spatial_observations_holder_scoped() -> None:
+    state = make_state()
+    state.placements["npc_1"] = Placement("npc_1", Point(47, 83))
+    state.observations["observation_1"] = Observation(
+        id="observation_1",
+        tick=2,
+        observer="npc_1",
+        subject="well_1",
+        description="The well is north-east of Erik.",
+        confidence=1.0,
+        evidence={"spatial_relations": ("north_east",)},
+        metadata={"engine": "spatial_perception"},
+    )
+
+    erik = NPCContextAssembler(state).assemble(holder_id="npc_1")
+    mira = NPCContextAssembler(state).assemble(holder_id="npc_2")
+
+    assert erik.current_perceptions == ("The well is north-east of Erik.",)
+    assert mira.current_perceptions == ("Another NPC's perception.",)
+    assert "spatial_relations" not in erik.current_perceptions[0]
+
+
+def test_assembler_numeric_equivalence_preserves_token_boundaries() -> None:
+    state = make_state()
+    state.placements["npc_1"] = Placement("npc_1", Point(47, 83))
+    state.observations["observation_1"] = Observation(
+        id="observation_1",
+        tick=2,
+        observer="npc_1",
+        subject="route_1",
+        description="Route47.0 remains open.",
+        confidence=0.8,
+        evidence={},
+        metadata={},
+    )
+
+    context = NPCContextAssembler(state).assemble(holder_id="npc_1")
+
+    assert context.current_perceptions == ("Route47.0 remains open.",)
+
+
+@pytest.mark.parametrize(
+    "description",
+    (
+        "The well is at x-47.0 and y-83.0.",
+        "The well is at x-4.7e1 and y-8.3e1.",
+    ),
+)
+def test_assembler_rejects_stored_attached_signed_coordinate_equivalents(
+    description: str,
+) -> None:
+    state = make_state()
+    state.placements["npc_1"] = Placement("npc_1", Point(-47, -83))
+    state.observations["observation_1"] = Observation(
+        id="observation_1",
+        tick=2,
+        observer="npc_1",
+        subject="well_1",
+        description=description,
+        confidence=0.8,
+        evidence={},
+        metadata={},
+    )
+
+    with pytest.raises(ValueError, match="coordinate notation"):
+        NPCContextAssembler(state).assemble(holder_id="npc_1")
+
+
+@pytest.mark.parametrize(
+    "description",
+    (
+        "The width+20.0 is known.",
+        "The height+3e1 is known.",
+    ),
+)
+def test_assembler_rejects_stored_attached_signed_dimension_equivalents(
+    description: str,
+) -> None:
+    state = make_state()
+    state.placements["npc_1"] = Placement(
+        "npc_1",
+        Bounds(40, 80, 20, 30),
+        bounds_kind=BoundsKind.STRUCTURE,
+    )
+    state.observations["observation_1"] = Observation(
+        id="observation_1",
+        tick=2,
+        observer="npc_1",
+        subject="well_1",
+        description=description,
+        confidence=0.8,
+        evidence={},
+        metadata={},
+    )
+
+    with pytest.raises(ValueError, match="coordinate notation"):
+        NPCContextAssembler(state).assemble(holder_id="npc_1")
+
+
+@pytest.mark.parametrize(
+    "description",
+    (
+        "The well is at x47.0 and y8.3e1.",
+        "The width20.0 and height3e1 are known.",
+    ),
+)
+def test_assembler_rejects_stored_attached_unsigned_spatial_equivalents(
+    description: str,
+) -> None:
+    state = make_state()
+    state.placements["npc_1"] = Placement(
+        "npc_1",
+        Bounds(47, 83, 20, 30),
+        bounds_kind=BoundsKind.STRUCTURE,
+    )
+    state.observations["observation_1"] = Observation(
+        id="observation_1",
+        tick=2,
+        observer="npc_1",
+        subject="well_1",
+        description=description,
+        confidence=0.8,
+        evidence={},
+        metadata={},
+    )
+
+    with pytest.raises(ValueError, match="coordinate notation"):
+        NPCContextAssembler(state).assemble(holder_id="npc_1")

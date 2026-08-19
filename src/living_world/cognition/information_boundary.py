@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import re
 from collections.abc import Mapping
+from decimal import Decimal, InvalidOperation
 from typing import TYPE_CHECKING
 
 from living_world.cognition.retrieval import RetrievedCognition
@@ -15,6 +16,23 @@ if TYPE_CHECKING:
 
 class NPCInformationBoundary:
     """Reject authoritative state from an NPC-readable context projection."""
+
+    _COORDINATE_NOTATION_PATTERN = re.compile(r"(?<![\w.])-?\d+\s*,\s*-?\d+(?![\w.])")
+    _SPATIAL_LABEL_NOTATION_PATTERN = re.compile(
+        r"\b(?:x|y|width|height)\s*[-+]?"
+        r"(?:\d+(?:\.\d+)?|\.\d+)(?:[eE][-+]?\d+)?"
+        r"(?!\w|\.\d)",
+        re.IGNORECASE,
+    )
+    _PRIVILEGED_SPATIAL_PATTERN = re.compile(
+        r"\b(?:coordinates|coordinate (?:axis|notation|pair|value)|bounds?|"
+        r"placement records?|overlap polic(?:y|ies))\b"
+        r"|\b(?:placement_record|overlap_policy)\b",
+        re.IGNORECASE,
+    )
+    _NUMERIC_LITERAL_PATTERN = re.compile(
+        r"(?<![\w.+-])[-+]?(?:\d+(?:\.\d+)?|\.\d+)(?:[eE][-+]?\d+)?" r"(?!\w|\.\d)"
+    )
 
     def __init__(self, state: WorldState) -> None:
         self._state = state
@@ -74,6 +92,18 @@ class NPCInformationBoundary:
             raise ValueError(f"NPC context {field_name} cannot contain empty prose.")
         if any(identifier in value for identifier in self._internal_identifiers()):
             raise ValueError(f"NPC context {field_name} cannot expose internal IDs.")
+        if self._COORDINATE_NOTATION_PATTERN.search(value) is not None:
+            raise ValueError(
+                f"NPC context {field_name} cannot expose raw coordinate notation."
+            )
+        if self._SPATIAL_LABEL_NOTATION_PATTERN.search(value) is not None:
+            raise ValueError(
+                f"NPC context {field_name} cannot expose raw coordinate notation."
+            )
+        if self._PRIVILEGED_SPATIAL_PATTERN.search(value) is not None:
+            raise ValueError(
+                f"NPC context {field_name} cannot expose privileged spatial terms."
+            )
         if self._contains_authoritative_number(value):
             raise ValueError(
                 f"NPC context {field_name} cannot expose authoritative numeric values."
@@ -90,25 +120,44 @@ class NPCInformationBoundary:
             self._state.experiences,
             self._state.npc_relationships,
             self._state.knowledge,
+            self._state.placements,
         )
         return tuple(
             identifier for collection in collections for identifier in collection
         )
 
     def _contains_authoritative_number(self, value: str) -> bool:
-        return any(
-            self._number_pattern(number).search(value) is not None
-            for number in self._authoritative_numbers()
-        )
+        authoritative = {
+            Decimal(str(number)) for number in self._authoritative_numbers()
+        }
+        for match in self._NUMERIC_LITERAL_PATTERN.finditer(value):
+            try:
+                if Decimal(match.group()) in authoritative:
+                    return True
+            except InvalidOperation:
+                continue
+        return False
 
     def _authoritative_numbers(self) -> tuple[int | float, ...]:
-        return tuple(
+        entity_numbers = tuple(
             value
             for entity in self._state.entities.values()
             for value in self._numeric_values(entity.attributes)
         )
+        spatial_numbers = tuple(
+            value
+            for placement in self._state.placements.values()
+            for value in self._numeric_values(placement.geometry)
+        )
+        return entity_numbers + spatial_numbers
 
     def _numeric_values(self, value: object) -> tuple[int | float, ...]:
+        from living_world.spatial.model import Bounds, Point
+
+        if isinstance(value, Point):
+            return value.x, value.y
+        if isinstance(value, Bounds):
+            return value.x, value.y, value.width, value.height
         if isinstance(value, Mapping):
             return tuple(
                 number
@@ -122,7 +171,3 @@ class NPCInformationBoundary:
         if isinstance(value, (int, float)) and not isinstance(value, bool):
             return (value,)
         return ()
-
-    @staticmethod
-    def _number_pattern(number: float) -> re.Pattern[str]:
-        return re.compile(rf"(?<![\w.]){re.escape(str(number))}(?!\w|\.\d)")

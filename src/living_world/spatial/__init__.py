@@ -10,6 +10,10 @@ from living_world.spatial.model import (
 
 if TYPE_CHECKING:
     from living_world.spatial.manager import SpatialManager
+    from living_world.spatial.perception import (
+        SpatialPerceptionEngine,
+        SpatialPerceptionError,
+    )
 
 __all__ = [
     "Bounds",
@@ -18,6 +22,8 @@ __all__ = [
     "Placement",
     "Point",
     "SpatialManager",
+    "SpatialPerceptionEngine",
+    "SpatialPerceptionError",
     "placement_snapshot",
 ]
 
@@ -31,4 +37,14 @@ def __getattr__(name: str) -> object:
         from living_world.spatial.manager import placement_snapshot
 
         return placement_snapshot
+    if name in {"SpatialPerceptionEngine", "SpatialPerceptionError"}:
+        from living_world.spatial.perception import (
+            SpatialPerceptionEngine,
+            SpatialPerceptionError,
+        )
+
+        return {
+            "SpatialPerceptionEngine": SpatialPerceptionEngine,
+            "SpatialPerceptionError": SpatialPerceptionError,
+        }[name]
     raise AttributeError(name)
