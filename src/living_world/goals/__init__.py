@@ -1,3 +1,11 @@
+from living_world.goals.evaluation import (
+    CriterionDisposition,
+    CriterionEvaluation,
+    CriterionEvaluator,
+    CriterionEvaluatorRegistry,
+    GoalEvaluationSystem,
+    default_criterion_evaluators,
+)
 from living_world.goals.manager import GoalManager
 from living_world.goals.model import (
     CapacityCriterion,
@@ -20,9 +28,14 @@ from living_world.goals.model import (
 __all__ = [
     "CapacityCriterion",
     "ConstructedCapabilityCriterion",
+    "CriterionDisposition",
+    "CriterionEvaluation",
+    "CriterionEvaluator",
+    "CriterionEvaluatorRegistry",
     "ExternalConnectionCriterion",
     "GoalCriterion",
     "GoalDefinition",
+    "GoalEvaluationSystem",
     "GoalManager",
     "GoalOwnerKind",
     "GoalState",
@@ -34,4 +47,5 @@ __all__ = [
     "ResourceMinimumCriterion",
     "SettlementStageCriterion",
     "SustainedNeedCriterion",
+    "default_criterion_evaluators",
 ]

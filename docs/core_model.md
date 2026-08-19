@@ -479,7 +479,20 @@ through their managers. Every NPC still receives only its filtered
 `WorldState` stores immutable goal and objective definitions separately from
 their immutable lifecycle state and progress evidence. `GoalManager` alone
 creates graphs and replaces state records. Criteria use six closed typed
-variants; Task 18 records but does not evaluate them.
+variants. A final deterministic simulation system evaluates them after the
+other systems at each tick. Typed evaluators return satisfied, unsatisfied, or
+unavailable results with detached evidence. Unavailable authoritative domains
+block progress; they are never inferred from arbitrary entity attributes.
+
+Dependencies are prerequisites and alternative objectives may satisfy their
+parent. Completion requires every completion criterion, while any satisfied
+failure criterion fails the record. The goal manager remains the sole mutation
+boundary and records exactly one immutable event for each actual lifecycle
+transition. Re-evaluation without a status change adds no lifecycle event.
+Materially changed evaluation snapshots may add manager-owned progress evidence
+without changing status or emitting an event. The manager compares normalized
+description and source-event provenance, so an unchanged snapshot on later
+ticks is idempotent.
 
 An NPC receives only `NPCGoalInterpretation(label, description)`. Definition
 IDs, owner IDs, criteria, evidence, deadlines, action policy, and authoritative

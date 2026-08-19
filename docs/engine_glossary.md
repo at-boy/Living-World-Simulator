@@ -737,3 +737,16 @@ expedition, or settlement. An **objective** is a typed node in that goal's
 dependency/alternative graph. Definitions are immutable and separate from
 manager-owned lifecycle state. An NPC goal interpretation is prose only and is
 not authoritative state.
+
+A **criterion evaluator** is a typed engine component that reads authoritative
+state and returns a frozen satisfied, unsatisfied, or unavailable result. The
+goal evaluation system applies these results in stable graph order through the
+goal manager. A registered-but-unavailable evaluator marks a future domain
+boundary explicitly instead of treating hidden or arbitrary attributes as
+truth.
+
+**Progress evidence** is a detached engine-only snapshot attached through the
+goal manager. A lifecycle transition carries evidence and emits exactly one
+event. Material progress while status is unchanged may append evidence without
+an event; identical normalized description and source provenance do not append
+again on later ticks.

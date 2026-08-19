@@ -17,6 +17,7 @@ from living_world.definitions.yaml_loader import YAMLWorldDefinitionLoader
 from living_world.external_world.dispatch_manager import ExternalDispatchManager
 from living_world.external_world.dispatch_system import ExternalDispatchSystem
 from living_world.external_world.manager import ExternalWorldReferenceManager
+from living_world.goals.evaluation import GoalEvaluationSystem
 from living_world.goals.manager import GoalManager
 from living_world.managers.belief_manager import BeliefManager
 from living_world.managers.definition_manager import DefinitionManager
@@ -115,6 +116,8 @@ class SimulationEngine:
         self._scheduler = SimulationScheduler(
             self._state,
         )
+        self._registered_systems: list[SimulationSystem] = []
+        self._goal_evaluation_system: GoalEvaluationSystem | None = None
 
         self._resources = ResourceSystem()
 
@@ -213,6 +216,8 @@ class SimulationEngine:
                 self._entities,
             )
         )
+        self._goal_evaluation_system = GoalEvaluationSystem(self._goals)
+        self._scheduler.register(self._goal_evaluation_system)
 
     @property
     def state(self) -> WorldState:
@@ -286,7 +291,14 @@ class SimulationEngine:
         self,
         system: SimulationSystem,
     ) -> None:
-        self._scheduler.register(system)
+        self._registered_systems.append(system)
+        if self._goal_evaluation_system is None:
+            self._scheduler.register(system)
+            return
+        self._scheduler = SimulationScheduler(self._state)
+        for registered in self._registered_systems:
+            self._scheduler.register(registered)
+        self._scheduler.register(self._goal_evaluation_system)
 
     def load_definitions(self, path: Path) -> tuple[Definition, ...]:
         """Load and atomically register definition vocabulary from YAML."""

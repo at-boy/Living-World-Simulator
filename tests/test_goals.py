@@ -106,6 +106,47 @@ def test_transitions_record_evidence_and_reject_terminal_change() -> None:
         engine.goals.transition_goal(goal.id, GoalStatus.ACTIVE)
 
 
+def test_blocked_records_may_complete_without_artificial_activation() -> None:
+    engine = _engine()
+    goal, objectives = _records()
+    engine.goals.create(goal, objectives)
+    engine.goals.transition_goal(goal.id, GoalStatus.ACTIVE)
+    engine.goals.transition_goal(goal.id, GoalStatus.BLOCKED)
+    completed = engine.goals.transition_goal(goal.id, GoalStatus.COMPLETED)
+    assert completed.status is GoalStatus.COMPLETED
+
+
+def test_manager_records_progress_evidence_without_an_event_and_deduplicates() -> None:
+    engine = _engine()
+    goal, objectives = _records()
+    engine.goals.create(goal, objectives)
+    engine.goals.transition_goal(goal.id, GoalStatus.ACTIVE)
+    event_count = len(engine.state.events)
+    evidence = ProgressEvidence(0, "Water reserve: 1 of 10 required.")
+    updated = engine.goals.record_goal_evidence(goal.id, evidence)
+    duplicate = engine.goals.record_goal_evidence(
+        goal.id, ProgressEvidence(0, evidence.description)
+    )
+    assert updated == duplicate
+    assert updated.evidence == (evidence,)
+    assert len(engine.state.events) == event_count
+
+
+def test_manager_rejects_invalid_progress_evidence_atomically() -> None:
+    engine = _engine()
+    goal, objectives = _records()
+    engine.goals.create(goal, objectives)
+    engine.goals.transition_objective(objectives[0].id, GoalStatus.ACTIVE)
+    before = engine.state.objective_states[objectives[0].id]
+    event_count = len(engine.state.events)
+    with pytest.raises(ValueError, match="future tick"):
+        engine.goals.record_objective_evidence(
+            objectives[0].id, ProgressEvidence(1, "Future progress.")
+        )
+    assert engine.state.objective_states[objectives[0].id] == before
+    assert len(engine.state.events) == event_count
+
+
 def test_graph_creation_is_atomic_on_invalid_reference_or_cycle() -> None:
     engine = _engine()
     goal, (objective,) = _records()

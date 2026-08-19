@@ -32,7 +32,9 @@ _TRANSITIONS = {
     GoalStatus.ACTIVE: frozenset(
         {GoalStatus.BLOCKED, GoalStatus.COMPLETED, GoalStatus.FAILED}
     ),
-    GoalStatus.BLOCKED: frozenset({GoalStatus.ACTIVE, GoalStatus.FAILED}),
+    GoalStatus.BLOCKED: frozenset(
+        {GoalStatus.ACTIVE, GoalStatus.COMPLETED, GoalStatus.FAILED}
+    ),
 }
 
 
@@ -89,6 +91,16 @@ class GoalManager:
         evidence: ProgressEvidence | None = None,
     ) -> ObjectiveState:
         return self._transition(objective_id, status, evidence, objective=True)
+
+    def record_goal_evidence(
+        self, goal_id: str, evidence: ProgressEvidence
+    ) -> GoalState:
+        return self._record_evidence(goal_id, evidence, objective=False)
+
+    def record_objective_evidence(
+        self, objective_id: str, evidence: ProgressEvidence
+    ) -> ObjectiveState:
+        return self._record_evidence(objective_id, evidence, objective=True)
 
     def all(self) -> tuple[GoalDefinition, ...]:
         return tuple(
@@ -195,6 +207,30 @@ class GoalManager:
             for event_id in set(self._state.events) - event_ids:
                 self._state.events.pop(event_id, None)
             raise
+        return updated
+
+    def _record_evidence(
+        self, record_id: str, evidence: ProgressEvidence, *, objective: bool
+    ) -> GoalState | ObjectiveState:
+        self._text(record_id, "record id")
+        if not isinstance(evidence, ProgressEvidence):
+            raise TypeError("evidence must be ProgressEvidence.")
+        states = self._state.objective_states if objective else self._state.goal_states
+        current = states.get(record_id)
+        if current is None:
+            raise ValueError(
+                f"Unknown {'objective' if objective else 'goal'} '{record_id}'."
+            )
+        if current.status in _TERMINAL:
+            raise ValueError("Progress evidence cannot be added to a terminal record.")
+        self._validate_evidence_records((evidence,))
+        if current.evidence and (
+            current.evidence[-1].description == evidence.description
+            and current.evidence[-1].source_event_ids == evidence.source_event_ids
+        ):
+            return current
+        updated = replace(current, evidence=current.evidence + (evidence,))
+        states[record_id] = updated
         return updated
 
     def _validate_new(
