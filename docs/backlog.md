@@ -82,9 +82,9 @@ Task 16a adds checkpoint execution plus continuous/bounded operator control.
 ADR-0016's canonical local spatial contract and Task 15b's domain, persistence,
 and privileged inspection are implemented; pathfinding, terrain, motion, and
 regional-scale geography remain deferred.
-Task 15d is next before Task 19 to add an engine-owned qualitative spatial and
-direct-road perception translation layer and close the stored-observation
-coordinate-leak gap without adding navigation or visibility simulation.
+Task 15d implements an engine-owned qualitative spatial and direct-road
+perception translation layer and closes the stored-observation coordinate-leak
+gap without adding navigation or visibility simulation. Task 19 is next.
 ADR-0017 and Task 17 implement partial off-map references, deterministic contact
 state, schema-v4 persistence, privileged inspection, and a filtered qualitative
 interpretation. Dispatch and trade transfer remain assigned to Task 17a.

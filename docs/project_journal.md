@@ -7,6 +7,23 @@ engineering milestones and lessons learned.
 
 ---
 
+# 2026-08-19
+
+## NPC-safe spatial perception
+
+Task 15d completes the v0.6 local-space information path without weakening the
+engine boundary. `SpatialPerceptionEngine` reads only a caller-selected live
+observer, subject, placements, and optional direct road, then returns stable
+containment and compass prose as an unpersisted observation. Callers still own
+recording, and holder-scoped context assembly still controls which NPC can see
+the result.
+
+Exact coordinates remain privileged inspection data. Both perception-time and
+final context validation reject geometry values, IDs, coordinate notation, and
+privileged spatial vocabulary, including unsafe observations inserted through
+older or manual recording paths. Direct-road prose reports an already-known
+connection; it does not add visibility, distance, travel, or pathfinding.
+
 # 2026-08-18
 
 ## Deterministic External Dispatch

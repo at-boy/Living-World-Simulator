@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted for Task 15b implementation.
+Accepted. Implemented by Tasks 15b and 15d.
 
 ## Context
 
@@ -143,11 +143,26 @@ because it is operator-only, but callers cannot mutate live state through it.
 ### NPC information boundary
 
 Coordinates, dimensions, placement records, inspection DTOs, overlap policy,
-and internal IDs are engine truth and do not enter `NPCContext`. Task 15b adds
-no NPC-facing spatial field. A later perception feature may translate verified
-geometry into qualitative relative prose such as “inside the storehouse” or
-“near the well,” after applying visibility and holder-scoping rules. It must not
-reuse privileged inspection payloads or expose raw coordinates by default.
+and internal IDs are engine truth and do not enter `NPCContext`. Positive x is
+east and positive y is north only for deterministic qualitative translation;
+the integers still have no declared geographic scale.
+
+Task 15d adds a `SpatialPerceptionEngine` behind the existing perception
+protocol. It resolves only the caller-selected live observer and subject and
+their authoritative placements. Point coordinates and doubled bounds centers
+produce co-location or one of eight compass directions without magnitude.
+Explicit containment may name a public container. An active direct `road` may
+be described only when the caller includes that authoritative relationship in
+the perception context; spatial perception never enumerates the world.
+
+The result is one unpersisted immutable `Observation`. Its visible description
+contains public names and qualitative prose. Detached evidence contains only
+relation codes; it contains no geometry or IDs. Perception-time validation
+rejects exact spatial numbers, internal identifiers, coordinate notation, and
+privileged spatial vocabulary. Final context validation repeats those checks
+against stored observations and all other NPC prose. The ordinary observation
+manager remains the only recording path and holder-scoped context assembly
+remains the only route into NPC cognition.
 
 ## Alternatives rejected
 
@@ -164,7 +179,7 @@ reuse privileged inspection payloads or expose raw coordinates by default.
 - Feeding coordinates to NPC cognition was rejected because privileged engine
   precision is not equivalent to NPC knowledge.
 
-## Consequences and Task 15b constraints
+## Consequences and implementation constraints
 
 Task 15b must implement these exact frozen records, enum values, validation
 rules, ordering, manager-owned lifecycle/events, schema-v3 migration, public
@@ -181,3 +196,8 @@ exposure. Future pathfinding may consume this geometry without redefining it.
 The v0.9 regional extension may map local planes into an explicit larger-scale
 model, but must preserve local identities and migrate through a documented
 contract rather than interpreting these integers as global geography.
+
+Task 15d does not infer visibility, line of sight, proximity, distance bands,
+navigation, movement, terrain, travel cost, or pathfinding. Its direct-road
+prose reports only an already-authoritative caller-selected connection. These
+capabilities remain separate future decisions.

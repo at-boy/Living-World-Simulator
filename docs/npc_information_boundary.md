@@ -473,6 +473,14 @@ visible description; it neither receives `PerceptionContext` nor reads an
 observation's evidence or metadata. Thus engine debugging evidence may remain
 on an observation without becoming NPC cognition.
 
+Spatial perception follows the same route. The engine may compare exact points
+and bounds, but the NPC receives only containment, co-location, compass, and an
+explicitly caller-authorized direct-road description. Coordinate and dimension
+values, placement and relationship IDs, inspection shapes, magnitude, and raw
+spatial vocabulary remain engine-only. Final `NPCContext` validation compares
+all visible prose with authoritative geometry, so even a manually stored unsafe
+observation such as an exact coordinate pair fails closed.
+
 ---
 
 # Deterministic and LLM Perception

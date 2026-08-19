@@ -4,6 +4,11 @@
 
 ### Added
 
+- Add deterministic NPC-safe spatial perception for explicitly selected
+  entities, containment, compass direction, co-location, and caller-filtered
+  direct roads, with coordinate-leak rejection at perception and context
+  boundaries.
+
 - Add deterministic engine-owned goal/objective criterion evaluation with
   typed evaluators, stable graph ordering, normalized evidence, and immutable
   lifecycle events. Material progress changes append manager-owned evidence

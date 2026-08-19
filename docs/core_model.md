@@ -185,6 +185,9 @@ and provenance without exposing that data as the NPC-facing perception.
 `NPCPerceptionBoundary` validates the description before an observation leaves
 the perception engine and again when it is projected into `NPCContext`; the
 latter path has no access to the observation's evidence or metadata.
+`NPCInformationBoundary` additionally compares every context prose field with
+authoritative placement numbers and spatial vocabulary, so an unsafe stored
+observation or cognitive record cannot bypass perception-time validation.
 
 `ConversationService` records a validated NPC utterance as an observation for
 each other conversation participant, with empty evidence and metadata. It does
@@ -432,8 +435,13 @@ and removes placements. It validates entities, containment, cycles, and mutual
 overlap permission before recording one immutable event. Queries use canonical
 container/geometry/entity ordering. SQLite migration treats legacy entities as
 spatially unknown, and privileged inspection returns detached exact geometry.
-No placement or coordinate enters NPC context; later perception owns any
-qualitative relative description. See ADR-0016.
+`SpatialPerceptionEngine` resolves only one caller-selected live observer and
+subject. It translates containment, doubled point/bounds centers, and an
+explicitly supplied active direct road into deterministic qualitative prose.
+Positive x is east and positive y is north. The returned observation is not
+recorded automatically; callers use `ObservationManager`, after which normal
+holder-scoped context assembly applies. Exact geometry, magnitude, IDs, and
+privileged spatial vocabulary remain outside NPC context. See ADR-0016.
 
 ## External-world references
 
