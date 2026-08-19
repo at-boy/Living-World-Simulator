@@ -9,3 +9,8 @@ implement work/stage behavior.
 Stay inside allowed files, add tests/example/docs and the truthful report, run
 `make`, `make examples`, and `git diff --check`, and do not commit, merge, push,
 or change branches.
+
+Use the exact boundary and scheduler order in the Task 19a plan: consequences
+run before needs assessment, which runs before goal evaluation. Never call the
+goal manager or directly complete criteria. Amend this prompt and the plan
+before expanding the allowed files.

@@ -1,4 +1,4 @@
-# Continuation brief — August 18, 2026
+# Continuation brief — August 19, 2026
 
 ## Current repository state
 
@@ -10,13 +10,14 @@ be changed.
 At this handoff checkpoint:
 
 - current branch: `milestone/v0.6`;
-- last implementation merge: `9c006fc` (`Merge Task 17a external dispatch lifecycle`);
-- current milestone head and remote include the documentation-only handoff
-  commit immediately following that merge; verify its hash from Git;
+- last implementation merge: `0fe099d` (`Merge Task 18 goals and objective graphs`);
+- current milestone head and `origin/milestone/v0.6`: `0fe099d` before the
+  documentation-only planning update that may follow this brief;
 - `origin/main`: `12f2f17` and intentionally unchanged;
 - worktree: clean;
-- next authorized task: Task 18 on `task/18-goals-objectives`;
-- no Task 18 branch or implementation has been started.
+- next authorized task: Task 18a on
+  `task/18a-objective-evaluation-events`;
+- no Task 18a branch or implementation has been started.
 
 Always verify these statements with `git status --short`, `git branch -vv`, and
 recent history before acting. The repository is authoritative if external
@@ -36,48 +37,51 @@ reviewed, corrected where necessary, validated, committed, merged with
 | 15b | Spatial domain, schema-v3 persistence, and inspection | `2e43ada` |
 | 17 | Partial external-world references and schema-v4 persistence | `c909d8a` |
 | 17a | Deterministic dispatch lifecycle, gateway, and schema-v5 persistence | `9c006fc` |
+| 18 | Engine-owned goals/objectives, schema-v6 persistence, inspection, and filtered interpretations | `0fe099d` |
 
 Task reports under `docs/subagent_execution_plan/v0_6/` contain exact files,
 interfaces, review corrections, and validation evidence. ADR-0015 through
-ADR-0018 capture the scenario, spatial, partial-world, and dispatch contracts.
+ADR-0019 capture the scenario, spatial, partial-world, dispatch, and goal
+contracts.
 
 ## Current validation baseline
 
-The final reviewed Task 17a delivery passed:
+The final reviewed Task 18 delivery passed:
 
 | Command | Result |
 | --- | --- |
-| Focused Task 17a/integration suite | 106 tests passed |
-| `make` | Ruff and Black passed; 498 pytest tests passed; examples 001–028 passed |
-| `make examples` | Examples 001–028 passed |
+| Focused Task 18 goal/persistence/inspection suite | 65 tests passed |
+| `make` | Ruff and Black passed; 547 pytest tests passed; examples 001–029 passed |
+| `make examples` | Examples 001–029 passed |
 | `git diff --check` | Passed |
 
 These results are a checkpoint, not a substitute for rerunning validation on
 future task branches.
 
-## Next task: Task 18
+## Next task: Task 18a
 
-Task 18 is authorized because Task 17a is reviewed and merged. Its binding
+Task 18a is authorized because Task 18 is reviewed and merged. Its binding
 artifacts are:
 
-- `docs/subagent_execution_plan/v0_6/18_goals_objective_graphs.md`
-- `docs/subagent_execution_plan/v0_6/18_goals_objective_graphs-prombt.md`
+- `docs/subagent_execution_plan/v0_6/18a_objective_evaluation_events.md`
+- `docs/subagent_execution_plan/v0_6/18a_objective_evaluation_events-prombt.md`
 
-Create and push `task/18-goals-objectives` from the verified current
-`milestone/v0.6` head. Implement only durable typed goal/objective definitions,
-managed lifecycle state, persistence, deterministic privileged inspection, and
-filtered NPC interpretations. Automatic evaluation belongs to Task 18a and
-work execution belongs to Tasks 20–20b.
+Create and push `task/18a-objective-evaluation-events` from the verified current
+`milestone/v0.6` head. Implement only deterministic criterion evaluation,
+stable graph lifecycle transitions/evidence, and engine composition. Needs and
+settlement-stage criteria remain registered-but-unavailable until Tasks 19 and
+21; work execution belongs to Tasks 20–20b.
 
-Before implementation, reread Task 17a's report and the current schema-v5
-persistence surface. If Task 18 needs an interface or file outside its stated
-boundary, amend the plan and saved prompt explicitly before code changes.
+Before implementation, reread Task 18's report, ADR-0019, the goal manager, and
+the schema-v6 persistence surface. The Task 18a plan and prompt now contain the
+binding evaluation semantics and exact allowed-file boundary. Amend both
+explicitly before any expansion.
 
 ## Remaining approved sequence
 
 Continue one reviewed task at a time in this order:
 
-1. Tasks 18 and 18a — goals/objectives and deterministic evaluation.
+1. Task 18a — deterministic objective evaluation.
 2. Tasks 19 and 19a — needs, consumption, maintenance, and consequences.
 3. Tasks 20, 20a, and 20b — work records, proposal gateway, and execution.
 4. Task 21 — settlement development stages.

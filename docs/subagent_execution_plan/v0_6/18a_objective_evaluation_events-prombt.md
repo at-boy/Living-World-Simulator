@@ -9,3 +9,14 @@ LLM to assert completion.
 Stay within allowed files, add tests/example/docs and the truthful report, run
 `make`, `make examples`, and `git diff --check`, and do not commit, merge, push,
 or change branches.
+
+The binding graph semantics, evaluator precedence, deferred-criterion policy,
+scheduler position, and exact allowed-file boundary are in the Task 18a plan.
+Implement concrete evaluators only for resource minimum, constructed
+capability, capacity, and external connection. Register sustained need and
+settlement stage as unavailable until Tasks 19 and 21 respectively; do not
+invent those future domains or read arbitrary attributes as substitutes.
+Use canonical direct `owns` relationships for owner-scoped capability/capacity
+queries. Permit direct manager `BLOCKED -> COMPLETED`, emit one event per real
+transition, and keep repeated unchanged evaluation idempotent. Amend both this
+prompt and the plan before expanding their explicit boundary.
