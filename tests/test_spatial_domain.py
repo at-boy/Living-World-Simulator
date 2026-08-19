@@ -294,7 +294,7 @@ def test_spatial_state_round_trips_and_legacy_defaults_to_empty(tmp_path: Path) 
         version = connection.execute(
             "SELECT schema_version FROM world_snapshots WHERE id = 1"
         ).fetchone()[0]
-    assert version == 5
+    assert version == 6
 
 
 @pytest.mark.parametrize("legacy_version", (1, 2))

@@ -17,6 +17,7 @@ from living_world.definitions.yaml_loader import YAMLWorldDefinitionLoader
 from living_world.external_world.dispatch_manager import ExternalDispatchManager
 from living_world.external_world.dispatch_system import ExternalDispatchSystem
 from living_world.external_world.manager import ExternalWorldReferenceManager
+from living_world.goals.manager import GoalManager
 from living_world.managers.belief_manager import BeliefManager
 from living_world.managers.definition_manager import DefinitionManager
 from living_world.managers.entity_manager import EntityManager
@@ -67,6 +68,8 @@ class SimulationEngine:
         self._events = EventManager(
             self._state,
         )
+
+        self._goals = GoalManager(self._state, self._events)
 
         self._external_world_references = ExternalWorldReferenceManager(
             self._state, self._events
@@ -248,6 +251,10 @@ class SimulationEngine:
     @property
     def external_dispatches(self) -> ExternalDispatchManager:
         return self._external_dispatches
+
+    @property
+    def goals(self) -> GoalManager:
+        return self._goals
 
     @property
     def observations(

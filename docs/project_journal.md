@@ -715,3 +715,9 @@ private NPC-relationship interpretation. Safe request serialization contains
 only each holder's prose projection; IDs, lineage, evidence, metadata, raw
 state, and other holders' cognition remain engine-only. These histories do not
 prescribe attendance, speech, a proposal, a majority, or a gateway outcome.
+## Task 18 — engine-owned goals and objective graphs
+
+Added frozen personal/collective goal graphs and separate manager-owned state,
+with atomic validation and lifecycle events, schema-v6 persistence, detached
+inspection, and a deliberately narrow prose-only NPC interpretation. Criterion
+evaluation and work execution remain separate follow-up tasks.

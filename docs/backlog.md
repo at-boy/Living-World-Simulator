@@ -87,6 +87,9 @@ state, schema-v4 persistence, privileged inspection, and a filtered qualitative
 interpretation. Dispatch and trade transfer remain assigned to Task 17a.
 Task 17a now implements deterministic durable dispatches and safe offered-label
 proposals; generic work, objectives, and remote-place simulation remain deferred.
+Task 18 now implements durable goal/objective definitions, managed lifecycle
+state, persistence, privileged inspection, and filtered NPC interpretations.
+Deterministic criterion evaluation and evidence production remain Task 18a.
 
 - Births
 - Childhood and apprenticeships

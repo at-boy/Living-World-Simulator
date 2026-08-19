@@ -730,3 +730,10 @@ perceptions.
 
 The scheduler system that departs pending dispatches and resolves elapsed
 transit deterministically from persisted seed and anchor policy.
+# Goal and objective
+
+A **goal** is a durable engine-owned mandate for one NPC, organization,
+expedition, or settlement. An **objective** is a typed node in that goal's
+dependency/alternative graph. Definitions are immutable and separate from
+manager-owned lifecycle state. An NPC goal interpretation is prose only and is
+not authoritative state.

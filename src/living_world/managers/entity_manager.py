@@ -70,6 +70,12 @@ class EntityManager:
 
     def remove(self, entity_id: str) -> None:
         if any(
+            goal.owner_id == entity_id for goal in self._state.goal_definitions.values()
+        ):
+            raise ValueError(
+                f"Entity '{entity_id}' cannot be removed while a goal refers to it."
+            )
+        if any(
             dispatch.source_entity_id == entity_id
             for dispatch in self._state.external_dispatches.values()
         ):
