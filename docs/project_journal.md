@@ -721,3 +721,16 @@ Added frozen personal/collective goal graphs and separate manager-owned state,
 with atomic validation and lifecycle events, schema-v6 persistence, detached
 inspection, and a deliberately narrow prose-only NPC interpretation. Criterion
 evaluation and work execution remain separate follow-up tasks.
+
+## Task 18a — deterministic objective evaluation
+
+Added a final engine system with a closed typed criterion-evaluator registry.
+It evaluates objective graphs in deterministic dependency/alternative order,
+uses manager-owned lifecycle transitions, and records normalized detached
+evidence when status changes or authoritative progress materially changes.
+Progress-only evidence emits no lifecycle event, and identical snapshots are
+deduplicated across ticks. Resource, construction, capacity, and
+external-contact criteria read their defined authoritative sources. Sustained
+need and settlement stage remain explicitly unavailable until their planned
+domains land. Exact evidence and authority remain engine-only; NPC goal
+interpretations are unchanged.

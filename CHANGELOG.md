@@ -4,6 +4,11 @@
 
 ### Added
 
+- Add deterministic engine-owned goal/objective criterion evaluation with
+  typed evaluators, stable graph ordering, normalized evidence, and immutable
+  lifecycle events. Material progress changes append manager-owned evidence
+  without fabricating lifecycle events.
+
 - Add immutable engine-owned goal/objective graphs, manager-owned lifecycle
   state, schema-v6 persistence, privileged inspection, and explicit prose-only
   NPC interpretations. Automatic evaluation remains deferred to Task 18a.
@@ -30,6 +35,12 @@
   reload on resume, and privileged read-only run inspection.
 - Add SQLite schema-version-2 snapshots while retaining schema-version-1 v0.5
   loading as unbound legacy worlds.
+
+### Changed
+
+- Evaluate goals after existing systems and before the simulation tick
+  advances, including direct blocked-to-completed transitions when fresh
+  authoritative state proves completion.
 
 ## v0.5.0 - 2026-08-12
 

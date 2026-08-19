@@ -89,7 +89,10 @@ Task 17a now implements deterministic durable dispatches and safe offered-label
 proposals; generic work, objectives, and remote-place simulation remain deferred.
 Task 18 now implements durable goal/objective definitions, managed lifecycle
 state, persistence, privileged inspection, and filtered NPC interpretations.
-Deterministic criterion evaluation and evidence production remain Task 18a.
+Task 18a implements deterministic criterion evaluation and evidence production
+for resources, constructed capabilities, capacity, and external connections.
+Sustained-needs evaluation remains Task 19 integration, and settlement-stage
+evaluation remains Task 21 integration.
 
 - Births
 - Childhood and apprenticeships
