@@ -5,6 +5,13 @@ from living_world.cognition.retrieval import RetrievalQuery
 from living_world.core.entity import Entity
 from living_world.core.memory import CognitiveSalience, Memory
 from living_world.core.observation import Observation
+from living_world.needs import (
+    NeedAssessment,
+    NeedDefinition,
+    NeedKind,
+    NeedLevel,
+    NeedState,
+)
 from living_world.spatial import Bounds, BoundsKind, Placement, Point
 from living_world.state.world_state import WorldState
 
@@ -324,4 +331,31 @@ def test_assembler_rejects_stored_attached_unsigned_spatial_equivalents(
     )
 
     with pytest.raises(ValueError, match="coordinate notation"):
+        NPCContextAssembler(state).assemble(holder_id="npc_1")
+
+
+@pytest.mark.parametrize(
+    "description",
+    ("The record need_food changed.", "Pressure is 0.25.", "Pressure0.25 remains."),
+)
+def test_assembler_rejects_need_ids_and_authoritative_numbers(description: str) -> None:
+    state = make_state()
+    definition = NeedDefinition("need_food", "npc_1", NeedKind.FOOD, 2, 0.25, 0.5, 3)
+    assessment = NeedAssessment(2, NeedLevel.CRITICAL, 1, 4, -3, 0.75)
+    state.need_definitions[definition.id] = definition
+    state.need_states[definition.id] = NeedState(
+        definition.id, assessment, (assessment,)
+    )
+    state.observations["observation_1"] = Observation(
+        id="observation_1",
+        tick=2,
+        observer="npc_1",
+        subject="tree_1",
+        description=description,
+        confidence=0.8,
+        evidence={},
+        metadata={},
+    )
+
+    with pytest.raises(ValueError, match="internal IDs|numeric values"):
         NPCContextAssembler(state).assemble(holder_id="npc_1")

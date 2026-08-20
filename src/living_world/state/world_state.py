@@ -18,6 +18,7 @@ from living_world.goals.model import (
     ObjectiveDefinition,
     ObjectiveState,
 )
+from living_world.needs.model import NeedDefinition, NeedState
 from living_world.spatial.model import Placement
 
 
@@ -45,6 +46,9 @@ class WorldState:
     goal_states: dict[str, GoalState] = field(default_factory=dict)
     objective_definitions: dict[str, ObjectiveDefinition] = field(default_factory=dict)
     objective_states: dict[str, ObjectiveState] = field(default_factory=dict)
+
+    need_definitions: dict[str, NeedDefinition] = field(default_factory=dict)
+    need_states: dict[str, NeedState] = field(default_factory=dict)
 
     events: dict[str, Event] = field(default_factory=dict)
 

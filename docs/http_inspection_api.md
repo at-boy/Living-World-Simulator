@@ -1,5 +1,9 @@
 # HTTP inspection API
 
+`GET /world/needs` returns privileged ID-ordered records shaped exactly as
+`{"definition": <NeedDefinition>, "state": <NeedState>}`. `GET /world` includes
+`need_count`; these operator views may expose exact thresholds and history.
+
 The HTTP inspection API is a privileged, read-only view of a running
 `SimulationEngine`. It returns detached JSON snapshots of authoritative world
 state for operator tools, debugging, and visualization.

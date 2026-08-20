@@ -1,6 +1,9 @@
 
 # Living World Simulator Backlog
 
+Task 19 settlement needs and pressure is complete for v0.6; consumption and
+maintenance consequences remain separately scoped to Task 19a.
+
 This document is intentionally **not** a specification.
 
 It is a parking lot for ideas that have been agreed upon but are

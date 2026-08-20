@@ -30,6 +30,8 @@ from living_world.managers.npc_relationship_manager import NPCRelationshipManage
 from living_world.managers.observation_manager import ObservationManager
 from living_world.managers.relationship_manager import RelationshipManager
 from living_world.managers.resource_definition_manager import ResourceDefinitionManager
+from living_world.needs.manager import NeedManager
+from living_world.needs.system import NeedAssessmentSystem
 from living_world.repositories.graph_repository import GraphRepository
 from living_world.scenarios.runtime import ScenarioRuntimeManager
 from living_world.scenarios.scenario import (
@@ -71,6 +73,8 @@ class SimulationEngine:
         )
 
         self._goals = GoalManager(self._state, self._events)
+
+        self._needs = NeedManager(self._state, self._events)
 
         self._external_world_references = ExternalWorldReferenceManager(
             self._state, self._events
@@ -117,6 +121,7 @@ class SimulationEngine:
             self._state,
         )
         self._registered_systems: list[SimulationSystem] = []
+        self._need_assessment_system: NeedAssessmentSystem | None = None
         self._goal_evaluation_system: GoalEvaluationSystem | None = None
 
         self._resources = ResourceSystem()
@@ -216,8 +221,9 @@ class SimulationEngine:
                 self._entities,
             )
         )
+        self._need_assessment_system = NeedAssessmentSystem(self._needs)
         self._goal_evaluation_system = GoalEvaluationSystem(self._goals)
-        self._scheduler.register(self._goal_evaluation_system)
+        self._rebuild_scheduler()
 
     @property
     def state(self) -> WorldState:
@@ -262,6 +268,10 @@ class SimulationEngine:
         return self._goals
 
     @property
+    def needs(self) -> NeedManager:
+        return self._needs
+
+    @property
     def observations(
         self,
     ) -> ObservationManager:
@@ -292,13 +302,19 @@ class SimulationEngine:
         system: SimulationSystem,
     ) -> None:
         self._registered_systems.append(system)
-        if self._goal_evaluation_system is None:
+        if self._need_assessment_system is None:
             self._scheduler.register(system)
             return
+        self._rebuild_scheduler()
+
+    def _rebuild_scheduler(self) -> None:
         self._scheduler = SimulationScheduler(self._state)
         for registered in self._registered_systems:
             self._scheduler.register(registered)
-        self._scheduler.register(self._goal_evaluation_system)
+        if self._need_assessment_system is not None:
+            self._scheduler.register(self._need_assessment_system)
+        if self._goal_evaluation_system is not None:
+            self._scheduler.register(self._goal_evaluation_system)
 
     def load_definitions(self, path: Path) -> tuple[Definition, ...]:
         """Load and atomically register definition vocabulary from YAML."""

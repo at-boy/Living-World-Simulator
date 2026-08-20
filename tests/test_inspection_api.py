@@ -32,6 +32,7 @@ from living_world.goals import (
     ProgressEvidence,
     ResourceMinimumCriterion,
 )
+from living_world.needs import NeedDefinition, NeedKind
 from living_world.simulation.simulation_engine import SimulationEngine
 from living_world.spatial import Point
 
@@ -290,6 +291,7 @@ def test_inspection_endpoints_return_authoritative_snapshots_in_id_order() -> No
         "external_dispatch_count": 0,
         "goal_count": 0,
         "objective_count": 0,
+        "need_count": 0,
         "event_count": 2,
         "observation_count": 2,
         "memory_count": 2,
@@ -718,3 +720,27 @@ def test_inspection_is_get_only_and_does_not_expand_npc_context() -> None:
     npc_information = "\n".join(context.retrieved_information)
     assert "120" not in npc_information
     assert "92" not in npc_information
+
+
+def test_need_inspection_is_privileged_exact_and_detached() -> None:
+    engine, client = make_client()
+    definition = engine.needs.create(
+        NeedDefinition("need_food", "entity_000001", NeedKind.FOOD, 2, 0.2, 0.5, 3)
+    )
+    records = client.get("/world/needs").json()
+    assert records == [
+        {
+            "definition": {
+                "id": "need_food",
+                "owner_id": "entity_000001",
+                "kind": "food",
+                "requirement_per_person": 2,
+                "secure_maximum": 0.2,
+                "strained_maximum": 0.5,
+                "assessment_window_ticks": 3,
+            },
+            "state": {"need_id": "need_food", "current": None, "history": []},
+        }
+    ]
+    records[0]["definition"]["kind"] = "changed"
+    assert engine.state.need_definitions[definition.id].kind is NeedKind.FOOD

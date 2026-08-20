@@ -30,6 +30,11 @@ class NPCInformationBoundary:
         r"|\b(?:placement_record|overlap_policy)\b",
         re.IGNORECASE,
     )
+    _NEED_NUMERIC_NOTATION_PATTERN = re.compile(
+        r"\b(?:need|pressure|available|required|balance|threshold|window)\s*"
+        r"[-+]?(?:\d+(?:\.\d+)?|\.\d+)(?:[eE][-+]?\d+)?(?!\w|\.\d)",
+        re.IGNORECASE,
+    )
     _NUMERIC_LITERAL_PATTERN = re.compile(
         r"(?<![\w.+-])[-+]?(?:\d+(?:\.\d+)?|\.\d+)(?:[eE][-+]?\d+)?" r"(?!\w|\.\d)"
     )
@@ -104,6 +109,10 @@ class NPCInformationBoundary:
             raise ValueError(
                 f"NPC context {field_name} cannot expose privileged spatial terms."
             )
+        if self._NEED_NUMERIC_NOTATION_PATTERN.search(value) is not None:
+            raise ValueError(
+                f"NPC context {field_name} cannot expose authoritative numeric values."
+            )
         if self._contains_authoritative_number(value):
             raise ValueError(
                 f"NPC context {field_name} cannot expose authoritative numeric values."
@@ -121,6 +130,8 @@ class NPCInformationBoundary:
             self._state.npc_relationships,
             self._state.knowledge,
             self._state.placements,
+            self._state.need_definitions,
+            self._state.need_states,
         )
         return tuple(
             identifier for collection in collections for identifier in collection
@@ -149,7 +160,28 @@ class NPCInformationBoundary:
             for placement in self._state.placements.values()
             for value in self._numeric_values(placement.geometry)
         )
-        return entity_numbers + spatial_numbers
+        need_numbers = tuple(
+            number
+            for definition in self._state.need_definitions.values()
+            for number in (
+                definition.requirement_per_person,
+                definition.secure_maximum,
+                definition.strained_maximum,
+                definition.assessment_window_ticks,
+            )
+        ) + tuple(
+            number
+            for need_state in self._state.need_states.values()
+            for assessment in need_state.history
+            for number in (
+                assessment.available,
+                assessment.required,
+                assessment.balance,
+                assessment.pressure,
+            )
+            if number is not None
+        )
+        return entity_numbers + spatial_numbers + need_numbers
 
     def _numeric_values(self, value: object) -> tuple[int | float, ...]:
         from living_world.spatial.model import Bounds, Point

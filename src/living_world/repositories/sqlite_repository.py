@@ -41,6 +41,14 @@ from living_world.goals import (
     SustainedNeedCriterion,
 )
 from living_world.managers.event_manager import EventManager
+from living_world.needs import (
+    NeedAssessment,
+    NeedDefinition,
+    NeedKind,
+    NeedLevel,
+    NeedManager,
+    NeedState,
+)
 from living_world.spatial.manager import SpatialManager, placement_order_key
 from living_world.spatial.model import (
     Bounds,
@@ -51,8 +59,8 @@ from living_world.spatial.model import (
 )
 from living_world.state.world_state import WorldState
 
-_SCHEMA_VERSION = 6
-_SUPPORTED_SCHEMA_VERSIONS = frozenset({1, 2, 3, 4, 5, 6})
+_SCHEMA_VERSION = 7
+_SUPPORTED_SCHEMA_VERSIONS = frozenset({1, 2, 3, 4, 5, 6, 7})
 Record = (
     Entity
     | Relationship
@@ -69,6 +77,8 @@ Record = (
     | ObjectiveDefinition
     | GoalState
     | ObjectiveState
+    | NeedDefinition
+    | NeedState
 )
 RecordType = TypeVar("RecordType", bound=Record)
 
@@ -214,6 +224,18 @@ def _serialize_world(state: WorldState) -> dict[str, object]:
             _serialize_objective_state(item)
             for item in sorted(
                 state.objective_states.values(), key=lambda item: item.objective_id
+            )
+        ],
+        "need_definitions": [
+            _serialize_need_definition(item)
+            for item in sorted(
+                state.need_definitions.values(), key=lambda item: item.id
+            )
+        ],
+        "need_states": [
+            _serialize_need_state(item)
+            for item in sorted(
+                state.need_states.values(), key=lambda item: item.need_id
             )
         ],
         "events": [_serialize_event(event) for event in state.events.values()],
@@ -436,6 +458,39 @@ def _serialize_goal_state(value: GoalState) -> dict[str, object]:
     }
 
 
+def _serialize_need_definition(value: NeedDefinition) -> dict[str, object]:
+    return {
+        "id": value.id,
+        "owner_id": value.owner_id,
+        "kind": value.kind.value,
+        "requirement_per_person": value.requirement_per_person,
+        "secure_maximum": value.secure_maximum,
+        "strained_maximum": value.strained_maximum,
+        "assessment_window_ticks": value.assessment_window_ticks,
+    }
+
+
+def _serialize_need_assessment(value: NeedAssessment) -> dict[str, object]:
+    return {
+        "tick": value.tick,
+        "level": value.level.value,
+        "available": value.available,
+        "required": value.required,
+        "balance": value.balance,
+        "pressure": value.pressure,
+    }
+
+
+def _serialize_need_state(value: NeedState) -> dict[str, object]:
+    return {
+        "need_id": value.need_id,
+        "current": (
+            None if value.current is None else _serialize_need_assessment(value.current)
+        ),
+        "history": [_serialize_need_assessment(item) for item in value.history],
+    }
+
+
 def _serialize_objective_state(value: ObjectiveState) -> dict[str, object]:
     return {
         "id": value.objective_id,
@@ -635,6 +690,18 @@ def _deserialize_world(payload: object, *, schema_version: int) -> WorldState:
         if schema_version >= 6
         else {}
     )
+    state.need_definitions = (
+        _records(
+            payload_mapping.get("need_definitions", []), _deserialize_need_definition
+        )
+        if schema_version >= 7
+        else {}
+    )
+    state.need_states = (
+        _records(payload_mapping.get("need_states", []), _deserialize_need_state)
+        if schema_version >= 7
+        else {}
+    )
     for dispatch in state.external_dispatches.values():
         reference = state.external_world_references.get(dispatch.reference_id)
         if reference is None:
@@ -668,6 +735,7 @@ def _deserialize_world(payload: object, *, schema_version: int) -> WorldState:
     )
     SpatialManager(state, EventManager(state)).validate_loaded_state()
     GoalManager(state, EventManager(state)).validate_loaded_state()
+    NeedManager(state, EventManager(state)).validate_loaded_state()
     return state
 
 
@@ -886,6 +954,57 @@ def _deserialize_objective_state(value: Mapping[str, object]) -> ObjectiveState:
     )
 
 
+def _deserialize_need_definition(value: Mapping[str, object]) -> NeedDefinition:
+    _exact_keys(
+        value,
+        {
+            "id",
+            "owner_id",
+            "kind",
+            "requirement_per_person",
+            "secure_maximum",
+            "strained_maximum",
+            "assessment_window_ticks",
+        },
+    )
+    return NeedDefinition(
+        _string(value["id"]),
+        _string(value["owner_id"]),
+        NeedKind(_string(value["kind"])),
+        _integer(value["requirement_per_person"]),
+        _number(value["secure_maximum"]),
+        _number(value["strained_maximum"]),
+        _integer(value["assessment_window_ticks"]),
+    )
+
+
+def _deserialize_need_assessment(value: object) -> NeedAssessment:
+    item = _mapping(value)
+    _exact_keys(item, {"tick", "level", "available", "required", "balance", "pressure"})
+    return NeedAssessment(
+        _integer(item["tick"]),
+        NeedLevel(_string(item["level"])),
+        _optional_integer(item["available"]),
+        _optional_integer(item["required"]),
+        _optional_integer(item["balance"]),
+        None if item["pressure"] is None else _number(item["pressure"]),
+    )
+
+
+def _deserialize_need_state(value: Mapping[str, object]) -> NeedState:
+    _exact_keys(value, {"need_id", "current", "history"})
+    current = (
+        None
+        if value["current"] is None
+        else _deserialize_need_assessment(value["current"])
+    )
+    return NeedState(
+        _string(value["need_id"]),
+        current,
+        tuple(_deserialize_need_assessment(item) for item in _list(value["history"])),
+    )
+
+
 def _deserialize_observation(value: Mapping[str, object]) -> Observation:
     return Observation(
         id=_string(value["id"]),
@@ -1062,6 +1181,11 @@ def _number(value: object) -> float:
     if not isinstance(value, (int, float)) or isinstance(value, bool):
         raise TypeError("Persisted value must be a number.")
     return float(value)
+
+
+def _exact_keys(value: Mapping[str, object], expected: set[str]) -> None:
+    if set(value) != expected:
+        raise ValueError("Persisted need record has unexpected or missing fields.")
 
 
 def _boolean(value: object) -> bool:
