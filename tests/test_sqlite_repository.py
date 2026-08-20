@@ -8,6 +8,7 @@ from typing import cast
 import pytest
 
 from living_world.core.belief import Belief, BeliefStatus
+from living_world.core.definition import Definition
 from living_world.core.entity import Entity
 from living_world.core.event import Event
 from living_world.core.experience import Experience
@@ -25,6 +26,7 @@ from living_world.goals import (
     ObjectiveState,
     ResourceMinimumCriterion,
 )
+from living_world.needs import NeedDefinition, NeedKind
 from living_world.repositories.sqlite_repository import (
     RepositoryLoadError,
     RepositorySaveError,
@@ -54,6 +56,157 @@ def test_sqlite_repository_round_trips_all_world_records(tmp_path: Path) -> None
     assert loaded.memories == state.memories
     assert loaded.npc_relationships == state.npc_relationships
     assert loaded.knowledge == state.knowledge
+
+
+def test_sqlite_repository_round_trips_schema_seven_needs(tmp_path: Path) -> None:
+    repository = SQLiteRepository(str(tmp_path / "needs.sqlite3"))
+    engine = SimulationEngine(repository)
+    engine.definitions.register(Definition("settlement"))
+    owner = engine.entities.create(
+        definition_key="settlement",
+        name="Oakford",
+        attributes={"population": 4, "resources": {"food": 3}},
+    )
+    definition = engine.needs.create(
+        NeedDefinition("need_food", owner.id, NeedKind.FOOD, 1, 0.2, 0.5, 2)
+    )
+    engine.step()
+    expected = engine.state.need_states[definition.id]
+    engine.save_world()
+
+    loaded = repository.load_world()
+    assert loaded.need_definitions[definition.id] == definition
+    assert loaded.need_states[definition.id] == expected
+    with sqlite3.connect(tmp_path / "needs.sqlite3") as connection:
+        assert (
+            connection.execute(
+                "SELECT schema_version FROM world_snapshots WHERE id = 1"
+            ).fetchone()[0]
+            == 7
+        )
+
+
+@pytest.mark.parametrize("schema_version", range(1, 7))
+def test_legacy_schema_loads_empty_needs_and_rewrites_seven(
+    tmp_path: Path, schema_version: int
+) -> None:
+    database = tmp_path / f"legacy-{schema_version}.sqlite3"
+    repository = SQLiteRepository(str(database))
+    repository.save_world(_world_state())
+    with sqlite3.connect(database) as connection:
+        payload = json.loads(
+            connection.execute(
+                "SELECT payload FROM world_snapshots WHERE id = 1"
+            ).fetchone()[0]
+        )
+        payload["need_definitions"] = [{"id": "need_ignored"}]
+        payload["need_states"] = [{"need_id": "need_ignored"}]
+        connection.execute(
+            "UPDATE world_snapshots SET schema_version = ?, payload = ? WHERE id = 1",
+            (schema_version, json.dumps(payload)),
+        )
+    loaded = repository.load_world()
+    assert loaded.need_definitions == {}
+    assert loaded.need_states == {}
+    repository.save_world(loaded)
+    with sqlite3.connect(database) as connection:
+        assert (
+            connection.execute(
+                "SELECT schema_version FROM world_snapshots WHERE id = 1"
+            ).fetchone()[0]
+            == 7
+        )
+
+
+@pytest.mark.parametrize(
+    "case",
+    (
+        "duplicate_definition",
+        "duplicate_state",
+        "state_id_mismatch",
+        "unexpected_field",
+        "overlong_history",
+        "out_of_order_history",
+        "future_history",
+        "partial_unavailable",
+        "bad_balance",
+        "bad_pressure",
+        "bad_level",
+        "invalid_owner",
+        "invalid_enum",
+        "invalid_number",
+    ),
+)
+def test_schema_seven_rejects_malformed_need_records(tmp_path: Path, case: str) -> None:
+    database = tmp_path / f"invalid-{case}.sqlite3"
+    repository = SQLiteRepository(str(database))
+    engine = SimulationEngine(repository)
+    engine.definitions.register(Definition("settlement"))
+    owner = engine.entities.create(
+        definition_key="settlement",
+        name="Oakford",
+        attributes={"population": 4, "resources": {"food": 3}},
+    )
+    engine.needs.create(
+        NeedDefinition("need_food", owner.id, NeedKind.FOOD, 1, 0.2, 0.5, 2)
+    )
+    engine.step()
+    engine.save_world()
+    with sqlite3.connect(database) as connection:
+        payload = json.loads(
+            connection.execute(
+                "SELECT payload FROM world_snapshots WHERE id = 1"
+            ).fetchone()[0]
+        )
+        definition = payload["need_definitions"][0]
+        state = payload["need_states"][0]
+        current = state["current"]
+        if case == "duplicate_definition":
+            payload["need_definitions"].append(dict(definition))
+        elif case == "duplicate_state":
+            payload["need_states"].append(dict(state))
+        elif case == "state_id_mismatch":
+            state["need_id"] = "need_other"
+        elif case == "unexpected_field":
+            definition["extra"] = "not allowed"
+        elif case == "overlong_history":
+            definition["assessment_window_ticks"] = 1
+            earlier = dict(current)
+            earlier["tick"] = 0
+            current["tick"] = 1
+            state["history"] = [earlier, dict(current)]
+            payload["tick"] = 1
+        elif case == "out_of_order_history":
+            later = dict(current)
+            later["tick"] = 1
+            state["history"] = [later, dict(current)]
+            payload["tick"] = 1
+        elif case == "future_history":
+            current["tick"] = 2
+            state["history"] = [dict(current)]
+        elif case == "partial_unavailable":
+            current["level"] = "unavailable"
+        elif case == "bad_balance":
+            current["balance"] = 99
+            state["history"] = [dict(current)]
+        elif case == "bad_pressure":
+            current["pressure"] = 0.4
+            state["history"] = [dict(current)]
+        elif case == "bad_level":
+            current["level"] = "secure"
+            state["history"] = [dict(current)]
+        elif case == "invalid_owner":
+            definition["owner_id"] = "entity_missing"
+        elif case == "invalid_enum":
+            definition["kind"] = "warmth"
+        elif case == "invalid_number":
+            definition["requirement_per_person"] = True
+        connection.execute(
+            "UPDATE world_snapshots SET payload = ? WHERE id = 1",
+            (json.dumps(payload),),
+        )
+    with pytest.raises(RepositoryLoadError, match="malformed"):
+        repository.load_world()
 
 
 def test_loaded_history_records_remain_immutable(tmp_path: Path) -> None:
@@ -177,7 +330,7 @@ def test_unsupported_schema_version_raises_without_returning_partial_state(
     repository.save_world(_world_state())
     with sqlite3.connect(database_path) as connection:
         connection.execute(
-            "UPDATE world_snapshots SET schema_version = ? WHERE id = 1", (7,)
+            "UPDATE world_snapshots SET schema_version = ? WHERE id = 1", (8,)
         )
 
     with pytest.raises(RepositoryLoadError, match="Unsupported world schema version"):

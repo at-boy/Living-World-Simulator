@@ -40,6 +40,8 @@ class WorldInspector(Protocol):
 
     def goals(self) -> tuple[Mapping[str, object], ...]: ...
 
+    def needs(self) -> tuple[Mapping[str, object], ...]: ...
+
     def events(self) -> tuple[Mapping[str, object], ...]: ...
 
     def npcs(self) -> tuple[Mapping[str, object], ...]: ...
@@ -75,6 +77,7 @@ class EngineWorldInspector:
             "external_dispatch_count": len(state.external_dispatches),
             "goal_count": len(state.goal_definitions),
             "objective_count": len(state.objective_definitions),
+            "need_count": len(state.need_definitions),
             "event_count": len(state.events),
             "observation_count": len(state.observations),
             "memory_count": len(state.memories),
@@ -162,6 +165,21 @@ class EngineWorldInspector:
                 ),
             )
             for goal_id in sorted(state.goal_definitions)
+        )
+
+    def needs(self) -> tuple[Mapping[str, object], ...]:
+        state = self._engine.state
+        return tuple(
+            cast(
+                Mapping[str, object],
+                _snapshot_value(
+                    {
+                        "definition": state.need_definitions[need_id],
+                        "state": state.need_states[need_id],
+                    }
+                ),
+            )
+            for need_id in sorted(state.need_definitions)
         )
 
     def events(self) -> tuple[Mapping[str, object], ...]:

@@ -20,6 +20,7 @@ from living_world.goals.model import (
     SettlementStageCriterion,
     SustainedNeedCriterion,
 )
+from living_world.needs.model import NeedKind, NeedLevel
 from living_world.state.world_state import WorldState
 
 
@@ -271,13 +272,78 @@ class _UnavailableEvaluator:
         )
 
 
+class _SustainedNeedEvaluator:
+    def evaluate(
+        self, criterion: GoalCriterion, *, owner_id: str, state: WorldState
+    ) -> CriterionEvaluation:
+        item = cast(SustainedNeedCriterion, criterion)
+        try:
+            kind = NeedKind(item.need)
+        except ValueError:
+            return self._unavailable("the requested need kind is unknown")
+        definitions = [
+            definition
+            for definition in state.need_definitions.values()
+            if definition.owner_id == owner_id and definition.kind is kind
+        ]
+        if len(definitions) != 1:
+            return self._unavailable("a unique need definition is not available")
+        definition = definitions[0]
+        if definition.assessment_window_ticks < item.duration_ticks:
+            return self._unavailable("the assessment window is too short")
+        need_state = state.need_states.get(definition.id)
+        if need_state is None:
+            return self._unavailable("the need state is absent")
+        history = need_state.history[-item.duration_ticks :]
+        expected_ticks = tuple(
+            range(state.tick - item.duration_ticks + 1, state.tick + 1)
+        )
+        if len(history) != item.duration_ticks:
+            return self._unavailable("the assessment history is incomplete")
+        if tuple(assessment.tick for assessment in history) != expected_ticks:
+            return self._unavailable("the assessment history is not consecutive")
+        if any(assessment.level is NeedLevel.UNAVAILABLE for assessment in history):
+            return self._unavailable("an assessment is unavailable")
+        pressures = tuple(assessment.pressure for assessment in history)
+        if any(value is None for value in pressures):
+            return self._unavailable("an assessment pressure is unavailable")
+        numeric = cast(tuple[float, ...], pressures)
+        disposition = (
+            CriterionDisposition.SATISFIED
+            if all(value <= item.maximum for value in numeric)
+            else CriterionDisposition.UNSATISFIED
+        )
+        rendered = ", ".join(str(value) for value in numeric)
+        event_ids = tuple(
+            sorted(
+                event.id
+                for event in state.events.values()
+                if event.subject_id == definition.id
+                and event.kind in {"need_created", "need_level_changed"}
+            )
+        )
+        return CriterionEvaluation(
+            disposition,
+            f"Sustained {kind.value} need over {item.duration_ticks} ticks at "
+            f"maximum {item.maximum}: ordered pressures [{rendered}].",
+            event_ids,
+        )
+
+    @staticmethod
+    def _unavailable(reason: str) -> CriterionEvaluation:
+        return CriterionEvaluation(
+            CriterionDisposition.UNAVAILABLE,
+            f"Sustained need criterion is unavailable because {reason}.",
+        )
+
+
 def default_criterion_evaluators() -> dict[type[object], CriterionEvaluator]:
     return {
         ResourceMinimumCriterion: _ResourceMinimumEvaluator(),
         ConstructedCapabilityCriterion: _ConstructedCapabilityEvaluator(),
         CapacityCriterion: _CapacityEvaluator(),
         ExternalConnectionCriterion: _ExternalConnectionEvaluator(),
-        SustainedNeedCriterion: _UnavailableEvaluator("Sustained need"),
+        SustainedNeedCriterion: _SustainedNeedEvaluator(),
         SettlementStageCriterion: _UnavailableEvaluator("Settlement stage"),
     }
 

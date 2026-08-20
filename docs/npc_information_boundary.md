@@ -1,5 +1,10 @@
 # NPC Information Boundary
 
+Need definitions and assessments are privileged. NPC-facing prose may use only a
+deliberately selected qualitative `NPCNeedInterpretation`. Need IDs, owners,
+thresholds, quantities, pressure, windows, history, and goal evidence remain out
+of NPC context and are rejected by the final information boundary.
+
 ## Purpose
 
 The Living World Simulator must maintain a strict boundary between **authoritative engine state** and the **information an NPC is allowed to perceive and reason about**.

@@ -4,6 +4,10 @@
 
 ### Added
 
+- Add authoritative settlement food, water, shelter, and storage pressure with
+  bounded history, sustained goal evaluation, schema-7 persistence, privileged
+  inspection, and qualitative NPC-safe interpretations.
+
 - Add deterministic NPC-safe spatial perception for explicitly selected
   entities, containment, compass direction, co-location, and caller-filtered
   direct roads, with coordinate-leak rejection at perception and context

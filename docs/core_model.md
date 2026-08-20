@@ -1,5 +1,9 @@
 # Core Runtime Model
 
+Settlement needs are authoritative `NeedDefinition` and `NeedState` records.
+Their bounded assessment history describes availability, requirement, balance,
+pressure, and qualitative level without choosing action.
+
 The Living World Simulator is a property graph simulation engine.
 
 Everything that exists is an Entity.

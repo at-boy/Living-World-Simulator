@@ -1,5 +1,11 @@
 # Engine Glossary
 
+## Need
+
+Typed food, water, shelter, or storage requirement owned by a live entity and
+assessed into a bounded authoritative pressure history. A need interpretation is
+the filtered qualitative label and prose safe for deliberate NPC-facing use.
+
 ## Definition
 
 **Purpose**

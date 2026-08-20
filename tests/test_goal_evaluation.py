@@ -20,6 +20,13 @@ from living_world.goals import (
     SustainedNeedCriterion,
     default_criterion_evaluators,
 )
+from living_world.needs import (
+    NeedAssessment,
+    NeedDefinition,
+    NeedKind,
+    NeedLevel,
+    NeedState,
+)
 from living_world.repositories.sqlite_repository import SQLiteRepository
 from living_world.simulation.simulation_engine import SimulationEngine
 
@@ -475,3 +482,139 @@ def test_progress_evidence_persists_across_save_and_resume(tmp_path: object) -> 
     loaded = SimulationEngine(repository)
     assert loaded.state.objective_states[objective.id].evidence == expected
     assert "4 of 10" in expected[-1].description
+
+
+def test_sustained_need_evaluator_requires_consecutive_current_history() -> None:
+    engine, owner_id = _engine()
+    engine.state.entities[owner_id].attributes.update(
+        {"population": 10, "resources": {"water": 9}}
+    )
+    engine.needs.create(
+        NeedDefinition("need_water", owner_id, NeedKind.WATER, 1, 0.2, 0.5, 3)
+    )
+    evaluator = default_criterion_evaluators()[SustainedNeedCriterion]
+    criterion = SustainedNeedCriterion("water", 0.2, 2)
+
+    first = evaluator.evaluate(criterion, owner_id=owner_id, state=engine.state)
+    assert first.disposition is CriterionDisposition.UNAVAILABLE
+    engine.run(2)
+    result = evaluator.evaluate(criterion, owner_id=owner_id, state=engine.state)
+    # The scheduler has advanced beyond the final recorded tick until the next pass.
+    assert result.disposition is CriterionDisposition.UNAVAILABLE
+    engine.state.tick -= 1
+    result = evaluator.evaluate(criterion, owner_id=owner_id, state=engine.state)
+    assert result.disposition is CriterionDisposition.SATISFIED
+    assert "ordered pressures [0.1, 0.1]" in result.description
+    assert result.source_event_ids == tuple(sorted(result.source_event_ids))
+
+
+def test_sustained_need_pressure_change_appends_evidence_then_is_idempotent() -> None:
+    engine, owner_id = _engine()
+    owner = engine.state.entities[owner_id]
+    owner.attributes.update({"population": 10, "resources": {"food": 8}})
+    engine.needs.create(
+        NeedDefinition("need_food", owner_id, NeedKind.FOOD, 1, 0.5, 0.8, 2)
+    )
+    objective = _objective("food", SustainedNeedCriterion("food", 0.1, 2))
+    _create(engine, owner_id, (objective,))
+
+    engine.step()
+    owner.attributes["resources"] = {"food": 7}
+    engine.step()
+    before = len(engine.state.objective_states[objective.id].evidence)
+    owner.attributes["resources"] = {"food": 6}
+    engine.step()
+    changed = len(engine.state.objective_states[objective.id].evidence)
+    assert changed == before + 1
+    assert "ordered pressures [0.3, 0.4]" in (
+        engine.state.objective_states[objective.id].evidence[-1].description
+    )
+    assert engine.state.need_states["need_food"].current.level is NeedLevel.SECURE
+
+    engine.step()
+    stable_sequence = len(engine.state.objective_states[objective.id].evidence)
+    engine.step()
+    assert len(engine.state.objective_states[objective.id].evidence) == stable_sequence
+
+
+def test_sustained_need_maximum_above_one_passes() -> None:
+    engine, owner_id = _engine()
+    engine.state.entities[owner_id].attributes.update(
+        {"population": 10, "resources": {"food": 0}}
+    )
+    engine.needs.create(
+        NeedDefinition("need_food", owner_id, NeedKind.FOOD, 1, 0.2, 0.5, 2)
+    )
+    engine.run(2)
+    engine.state.tick = 1
+    evaluator = default_criterion_evaluators()[SustainedNeedCriterion]
+    result = evaluator.evaluate(
+        SustainedNeedCriterion("food", 1.5, 2),
+        owner_id=owner_id,
+        state=engine.state,
+    )
+    assert result.disposition is CriterionDisposition.SATISFIED
+
+
+@pytest.mark.parametrize(
+    ("mode", "reason"),
+    (
+        ("missing", "unique need definition"),
+        ("short", "assessment window is too short"),
+        ("incomplete", "assessment history is incomplete"),
+        ("nonconsecutive", "assessment history is not consecutive"),
+        ("unavailable", "an assessment is unavailable"),
+    ),
+)
+def test_sustained_need_unavailable_reasons_are_stable(mode: str, reason: str) -> None:
+    engine, owner_id = _engine()
+    evaluator = default_criterion_evaluators()[SustainedNeedCriterion]
+    if mode != "missing":
+        window = 1 if mode == "short" else 3
+        definition = engine.needs.create(
+            NeedDefinition("need_food", owner_id, NeedKind.FOOD, 1, 0.2, 0.5, window)
+        )
+        if mode == "nonconsecutive":
+            first = NeedAssessment(0, NeedLevel.SECURE, 1, 1, 0, 0.0)
+            last = NeedAssessment(2, NeedLevel.SECURE, 1, 1, 0, 0.0)
+            engine.state.tick = 2
+            engine.state.need_states[definition.id] = NeedState(
+                definition.id, last, (first, last)
+            )
+        elif mode == "unavailable":
+            first = NeedAssessment(0, NeedLevel.SECURE, 1, 1, 0, 0.0)
+            last = NeedAssessment(1, NeedLevel.UNAVAILABLE, None, None, None, None)
+            engine.state.tick = 1
+            engine.state.need_states[definition.id] = NeedState(
+                definition.id, last, (first, last)
+            )
+    result = evaluator.evaluate(
+        SustainedNeedCriterion("food", 0.5, 2),
+        owner_id=owner_id,
+        state=engine.state,
+    )
+    assert result.disposition is CriterionDisposition.UNAVAILABLE
+    assert reason in result.description
+
+
+def test_sustained_need_sources_exclude_unrelated_same_subject_events() -> None:
+    engine, owner_id = _engine()
+    engine.state.entities[owner_id].attributes.update(
+        {"population": 1, "resources": {"food": 1}}
+    )
+    definition = engine.needs.create(
+        NeedDefinition("need_food", owner_id, NeedKind.FOOD, 1, 0.2, 0.5, 2)
+    )
+    unrelated = engine.events.record(kind="unrelated", subject_id=definition.id)
+    engine.run(2)
+    engine.state.tick = 1
+    result = default_criterion_evaluators()[SustainedNeedCriterion].evaluate(
+        SustainedNeedCriterion("food", 0.5, 2),
+        owner_id=owner_id,
+        state=engine.state,
+    )
+    assert unrelated.id not in result.source_event_ids
+    assert all(
+        engine.state.events[event_id].kind in {"need_created", "need_level_changed"}
+        for event_id in result.source_event_ids
+    )

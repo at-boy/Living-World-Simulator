@@ -1,5 +1,11 @@
 # Living World Simulator – Project Journal
 
+## Task 19 — settlement needs
+
+Introduced authoritative settlement need pressure after ordinary systems and
+before goals. NPC projection remains qualitative, while all action authority
+continues through the existing gateway.
+
 This document records the evolution of the project.
 
 Unlike the CHANGELOG, this journal focuses on architectural decisions,
