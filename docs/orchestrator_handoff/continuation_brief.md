@@ -10,14 +10,13 @@ be changed.
 At this handoff checkpoint:
 
 - current branch: `milestone/v0.6`;
-- last implementation merge: `033ed60` (`Merge Task 18a objective evaluation events`);
-- current milestone head and `origin/milestone/v0.6`: `033ed60` before the
+- last implementation merge: `43405ee` (`Merge Task 15d NPC-safe spatial perception`);
+- current milestone head and `origin/milestone/v0.6`: `43405ee` before the
   documentation-only planning update that may follow this brief;
 - `origin/main`: `12f2f17` and intentionally unchanged;
 - worktree: clean;
-- next authorized task: Task 15d on
-  `task/15d-npc-spatial-perception`;
-- Task 19 must not start before Task 15d is independently reviewed, merged,
+- next authorized task: Task 19 on `task/19-settlement-needs`;
+- Task 19a must not start before Task 19 is independently reviewed, merged,
   and pushed.
 
 Always verify these statements with `git status --short`, `git branch -vv`, and
@@ -40,6 +39,7 @@ reviewed, corrected where necessary, validated, committed, merged with
 | 17a | Deterministic dispatch lifecycle, gateway, and schema-v5 persistence | `9c006fc` |
 | 18 | Engine-owned goals/objectives, schema-v6 persistence, inspection, and filtered interpretations | `0fe099d` |
 | 18a | Deterministic criterion evaluation, lifecycle transitions, and evidence | `033ed60` |
+| 15d | NPC-safe qualitative spatial and direct-road perception | `43405ee` |
 
 Task reports under `docs/subagent_execution_plan/v0_6/` contain exact files,
 interfaces, review corrections, and validation evidence. ADR-0015 through
@@ -48,42 +48,42 @@ contracts.
 
 ## Current validation baseline
 
-The final reviewed Task 18a delivery passed:
+The final reviewed Task 15d delivery passed:
 
 | Command | Result |
 | --- | --- |
-| Focused Task 18a goal/evaluation/persistence/scenario/engine suite | 94 tests passed |
-| `make` | Ruff and Black passed; 569 pytest tests passed; examples 001–030 passed |
-| `make examples` | Examples 001–030 passed |
+| Focused Task 15d spatial/domain/context suite | 69 tests passed |
+| `make` | Ruff and Black passed; 610 pytest tests passed; examples 001–031 passed |
+| `make examples` | Examples 001–031 passed |
 | `git diff --check` | Passed |
 
 These results are a checkpoint, not a substitute for rerunning validation on
 future task branches.
 
-## Next task: Task 15d
+## Next task: Task 19
 
-Task 15d is authorized because Tasks 15b and 18a are reviewed and merged. Its binding
+Task 19 is authorized because Tasks 18a and 15d are reviewed and merged. Its binding
 artifacts are:
 
-- `docs/subagent_execution_plan/v0_6/15d_npc_safe_spatial_perception.md`
-- `docs/subagent_execution_plan/v0_6/15d_npc_safe_spatial_perception-prombt.md`
+- `docs/subagent_execution_plan/v0_6/19_settlement_needs_pressure.md`
+- `docs/subagent_execution_plan/v0_6/19_settlement_needs_pressure-prombt.md`
 
-Create and push `task/15d-npc-spatial-perception` from the verified current
-`milestone/v0.6` head. Implement only qualitative translation of the explicitly
-selected observer, subject, authoritative placements, and caller-filtered
-direct road, plus the documented coordinate-leak boundary correction.
+Create and push `task/19-settlement-needs` from the verified current
+`milestone/v0.6` head. Implement only the typed need domain, deterministic
+assessment, sustained-need evaluator, schema-v7 persistence, privileged
+inspection, and filtered qualitative interpretations in the binding plan.
 
-Before implementation, reread the Task 15b report, ADR-0016, the existing
-perception/context boundaries, and the Task 18a report. The Task 15d plan and
-prompt contain the binding translation semantics and exact allowed-file
+Before implementation, reread the Task 18a and Task 15d reports, goal evaluator,
+resource/population/housing systems, persistence surface, and NPC boundary. The
+Task 19 plan and prompt contain the binding semantics and exact allowed-file
 boundary. Amend both explicitly before any expansion.
 
 ## Remaining approved sequence
 
 Continue one reviewed task at a time in this order:
 
-1. Task 15d — NPC-safe qualitative spatial and direct-road perception.
-2. Tasks 19 and 19a — needs, consumption, maintenance, and consequences.
+1. Task 19 — settlement needs and resource pressure.
+2. Task 19a — consumption, maintenance, and consequences.
 3. Tasks 20, 20a, and 20b — work records, proposal gateway, and execution.
 4. Task 21 — settlement development stages.
 5. Task 22 — deterministic recorded proposal tapes.

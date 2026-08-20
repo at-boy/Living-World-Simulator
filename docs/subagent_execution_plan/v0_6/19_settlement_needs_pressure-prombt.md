@@ -15,4 +15,10 @@ Use the exact allowed-file boundary and Task 18a integration contract in the
 binding Task 19 plan. Implement and register the concrete
 `SustainedNeedCriterion` evaluator through Task 18a's protocol, schedule needs
 assessment before goal evaluation, and keep exact need state/evidence out of
-NPC context. Amend this prompt and the plan before expanding the boundary.
+NPC context. The plan's model fields, pressure arithmetic, source scoping,
+level precedence, history retention, event taxonomy, schema-v7 migration,
+sustained-duration semantics, inspection shape, and fixed qualitative NPC
+projection are binding; do not invent alternatives. Strengthen the final NPC
+boundary for need IDs/numbers, but do not automatically inject need
+interpretations into NPC context. Amend this prompt and the plan before
+expanding the boundary.
