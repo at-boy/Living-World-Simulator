@@ -1,5 +1,9 @@
 # Task 19a subagent prompt — consumption and maintenance
 
+Planning gate: this prompt remains a high-level outline and must not be issued
+to an implementation subagent until it and the binding plan have been amended
+into a decision-complete contract on `milestone/v0.6`.
+
 Work only on `task/19a-consumption-maintenance` after Task 19 merges. Implement
 only deterministic configured consumption, storage/spoilage, upkeep,
 deterioration/recovery, manager-owned mutations/events, persistence and

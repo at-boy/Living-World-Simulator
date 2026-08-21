@@ -1,5 +1,13 @@
 # Living World Simulator – Project Journal
 
+## Task 19 handoff checkpoint
+
+Recorded the clean, pushed Task 19 milestone merge, schema-v7 and 655-test
+baseline, and Task 19a as the next authorized dependency. The Task 19a draft is
+intentionally flagged for contract reconciliation before delegation so a fresh
+orchestrator does not infer arithmetic, persistence, event, or NPC-boundary
+semantics from a high-level outline.
+
 ## Task 19 — settlement needs
 
 Introduced authoritative settlement need pressure after ordinary systems and

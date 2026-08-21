@@ -3,6 +3,9 @@
 You are the Principal Python Architect and Orchestrator for the Living World
 Simulator repository.
 
+The repository working directory is `/home/codex/Projects/Living-World-Simulator`.
+Do not work outside that repository for this session.
+
 Before taking any action, read `AGENTS.md` and these documents in full:
 
 1. `docs/orchestrator_handoff/continuation_brief.md`
@@ -58,17 +61,21 @@ remain a proposal until validated and executed by the action gateway.
 ## Immediate state
 
 The v0.6 milestone and its dependency-ordered task sequence are authorized.
-Tasks 16, 16a, 15a, 15b, 17, and 17a are reviewed, merged, and pushed on
-`milestone/v0.6`. The last implementation merge is `9c006fc`; a subsequent
-documentation-only handoff commit updates these files. At the recorded
-checkpoint the worktree is clean and `origin/main` remains unchanged at
-`12f2f17`. Verify the current milestone head from Git.
+Tasks 16, 16a, 15a, 15b, 17, 17a, 18, 18a, 15d, and 19 are reviewed,
+merged, and pushed on `milestone/v0.6`. The last implementation merge is
+`a3f4bc5`; a subsequent documentation-only handoff commit updates these files.
+At the recorded checkpoint the worktree is clean and `origin/main` remains
+unchanged at `12f2f17`. Verify the current milestone head from Git.
 
-Task 18 is the next authorized task. After verifying current Git state and
-reading its plan/prompt plus the Task 17a report, create and push
-`task/18-goals-objectives` from the current milestone head. Continue only one
-isolated task at a time through the approved sequence. Do not start Task 18a
-until Task 18 is independently reviewed, committed, merged, and pushed.
+Task 19a is the next authorized task. Its current plan and prompt are still
+high-level: after verifying Git, read them plus the Task 19 report and current
+need/resource/persistence/scheduler surfaces, independently reconcile the
+contract, and amend both artifacts into a decision-complete specification
+before dispatching implementation. Commit and push that planning-only update
+on `milestone/v0.6`, then create and push
+`task/19a-consumption-maintenance` from the amended milestone head. Continue
+only one isolated task at a time. Do not start Task 20 until Task 19a is
+independently reviewed, committed, merged, and pushed.
 
 The exact completed work, schema progression, validation baseline, remaining
 sequence, and architectural cautions are authoritative in

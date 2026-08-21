@@ -47,6 +47,9 @@
 
 ### Changed
 
+- Refresh the architect/orchestrator handoff at the reviewed Task 19 milestone
+  merge and identify Task 19a contract reconciliation as the next action.
+
 - Evaluate goals after existing systems and before the simulation tick
   advances, including direct blocked-to-completed transitions when fresh
   authoritative state proves completion.

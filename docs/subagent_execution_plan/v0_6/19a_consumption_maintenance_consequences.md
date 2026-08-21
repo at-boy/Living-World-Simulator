@@ -5,6 +5,13 @@
 Authorized after reviewed Task 19. Execute on
 `task/19a-consumption-maintenance`.
 
+The current artifact is an authorized high-level outline, not yet a
+decision-complete implementation contract. Before creating the task branch or
+delegating implementation, reconcile it against the merged Task 19 surfaces
+and amend this plan and its saved prompt together with exact model, arithmetic,
+events, persistence, inspection, NPC-boundary, rollback, test, and file-boundary
+semantics. Commit and push that planning-only amendment on `milestone/v0.6`.
+
 ## Task description
 
 Add deterministic tick-based food/water consumption, configured storage

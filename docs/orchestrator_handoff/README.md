@@ -8,10 +8,11 @@ Start the new session by providing
 It directs the session to read
 [`continuation_brief.md`](continuation_brief.md) before it acts.
 
-The current checkpoint is the reviewed merge of Task 17a on
-`milestone/v0.6`. The next authorized task is Task 18. The startup prompt and
-brief intentionally direct the new session to verify those facts against Git
-before creating the next pushed task branch.
+The current checkpoint is the reviewed merge of Task 19 on
+`milestone/v0.6`. The next authorized task is Task 19a. Its existing plan and
+prompt must first be reconciled with the merged Task 19 implementation and
+amended into a decision-complete contract. The startup prompt and brief direct
+the new session to verify Git before planning or creating the next task branch.
 
 The cross-milestone task index is
 [`docs/subagent_execution_plan/README.md`](../subagent_execution_plan/README.md).

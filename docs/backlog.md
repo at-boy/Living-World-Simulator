@@ -87,7 +87,7 @@ and privileged inspection are implemented; pathfinding, terrain, motion, and
 regional-scale geography remain deferred.
 Task 15d implements an engine-owned qualitative spatial and direct-road
 perception translation layer and closes the stored-observation coordinate-leak
-gap without adding navigation or visibility simulation. Task 19 is next.
+gap without adding navigation or visibility simulation.
 ADR-0017 and Task 17 implement partial off-map references, deterministic contact
 state, schema-v4 persistence, privileged inspection, and a filtered qualitative
 interpretation. Dispatch and trade transfer remain assigned to Task 17a.
@@ -96,9 +96,15 @@ proposals; generic work, objectives, and remote-place simulation remain deferred
 Task 18 now implements durable goal/objective definitions, managed lifecycle
 state, persistence, privileged inspection, and filtered NPC interpretations.
 Task 18a implements deterministic criterion evaluation and evidence production
-for resources, constructed capabilities, capacity, and external connections.
-Sustained-needs evaluation remains Task 19 integration, and settlement-stage
-evaluation remains Task 21 integration.
+for resources, constructed capabilities, capacity, external connections, and,
+after Task 19, sustained need pressure. Settlement-stage evaluation remains
+Task 21 integration.
+
+Task 19 now implements authoritative food, water, shelter, and storage needs,
+bounded assessment history, sustained-need objective evidence, schema-v7
+persistence, privileged inspection, and qualitative NPC-safe interpretation.
+Consumption, storage/spoilage, upkeep, and deterioration consequences remain
+separately scoped to Task 19a; work selection remains Task 20 and later.
 
 - Births
 - Childhood and apprenticeships

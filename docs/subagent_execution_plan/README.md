@@ -71,7 +71,7 @@ one documented, reviewed task branch at a time. Current additional plans:
 - **17a External dispatch lifecycle:** [plan](v0_6/17a_external_dispatch_lifecycle.md), [prompt](v0_6/17a_external_dispatch_lifecycle-prombt.md)
 - **18 Goals and objective graphs:** [plan](v0_6/18_goals_objective_graphs.md), [prompt](v0_6/18_goals_objective_graphs-prombt.md)
 - **18a Objective evaluation/events:** [plan](v0_6/18a_objective_evaluation_events.md), [prompt](v0_6/18a_objective_evaluation_events-prombt.md)
-- **19 Settlement needs/pressure:** [plan](v0_6/19_settlement_needs_pressure.md), [prompt](v0_6/19_settlement_needs_pressure-prombt.md)
+- **19 Settlement needs/pressure (complete):** [plan](v0_6/19_settlement_needs_pressure.md), [prompt](v0_6/19_settlement_needs_pressure-prombt.md), [report](v0_6/19_settlement_needs_pressure-report.md)
 - **19a Consumption/maintenance:** [plan](v0_6/19a_consumption_maintenance_consequences.md), [prompt](v0_6/19a_consumption_maintenance_consequences-prombt.md)
 - **20 Work orders/reservations:** [plan](v0_6/20_work_orders_reservations.md), [prompt](v0_6/20_work_orders_reservations-prombt.md)
 - **20a Proposal-to-work gateway:** [plan](v0_6/20a_proposal_work_gateway.md), [prompt](v0_6/20a_proposal_work_gateway-prombt.md)
