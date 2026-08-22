@@ -30,6 +30,7 @@ from living_world.managers.npc_relationship_manager import NPCRelationshipManage
 from living_world.managers.observation_manager import ObservationManager
 from living_world.managers.relationship_manager import RelationshipManager
 from living_world.managers.resource_definition_manager import ResourceDefinitionManager
+from living_world.needs.consequence import ConsequenceManager, ConsequenceSystem
 from living_world.needs.manager import NeedManager
 from living_world.needs.system import NeedAssessmentSystem
 from living_world.repositories.graph_repository import GraphRepository
@@ -123,8 +124,13 @@ class SimulationEngine:
         self._registered_systems: list[SimulationSystem] = []
         self._need_assessment_system: NeedAssessmentSystem | None = None
         self._goal_evaluation_system: GoalEvaluationSystem | None = None
+        self._consequence_system: ConsequenceSystem | None = None
 
         self._resources = ResourceSystem()
+
+        self._consequences = ConsequenceManager(
+            self._state, self._resources, self._entities, self._events
+        )
 
         self._external_dispatches = ExternalDispatchManager(
             self._state,
@@ -221,6 +227,7 @@ class SimulationEngine:
                 self._entities,
             )
         )
+        self._consequence_system = ConsequenceSystem(self._consequences)
         self._need_assessment_system = NeedAssessmentSystem(self._needs)
         self._goal_evaluation_system = GoalEvaluationSystem(self._goals)
         self._rebuild_scheduler()
@@ -272,6 +279,10 @@ class SimulationEngine:
         return self._needs
 
     @property
+    def consequences(self) -> ConsequenceManager:
+        return self._consequences
+
+    @property
     def observations(
         self,
     ) -> ObservationManager:
@@ -311,6 +322,8 @@ class SimulationEngine:
         self._scheduler = SimulationScheduler(self._state)
         for registered in self._registered_systems:
             self._scheduler.register(registered)
+        if self._consequence_system is not None:
+            self._scheduler.register(self._consequence_system)
         if self._need_assessment_system is not None:
             self._scheduler.register(self._need_assessment_system)
         if self._goal_evaluation_system is not None:

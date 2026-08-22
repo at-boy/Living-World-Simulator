@@ -556,3 +556,34 @@ def test_all_owner_scopes_are_supported_and_owner_removal_is_guarded(
                 ),
             ),
         )
+
+
+def test_goal_owner_rejects_existing_maintenance_capability() -> None:
+    from living_world.needs import MaintenancePolicy, MaintenanceRequirement
+
+    engine = _engine()
+    owner = engine.state.entities["entity_000001"]
+    capability = engine.entities.create(
+        definition_key="settlement",
+        name="Well",
+        attributes={"is_constructed": True},
+    )
+    engine.relationships.create(
+        kind="owns", source_id=owner.id, target_id=capability.id
+    )
+    engine.consequences.create_maintenance(
+        MaintenancePolicy(
+            "maintenance_well",
+            owner.id,
+            capability.id,
+            "Well",
+            (MaintenanceRequirement("wood", 1),),
+            1,
+            1,
+            1,
+            1,
+        )
+    )
+    goal, objectives = _records()
+    with pytest.raises(ValueError, match="maintenance capability"):
+        engine.goals.create(replace(goal, owner_id=capability.id), objectives)

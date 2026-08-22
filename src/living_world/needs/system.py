@@ -73,28 +73,33 @@ class NeedAssessmentSystem:
             if definition.kind is NeedKind.SHELTER
             else "storage_capacity"
         )
-        targets = {
-            r.target_id
-            for r in state.relationships.values()
-            if r.kind == "owns"
-            and r.source_id == definition.owner_id
-            and r.destroyed_tick is None
-            and r.created_tick <= state.tick
-            and r.target_id != definition.owner_id
-        }
-        entities = [owner]
-        for target_id in sorted(targets):
-            target = state.entities.get(target_id)
-            if target is None:
-                raise ValueError(
-                    f"Ownership relationship targets unknown entity '{target_id}'."
-                )
-            if target.destroyed_tick is None:
-                entities.append(target)
-        return sum(
-            _nonnegative_integer(entity.attributes.get(attribute, 0), attribute)
-            for entity in entities
-        )
+        return owned_capacity(state, definition.owner_id, attribute)
+
+
+def owned_capacity(state: WorldState, owner_id: str, attribute: str) -> int:
+    owner = state.entities[owner_id]
+    targets = {
+        r.target_id
+        for r in state.relationships.values()
+        if r.kind == "owns"
+        and r.source_id == owner_id
+        and r.destroyed_tick is None
+        and r.created_tick <= state.tick
+        and r.target_id != owner_id
+    }
+    entities = [owner]
+    for target_id in sorted(targets):
+        target = state.entities.get(target_id)
+        if target is None:
+            raise ValueError(
+                f"Ownership relationship targets unknown entity '{target_id}'."
+            )
+        if target.destroyed_tick is None:
+            entities.append(target)
+    return sum(
+        _nonnegative_integer(entity.attributes.get(attribute, 0), attribute)
+        for entity in entities
+    )
 
 
 def _nonnegative_integer(value: object, name: str) -> int:

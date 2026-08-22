@@ -231,3 +231,15 @@ def test_engine_orders_late_system_before_needs_and_goals_last() -> None:
     engine.register_system(Replenish())  # type: ignore[arg-type]
     engine.step()
     assert engine.state.need_states[definition.id].current.available == 10
+
+
+def test_same_tick_consumption_reduces_food_before_need_assessment() -> None:
+    from living_world.needs import ConsumptionPolicy
+
+    engine, owner_id = _engine(population=2)
+    definition = engine.needs.create(_definition(owner_id))
+    engine.consequences.create_consumption(
+        ConsumptionPolicy("consumption_town", owner_id, 2, 1)
+    )
+    engine.step()
+    assert engine.state.need_states[definition.id].current.available == 4

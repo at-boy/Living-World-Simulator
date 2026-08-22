@@ -19,5 +19,7 @@ only a kind label and fixed qualitative description.
 
 ## Consequences
 
-Task 19a can introduce consumption before assessment without changing scheduler
-semantics. Later NPC action still uses the cognition proposal and action gateway.
+Consumption, maintenance, and storage consequences run atomically after ordinary
+systems and before needs assessment. Managers own resource and lifecycle
+mutation; terminal capabilities cease contributing capacity. Later NPC action
+still uses the cognition proposal and action gateway.

@@ -258,6 +258,11 @@ class GoalManager:
         owner = self._state.entities.get(goal.owner_id)
         if owner is None or owner.destroyed_tick is not None:
             raise ValueError("Goal owner must be a live entity.")
+        if any(
+            policy.capability_id == goal.owner_id
+            for policy in self._state.maintenance_policies.values()
+        ):
+            raise ValueError("A maintenance capability cannot own a goal.")
         self._text(goal.id, "goal id")
         self._visible_text(goal.label, "goal label")
         self._text(goal.purpose, "goal purpose")

@@ -618,3 +618,29 @@ def test_sustained_need_sources_exclude_unrelated_same_subject_events() -> None:
         engine.state.events[event_id].kind in {"need_created", "need_level_changed"}
         for event_id in result.source_event_ids
     )
+
+
+def test_consequence_need_sustained_goal_evidence_flow() -> None:
+    from living_world.needs import ConsumptionPolicy
+
+    engine, owner_id = _engine()
+    engine.state.entities[owner_id].attributes.update(
+        {"population": 1, "resources": {"food": 1}}
+    )
+    engine.needs.create(
+        NeedDefinition("need_food", owner_id, NeedKind.FOOD, 1, 0.2, 0.5, 2)
+    )
+    objective = _objective("food", SustainedNeedCriterion("food", 1.0, 2))
+    _create(engine, owner_id, (objective,))
+    engine.consequences.create_consumption(
+        ConsumptionPolicy("consumption_town", owner_id, 1, 1)
+    )
+    engine.run(2)
+    assert engine.state.need_states["need_food"].current.available == 0
+    evidence = engine.state.objective_states[objective.id].evidence
+    assert evidence
+    assert "ordered pressures [1.0, 1.0]" in evidence[-1].description
+    assert all(
+        engine.state.events[event_id].kind in {"need_created", "need_level_changed"}
+        for event_id in evidence[-1].source_event_ids
+    )

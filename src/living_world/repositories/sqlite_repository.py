@@ -40,14 +40,25 @@ from living_world.goals import (
     SettlementStageCriterion,
     SustainedNeedCriterion,
 )
+from living_world.managers.definition_manager import DefinitionManager
+from living_world.managers.entity_manager import EntityManager
 from living_world.managers.event_manager import EventManager
 from living_world.needs import (
+    ConsequenceManager,
+    ConsumptionPolicy,
+    ConsumptionState,
+    MaintenancePolicy,
+    MaintenanceRequirement,
+    MaintenanceState,
     NeedAssessment,
     NeedDefinition,
     NeedKind,
     NeedLevel,
     NeedManager,
     NeedState,
+    StoragePolicy,
+    StorageResourceRule,
+    StorageState,
 )
 from living_world.spatial.manager import SpatialManager, placement_order_key
 from living_world.spatial.model import (
@@ -58,9 +69,10 @@ from living_world.spatial.model import (
     Point,
 )
 from living_world.state.world_state import WorldState
+from living_world.systems.resource_system import ResourceSystem
 
-_SCHEMA_VERSION = 7
-_SUPPORTED_SCHEMA_VERSIONS = frozenset({1, 2, 3, 4, 5, 6, 7})
+_SCHEMA_VERSION = 8
+_SUPPORTED_SCHEMA_VERSIONS = frozenset({1, 2, 3, 4, 5, 6, 7, 8})
 Record = (
     Entity
     | Relationship
@@ -236,6 +248,34 @@ def _serialize_world(state: WorldState) -> dict[str, object]:
             _serialize_need_state(item)
             for item in sorted(
                 state.need_states.values(), key=lambda item: item.need_id
+            )
+        ],
+        "consumption_policies": [
+            _serialize_consumption_policy(x)
+            for x in sorted(state.consumption_policies.values(), key=lambda x: x.id)
+        ],
+        "consumption_states": [
+            _serialize_consumption_state(x)
+            for x in sorted(
+                state.consumption_states.values(), key=lambda x: x.policy_id
+            )
+        ],
+        "storage_policies": [
+            _serialize_storage_policy(x)
+            for x in sorted(state.storage_policies.values(), key=lambda x: x.id)
+        ],
+        "storage_states": [
+            _serialize_storage_state(x)
+            for x in sorted(state.storage_states.values(), key=lambda x: x.policy_id)
+        ],
+        "maintenance_policies": [
+            _serialize_maintenance_policy(x)
+            for x in sorted(state.maintenance_policies.values(), key=lambda x: x.id)
+        ],
+        "maintenance_states": [
+            _serialize_maintenance_state(x)
+            for x in sorted(
+                state.maintenance_states.values(), key=lambda x: x.policy_id
             )
         ],
         "events": [_serialize_event(event) for event in state.events.values()],
@@ -491,6 +531,67 @@ def _serialize_need_state(value: NeedState) -> dict[str, object]:
     }
 
 
+def _serialize_consumption_policy(x: ConsumptionPolicy) -> dict[str, object]:
+    return {
+        "id": x.id,
+        "owner_id": x.owner_id,
+        "food_per_person_per_tick": x.food_per_person_per_tick,
+        "water_per_person_per_tick": x.water_per_person_per_tick,
+    }
+
+
+def _serialize_consumption_state(x: ConsumptionState) -> dict[str, object]:
+    return {
+        "policy_id": x.policy_id,
+        "last_processed_tick": x.last_processed_tick,
+        "food_shortage": x.food_shortage,
+        "water_shortage": x.water_shortage,
+    }
+
+
+def _serialize_storage_policy(x: StoragePolicy) -> dict[str, object]:
+    return {
+        "id": x.id,
+        "owner_id": x.owner_id,
+        "resources": [
+            {"resource": r.resource, "spoilage_per_tick": r.spoilage_per_tick}
+            for r in x.resources
+        ],
+    }
+
+
+def _serialize_storage_state(x: StorageState) -> dict[str, object]:
+    return {
+        "policy_id": x.policy_id,
+        "last_processed_tick": x.last_processed_tick,
+        "overflowing": x.overflowing,
+        "spoiling": x.spoiling,
+    }
+
+
+def _serialize_maintenance_policy(x: MaintenancePolicy) -> dict[str, object]:
+    return {
+        "id": x.id,
+        "owner_id": x.owner_id,
+        "capability_id": x.capability_id,
+        "label": x.label,
+        "upkeep": [{"resource": r.resource, "amount": r.amount} for r in x.upkeep],
+        "initial_condition": x.initial_condition,
+        "maximum_condition": x.maximum_condition,
+        "deterioration_per_unpaid_tick": x.deterioration_per_unpaid_tick,
+        "recovery_per_paid_tick": x.recovery_per_paid_tick,
+    }
+
+
+def _serialize_maintenance_state(x: MaintenanceState) -> dict[str, object]:
+    return {
+        "policy_id": x.policy_id,
+        "condition": x.condition,
+        "last_processed_tick": x.last_processed_tick,
+        "upkeep_shortage": x.upkeep_shortage,
+    }
+
+
 def _serialize_objective_state(value: ObjectiveState) -> dict[str, object]:
     return {
         "id": value.objective_id,
@@ -702,6 +803,50 @@ def _deserialize_world(payload: object, *, schema_version: int) -> WorldState:
         if schema_version >= 7
         else {}
     )
+    state.consumption_policies = (
+        _records(
+            payload_mapping.get("consumption_policies", []),
+            _deserialize_consumption_policy,
+        )
+        if schema_version >= 8
+        else {}
+    )
+    state.consumption_states = (
+        _records(
+            payload_mapping.get("consumption_states", []),
+            _deserialize_consumption_state,
+        )
+        if schema_version >= 8
+        else {}
+    )
+    state.storage_policies = (
+        _records(
+            payload_mapping.get("storage_policies", []), _deserialize_storage_policy
+        )
+        if schema_version >= 8
+        else {}
+    )
+    state.storage_states = (
+        _records(payload_mapping.get("storage_states", []), _deserialize_storage_state)
+        if schema_version >= 8
+        else {}
+    )
+    state.maintenance_policies = (
+        _records(
+            payload_mapping.get("maintenance_policies", []),
+            _deserialize_maintenance_policy,
+        )
+        if schema_version >= 8
+        else {}
+    )
+    state.maintenance_states = (
+        _records(
+            payload_mapping.get("maintenance_states", []),
+            _deserialize_maintenance_state,
+        )
+        if schema_version >= 8
+        else {}
+    )
     for dispatch in state.external_dispatches.values():
         reference = state.external_world_references.get(dispatch.reference_id)
         if reference is None:
@@ -736,6 +881,13 @@ def _deserialize_world(payload: object, *, schema_version: int) -> WorldState:
     SpatialManager(state, EventManager(state)).validate_loaded_state()
     GoalManager(state, EventManager(state)).validate_loaded_state()
     NeedManager(state, EventManager(state)).validate_loaded_state()
+    spatial = SpatialManager(state, EventManager(state))
+    ConsequenceManager(
+        state,
+        ResourceSystem(),
+        EntityManager(state, DefinitionManager(), spatial),
+        EventManager(state),
+    ).validate_loaded_state()
     return state
 
 
@@ -1002,6 +1154,105 @@ def _deserialize_need_state(value: Mapping[str, object]) -> NeedState:
         _string(value["need_id"]),
         current,
         tuple(_deserialize_need_assessment(item) for item in _list(value["history"])),
+    )
+
+
+def _checked(value: Mapping[str, object], keys: set[str]) -> Mapping[str, object]:
+    _exact_keys(value, keys)
+    return value
+
+
+def _deserialize_consumption_policy(value: Mapping[str, object]) -> ConsumptionPolicy:
+    v = _checked(
+        value,
+        {"id", "owner_id", "food_per_person_per_tick", "water_per_person_per_tick"},
+    )
+    return ConsumptionPolicy(
+        _string(v["id"]),
+        _string(v["owner_id"]),
+        _integer(v["food_per_person_per_tick"]),
+        _integer(v["water_per_person_per_tick"]),
+    )
+
+
+def _deserialize_consumption_state(value: Mapping[str, object]) -> ConsumptionState:
+    v = _checked(
+        value, {"policy_id", "last_processed_tick", "food_shortage", "water_shortage"}
+    )
+    return ConsumptionState(
+        _string(v["policy_id"]),
+        _optional_integer(v["last_processed_tick"]),
+        _boolean(v["food_shortage"]),
+        _boolean(v["water_shortage"]),
+    )
+
+
+def _deserialize_storage_policy(value: Mapping[str, object]) -> StoragePolicy:
+    v = _checked(value, {"id", "owner_id", "resources"})
+    rules = []
+    for item in _list(v["resources"]):
+        r = _checked(_mapping(item), {"resource", "spoilage_per_tick"})
+        rules.append(
+            StorageResourceRule(
+                _string(r["resource"]), _integer(r["spoilage_per_tick"])
+            )
+        )
+    return StoragePolicy(_string(v["id"]), _string(v["owner_id"]), tuple(rules))
+
+
+def _deserialize_storage_state(value: Mapping[str, object]) -> StorageState:
+    v = _checked(value, {"policy_id", "last_processed_tick", "overflowing", "spoiling"})
+    return StorageState(
+        _string(v["policy_id"]),
+        _optional_integer(v["last_processed_tick"]),
+        _boolean(v["overflowing"]),
+        _boolean(v["spoiling"]),
+    )
+
+
+def _deserialize_maintenance_policy(value: Mapping[str, object]) -> MaintenancePolicy:
+    v = _checked(
+        value,
+        {
+            "id",
+            "owner_id",
+            "capability_id",
+            "label",
+            "upkeep",
+            "initial_condition",
+            "maximum_condition",
+            "deterioration_per_unpaid_tick",
+            "recovery_per_paid_tick",
+        },
+    )
+    upkeep = []
+    for item in _list(v["upkeep"]):
+        r = _checked(_mapping(item), {"resource", "amount"})
+        upkeep.append(
+            MaintenanceRequirement(_string(r["resource"]), _integer(r["amount"]))
+        )
+    return MaintenancePolicy(
+        _string(v["id"]),
+        _string(v["owner_id"]),
+        _string(v["capability_id"]),
+        _string(v["label"]),
+        tuple(upkeep),
+        _integer(v["initial_condition"]),
+        _integer(v["maximum_condition"]),
+        _integer(v["deterioration_per_unpaid_tick"]),
+        _integer(v["recovery_per_paid_tick"]),
+    )
+
+
+def _deserialize_maintenance_state(value: Mapping[str, object]) -> MaintenanceState:
+    v = _checked(
+        value, {"policy_id", "condition", "last_processed_tick", "upkeep_shortage"}
+    )
+    return MaintenanceState(
+        _string(v["policy_id"]),
+        _integer(v["condition"]),
+        _optional_integer(v["last_processed_tick"]),
+        _boolean(v["upkeep_shortage"]),
     )
 
 

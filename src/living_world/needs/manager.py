@@ -194,6 +194,11 @@ class NeedManager:
         owner = self._state.entities.get(definition.owner_id)
         if owner is None or owner.destroyed_tick is not None:
             raise ValueError("Need owner must be a live entity.")
+        if any(
+            policy.capability_id == definition.owner_id
+            for policy in self._state.maintenance_policies.values()
+        ):
+            raise ValueError("A maintenance capability cannot own a need.")
 
     @staticmethod
     def _validate_assessment(

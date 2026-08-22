@@ -359,3 +359,16 @@ def test_assembler_rejects_need_ids_and_authoritative_numbers(description: str) 
 
     with pytest.raises(ValueError, match="internal IDs|numeric values"):
         NPCContextAssembler(state).assemble(holder_id="npc_1")
+
+
+def test_assembler_does_not_auto_inject_consequence_interpretations() -> None:
+    from living_world.needs import ConsumptionPolicy, ConsumptionState
+
+    state = make_state()
+    state.consumption_policies["consumption_town"] = ConsumptionPolicy(
+        "consumption_town", "npc_1", 1, 1
+    )
+    state.consumption_states["consumption_town"] = ConsumptionState("consumption_town")
+    context = NPCContextAssembler(state).assemble(holder_id="npc_1")
+    assert "consumption_town" not in repr(context)
+    assert "Food and water use" not in repr(context)

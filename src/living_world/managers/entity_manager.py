@@ -70,6 +70,21 @@ class EntityManager:
 
     def remove(self, entity_id: str) -> None:
         if any(
+            policy.owner_id == entity_id
+            for policies in (
+                self._state.consumption_policies,
+                self._state.storage_policies,
+                self._state.maintenance_policies,
+            )
+            for policy in policies.values()
+        ) or any(
+            policy.capability_id == entity_id
+            for policy in self._state.maintenance_policies.values()
+        ):
+            raise ValueError(
+                f"Entity '{entity_id}' cannot be removed while a consequence policy refers to it."
+            )
+        if any(
             need.owner_id == entity_id for need in self._state.need_definitions.values()
         ):
             raise ValueError(
@@ -99,6 +114,39 @@ class EntityManager:
         if self._removal_guard is not None:
             self._removal_guard.validate_entity_removal(entity_id)
         self._state.entities.pop(entity_id, None)
+
+    def mark_destroyed(self, entity_id: str, tick: int) -> None:
+        entity = self.get(entity_id)
+        if entity is None:
+            raise ValueError(f"Unknown entity '{entity_id}'.")
+        if not isinstance(tick, int) or isinstance(tick, bool):
+            raise TypeError("tick must be an integer.")
+        if tick < 0 or tick != self._state.tick:
+            raise ValueError("Destruction tick must be the current nonnegative tick.")
+        if entity.destroyed_tick is not None:
+            if entity.destroyed_tick == tick:
+                return
+            raise ValueError("Entity was destroyed at a different tick.")
+        if (
+            any(n.owner_id == entity_id for n in self._state.need_definitions.values())
+            or any(
+                g.owner_id == entity_id for g in self._state.goal_definitions.values()
+            )
+            or any(
+                d.source_entity_id == entity_id
+                for d in self._state.external_dispatches.values()
+            )
+            or any(
+                p.owner_id == entity_id
+                for p in (
+                    *self._state.consumption_policies.values(),
+                    *self._state.storage_policies.values(),
+                    *self._state.maintenance_policies.values(),
+                )
+            )
+        ):
+            raise ValueError("Entity occupies a role that requires it to remain live.")
+        entity.destroyed_tick = tick
 
     def set_attribute(
         self,

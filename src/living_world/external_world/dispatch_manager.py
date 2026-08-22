@@ -103,6 +103,11 @@ class ExternalDispatchManager:
         source = self._entities.get(source_entity_id)
         if source is None or source.destroyed_tick is not None:
             raise ValueError("Dispatch source must be a live entity.")
+        if any(
+            policy.capability_id == source_entity_id
+            for policy in self._state.maintenance_policies.values()
+        ):
+            raise ValueError("A maintenance capability cannot source a dispatch.")
         reference = self._references.get(reference_id)
         if reference is None:
             raise ValueError("Dispatch reference is unknown.")

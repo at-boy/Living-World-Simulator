@@ -1,5 +1,15 @@
 # Engine Glossary
 
+## Consequence phase
+
+Atomic deterministic application of consumption, maintenance, and storage after
+ordinary systems and before needs assessment.
+
+## Maintenance condition
+
+A bounded authoritative measure that causes terminal destruction at zero; it
+does not proportionally scale capability output.
+
 ## Need
 
 Typed food, water, shelter, or storage requirement owned by a live entity and

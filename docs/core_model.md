@@ -1,5 +1,10 @@
 # Core Runtime Model
 
+Consumption, storage, and maintenance policies configure an authoritative
+per-tick consequence phase. `ConsequenceManager` owns policy/state, resource,
+condition, lifecycle, and event mutation. Consequences run after ordinary
+systems and before needs and goals.
+
 Settlement needs are authoritative `NeedDefinition` and `NeedState` records.
 Their bounded assessment history describes availability, requirement, balance,
 pressure, and qualitative level without choosing action.

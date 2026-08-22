@@ -132,6 +132,12 @@ class NPCInformationBoundary:
             self._state.placements,
             self._state.need_definitions,
             self._state.need_states,
+            self._state.consumption_policies,
+            self._state.consumption_states,
+            self._state.storage_policies,
+            self._state.storage_states,
+            self._state.maintenance_policies,
+            self._state.maintenance_states,
         )
         return tuple(
             identifier for collection in collections for identifier in collection
@@ -181,9 +187,24 @@ class NPCInformationBoundary:
             )
             if number is not None
         )
-        return entity_numbers + spatial_numbers + need_numbers
+        consequence_numbers = tuple(
+            number
+            for collections in (
+                self._state.consumption_policies.values(),
+                self._state.consumption_states.values(),
+                self._state.storage_policies.values(),
+                self._state.storage_states.values(),
+                self._state.maintenance_policies.values(),
+                self._state.maintenance_states.values(),
+            )
+            for record in collections
+            for number in self._numeric_values(record)
+        )
+        return entity_numbers + spatial_numbers + need_numbers + consequence_numbers
 
     def _numeric_values(self, value: object) -> tuple[int | float, ...]:
+        from dataclasses import fields, is_dataclass
+
         from living_world.spatial.model import Bounds, Point
 
         if isinstance(value, Point):
@@ -195,6 +216,12 @@ class NPCInformationBoundary:
                 number
                 for item in value.values()
                 for number in self._numeric_values(item)
+            )
+        if is_dataclass(value):
+            return tuple(
+                number
+                for field in fields(value)
+                for number in self._numeric_values(getattr(value, field.name))
             )
         if isinstance(value, (tuple, list, set, frozenset)):
             return tuple(
