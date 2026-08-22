@@ -15,9 +15,11 @@ At this handoff checkpoint:
   checkpoint-only documentation update follows that merge;
 - `origin/main`: `12f2f17` and intentionally unchanged;
 - worktree: clean after the reviewed Task 20 merge;
-- next authorized task: Task 20a, subject to a fresh orchestrator checkpoint
-  and a decision-complete review of its plan and saved prompt;
+- next authorized task: Task 20a on `task/20a-work-action-gateway` after the
+  reviewed planning-only amendment that follows this brief;
 - Task 20 is independently reviewed, validated, committed, merged, and pushed;
+- Task 20a's plan and saved prompt have been reconciled against Task 20 and the
+  current action/NPC trust boundary and now bind the exact implementation;
 - Task 20b must not start before Task 20a is independently reviewed, committed,
   merged, and pushed.
 
@@ -74,19 +76,22 @@ future task branches.
 
 ## Next task: Task 20a
 
-Task 20a is next because Task 20 is reviewed, merged, and pushed. Its current
-artifacts are:
+Task 20a is authorized because Task 20 is reviewed, merged, and pushed. Its
+binding artifacts are:
 
 - `docs/subagent_execution_plan/v0_6/20a_proposal_work_gateway.md`
 - `docs/subagent_execution_plan/v0_6/20a_proposal_work_gateway-prombt.md`
 
-Before Task 20a implementation, reconcile its high-level plan and prompt against
-the merged Task 20 domain/report and existing action-resolution trust boundary.
-The contract must bind proposal shape, label-to-authoritative-work resolution,
-actor authorization, duplicate/stale proposal handling, validation failures,
-events, NPC-visible inputs, tests, and allowed files. Task 20a may add only the
-proposal gateway; Task 20b remains the sole owner of scheduling, progress,
-charging, and domain effects.
+The reconciled contract binds actor-scoped ephemeral offers, eight closed action
+keys, label-to-hidden-policy resolution, settlement/goal/objective
+authorization, manager preflights, duplicate and admission-affordability rules,
+self-volunteering, stale-state failure, exact safe resolutions, existing
+manager events, NPC filtering, tests, and allowed files. Commit and push this
+planning-only amendment on `milestone/v0.6`, then create and push
+`task/20a-work-action-gateway` from that head. Task 20a adds no persistence,
+inspection, scheduler, execution, resource deduction, goal mutation, or global
+resolver behavior; Task 20b remains the sole owner of automatic selection,
+progress, charging, and domain effects.
 
 ## Remaining approved sequence
 
