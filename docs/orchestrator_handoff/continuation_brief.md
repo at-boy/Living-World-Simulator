@@ -10,16 +10,16 @@ be changed.
 At this handoff checkpoint:
 
 - current branch: `milestone/v0.6`;
-- last implementation merge: `a3f4bc5` (`Merge Task 19 settlement needs`);
-- current milestone head and `origin/milestone/v0.6`: `ecf175a` before the
-  Task 19a planning-only amendment that follows this brief;
+- last implementation merge: `bba7549` (`Merge Task 19a consumption and maintenance`);
+- current milestone head and `origin/milestone/v0.6`: `bba7549` before the
+  Task 20 planning-only amendment that follows this brief;
 - `origin/main`: `12f2f17` and intentionally unchanged;
-- worktree: clean before the Task 19a planning-only amendment;
-- next authorized task: Task 19a on `task/19a-consumption-maintenance`;
-- Task 19a's plan and prompt have been reconciled against the merged Task 19
+- worktree: clean before the Task 20 planning-only amendment;
+- next authorized task: Task 20 on `task/20-work-orders`;
+- Task 20's plan and prompt have been reconciled against the merged Task 19a
   implementation and now bind the exact implementation contract;
-- Task 20 must not start before Task 19a is independently reviewed, committed,
-  merged, and pushed.
+- Tasks 20a and 20b must not start before Task 20 is independently reviewed,
+  committed, merged, and pushed.
 
 Always verify these statements with `git status --short`, `git branch -vv`, and
 recent history before acting. The repository is authoritative if external
@@ -43,17 +43,19 @@ reviewed, corrected where necessary, validated, committed, merged with
 | 18a | Deterministic criterion evaluation, lifecycle transitions, and evidence | `033ed60` |
 | 15d | NPC-safe qualitative spatial and direct-road perception | `43405ee` |
 | 19 | Settlement needs, sustained pressure evaluation, schema-v7 persistence, inspection, and filtered interpretations | `a3f4bc5` |
+| 19a | Consumption, storage/spoilage, maintenance consequences, and schema-v8 persistence | `bba7549` |
 
 Task reports under `docs/subagent_execution_plan/v0_6/` contain exact files,
 interfaces, review corrections, and validation evidence. ADR-0015 through
 ADR-0020 capture the scenario, spatial, partial-world, dispatch, goal, and need
 contracts.
 
-SQLite snapshot support now spans schema versions 1 through 7. The v0.6
+SQLite snapshot support now spans schema versions 1 through 8. The v0.6
 progression is run identity in schema 2, spatial placements in schema 3,
 external references in schema 4, external dispatches in schema 5, goals and
-objectives in schema 6, and settlement needs in schema 7. Legacy versions load
-newer collections as empty; Task 19a must define the next migration explicitly
+objectives in schema 6, settlement needs in schema 7, and consequences in
+schema 8. Legacy versions load newer collections as empty; Task 20 must define
+the next migration explicitly
 if it adds persisted policy or consequence state.
 
 ## Current validation baseline
@@ -63,49 +65,46 @@ The final reviewed Task 19 delivery passed:
 | Command | Result |
 | --- | --- |
 | Focused Task 19 needs/goal/persistence/inspection/context suite | 126 tests passed |
-| `make` | Ruff and Black passed; 655 pytest tests passed; examples 001–032 passed |
-| `make examples` | Examples 001–032 passed |
+| `make` | Ruff and Black passed; 729 pytest tests passed; examples 001–033 passed |
+| `make examples` | Examples 001–033 passed |
 | `git diff --check` | Passed |
 
 These results are a checkpoint, not a substitute for rerunning validation on
 future task branches.
 
-## Next task: Task 19a
+## Next task: Task 20
 
-Task 19a is authorized because Task 19 is reviewed, merged, and pushed. Its
+Task 20 is authorized because Task 19a is reviewed, merged, and pushed. Its
 current artifacts are:
 
-- `docs/subagent_execution_plan/v0_6/19a_consumption_maintenance_consequences.md`
-- `docs/subagent_execution_plan/v0_6/19a_consumption_maintenance_consequences-prombt.md`
+- `docs/subagent_execution_plan/v0_6/20_work_orders_reservations.md`
+- `docs/subagent_execution_plan/v0_6/20_work_orders_reservations-prombt.md`
 
-The plan and prompt now bind exact policy/state records, IDs and validation,
-per-tick integer arithmetic, a single atomic consequence phase, manager-owned
-mutations, event kinds and attributes, shortage/recovery and terminal
-deterioration semantics, capacity-bounded storage/spoilage, schema-v8
-persistence/migration/validation, detached inspection, fixed qualitative
-NPC-visible translation, whole-phase rollback, tests, and the exact allowed
+The reconciled plan and prompt bind exact work/requirement/reservation records,
+settlement/objective/location/prerequisite references, aggregate locks without
+resource deduction, manager lifecycle and release rules, immutable events,
+schema-v9 persistence/migration/validation, detached inspection, fixed
+qualitative NPC-visible translation, rollback, tests, and the exact allowed
 file boundary. Commit and push this planning-only change on `milestone/v0.6`,
-then create and push `task/19a-consumption-maintenance` from that amended head
-and delegate only the binding contract.
+then create and push `task/20-work-orders` from that amended head and delegate
+only the binding contract.
 
-Before planning or implementation, reread the Task 19 report, ADR-0020, need
-model/manager/system, resource and entity mutation APIs, scheduler, schema-v7
-persistence, inspection surface, goal evaluator, and NPC boundary. Confirm how
-Task 19a consequences become authoritative inputs to Task 19 assessment without
-calling the goal manager or directly deciding run failure. Amend plan and prompt
-together before any boundary expansion.
+Before implementation, reread the Task 19a report, Tasks 20a/20b plans,
+ADR-0016, ADR-0019, ADR-0020, goal/objective ownership, spatial containment,
+resource mutation APIs, schema-v8 persistence, inspection, and NPC boundaries.
+Task 20 adds no action handler, work system, scheduler phase, resource charge,
+domain effect, or direct goal mutation.
 
 ## Remaining approved sequence
 
 Continue one reviewed task at a time in this order:
 
-1. Task 19a — consumption, maintenance, and consequences.
-2. Tasks 20, 20a, and 20b — work records, proposal gateway, and execution.
-3. Task 21 — settlement development stages.
-4. Task 22 — deterministic recorded proposal tapes.
-5. Tasks 15 and 15c — FastAPI-hosted inspector and spatial view.
-6. Task 23 — canonical success, stall, and failure founders scenarios.
-7. Task 24 — milestone release-readiness closeout.
+1. Tasks 20, 20a, and 20b — work records, proposal gateway, and execution.
+2. Task 21 — settlement development stages.
+3. Task 22 — deterministic recorded proposal tapes.
+4. Tasks 15 and 15c — FastAPI-hosted inspector and spatial view.
+5. Task 23 — canonical success, stall, and failure founders scenarios.
+6. Task 24 — milestone release-readiness closeout.
 
 Task 24 leaves `milestone/v0.6` ready for owner integration. It does not merge
 or push anything to `main`.
@@ -153,6 +152,8 @@ Recent concrete boundaries to preserve:
 - Task 19 assessment runs after ordinary systems and before goal evaluation;
   Task 19a consequences must run before assessment and must use manager-owned
   authoritative mutation and immutable events.
+- Task 20 reservations are engine-owned aggregate locks, not resource
+  deductions or item identities; Task 20 adds no scheduler or execution path.
 
 ## Historical context
 
