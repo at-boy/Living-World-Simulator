@@ -1,5 +1,10 @@
 # Living World Simulator – Project Journal
 
+## Task 19a implementation
+
+Added the manager-owned atomic consequence phase, schema-8 persistence,
+privileged inspection, qualitative NPC projection, tests, and example 033.
+
 ## Task 19 handoff checkpoint
 
 Recorded the clean, pushed Task 19 milestone merge, schema-v7 and 655-test

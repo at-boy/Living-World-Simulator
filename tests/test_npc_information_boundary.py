@@ -116,3 +116,19 @@ def test_boundary_rejects_raw_numeric_skill_value_in_npc_prose() -> None:
         NPCInformationBoundary(state).validate_context(
             _context("My woodcraft skill is 80.")
         )
+
+
+def test_boundary_rejects_consequence_ids_and_numbers_and_allows_fixed_prose() -> None:
+    from living_world.needs import ConsumptionPolicy, ConsumptionState
+
+    state = WorldState()
+    state.consumption_policies["consumption_town"] = ConsumptionPolicy(
+        "consumption_town", "town", 7, 1
+    )
+    state.consumption_states["consumption_town"] = ConsumptionState("consumption_town")
+    boundary = NPCInformationBoundary(state)
+    with pytest.raises(ValueError, match="internal IDs"):
+        boundary.validate_context(_context("The policy is consumption_town."))
+    with pytest.raises(ValueError, match="numeric values"):
+        boundary.validate_context(_context("The hidden rate is 7."))
+    boundary.validate_context(_context("Food and water use is currently supplied."))

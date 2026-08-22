@@ -1,8 +1,9 @@
 
 # Living World Simulator Backlog
 
-Task 19 settlement needs and pressure is complete for v0.6; consumption and
-maintenance consequences remain separately scoped to Task 19a.
+Task 19 settlement needs and pressure is complete for v0.6. Task 19a
+consumption, storage, and maintenance consequences are implemented on their task
+branch and await review and milestone integration.
 
 This document is intentionally **not** a specification.
 

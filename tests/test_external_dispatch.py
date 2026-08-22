@@ -488,3 +488,39 @@ def test_privileged_dispatch_inspection_is_detached_and_ordered() -> None:
     snapshot[0]["status"] = "lost"
     assert dispatch.status is DispatchStatus.PENDING
     assert EngineWorldInspector(engine).world_summary()["external_dispatch_count"] == 1
+
+
+def test_dispatch_source_rejects_existing_maintenance_capability() -> None:
+    from living_world.needs import MaintenancePolicy, MaintenanceRequirement
+
+    engine, source, reference = _world()
+    engine.definitions.register(Definition("capability"))
+    capability = engine.entities.create(
+        definition_key="capability",
+        name="Cart",
+        attributes={"is_constructed": True, "resources": {"grain": 2, "coin": 5}},
+    )
+    engine.relationships.create(
+        kind="owns", source_id=source.id, target_id=capability.id
+    )
+    engine.consequences.create_maintenance(
+        MaintenancePolicy(
+            "maintenance_cart",
+            source.id,
+            capability.id,
+            "Cart",
+            (MaintenanceRequirement("grain", 1),),
+            1,
+            1,
+            1,
+            1,
+        )
+    )
+    with pytest.raises(ValueError, match="maintenance capability"):
+        engine.external_dispatches.create(
+            source_entity_id=capability.id,
+            reference_id=reference.id,
+            direction=DispatchDirection.OUTBOUND,
+            good="grain",
+            quantity=1,
+        )

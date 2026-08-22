@@ -42,6 +42,8 @@ class WorldInspector(Protocol):
 
     def needs(self) -> tuple[Mapping[str, object], ...]: ...
 
+    def consequences(self) -> Mapping[str, object]: ...
+
     def events(self) -> tuple[Mapping[str, object], ...]: ...
 
     def npcs(self) -> tuple[Mapping[str, object], ...]: ...
@@ -78,6 +80,9 @@ class EngineWorldInspector:
             "goal_count": len(state.goal_definitions),
             "objective_count": len(state.objective_definitions),
             "need_count": len(state.need_definitions),
+            "consumption_policy_count": len(state.consumption_policies),
+            "storage_policy_count": len(state.storage_policies),
+            "maintenance_policy_count": len(state.maintenance_policies),
             "event_count": len(state.events),
             "observation_count": len(state.observations),
             "memory_count": len(state.memories),
@@ -180,6 +185,37 @@ class EngineWorldInspector:
                 ),
             )
             for need_id in sorted(state.need_definitions)
+        )
+
+    def consequences(self) -> Mapping[str, object]:
+        state = self._engine.state
+        return cast(
+            Mapping[str, object],
+            _snapshot_value(
+                {
+                    "consumption": [
+                        {
+                            "policy": state.consumption_policies[key],
+                            "state": state.consumption_states[key],
+                        }
+                        for key in sorted(state.consumption_policies)
+                    ],
+                    "storage": [
+                        {
+                            "policy": state.storage_policies[key],
+                            "state": state.storage_states[key],
+                        }
+                        for key in sorted(state.storage_policies)
+                    ],
+                    "maintenance": [
+                        {
+                            "policy": state.maintenance_policies[key],
+                            "state": state.maintenance_states[key],
+                        }
+                        for key in sorted(state.maintenance_policies)
+                    ],
+                }
+            ),
         )
 
     def events(self) -> tuple[Mapping[str, object], ...]:

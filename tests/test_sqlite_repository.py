@@ -22,11 +22,21 @@ from living_world.goals import (
     GoalDefinition,
     GoalOwnerKind,
     GoalState,
+    GoalStatus,
     ObjectiveDefinition,
     ObjectiveState,
     ResourceMinimumCriterion,
+    SustainedNeedCriterion,
 )
-from living_world.needs import NeedDefinition, NeedKind
+from living_world.needs import (
+    ConsumptionPolicy,
+    MaintenancePolicy,
+    MaintenanceRequirement,
+    NeedDefinition,
+    NeedKind,
+    StoragePolicy,
+    StorageResourceRule,
+)
 from living_world.repositories.sqlite_repository import (
     RepositoryLoadError,
     RepositorySaveError,
@@ -58,7 +68,7 @@ def test_sqlite_repository_round_trips_all_world_records(tmp_path: Path) -> None
     assert loaded.knowledge == state.knowledge
 
 
-def test_sqlite_repository_round_trips_schema_seven_needs(tmp_path: Path) -> None:
+def test_sqlite_repository_round_trips_schema_eight_needs(tmp_path: Path) -> None:
     repository = SQLiteRepository(str(tmp_path / "needs.sqlite3"))
     engine = SimulationEngine(repository)
     engine.definitions.register(Definition("settlement"))
@@ -82,12 +92,12 @@ def test_sqlite_repository_round_trips_schema_seven_needs(tmp_path: Path) -> Non
             connection.execute(
                 "SELECT schema_version FROM world_snapshots WHERE id = 1"
             ).fetchone()[0]
-            == 7
+            == 8
         )
 
 
 @pytest.mark.parametrize("schema_version", range(1, 7))
-def test_legacy_schema_loads_empty_needs_and_rewrites_seven(
+def test_legacy_schema_loads_empty_needs_and_rewrites_eight(
     tmp_path: Path, schema_version: int
 ) -> None:
     database = tmp_path / f"legacy-{schema_version}.sqlite3"
@@ -114,7 +124,7 @@ def test_legacy_schema_loads_empty_needs_and_rewrites_seven(
             connection.execute(
                 "SELECT schema_version FROM world_snapshots WHERE id = 1"
             ).fetchone()[0]
-            == 7
+            == 8
         )
 
 
@@ -330,11 +340,277 @@ def test_unsupported_schema_version_raises_without_returning_partial_state(
     repository.save_world(_world_state())
     with sqlite3.connect(database_path) as connection:
         connection.execute(
-            "UPDATE world_snapshots SET schema_version = ? WHERE id = 1", (8,)
+            "UPDATE world_snapshots SET schema_version = ? WHERE id = 1", (9,)
         )
 
     with pytest.raises(RepositoryLoadError, match="Unsupported world schema version"):
         repository.load_world()
+
+
+def _consequence_engine(repository: SQLiteRepository) -> SimulationEngine:
+    engine = SimulationEngine(repository)
+    engine.definitions.register(Definition("thing"))
+    owner = engine.entities.create(
+        definition_key="thing",
+        name="Town",
+        attributes={
+            "population": 1,
+            "resources": {"food": 4, "water": 4, "wood": 2},
+            "storage_capacity": 5,
+        },
+    )
+    capability = engine.entities.create(
+        definition_key="thing", name="Well", attributes={"is_constructed": True}
+    )
+    engine.relationships.create(
+        kind="owns", source_id=owner.id, target_id=capability.id
+    )
+    engine.consequences.create_consumption(
+        ConsumptionPolicy("consumption_town", owner.id, 1, 1)
+    )
+    engine.consequences.create_storage(
+        StoragePolicy("storage_town", owner.id, (StorageResourceRule("food", 1),))
+    )
+    engine.consequences.create_maintenance(
+        MaintenancePolicy(
+            "maintenance_well",
+            owner.id,
+            capability.id,
+            "Well",
+            (MaintenanceRequirement("wood", 1),),
+            2,
+            3,
+            1,
+            1,
+        )
+    )
+    engine.needs.create(
+        NeedDefinition("need_food", owner.id, NeedKind.FOOD, 1, 0.2, 0.5, 3)
+    )
+    objective = ObjectiveDefinition(
+        "objective_food",
+        "Food pressure",
+        "Food pressure",
+        "Observe pressure.",
+        (SustainedNeedCriterion("food", 1.0, 2),),
+        authorized_action_categories=("supply",),
+    )
+    goal = GoalDefinition(
+        "goal_food",
+        GoalOwnerKind.SETTLEMENT,
+        owner.id,
+        "Food security",
+        "Food security",
+        "Keep food supplied.",
+        (objective.id,),
+        authorized_action_categories=("supply",),
+    )
+    engine.goals.create(goal, (objective,))
+    engine.goals.transition_goal(goal.id, GoalStatus.ACTIVE)
+    engine.goals.transition_objective(objective.id, GoalStatus.ACTIVE)
+    return engine
+
+
+def test_schema_eight_round_trips_all_six_consequence_collections(
+    tmp_path: Path,
+) -> None:
+    repository = SQLiteRepository(str(tmp_path / "consequences.sqlite3"))
+    engine = _consequence_engine(repository)
+    engine.step()
+    engine.save_world()
+    loaded = repository.load_world()
+    for name in (
+        "consumption_policies",
+        "consumption_states",
+        "storage_policies",
+        "storage_states",
+        "maintenance_policies",
+        "maintenance_states",
+    ):
+        assert getattr(loaded, name) == getattr(engine.state, name)
+
+
+@pytest.mark.parametrize("schema_version", range(1, 8))
+def test_versions_one_through_seven_ignore_stray_consequences_and_write_forward(
+    tmp_path: Path, schema_version: int
+) -> None:
+    database = tmp_path / f"legacy-consequences-{schema_version}.sqlite3"
+    repository = SQLiteRepository(str(database))
+    repository.save_world(_world_state())
+    with sqlite3.connect(database) as connection:
+        payload = json.loads(
+            connection.execute(
+                "SELECT payload FROM world_snapshots WHERE id = 1"
+            ).fetchone()[0]
+        )
+        payload["consumption_policies"] = [{"id": "consumption_stray"}]
+        connection.execute(
+            "UPDATE world_snapshots SET schema_version = ?, payload = ? WHERE id = 1",
+            (schema_version, json.dumps(payload)),
+        )
+    loaded = repository.load_world()
+    assert loaded.consumption_policies == {}
+    repository.save_world(loaded)
+    with sqlite3.connect(database) as connection:
+        assert (
+            connection.execute(
+                "SELECT schema_version FROM world_snapshots WHERE id = 1"
+            ).fetchone()[0]
+            == 8
+        )
+
+
+@pytest.mark.parametrize(
+    ("collection", "nested", "required_key", "extra"),
+    [
+        (collection, None, required, extra)
+        for collection, required in (
+            ("consumption_policies", "owner_id"),
+            ("consumption_states", "food_shortage"),
+            ("storage_policies", "owner_id"),
+            ("storage_states", "overflowing"),
+            ("maintenance_policies", "label"),
+            ("maintenance_states", "condition"),
+        )
+        for extra in (False, True)
+    ]
+    + [
+        (collection, nested, required, extra)
+        for collection, nested, required in (
+            ("storage_policies", "resources", "spoilage_per_tick"),
+            ("maintenance_policies", "upkeep", "amount"),
+        )
+        for extra in (False, True)
+    ],
+)
+def test_schema_eight_rejects_missing_and_additional_nested_keys(
+    tmp_path: Path,
+    collection: str,
+    nested: str | None,
+    required_key: str,
+    extra: bool,
+) -> None:
+    database = tmp_path / f"malformed-{collection}.sqlite3"
+    repository = SQLiteRepository(str(database))
+    engine = _consequence_engine(repository)
+    engine.save_world()
+    with sqlite3.connect(database) as connection:
+        payload = json.loads(
+            connection.execute(
+                "SELECT payload FROM world_snapshots WHERE id = 1"
+            ).fetchone()[0]
+        )
+        record = payload[collection][0]
+        target = record if nested is None else record[nested][0]
+        if extra:
+            target["extra"] = 1
+        else:
+            target.pop(required_key)
+        connection.execute(
+            "UPDATE world_snapshots SET payload = ? WHERE id = 1",
+            (json.dumps(payload),),
+        )
+    with pytest.raises(RepositoryLoadError, match="malformed"):
+        repository.load_world()
+
+
+@pytest.mark.parametrize("case", ("owner", "unprocessed", "terminal", "partial"))
+def test_schema_eight_rejects_malformed_consequence_invariants(
+    tmp_path: Path, case: str
+) -> None:
+    database = tmp_path / f"bad-invariant-{case}.sqlite3"
+    repository = SQLiteRepository(str(database))
+    engine = _consequence_engine(repository)
+    engine.save_world()
+    with sqlite3.connect(database) as connection:
+        payload = json.loads(
+            connection.execute(
+                "SELECT payload FROM world_snapshots WHERE id = 1"
+            ).fetchone()[0]
+        )
+        if case == "owner":
+            payload["consumption_policies"][0]["owner_id"] = "missing"
+        elif case == "unprocessed":
+            payload["consumption_states"][0]["food_shortage"] = True
+        elif case == "terminal":
+            payload["maintenance_states"][0]["condition"] = 0
+        else:
+            payload["consumption_states"][0]["last_processed_tick"] = payload["tick"]
+        connection.execute(
+            "UPDATE world_snapshots SET payload = ? WHERE id = 1",
+            (json.dumps(payload),),
+        )
+    with pytest.raises(RepositoryLoadError, match="malformed"):
+        repository.load_world()
+
+
+@pytest.mark.parametrize(
+    ("destroyed_tick", "last_processed_tick", "world_tick"),
+    ((-1, 1, 2), (True, 1, 2), (3, 3, 2), (2, 1, 3)),
+)
+def test_schema_eight_rejects_invalid_terminal_destruction_ticks(
+    tmp_path: Path,
+    destroyed_tick: object,
+    last_processed_tick: int,
+    world_tick: int,
+) -> None:
+    database = tmp_path / f"bad-terminal-{destroyed_tick}-{last_processed_tick}.sqlite3"
+    repository = SQLiteRepository(str(database))
+    engine = _consequence_engine(repository)
+    engine.save_world()
+    with sqlite3.connect(database) as connection:
+        payload = json.loads(
+            connection.execute(
+                "SELECT payload FROM world_snapshots WHERE id = 1"
+            ).fetchone()[0]
+        )
+        payload["tick"] = world_tick
+        payload["entities"][1]["destroyed_tick"] = destroyed_tick
+        payload["maintenance_states"][0].update(
+            {
+                "condition": 0,
+                "last_processed_tick": last_processed_tick,
+                "upkeep_shortage": True,
+            }
+        )
+        connection.execute(
+            "UPDATE world_snapshots SET payload = ? WHERE id = 1",
+            (json.dumps(payload),),
+        )
+    with pytest.raises(RepositoryLoadError, match="malformed"):
+        repository.load_world()
+
+
+def test_uninterrupted_and_save_resume_consequence_results_match(
+    tmp_path: Path,
+) -> None:
+    left_repo = SQLiteRepository(str(tmp_path / "left.sqlite3"))
+    right_repo = SQLiteRepository(str(tmp_path / "right.sqlite3"))
+    left = _consequence_engine(left_repo)
+    right = _consequence_engine(right_repo)
+    left.step()
+    right.step()
+    right.save_world()
+    resumed = SimulationEngine(right_repo)
+    resumed.definitions.register(Definition("thing"))
+    left.step()
+    resumed.step()
+    assert left.state.tick == resumed.state.tick
+    assert [e.attributes for e in left.state.entities.values()] == [
+        e.attributes for e in resumed.state.entities.values()
+    ]
+    assert left.state.consumption_states == resumed.state.consumption_states
+    assert left.state.storage_states == resumed.state.storage_states
+    assert left.state.maintenance_states == resumed.state.maintenance_states
+    assert left.state.need_states == resumed.state.need_states
+    assert left.state.goal_states == resumed.state.goal_states
+    assert left.state.objective_states == resumed.state.objective_states
+    assert [
+        (e.tick, e.kind, e.subject_id, e.attributes) for e in left.state.events.values()
+    ] == [
+        (e.tick, e.kind, e.subject_id, e.attributes)
+        for e in resumed.state.events.values()
+    ]
 
 
 def test_invalid_database_path_raises_explicit_repository_error(tmp_path: Path) -> None:

@@ -18,7 +18,16 @@ from living_world.goals.model import (
     ObjectiveDefinition,
     ObjectiveState,
 )
-from living_world.needs.model import NeedDefinition, NeedState
+from living_world.needs.model import (
+    ConsumptionPolicy,
+    ConsumptionState,
+    MaintenancePolicy,
+    MaintenanceState,
+    NeedDefinition,
+    NeedState,
+    StoragePolicy,
+    StorageState,
+)
 from living_world.spatial.model import Placement
 
 
@@ -49,6 +58,13 @@ class WorldState:
 
     need_definitions: dict[str, NeedDefinition] = field(default_factory=dict)
     need_states: dict[str, NeedState] = field(default_factory=dict)
+
+    consumption_policies: dict[str, ConsumptionPolicy] = field(default_factory=dict)
+    consumption_states: dict[str, ConsumptionState] = field(default_factory=dict)
+    storage_policies: dict[str, StoragePolicy] = field(default_factory=dict)
+    storage_states: dict[str, StorageState] = field(default_factory=dict)
+    maintenance_policies: dict[str, MaintenancePolicy] = field(default_factory=dict)
+    maintenance_states: dict[str, MaintenanceState] = field(default_factory=dict)
 
     events: dict[str, Event] = field(default_factory=dict)
 

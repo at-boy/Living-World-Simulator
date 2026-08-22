@@ -1,5 +1,9 @@
 # HTTP inspection API
 
+`GET /world/consequences` returns detached privileged consumption, storage, and
+maintenance policy/state pairs ordered by policy ID. `GET /world` includes a
+count for each policy type. These operator surfaces are not NPC-visible.
+
 `GET /world/needs` returns privileged ID-ordered records shaped exactly as
 `{"definition": <NeedDefinition>, "state": <NeedState>}`. `GET /world` includes
 `need_count`; these operator views may expose exact thresholds and history.

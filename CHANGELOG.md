@@ -4,6 +4,8 @@
 
 ### Added
 
+- Deterministic consumption, storage loss, and maintenance consequences with schema-8 persistence, privileged inspection, and qualitative NPC-safe interpretations.
+
 - Add authoritative settlement food, water, shelter, and storage pressure with
   bounded history, sustained goal evaluation, schema-7 persistence, privileged
   inspection, and qualitative NPC-safe interpretations.

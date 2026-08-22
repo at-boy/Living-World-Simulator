@@ -1,5 +1,9 @@
 # NPC Information Boundary
 
+Consequence IDs, rates, quantities, capacity, condition, ticks, and events are
+privileged. Only explicitly selected fixed qualitative consequence prose is
+safe; Task 19a does not automatically inject it into NPC context or LLM input.
+
 Need definitions and assessments are privileged. NPC-facing prose may use only a
 deliberately selected qualitative `NPCNeedInterpretation`. Need IDs, owners,
 thresholds, quantities, pressure, windows, history, and goal evidence remain out
