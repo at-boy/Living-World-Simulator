@@ -1,4 +1,4 @@
-# Continuation brief — August 20, 2026
+# Continuation brief — August 22, 2026
 
 ## Current repository state
 
@@ -11,14 +11,13 @@ At this handoff checkpoint:
 
 - current branch: `milestone/v0.6`;
 - last implementation merge: `a3f4bc5` (`Merge Task 19 settlement needs`);
-- current milestone head and `origin/milestone/v0.6`: `a3f4bc5` before the
-  documentation-only handoff update that follows this brief;
+- current milestone head and `origin/milestone/v0.6`: `ecf175a` before the
+  Task 19a planning-only amendment that follows this brief;
 - `origin/main`: `12f2f17` and intentionally unchanged;
-- worktree: clean;
+- worktree: clean before the Task 19a planning-only amendment;
 - next authorized task: Task 19a on `task/19a-consumption-maintenance`;
-- Task 19a's current plan and prompt are high-level and must be reconciled
-  against the merged Task 19 implementation, then amended into a
-  decision-complete contract before implementation is delegated;
+- Task 19a's plan and prompt have been reconciled against the merged Task 19
+  implementation and now bind the exact implementation contract;
 - Task 20 must not start before Task 19a is independently reviewed, committed,
   merged, and pushed.
 
@@ -79,16 +78,15 @@ current artifacts are:
 - `docs/subagent_execution_plan/v0_6/19a_consumption_maintenance_consequences.md`
 - `docs/subagent_execution_plan/v0_6/19a_consumption_maintenance_consequences-prombt.md`
 
-Do not dispatch implementation directly from those high-level artifacts. First
-review the merged Task 19 domain and report, then amend both Task 19a artifacts
-so they bind the exact policy/state records, IDs and validation, per-tick
-integer arithmetic, scheduler order, manager-owned mutations, event kinds and
-attributes, shortage/recovery and deterioration semantics, storage/spoilage
-rules, persistence version/migration/validation, inspection DTOs, NPC-visible
-translation path, rollback behavior, tests, and exact allowed-file boundary.
-Commit and push that documentation-only planning change on
-`milestone/v0.6`. Then create and push `task/19a-consumption-maintenance` from
-the amended milestone head and delegate only the binding contract.
+The plan and prompt now bind exact policy/state records, IDs and validation,
+per-tick integer arithmetic, a single atomic consequence phase, manager-owned
+mutations, event kinds and attributes, shortage/recovery and terminal
+deterioration semantics, capacity-bounded storage/spoilage, schema-v8
+persistence/migration/validation, detached inspection, fixed qualitative
+NPC-visible translation, whole-phase rollback, tests, and the exact allowed
+file boundary. Commit and push this planning-only change on `milestone/v0.6`,
+then create and push `task/19a-consumption-maintenance` from that amended head
+and delegate only the binding contract.
 
 Before planning or implementation, reread the Task 19 report, ADR-0020, need
 model/manager/system, resource and entity mutation APIs, scheduler, schema-v7
