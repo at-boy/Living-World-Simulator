@@ -1,0 +1,26 @@
+# Living World Simulator — milestone/v0.6
+# Project-local Codex configuration.
+#
+# Root/orchestrator: GPT-5.6 Sol, medium reasoning
+# Default subagents: GPT-5.6 Sol, low reasoning
+
+model = "gpt-5.6-sol"
+model_reasoning_effort = "medium"
+
+[agents]
+enabled = true
+max_concurrent_threads_per_session = 4
+default_subagent_model = "gpt-5.6-sol"
+default_subagent_reasoning_effort = "low"
+
+[agents.explorer]
+description = "Read-only repository investigator for scoped architectural questions on Living World Simulator."
+config_file = "../.codex/agents/explorer.toml"
+
+[agents.worker]
+description = "Implements exactly one decision-complete authorized Living World Simulator task."
+config_file = "../.codex/agents/worker.toml"
+
+[agents.reviewer]
+description = "Independently reviews delegated work against the task contract and repository invariants."
+config_file = "../.codex/agents/reviewer.toml"
