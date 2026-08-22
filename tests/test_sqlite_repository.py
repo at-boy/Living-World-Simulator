@@ -7,6 +7,7 @@ from typing import cast
 
 import pytest
 
+from living_world.api.inspection import EngineWorldInspector
 from living_world.core.belief import Belief, BeliefStatus
 from living_world.core.definition import Definition
 from living_world.core.entity import Entity
@@ -44,6 +45,7 @@ from living_world.repositories.sqlite_repository import (
 )
 from living_world.simulation.simulation_engine import SimulationEngine
 from living_world.state.world_state import WorldState
+from living_world.work import ResourceWorkTarget, WorkCategory, WorkCreationOffer
 
 
 def test_sqlite_repository_round_trips_all_world_records(tmp_path: Path) -> None:
@@ -66,6 +68,34 @@ def test_sqlite_repository_round_trips_all_world_records(tmp_path: Path) -> None
     assert loaded.memories == state.memories
     assert loaded.npc_relationships == state.npc_relationships
     assert loaded.knowledge == state.knowledge
+
+
+def test_schema_nine_does_not_persist_or_inspect_ephemeral_work_offers(
+    tmp_path: Path,
+) -> None:
+    offer = WorkCreationOffer(
+        "Plant a crop",
+        WorkCategory.PRODUCE_FOOD,
+        ResourceWorkTarget("food", 1),
+        "settlement",
+        "objective",
+        "location",
+        priority=3,
+        deadline_tick=5,
+    )
+    repository = SQLiteRepository(str(tmp_path / "ephemeral-offer.sqlite3"))
+    repository.save_world(WorldState())
+    with sqlite3.connect(tmp_path / "ephemeral-offer.sqlite3") as connection:
+        schema_version, payload = connection.execute(
+            "SELECT schema_version, payload FROM world_snapshots WHERE id = 1"
+        ).fetchone()
+    assert schema_version == 9
+    assert "work_offers" not in payload
+    assert offer.label not in payload
+    inspector = EngineWorldInspector(SimulationEngine(repository))
+    assert all("offer" not in key for key in inspector.world_summary())
+    assert inspector.work_orders() == ()
+    assert not hasattr(inspector, "work_offers")
 
 
 def test_sqlite_repository_round_trips_schema_eight_needs(tmp_path: Path) -> None:

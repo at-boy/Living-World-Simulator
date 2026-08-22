@@ -1,5 +1,14 @@
 # Living World Simulator – Project Journal
 
+## Task 20a implementation
+
+Engine-authored work offers now give one eligible NPC a narrow qualitative
+choice while retaining all category, target, requirement, priority, and labor
+policy inside the simulation. Construction, validation, and application each
+recheck active settlement-goal authority and current manager preflights. The
+gateway creates no proposal event or durable offer state; Task 20b still owns
+automatic selection, charging, progress, and effects.
+
 ## Task 20 implementation
 
 Work intent and non-deducting aggregate locks are now manager-owned durable

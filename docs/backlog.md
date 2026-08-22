@@ -1,8 +1,9 @@
 
 # Living World Simulator Backlog
 
-Task 20 work orders and reservations are implemented; Task 20a proposal gateway
-remains the next dependency-ordered milestone task.
+Task 20 work orders and reservations and Task 20a's actor-bound proposal
+gateway are implemented on their task branches. Deterministic execution remains
+Task 20b's dependency-ordered scope.
 
 Task 19 settlement needs and pressure is complete for v0.6. Task 19a
 consumption, storage, and maintenance consequences are implemented on their task

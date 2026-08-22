@@ -196,6 +196,28 @@ def test_rejects_internal_record_ids_in_client_visible_values(
 
 
 @pytest.mark.parametrize(
+    "identifier",
+    (
+        "placement_000001",
+        "need_example",
+        "goal_example",
+        "objective_example",
+        "external_reference_000001",
+        "external_dispatch_000001",
+        "dispatch_000001",
+        "consumption_example",
+        "storage_example",
+        "maintenance_example",
+        "work_000001",
+        "work_reservation_000001",
+    ),
+)
+def test_rejects_every_newer_canonical_record_prefix(identifier: str) -> None:
+    with pytest.raises(ValueError, match="internal record ID"):
+        ActionOption("inspect", f"Inspect {identifier}.")
+
+
+@pytest.mark.parametrize(
     "content",
     [
         ('{"spoken_text":"I saw entity_000001.","action_request":null}'),

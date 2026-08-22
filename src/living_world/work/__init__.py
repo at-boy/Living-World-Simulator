@@ -14,6 +14,8 @@ from living_world.work.model import (
 )
 
 __all__ = [
+    "PRIORITIZE_WORK_ACTION_KEY",
+    "VOLUNTEER_FOR_WORK_ACTION_KEY",
     "CapabilityWorkTarget",
     "ExternalConnectionWorkTarget",
     "MaintenanceWorkTarget",
@@ -21,9 +23,28 @@ __all__ = [
     "ResourceRequirement",
     "ResourceWorkTarget",
     "ToolRequirement",
+    "WorkActionHandler",
+    "WorkAssignmentOffer",
     "WorkCategory",
+    "WorkCreationOffer",
     "WorkDefinition",
+    "WorkPriorityOffer",
     "WorkReservation",
     "WorkState",
     "WorkStatus",
 ]
+
+
+def __getattr__(name: str) -> object:
+    if name in {
+        "PRIORITIZE_WORK_ACTION_KEY",
+        "VOLUNTEER_FOR_WORK_ACTION_KEY",
+        "WorkActionHandler",
+        "WorkAssignmentOffer",
+        "WorkCreationOffer",
+        "WorkPriorityOffer",
+    }:
+        from living_world.work import action
+
+        return getattr(action, name)
+    raise AttributeError(name)

@@ -5,6 +5,13 @@ priority, deadlines, ticks, and events remain engine-only. Explicitly selected
 `NPCWorkInterpretation` contains only a public label and fixed qualitative
 status prose; Task 20 never injects it automatically.
 
+Task 20a work offers are likewise ephemeral and actor-bound. Model-visible
+action options contain only closed action keys, fixed descriptions, and labels
+validated by both canonical-ID and state-aware information filters. Hidden
+offer fields, authoritative availability, validation causes, manager objects,
+and raw state never enter `NPCContext`; accepted labels are revalidated and
+applied only through `WorkManager`.
+
 Consequence IDs, rates, quantities, capacity, condition, ticks, and events are
 privileged. Only explicitly selected fixed qualitative consequence prose is
 safe; Task 19a does not automatically inject it into NPC context or LLM input.

@@ -21,6 +21,7 @@ from living_world.work.model import (
     WorkReservation,
     WorkState,
     WorkStatus,
+    WorkTarget,
     integer,
     text,
     visible_text,
@@ -57,7 +58,7 @@ class WorkManager:
         self,
         *,
         category: WorkCategory,
-        target: object,
+        target: WorkTarget,
         public_label: str,
         settlement_id: str,
         objective_id: str,
@@ -70,25 +71,37 @@ class WorkManager:
         priority: int = 0,
         deadline_tick: int | None = None,
     ) -> WorkDefinition:
-        wid = self._candidate_work_id()
-        definition = WorkDefinition(
-            wid,
+        self.validate_create(
+            category=category,
+            target=target,
+            public_label=public_label,
+            settlement_id=settlement_id,
+            objective_id=objective_id,
+            location_id=location_id,
+            prerequisite_work_ids=prerequisite_work_ids,
+            labor_required=labor_required,
+            tools=tools,
+            resources=resources,
+            required_progress=required_progress,
+            priority=priority,
+            deadline_tick=deadline_tick,
+        )
+        definition = self._candidate_definition(
             category,
-            target,  # type: ignore[arg-type]
+            target,
             public_label,
             settlement_id,
             objective_id,
             location_id,
-            tuple(sorted(prerequisite_work_ids)),
+            prerequisite_work_ids,
             labor_required,
-            tuple(sorted(tools, key=lambda x: x.tool)),
-            tuple(sorted(resources, key=lambda x: x.resource)),
+            tools,
+            resources,
             required_progress,
             priority,
             deadline_tick,
-            self._state.tick,
         )
-        self._validate_definition(definition, creating=True)
+        wid = definition.id
         state = WorkState(wid)
         snapshot = self._snapshot()
         try:
@@ -104,6 +117,109 @@ class WorkManager:
             self._restore(snapshot)
             raise
         return definition
+
+    def validate_create(
+        self,
+        *,
+        category: WorkCategory,
+        target: WorkTarget,
+        public_label: str,
+        settlement_id: str,
+        objective_id: str,
+        location_id: str,
+        prerequisite_work_ids: tuple[str, ...] = (),
+        labor_required: int = 0,
+        tools: tuple[ToolRequirement, ...] = (),
+        resources: tuple[ResourceRequirement, ...] = (),
+        required_progress: int = 1,
+        priority: int = 0,
+        deadline_tick: int | None = None,
+        require_available_inputs: bool = False,
+        reject_nonterminal_duplicate: bool = False,
+    ) -> None:
+        if not isinstance(require_available_inputs, bool):
+            raise TypeError("require_available_inputs must be a bool.")
+        if not isinstance(reject_nonterminal_duplicate, bool):
+            raise TypeError("reject_nonterminal_duplicate must be a bool.")
+        definition = self._candidate_definition(
+            category,
+            target,
+            public_label,
+            settlement_id,
+            objective_id,
+            location_id,
+            prerequisite_work_ids,
+            labor_required,
+            tools,
+            resources,
+            required_progress,
+            priority,
+            deadline_tick,
+        )
+        self._validate_definition(definition, creating=True)
+        if reject_nonterminal_duplicate and any(
+            x.settlement_id == settlement_id
+            and x.objective_id == objective_id
+            and x.category is category
+            and x.target == definition.target
+            and x.location_id == location_id
+            and self._state.work_states[x.id].status not in _TERMINAL
+            for x in self._state.work_definitions.values()
+        ):
+            raise ValueError("Duplicate nonterminal work is not allowed.")
+        if require_available_inputs:
+            quantities = self._settlement_resources(settlement_id)
+            locked: dict[str, int] = {}
+            for reservation in self.active_reservations():
+                for requirement in (*reservation.tools, *reservation.resources):
+                    name = (
+                        requirement.tool
+                        if isinstance(requirement, ToolRequirement)
+                        else requirement.resource
+                    )
+                    locked[name] = locked.get(name, 0) + requirement.quantity
+            for requirement in (*definition.tools, *definition.resources):
+                name = (
+                    requirement.tool
+                    if isinstance(requirement, ToolRequirement)
+                    else requirement.resource
+                )
+                if quantities.get(name, 0) - locked.get(name, 0) < requirement.quantity:
+                    raise ValueError(f"Insufficient unreserved '{name}'.")
+
+    def _candidate_definition(
+        self,
+        category: WorkCategory,
+        target: WorkTarget,
+        public_label: str,
+        settlement_id: str,
+        objective_id: str,
+        location_id: str,
+        prerequisite_work_ids: tuple[str, ...],
+        labor_required: int,
+        tools: tuple[ToolRequirement, ...],
+        resources: tuple[ResourceRequirement, ...],
+        required_progress: int,
+        priority: int,
+        deadline_tick: int | None,
+    ) -> WorkDefinition:
+        return WorkDefinition(
+            self._candidate_work_id(),
+            category,
+            target,
+            public_label,
+            settlement_id,
+            objective_id,
+            location_id,
+            tuple(sorted(prerequisite_work_ids)),
+            labor_required,
+            tuple(sorted(tools, key=lambda x: x.tool)),
+            tuple(sorted(resources, key=lambda x: x.resource)),
+            required_progress,
+            priority,
+            deadline_tick,
+            self._state.tick,
+        )
 
     def mark_ready(self, work_id: str) -> WorkState:
         definition, current = self._required(work_id)
@@ -123,40 +239,10 @@ class WorkManager:
     def assign_and_reserve(
         self, work_id: str, labor_entity_ids: tuple[str, ...]
     ) -> WorkState:
+        self.validate_assign_and_reserve(work_id, labor_entity_ids)
         definition, current = self._required(work_id)
-        if current.status is not WorkStatus.READY:
-            raise ValueError("Only ready work can be assigned.")
-        if not isinstance(labor_entity_ids, tuple):
-            raise TypeError("labor_entity_ids must be a tuple.")
         labor = tuple(sorted(labor_entity_ids))
-        if len(labor) != definition.labor_required or len(set(labor)) != len(labor):
-            raise ValueError(
-                "Assignment must contain exactly the required unique laborers."
-            )
-        for entity_id in labor:
-            self._validate_labor(entity_id, definition.settlement_id)
-        used = {x for r in self.active_reservations() for x in r.labor_entity_ids}
-        if used.intersection(labor):
-            raise ValueError("A laborer cannot be reserved by multiple work orders.")
-        quantities = self._settlement_resources(definition.settlement_id)
-        locked: dict[str, int] = {}
-        for reservation in self.active_reservations():
-            for requirement in (*reservation.tools, *reservation.resources):
-                name = (
-                    requirement.tool
-                    if isinstance(requirement, ToolRequirement)
-                    else requirement.resource
-                )
-                locked[name] = locked.get(name, 0) + requirement.quantity
-        for requirement in (*definition.tools, *definition.resources):
-            name = (
-                requirement.tool
-                if isinstance(requirement, ToolRequirement)
-                else requirement.resource
-            )
-            if quantities.get(name, 0) - locked.get(name, 0) < requirement.quantity:
-                raise ValueError(f"Insufficient unreserved '{name}'.")
-            locked[name] = locked.get(name, 0) + requirement.quantity
+
         rid = self._candidate_reservation_id()
         reservation = WorkReservation(
             rid,
@@ -195,6 +281,44 @@ class WorkManager:
             self._restore(snapshot)
             raise
         return updated
+
+    def validate_assign_and_reserve(
+        self, work_id: str, labor_entity_ids: tuple[str, ...]
+    ) -> None:
+        definition, current = self._required(work_id)
+        if current.status is not WorkStatus.READY:
+            raise ValueError("Only ready work can be assigned.")
+        if not isinstance(labor_entity_ids, tuple):
+            raise TypeError("labor_entity_ids must be a tuple.")
+        labor = tuple(sorted(labor_entity_ids))
+        if len(labor) != definition.labor_required or len(set(labor)) != len(labor):
+            raise ValueError(
+                "Assignment must contain exactly the required unique laborers."
+            )
+        for entity_id in labor:
+            self._validate_labor(entity_id, definition.settlement_id)
+        used = {x for r in self.active_reservations() for x in r.labor_entity_ids}
+        if used.intersection(labor):
+            raise ValueError("A laborer cannot be reserved by multiple work orders.")
+        quantities = self._settlement_resources(definition.settlement_id)
+        locked: dict[str, int] = {}
+        for reservation in self.active_reservations():
+            for requirement in (*reservation.tools, *reservation.resources):
+                name = (
+                    requirement.tool
+                    if isinstance(requirement, ToolRequirement)
+                    else requirement.resource
+                )
+                locked[name] = locked.get(name, 0) + requirement.quantity
+        for requirement in (*definition.tools, *definition.resources):
+            name = (
+                requirement.tool
+                if isinstance(requirement, ToolRequirement)
+                else requirement.resource
+            )
+            if quantities.get(name, 0) - locked.get(name, 0) < requirement.quantity:
+                raise ValueError(f"Insufficient unreserved '{name}'.")
+            locked[name] = locked.get(name, 0) + requirement.quantity
 
     def activate(self, work_id: str) -> WorkState:
         _, current = self._required(work_id)
@@ -238,12 +362,8 @@ class WorkManager:
         )
 
     def set_priority(self, work_id: str, priority: int) -> WorkDefinition:
-        definition, state = self._required(work_id)
-        if state.status in _TERMINAL:
-            raise ValueError("Terminal work priority cannot change.")
-        integer(priority, "priority")
-        if priority == definition.priority:
-            raise ValueError("Priority must change.")
+        self.validate_set_priority(work_id, priority)
+        definition, _ = self._required(work_id)
         updated = replace(definition, priority=priority)
         snapshot = self._snapshot()
         try:
@@ -260,6 +380,14 @@ class WorkManager:
             self._restore(snapshot)
             raise
         return updated
+
+    def validate_set_priority(self, work_id: str, priority: int) -> None:
+        definition, state = self._required(work_id)
+        if state.status in _TERMINAL:
+            raise ValueError("Terminal work priority cannot change.")
+        integer(priority, "priority")
+        if priority == definition.priority:
+            raise ValueError("Priority must change.")
 
     def block(self, work_id: str, reason: str) -> WorkState:
         return self._finish(work_id, WorkStatus.BLOCKED, reason)

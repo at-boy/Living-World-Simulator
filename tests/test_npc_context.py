@@ -405,3 +405,25 @@ def test_assembler_does_not_auto_inject_work_interpretations() -> None:
     context = NPCContextAssembler(state).assemble(holder_id="npc_1")
     assert "work_000001" not in repr(context)
     assert "Fetch water" not in repr(context)
+
+
+def test_assembler_does_not_auto_inject_ephemeral_work_offers() -> None:
+    from living_world.work import (
+        ResourceWorkTarget,
+        WorkCategory,
+        WorkCreationOffer,
+    )
+
+    state = make_state()
+    offer = WorkCreationOffer(
+        "Plant the hidden offered crop",
+        WorkCategory.PRODUCE_FOOD,
+        ResourceWorkTarget("food", 1),
+        "settlement",
+        "objective",
+        "location",
+        priority=4,
+    )
+    context = NPCContextAssembler(state).assemble(holder_id="npc_1")
+    assert offer.label not in repr(context)
+    assert "priority" not in repr(context)
