@@ -4,6 +4,9 @@
 
 ### Added
 
+- Engine-owned work orders, aggregate reservations, schema-9 persistence,
+  privileged inspection, and NPC-safe qualitative interpretations.
+
 - Deterministic consumption, storage loss, and maintenance consequences with schema-8 persistence, privileged inspection, and qualitative NPC-safe interpretations.
 
 - Add authoritative settlement food, water, shelter, and storage pressure with

@@ -1,5 +1,9 @@
 # HTTP inspection API
 
+`GET /world/work-orders` returns detached ID-ordered work definition/state pairs
+with ID-ordered reservation history. `/world` includes work and reservation
+counts. This privileged data is not NPC context.
+
 `GET /world/consequences` returns detached privileged consumption, storage, and
 maintenance policy/state pairs ordered by policy ID. `GET /world` includes a
 count for each policy type. These operator surfaces are not NPC-visible.

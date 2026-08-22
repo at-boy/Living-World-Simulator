@@ -138,6 +138,9 @@ class NPCInformationBoundary:
             self._state.storage_states,
             self._state.maintenance_policies,
             self._state.maintenance_states,
+            self._state.work_definitions,
+            self._state.work_states,
+            self._state.work_reservations,
         )
         return tuple(
             identifier for collection in collections for identifier in collection
@@ -200,7 +203,23 @@ class NPCInformationBoundary:
             for record in collections
             for number in self._numeric_values(record)
         )
-        return entity_numbers + spatial_numbers + need_numbers + consequence_numbers
+        work_numbers = tuple(
+            number
+            for collections in (
+                self._state.work_definitions.values(),
+                self._state.work_states.values(),
+                self._state.work_reservations.values(),
+            )
+            for record in collections
+            for number in self._numeric_values(record)
+        )
+        return (
+            entity_numbers
+            + spatial_numbers
+            + need_numbers
+            + consequence_numbers
+            + work_numbers
+        )
 
     def _numeric_values(self, value: object) -> tuple[int | float, ...]:
         from dataclasses import fields, is_dataclass

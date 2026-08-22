@@ -372,3 +372,36 @@ def test_assembler_does_not_auto_inject_consequence_interpretations() -> None:
     context = NPCContextAssembler(state).assemble(holder_id="npc_1")
     assert "consumption_town" not in repr(context)
     assert "Food and water use" not in repr(context)
+
+
+def test_assembler_does_not_auto_inject_work_interpretations() -> None:
+    from living_world.work import (
+        ResourceWorkTarget,
+        WorkCategory,
+        WorkDefinition,
+        WorkState,
+    )
+
+    state = make_state()
+    definition = WorkDefinition(
+        "work_000001",
+        WorkCategory.GATHER_WATER,
+        ResourceWorkTarget("water", 1),
+        "Fetch water",
+        "npc_1",
+        "objective",
+        "npc_1",
+        (),
+        0,
+        (),
+        (),
+        1,
+        0,
+        None,
+        0,
+    )
+    state.work_definitions[definition.id] = definition
+    state.work_states[definition.id] = WorkState(definition.id)
+    context = NPCContextAssembler(state).assemble(holder_id="npc_1")
+    assert "work_000001" not in repr(context)
+    assert "Fetch water" not in repr(context)

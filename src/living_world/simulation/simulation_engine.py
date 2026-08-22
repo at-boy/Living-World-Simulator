@@ -54,6 +54,7 @@ from living_world.systems.settlement_system import SettlementSystem
 from living_world.systems.simulation_system import SimulationSystem
 from living_world.systems.trade_system import TradeSystem
 from living_world.systems.weather_system import WeatherSystem
+from living_world.work.manager import WorkManager
 
 
 class SimulationEngine:
@@ -73,6 +74,8 @@ class SimulationEngine:
             self._state,
         )
 
+        self._work = WorkManager(self._state, self._events)
+
         self._goals = GoalManager(self._state, self._events)
 
         self._needs = NeedManager(self._state, self._events)
@@ -81,12 +84,13 @@ class SimulationEngine:
             self._state, self._events
         )
 
-        self._spatial = SpatialManager(self._state, self._events)
+        self._spatial = SpatialManager(self._state, self._events, self._work)
 
         self._entities = EntityManager(
             self._state,
             self._definitions,
             self._spatial,
+            self._work,
         )
 
         self._relationships = RelationshipManager(
@@ -129,7 +133,7 @@ class SimulationEngine:
         self._resources = ResourceSystem()
 
         self._consequences = ConsequenceManager(
-            self._state, self._resources, self._entities, self._events
+            self._state, self._resources, self._entities, self._events, self._work
         )
 
         self._external_dispatches = ExternalDispatchManager(
@@ -281,6 +285,10 @@ class SimulationEngine:
     @property
     def consequences(self) -> ConsequenceManager:
         return self._consequences
+
+    @property
+    def work(self) -> WorkManager:
+        return self._work
 
     @property
     def observations(

@@ -10,6 +10,11 @@ class EntityRemovalGuard(Protocol):
     def validate_entity_removal(self, entity_id: str) -> None: ...
 
 
+class WorkEntityGuard(Protocol):
+    def validate_entity_removal(self, entity_id: str) -> None: ...
+    def validate_entity_destruction(self, entity_id: str) -> None: ...
+
+
 class EntityManager:
     """Owns the lifecycle of entities."""
 
@@ -18,10 +23,12 @@ class EntityManager:
         state: WorldState,
         definition_manager: DefinitionManager,
         removal_guard: EntityRemovalGuard | None = None,
+        work_guard: WorkEntityGuard | None = None,
     ) -> None:
         self._state = state
         self._definitions = definition_manager
         self._removal_guard = removal_guard
+        self._work_guard = work_guard
         self._next_entity_id = 1
 
     def create(
@@ -113,6 +120,8 @@ class EntityManager:
             )
         if self._removal_guard is not None:
             self._removal_guard.validate_entity_removal(entity_id)
+        if self._work_guard is not None:
+            self._work_guard.validate_entity_removal(entity_id)
         self._state.entities.pop(entity_id, None)
 
     def mark_destroyed(self, entity_id: str, tick: int) -> None:
@@ -127,6 +136,8 @@ class EntityManager:
             if entity.destroyed_tick == tick:
                 return
             raise ValueError("Entity was destroyed at a different tick.")
+        if self._work_guard is not None:
+            self._work_guard.validate_entity_destruction(entity_id)
         if (
             any(n.owner_id == entity_id for n in self._state.need_definitions.values())
             or any(

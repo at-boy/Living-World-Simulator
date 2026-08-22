@@ -1,5 +1,10 @@
 # NPC Information Boundary
 
+Work IDs, reservation IDs, targets, exact requirements, assignments, progress,
+priority, deadlines, ticks, and events remain engine-only. Explicitly selected
+`NPCWorkInterpretation` contains only a public label and fixed qualitative
+status prose; Task 20 never injects it automatically.
+
 Consequence IDs, rates, quantities, capacity, condition, ticks, and events are
 privileged. Only explicitly selected fixed qualitative consequence prose is
 safe; Task 19a does not automatically inject it into NPC context or LLM input.

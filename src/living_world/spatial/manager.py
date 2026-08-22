@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
+from typing import Protocol
 
 from living_world.managers.event_manager import EventManager
 from living_world.spatial.model import (
@@ -13,12 +14,22 @@ from living_world.spatial.model import (
 from living_world.state.world_state import WorldState
 
 
+class WorkSpatialGuard(Protocol):
+    def validate_spatial_change(self, entity_id: str) -> None: ...
+
+
 class SpatialManager:
     """Own placement lifecycle, invariants, ordering, and spatial events."""
 
-    def __init__(self, state: WorldState, events: EventManager) -> None:
+    def __init__(
+        self,
+        state: WorldState,
+        events: EventManager,
+        work_guard: WorkSpatialGuard | None = None,
+    ) -> None:
         self._state = state
         self._events = events
+        self._work_guard = work_guard
 
     def place(
         self,
@@ -52,6 +63,8 @@ class SpatialManager:
         overlap_policy: OverlapPolicy = OverlapPolicy.REJECT,
     ) -> Placement:
         previous = self._required(entity_id)
+        if self._work_guard is not None:
+            self._work_guard.validate_spatial_change(entity_id)
         placement = Placement(
             entity_id,
             geometry,
@@ -66,6 +79,8 @@ class SpatialManager:
 
     def unplace(self, entity_id: str) -> Placement:
         previous = self._required(entity_id)
+        if self._work_guard is not None:
+            self._work_guard.validate_spatial_change(entity_id)
         if previous.geometry is None:
             raise ValueError(f"Entity '{entity_id}' is already unplaced.")
         self._reject_children(entity_id)
@@ -75,6 +90,8 @@ class SpatialManager:
 
     def remove(self, entity_id: str) -> Placement:
         previous = self._required(entity_id)
+        if self._work_guard is not None:
+            self._work_guard.validate_spatial_change(entity_id)
         self._reject_children(entity_id)
         self._commit("spatial_placement_removed", previous, None)
         return previous

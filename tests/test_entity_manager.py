@@ -1,3 +1,5 @@
+import pytest
+
 from living_world.core.definition import Definition
 from living_world.managers.definition_manager import DefinitionManager
 from living_world.managers.entity_manager import EntityManager
@@ -52,3 +54,23 @@ def test_current_tick_destruction_validation_and_consequence_removal_guards() ->
     )
     with pytest.raises(ValueError, match="consequence policy"):
         engine.entities.remove(entity.id)
+
+
+def test_work_history_forever_guards_removal_but_release_allows_labor_destruction() -> (
+    None
+):
+    from test_work_orders import _create, _engine
+
+    engine, settlement_id, npc_id = _engine()
+    work = _create(engine, settlement_id)
+    engine.work.mark_ready(work.id)
+    engine.work.assign_and_reserve(work.id, (npc_id,))
+    with pytest.raises(ValueError, match="spatial state|work history"):
+        engine.entities.remove(npc_id)
+    with pytest.raises(ValueError, match="required by nonterminal work"):
+        engine.entities.mark_destroyed(npc_id, engine.state.tick)
+    engine.work.block(work.id, "Released.")
+    engine.spatial.remove(npc_id)
+    engine.entities.mark_destroyed(npc_id, engine.state.tick)
+    with pytest.raises(ValueError, match="work history"):
+        engine.entities.remove(npc_id)

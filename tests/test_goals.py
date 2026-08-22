@@ -587,3 +587,17 @@ def test_goal_owner_rejects_existing_maintenance_capability() -> None:
     goal, objectives = _records()
     with pytest.raises(ValueError, match="maintenance capability"):
         engine.goals.create(replace(goal, owner_id=capability.id), objectives)
+
+
+def test_work_creation_requires_nonterminal_objective_and_never_mutates_goal() -> None:
+    from test_work_orders import _create, _engine
+
+    engine, settlement_id, _ = _engine()
+    before_goal = dict(engine.state.goal_states)
+    before_objective = dict(engine.state.objective_states)
+    _create(engine, settlement_id)
+    assert engine.state.goal_states == before_goal
+    assert engine.state.objective_states == before_objective
+    engine.goals.transition_objective("objective_food", GoalStatus.FAILED)
+    with pytest.raises(ValueError, match="Terminal goals"):
+        _create(engine, settlement_id, public_label="Late work")

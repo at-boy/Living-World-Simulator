@@ -11,6 +11,12 @@ from fastapi.encoders import jsonable_encoder
 
 from living_world.simulation.simulation_engine import SimulationEngine
 from living_world.spatial.manager import placement_snapshot
+from living_world.work import (
+    CapabilityWorkTarget,
+    ExternalConnectionWorkTarget,
+    MaintenanceWorkTarget,
+    ResourceWorkTarget,
+)
 
 
 class WorldInspector(Protocol):
@@ -43,6 +49,8 @@ class WorldInspector(Protocol):
     def needs(self) -> tuple[Mapping[str, object], ...]: ...
 
     def consequences(self) -> Mapping[str, object]: ...
+
+    def work_orders(self) -> tuple[Mapping[str, object], ...]: ...
 
     def events(self) -> tuple[Mapping[str, object], ...]: ...
 
@@ -83,6 +91,8 @@ class EngineWorldInspector:
             "consumption_policy_count": len(state.consumption_policies),
             "storage_policy_count": len(state.storage_policies),
             "maintenance_policy_count": len(state.maintenance_policies),
+            "work_order_count": len(state.work_definitions),
+            "work_reservation_count": len(state.work_reservations),
             "event_count": len(state.events),
             "observation_count": len(state.observations),
             "memory_count": len(state.memories),
@@ -221,6 +231,24 @@ class EngineWorldInspector:
     def events(self) -> tuple[Mapping[str, object], ...]:
         return self._records(self._engine.state.events)
 
+    def work_orders(self) -> tuple[Mapping[str, object], ...]:
+        state = self._engine.state
+        return tuple(
+            cast(
+                Mapping[str, object],
+                _snapshot_value(
+                    {
+                        "definition": _work_definition_snapshot(
+                            state.work_definitions[key]
+                        ),
+                        "state": state.work_states[key],
+                        "reservations": self._engine.work.reservations_for(key),
+                    }
+                ),
+            )
+            for key in sorted(state.work_definitions)
+        )
+
     def npcs(self) -> tuple[Mapping[str, object], ...]:
         """Return the presentation attributes of entities declared as NPCs."""
 
@@ -299,6 +327,31 @@ class EngineWorldInspector:
         return tuple(
             _snapshot_value(records[record_id]) for record_id in sorted(records)
         )
+
+
+def _work_definition_snapshot(definition: object) -> Mapping[str, object]:
+    snapshot = cast(dict[str, object], _snapshot_value(definition))
+    target = definition.target
+    if isinstance(target, ResourceWorkTarget):
+        snapshot["target"] = {
+            "kind": "resource",
+            "resource": target.resource,
+            "quantity": target.quantity,
+        }
+    elif isinstance(target, CapabilityWorkTarget):
+        snapshot["target"] = {
+            "kind": "capability",
+            "definition_key": target.definition_key,
+            "count": target.count,
+        }
+    elif isinstance(target, MaintenanceWorkTarget):
+        snapshot["target"] = {"kind": "maintenance", "policy_id": target.policy_id}
+    elif isinstance(target, ExternalConnectionWorkTarget):
+        snapshot["target"] = {
+            "kind": "external_connection",
+            "reference_id": target.reference_id,
+        }
+    return snapshot
 
 
 def _snapshot_value(value: object) -> object:
