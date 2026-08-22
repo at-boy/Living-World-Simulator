@@ -1,5 +1,9 @@
 # Core Runtime Model
 
+Work orders are immutable definitions paired with immutable lifecycle state and
+durable aggregate reservation history. `WorkManager` alone mutates these
+collections; reservations lock but do not deduct settlement resources.
+
 Consumption, storage, and maintenance policies configure an authoritative
 per-tick consequence phase. `ConsequenceManager` owns policy/state, resource,
 condition, lifecycle, and event mutation. Consequences run after ordinary

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from copy import deepcopy
 from dataclasses import replace
+from typing import Protocol
 
 from living_world.managers.entity_manager import EntityManager
 from living_world.managers.event_manager import EventManager
@@ -19,6 +20,10 @@ from living_world.state.world_state import WorldState
 from living_world.systems.resource_system import ResourceSystem
 
 
+class WorkMaintenanceGuard(Protocol):
+    def validate_maintenance_target(self, entity_id: str) -> None: ...
+
+
 class ConsequenceManager:
     def __init__(
         self,
@@ -26,6 +31,7 @@ class ConsequenceManager:
         resources: ResourceSystem,
         entities: EntityManager,
         events: EventManager,
+        work_guard: WorkMaintenanceGuard | None = None,
     ) -> None:
         self._state, self._resources, self._entities, self._events = (
             state,
@@ -33,6 +39,7 @@ class ConsequenceManager:
             entities,
             events,
         )
+        self._work_guard = work_guard
 
     def create_consumption(self, policy: ConsumptionPolicy) -> ConsumptionPolicy:
         if type(policy) is not ConsumptionPolicy:
@@ -79,6 +86,8 @@ class ConsequenceManager:
         if type(policy) is not MaintenancePolicy:
             raise TypeError("policy must be a MaintenancePolicy.")
         self._not_capability(policy.owner_id)
+        if self._work_guard is not None:
+            self._work_guard.validate_maintenance_target(policy.capability_id)
         self._validate_maintenance(policy, ownership=True)
         if policy.id in self._state.maintenance_policies or any(
             p.capability_id == policy.capability_id

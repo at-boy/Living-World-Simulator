@@ -1,5 +1,11 @@
 # Engine Glossary
 
+## Work order and reservation
+
+A work order is engine-owned typed intent associated with one settlement
+objective and canonical location. Its durable aggregate reservation locks labor
+and settlement-held tool/consumable quantities without deducting stock.
+
 ## Consequence phase
 
 Atomic deterministic application of consumption, maintenance, and storage after

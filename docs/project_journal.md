@@ -1,5 +1,10 @@
 # Living World Simulator – Project Journal
 
+## Task 20 implementation
+
+Work intent and non-deducting aggregate locks are now manager-owned durable
+truth. Proposal translation and deterministic effects remain Tasks 20a/20b.
+
 ## Task 19a implementation
 
 Added the manager-owned atomic consequence phase, schema-8 persistence,

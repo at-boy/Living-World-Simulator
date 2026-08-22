@@ -29,6 +29,7 @@ from living_world.needs.model import (
     StorageState,
 )
 from living_world.spatial.model import Placement
+from living_world.work.model import WorkDefinition, WorkReservation, WorkState
 
 
 @dataclass(slots=True)
@@ -65,6 +66,10 @@ class WorldState:
     storage_states: dict[str, StorageState] = field(default_factory=dict)
     maintenance_policies: dict[str, MaintenancePolicy] = field(default_factory=dict)
     maintenance_states: dict[str, MaintenanceState] = field(default_factory=dict)
+
+    work_definitions: dict[str, WorkDefinition] = field(default_factory=dict)
+    work_states: dict[str, WorkState] = field(default_factory=dict)
+    work_reservations: dict[str, WorkReservation] = field(default_factory=dict)
 
     events: dict[str, Event] = field(default_factory=dict)
 

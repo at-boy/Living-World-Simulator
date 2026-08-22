@@ -132,3 +132,38 @@ def test_boundary_rejects_consequence_ids_and_numbers_and_allows_fixed_prose() -
     with pytest.raises(ValueError, match="numeric values"):
         boundary.validate_context(_context("The hidden rate is 7."))
     boundary.validate_context(_context("Food and water use is currently supplied."))
+
+
+def test_boundary_rejects_work_ids_and_authoritative_numbers() -> None:
+    from living_world.work import (
+        ResourceWorkTarget,
+        WorkCategory,
+        WorkDefinition,
+        WorkState,
+    )
+
+    state = WorldState()
+    definition = WorkDefinition(
+        "work_000001",
+        WorkCategory.PRODUCE_FOOD,
+        ResourceWorkTarget("food", 17),
+        "Plant crops",
+        "settlement",
+        "objective",
+        "location",
+        (),
+        0,
+        (),
+        (),
+        23,
+        4,
+        None,
+        0,
+    )
+    state.work_definitions[definition.id] = definition
+    state.work_states[definition.id] = WorkState(definition.id)
+    boundary = NPCInformationBoundary(state)
+    with pytest.raises(ValueError, match="internal IDs"):
+        boundary.validate_context(_context("Review work_000001."))
+    with pytest.raises(ValueError, match="numeric values"):
+        boundary.validate_context(_context("Progress requires 23."))

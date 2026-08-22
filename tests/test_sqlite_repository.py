@@ -92,8 +92,82 @@ def test_sqlite_repository_round_trips_schema_eight_needs(tmp_path: Path) -> Non
             connection.execute(
                 "SELECT schema_version FROM world_snapshots WHERE id = 1"
             ).fetchone()[0]
-            == 8
+            == 9
         )
+
+
+@pytest.mark.parametrize(
+    "record,shape,field",
+    (
+        ("work_definitions", "record", "priority"),
+        ("work_states", "record", "progress"),
+        ("work_reservations", "record", "created_tick"),
+        ("work_definitions", "resource_target", "quantity"),
+        ("work_definitions", "capability_target", "count"),
+        ("work_definitions", "maintenance_target", "policy_id"),
+        ("work_definitions", "external_target", "reference_id"),
+        ("work_definitions", "tool", "quantity"),
+        ("work_definitions", "resource", "quantity"),
+        ("work_reservations", "tool", "quantity"),
+        ("work_reservations", "resource", "quantity"),
+    ),
+)
+@pytest.mark.parametrize("change", ("missing", "extra"))
+def test_schema_nine_rejects_missing_or_extra_keys_for_every_work_shape(
+    tmp_path: Path, record: str, shape: str, field: str, change: str
+) -> None:
+    from test_work_orders import _create, _engine
+
+    database = tmp_path / f"work-corrupt-{record}-{shape}-{change}.sqlite3"
+    repository = SQLiteRepository(str(database))
+    engine, settlement_id, npc_id = _engine()
+    work = _create(engine, settlement_id)
+    engine.work.mark_ready(work.id)
+    engine.work.assign_and_reserve(work.id, (npc_id,))
+    repository.save_world(engine.state)
+    with sqlite3.connect(database) as connection:
+        payload = json.loads(
+            connection.execute(
+                "SELECT payload FROM world_snapshots WHERE id = 1"
+            ).fetchone()[0]
+        )
+        item = payload[record][0]
+        if shape.endswith("target"):
+            item["target"] = {
+                "resource_target": {
+                    "kind": "resource",
+                    "resource": "food",
+                    "quantity": 1,
+                },
+                "capability_target": {
+                    "kind": "capability",
+                    "definition_key": "shelter",
+                    "count": 1,
+                },
+                "maintenance_target": {
+                    "kind": "maintenance",
+                    "policy_id": "maintenance_missing",
+                },
+                "external_target": {
+                    "kind": "external_connection",
+                    "reference_id": "external_reference_missing",
+                },
+            }[shape]
+            item = item["target"]
+        elif shape == "tool":
+            item = item["tools"][0]
+        elif shape == "resource":
+            item = item["resources"][0]
+        if change == "missing":
+            del item[field]
+        else:
+            item["unexpected"] = True
+        connection.execute(
+            "UPDATE world_snapshots SET payload = ? WHERE id = 1",
+            (json.dumps(payload),),
+        )
+    with pytest.raises(RepositoryLoadError):
+        repository.load_world()
 
 
 @pytest.mark.parametrize("schema_version", range(1, 7))
@@ -124,7 +198,7 @@ def test_legacy_schema_loads_empty_needs_and_rewrites_eight(
             connection.execute(
                 "SELECT schema_version FROM world_snapshots WHERE id = 1"
             ).fetchone()[0]
-            == 8
+            == 9
         )
 
 
@@ -340,7 +414,7 @@ def test_unsupported_schema_version_raises_without_returning_partial_state(
     repository.save_world(_world_state())
     with sqlite3.connect(database_path) as connection:
         connection.execute(
-            "UPDATE world_snapshots SET schema_version = ? WHERE id = 1", (9,)
+            "UPDATE world_snapshots SET schema_version = ? WHERE id = 1", (10,)
         )
 
     with pytest.raises(RepositoryLoadError, match="Unsupported world schema version"):
@@ -456,7 +530,38 @@ def test_versions_one_through_seven_ignore_stray_consequences_and_write_forward(
             connection.execute(
                 "SELECT schema_version FROM world_snapshots WHERE id = 1"
             ).fetchone()[0]
-            == 8
+            == 9
+        )
+
+
+def test_schema_eight_ignores_stray_work_and_writes_forward(tmp_path: Path) -> None:
+    database = tmp_path / "legacy-work.sqlite3"
+    repository = SQLiteRepository(str(database))
+    repository.save_world(_world_state())
+    with sqlite3.connect(database) as connection:
+        payload = json.loads(
+            connection.execute(
+                "SELECT payload FROM world_snapshots WHERE id = 1"
+            ).fetchone()[0]
+        )
+        payload["work_definitions"] = [{"id": "work_ignored"}]
+        payload["work_states"] = [{"work_id": "work_ignored"}]
+        payload["work_reservations"] = [{"id": "work_reservation_ignored"}]
+        connection.execute(
+            "UPDATE world_snapshots SET schema_version = 8, payload = ? WHERE id = 1",
+            (json.dumps(payload),),
+        )
+    loaded = repository.load_world()
+    assert loaded.work_definitions == {}
+    assert loaded.work_states == {}
+    assert loaded.work_reservations == {}
+    repository.save_world(loaded)
+    with sqlite3.connect(database) as connection:
+        assert (
+            connection.execute(
+                "SELECT schema_version FROM world_snapshots WHERE id = 1"
+            ).fetchone()[0]
+            == 9
         )
 
 

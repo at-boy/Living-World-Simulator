@@ -294,7 +294,7 @@ def test_spatial_state_round_trips_and_legacy_defaults_to_empty(tmp_path: Path) 
         version = connection.execute(
             "SELECT schema_version FROM world_snapshots WHERE id = 1"
         ).fetchone()[0]
-    assert version == 8
+    assert version == 9
 
 
 @pytest.mark.parametrize("legacy_version", (1, 2))
@@ -380,3 +380,26 @@ def test_event_failure_leaves_placement_and_history_unchanged() -> None:
 
     assert engine.state.placements == {}
     assert engine.state.events == {}
+
+
+def test_terminal_work_location_and_released_labor_may_move() -> None:
+    from test_work_orders import _create, _engine
+
+    engine, settlement_id, npc_id = _engine()
+    engine.definitions.register(Definition("site"))
+    site = engine.entities.create(definition_key="site", name="Field")
+    engine.spatial.place(
+        entity_id=site.id,
+        geometry=Point(3, 3),
+        containing_entity_id=settlement_id,
+    )
+    work = _create(engine, settlement_id, location_id=site.id)
+    engine.work.mark_ready(work.id)
+    engine.work.assign_and_reserve(work.id, (npc_id,))
+    engine.work.cancel(work.id, "Stopped.")
+    engine.spatial.replace(
+        entity_id=npc_id, geometry=Point(2, 2), containing_entity_id=settlement_id
+    )
+    engine.spatial.replace(
+        entity_id=site.id, geometry=Point(4, 4), containing_entity_id=settlement_id
+    )

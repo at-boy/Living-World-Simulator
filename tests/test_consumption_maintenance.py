@@ -507,3 +507,32 @@ def test_current_tick_partial_state_rejected_and_new_policy_joins_next_tick() ->
     )
     with pytest.raises(ValueError, match="partially processed"):
         engine.consequences.apply()
+
+
+def test_consumption_may_undercollateralize_work_lock_without_mutating_ledger(
+    tmp_path: Path,
+) -> None:
+    from test_work_orders import _create, _engine
+
+    from living_world.work import ResourceRequirement
+
+    engine, settlement_id, npc_id = _engine()
+    owner = engine.state.entities[settlement_id]
+    owner.attributes["population"] = 1
+    owner.attributes["resources"]["food"] = 2
+    work = _create(
+        engine, settlement_id, resources=(ResourceRequirement("food", 2),), tools=()
+    )
+    engine.work.mark_ready(work.id)
+    engine.work.assign_and_reserve(work.id, (npc_id,))
+    engine.consequences.create_consumption(
+        ConsumptionPolicy("consumption_work", settlement_id, 2, 0)
+    )
+    engine.consequences.apply()
+    assert owner.attributes["resources"]["food"] == 0
+    assert engine.work.active_reservations()[0].resources == (
+        ResourceRequirement("food", 2),
+    )
+    repository = SQLiteRepository(str(tmp_path / "under-work.sqlite3"))
+    repository.save_world(engine.state)
+    assert repository.load_world().work_reservations == engine.state.work_reservations

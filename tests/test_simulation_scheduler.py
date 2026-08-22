@@ -1,3 +1,4 @@
+from living_world.simulation.simulation_engine import SimulationEngine
 from living_world.simulation.simulation_scheduler import SimulationScheduler
 from living_world.state.world_state import WorldState
 from living_world.systems.simulation_system import SimulationSystem
@@ -41,3 +42,22 @@ def test_scheduler_run() -> None:
     assert state.tick == 5
 
     assert system.calls == 5
+
+
+def test_task_twenty_adds_no_work_system_or_scheduler_mutation() -> None:
+    engine = SimulationEngine()
+    assert all(
+        type(system).__module__ != "living_world.work"
+        for system in engine._registered_systems
+    )
+    before = (
+        dict(engine.state.work_definitions),
+        dict(engine.state.work_states),
+        dict(engine.state.work_reservations),
+    )
+    engine.step()
+    assert (
+        engine.state.work_definitions,
+        engine.state.work_states,
+        engine.state.work_reservations,
+    ) == before

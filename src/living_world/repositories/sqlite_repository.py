@@ -70,9 +70,23 @@ from living_world.spatial.model import (
 )
 from living_world.state.world_state import WorldState
 from living_world.systems.resource_system import ResourceSystem
+from living_world.work import (
+    CapabilityWorkTarget,
+    ExternalConnectionWorkTarget,
+    MaintenanceWorkTarget,
+    ResourceRequirement,
+    ResourceWorkTarget,
+    ToolRequirement,
+    WorkCategory,
+    WorkDefinition,
+    WorkReservation,
+    WorkState,
+    WorkStatus,
+)
+from living_world.work.manager import WorkManager
 
-_SCHEMA_VERSION = 8
-_SUPPORTED_SCHEMA_VERSIONS = frozenset({1, 2, 3, 4, 5, 6, 7, 8})
+_SCHEMA_VERSION = 9
+_SUPPORTED_SCHEMA_VERSIONS = frozenset({1, 2, 3, 4, 5, 6, 7, 8, 9})
 Record = (
     Entity
     | Relationship
@@ -91,6 +105,9 @@ Record = (
     | ObjectiveState
     | NeedDefinition
     | NeedState
+    | WorkDefinition
+    | WorkState
+    | WorkReservation
 )
 RecordType = TypeVar("RecordType", bound=Record)
 
@@ -277,6 +294,18 @@ def _serialize_world(state: WorldState) -> dict[str, object]:
             for x in sorted(
                 state.maintenance_states.values(), key=lambda x: x.policy_id
             )
+        ],
+        "work_definitions": [
+            _serialize_work_definition(x)
+            for x in sorted(state.work_definitions.values(), key=lambda x: x.id)
+        ],
+        "work_states": [
+            _serialize_work_state(x)
+            for x in sorted(state.work_states.values(), key=lambda x: x.work_id)
+        ],
+        "work_reservations": [
+            _serialize_work_reservation(x)
+            for x in sorted(state.work_reservations.values(), key=lambda x: x.id)
         ],
         "events": [_serialize_event(event) for event in state.events.values()],
         "observations": [
@@ -730,6 +759,81 @@ def _serialize_salience(salience: CognitiveSalience) -> dict[str, object]:
     return {"importance": salience.importance, "is_core": salience.is_core}
 
 
+def _serialize_work_target(value: object) -> dict[str, object]:
+    if isinstance(value, ResourceWorkTarget):
+        return {
+            "kind": "resource",
+            "resource": value.resource,
+            "quantity": value.quantity,
+        }
+    if isinstance(value, CapabilityWorkTarget):
+        return {
+            "kind": "capability",
+            "definition_key": value.definition_key,
+            "count": value.count,
+        }
+    if isinstance(value, MaintenanceWorkTarget):
+        return {"kind": "maintenance", "policy_id": value.policy_id}
+    if isinstance(value, ExternalConnectionWorkTarget):
+        return {"kind": "external_connection", "reference_id": value.reference_id}
+    raise TypeError("Unknown work target.")
+
+
+def _serialize_tools(values: tuple[ToolRequirement, ...]) -> list[dict[str, object]]:
+    return [{"tool": x.tool, "quantity": x.quantity} for x in values]
+
+
+def _serialize_resources(
+    values: tuple[ResourceRequirement, ...],
+) -> list[dict[str, object]]:
+    return [{"resource": x.resource, "quantity": x.quantity} for x in values]
+
+
+def _serialize_work_definition(x: WorkDefinition) -> dict[str, object]:
+    return {
+        "id": x.id,
+        "category": x.category.value,
+        "target": _serialize_work_target(x.target),
+        "public_label": x.public_label,
+        "settlement_id": x.settlement_id,
+        "objective_id": x.objective_id,
+        "location_id": x.location_id,
+        "prerequisite_work_ids": list(x.prerequisite_work_ids),
+        "labor_required": x.labor_required,
+        "tools": _serialize_tools(x.tools),
+        "resources": _serialize_resources(x.resources),
+        "required_progress": x.required_progress,
+        "priority": x.priority,
+        "deadline_tick": x.deadline_tick,
+        "created_tick": x.created_tick,
+    }
+
+
+def _serialize_work_state(x: WorkState) -> dict[str, object]:
+    return {
+        "work_id": x.work_id,
+        "status": x.status.value,
+        "progress": x.progress,
+        "reservation_id": x.reservation_id,
+        "status_reason": x.status_reason,
+        "started_tick": x.started_tick,
+        "resolution_tick": x.resolution_tick,
+    }
+
+
+def _serialize_work_reservation(x: WorkReservation) -> dict[str, object]:
+    return {
+        "id": x.id,
+        "work_id": x.work_id,
+        "labor_entity_ids": list(x.labor_entity_ids),
+        "tools": _serialize_tools(x.tools),
+        "resources": _serialize_resources(x.resources),
+        "created_tick": x.created_tick,
+        "released_tick": x.released_tick,
+        "release_status": None if x.release_status is None else x.release_status.value,
+    }
+
+
 def _deserialize_world(payload: object, *, schema_version: int) -> WorldState:
     payload_mapping = _mapping(payload)
     state = WorldState(
@@ -847,6 +951,21 @@ def _deserialize_world(payload: object, *, schema_version: int) -> WorldState:
         if schema_version >= 8
         else {}
     )
+    state.work_definitions = (
+        _records(payload_mapping["work_definitions"], _deserialize_work_definition)
+        if schema_version >= 9
+        else {}
+    )
+    state.work_states = (
+        _records(payload_mapping["work_states"], _deserialize_work_state)
+        if schema_version >= 9
+        else {}
+    )
+    state.work_reservations = (
+        _records(payload_mapping["work_reservations"], _deserialize_work_reservation)
+        if schema_version >= 9
+        else {}
+    )
     for dispatch in state.external_dispatches.values():
         reference = state.external_world_references.get(dispatch.reference_id)
         if reference is None:
@@ -888,6 +1007,7 @@ def _deserialize_world(payload: object, *, schema_version: int) -> WorldState:
         EntityManager(state, DefinitionManager(), spatial),
         EventManager(state),
     ).validate_loaded_state()
+    WorkManager(state, EventManager(state)).validate_loaded_state()
     return state
 
 
@@ -1253,6 +1373,133 @@ def _deserialize_maintenance_state(value: Mapping[str, object]) -> MaintenanceSt
         _integer(v["condition"]),
         _optional_integer(v["last_processed_tick"]),
         _boolean(v["upkeep_shortage"]),
+    )
+
+
+def _work_tools(value: object) -> tuple[ToolRequirement, ...]:
+    result = []
+    for item in _list(value):
+        v = _checked(_mapping(item), {"tool", "quantity"})
+        result.append(ToolRequirement(_string(v["tool"]), _integer(v["quantity"])))
+    return tuple(result)
+
+
+def _work_resources(value: object) -> tuple[ResourceRequirement, ...]:
+    result = []
+    for item in _list(value):
+        v = _checked(_mapping(item), {"resource", "quantity"})
+        result.append(
+            ResourceRequirement(_string(v["resource"]), _integer(v["quantity"]))
+        )
+    return tuple(result)
+
+
+def _deserialize_work_target(value: object):
+    raw = _mapping(value)
+    kind = _string(raw.get("kind"))
+    if kind == "resource":
+        v = _checked(raw, {"kind", "resource", "quantity"})
+        return ResourceWorkTarget(_string(v["resource"]), _integer(v["quantity"]))
+    if kind == "capability":
+        v = _checked(raw, {"kind", "definition_key", "count"})
+        return CapabilityWorkTarget(_string(v["definition_key"]), _integer(v["count"]))
+    if kind == "maintenance":
+        v = _checked(raw, {"kind", "policy_id"})
+        return MaintenanceWorkTarget(_string(v["policy_id"]))
+    if kind == "external_connection":
+        v = _checked(raw, {"kind", "reference_id"})
+        return ExternalConnectionWorkTarget(_string(v["reference_id"]))
+    raise ValueError("Unknown persisted work target kind.")
+
+
+def _deserialize_work_definition(value: Mapping[str, object]) -> WorkDefinition:
+    v = _checked(
+        value,
+        {
+            "id",
+            "category",
+            "target",
+            "public_label",
+            "settlement_id",
+            "objective_id",
+            "location_id",
+            "prerequisite_work_ids",
+            "labor_required",
+            "tools",
+            "resources",
+            "required_progress",
+            "priority",
+            "deadline_tick",
+            "created_tick",
+        },
+    )
+    return WorkDefinition(
+        _string(v["id"]),
+        WorkCategory(_string(v["category"])),
+        _deserialize_work_target(v["target"]),
+        _string(v["public_label"]),
+        _string(v["settlement_id"]),
+        _string(v["objective_id"]),
+        _string(v["location_id"]),
+        _strings(v["prerequisite_work_ids"]),
+        _integer(v["labor_required"]),
+        _work_tools(v["tools"]),
+        _work_resources(v["resources"]),
+        _integer(v["required_progress"]),
+        _integer(v["priority"]),
+        _optional_integer(v["deadline_tick"]),
+        _integer(v["created_tick"]),
+    )
+
+
+def _deserialize_work_state(value: Mapping[str, object]) -> WorkState:
+    v = _checked(
+        value,
+        {
+            "work_id",
+            "status",
+            "progress",
+            "reservation_id",
+            "status_reason",
+            "started_tick",
+            "resolution_tick",
+        },
+    )
+    return WorkState(
+        _string(v["work_id"]),
+        WorkStatus(_string(v["status"])),
+        _integer(v["progress"]),
+        _optional_string(v["reservation_id"]),
+        _optional_string(v["status_reason"]),
+        _optional_integer(v["started_tick"]),
+        _optional_integer(v["resolution_tick"]),
+    )
+
+
+def _deserialize_work_reservation(value: Mapping[str, object]) -> WorkReservation:
+    v = _checked(
+        value,
+        {
+            "id",
+            "work_id",
+            "labor_entity_ids",
+            "tools",
+            "resources",
+            "created_tick",
+            "released_tick",
+            "release_status",
+        },
+    )
+    status = _optional_string(v["release_status"])
+    return WorkReservation(
+        _string(v["id"]),
+        _string(v["work_id"]),
+        _strings(v["labor_entity_ids"]),
+        _work_tools(v["tools"]),
+        _work_resources(v["resources"]),
+        _integer(v["created_tick"]),
+        _optional_integer(v["released_tick"]),
+        None if status is None else WorkStatus(status),
     )
 
 

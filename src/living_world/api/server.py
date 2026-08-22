@@ -79,6 +79,10 @@ def create_app(engine: SimulationEngine) -> FastAPI:
     async def consequences() -> Mapping[str, object]:
         return inspector.consequences()
 
+    @application.get("/world/work-orders")
+    async def work_orders() -> tuple[Mapping[str, object], ...]:
+        return inspector.work_orders()
+
     @application.get("/world/events")
     async def events() -> tuple[Mapping[str, object], ...]:
         return inspector.events()

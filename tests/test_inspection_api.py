@@ -295,6 +295,8 @@ def test_inspection_endpoints_return_authoritative_snapshots_in_id_order() -> No
         "consumption_policy_count": 0,
         "storage_policy_count": 0,
         "maintenance_policy_count": 0,
+        "work_order_count": 0,
+        "work_reservation_count": 0,
         "event_count": 2,
         "observation_count": 2,
         "memory_count": 2,
@@ -747,3 +749,39 @@ def test_need_inspection_is_privileged_exact_and_detached() -> None:
     ]
     records[0]["definition"]["kind"] = "changed"
     assert engine.state.need_definitions[definition.id].kind is NeedKind.FOOD
+
+
+def test_work_inspection_is_privileged_id_ordered_and_detached() -> None:
+    from living_world.work import (
+        ResourceWorkTarget,
+        WorkCategory,
+        WorkDefinition,
+        WorkState,
+    )
+
+    engine, client = make_client()
+    definition = WorkDefinition(
+        "work_000002",
+        WorkCategory.GATHER_WATER,
+        ResourceWorkTarget("water", 2),
+        "Fetch water",
+        "entity_000001",
+        "objective_demo",
+        "entity_000001",
+        (),
+        0,
+        (),
+        (),
+        3,
+        1,
+        None,
+        0,
+    )
+    engine.state.work_definitions[definition.id] = definition
+    engine.state.work_states[definition.id] = WorkState(definition.id)
+    records = client.get("/world/work-orders").json()
+    assert records[0]["definition"]["id"] == definition.id
+    assert records[0]["reservations"] == []
+    records[0]["definition"]["public_label"] = "changed"
+    assert engine.state.work_definitions[definition.id].public_label == "Fetch water"
+    assert client.post("/world/work-orders").status_code == 405
