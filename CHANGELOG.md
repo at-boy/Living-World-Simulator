@@ -4,6 +4,10 @@
 
 ### Added
 
+- Add actor-bound, engine-authored work offers that translate safe qualitative
+  NPC proposals into validated manager-owned creation, priority, or
+  self-assignment operations without exposing work policy.
+
 - Engine-owned work orders, aggregate reservations, schema-9 persistence,
   privileged inspection, and NPC-safe qualitative interpretations.
 

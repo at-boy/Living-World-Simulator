@@ -3,6 +3,9 @@
 Work orders are immutable definitions paired with immutable lifecycle state and
 durable aggregate reservation history. `WorkManager` alone mutates these
 collections; reservations lock but do not deduct settlement resources.
+`WorkActionHandler` exposes only engine-authored qualitative labels to one
+eligible actor, then revalidates hidden offer policy and delegates exactly one
+creation, priority, or self-assignment mutation to `WorkManager`.
 
 Consumption, storage, and maintenance policies configure an authoritative
 per-tick consequence phase. `ConsequenceManager` owns policy/state, resource,

@@ -29,6 +29,8 @@ from living_world.needs import (
     StorageState,
 )
 from living_world.work import (
+    PRIORITIZE_WORK_ACTION_KEY,
+    VOLUNTEER_FOR_WORK_ACTION_KEY,
     CapabilityWorkTarget,
     ExternalConnectionWorkTarget,
     MaintenanceWorkTarget,
@@ -36,8 +38,12 @@ from living_world.work import (
     ResourceRequirement,
     ResourceWorkTarget,
     ToolRequirement,
+    WorkActionHandler,
+    WorkAssignmentOffer,
     WorkCategory,
+    WorkCreationOffer,
     WorkDefinition,
+    WorkPriorityOffer,
     WorkReservation,
     WorkState,
     WorkStatus,
@@ -45,6 +51,8 @@ from living_world.work import (
 from living_world.work.manager import WorkManager
 
 __all__ = [
+    "PRIORITIZE_WORK_ACTION_KEY",
+    "VOLUNTEER_FOR_WORK_ACTION_KEY",
     "CapabilityWorkTarget",
     "ConsequenceManager",
     "ConsequenceSystem",
@@ -76,9 +84,13 @@ __all__ = [
     "StorageResourceRule",
     "StorageState",
     "ToolRequirement",
+    "WorkActionHandler",
+    "WorkAssignmentOffer",
     "WorkCategory",
+    "WorkCreationOffer",
     "WorkDefinition",
     "WorkManager",
+    "WorkPriorityOffer",
     "WorkReservation",
     "WorkState",
     "WorkStatus",

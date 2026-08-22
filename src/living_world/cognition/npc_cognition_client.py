@@ -11,8 +11,11 @@ from typing import Protocol
 from living_world.cognition.npc_context import NPCContext
 
 _INTERNAL_RECORD_ID_PATTERN = re.compile(
-    r"(?:entity|relationship|event|observation|belief|experience|memory|"
-    r"knowledge|npc_relationship)_\d+"
+    r"(?<![A-Za-z0-9_])(?:(?:entity|relationship|event|observation|belief|"
+    r"experience|memory|knowledge|npc_relationship|placement|external_reference|"
+    r"external_dispatch|dispatch|work|work_reservation)_\d+|"
+    r"(?:need|goal|objective|consumption|storage|maintenance)_"
+    r"[A-Za-z0-9][A-Za-z0-9_-]*)"
 )
 
 

@@ -50,6 +50,11 @@ def test_task_twenty_adds_no_work_system_or_scheduler_mutation() -> None:
         type(system).__module__ != "living_world.work"
         for system in engine._registered_systems
     )
+    assert all(
+        type(system).__module__ != "living_world.work.action"
+        for system in engine._registered_systems
+    )
+    assert not hasattr(engine, "work_action_handler")
     before = (
         dict(engine.state.work_definitions),
         dict(engine.state.work_states),

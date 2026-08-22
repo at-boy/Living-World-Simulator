@@ -6,6 +6,12 @@ A work order is engine-owned typed intent associated with one settlement
 objective and canonical location. Its durable aggregate reservation locks labor
 and settlement-held tool/consumable quantities without deducting stock.
 
+## Work offer
+
+An ephemeral engine-owned record that binds a safe public label to complete
+hidden work policy for one actor. The NPC may select the offered label but may
+not supply IDs, quantities, priority, targets, laborers, or execution effects.
+
 ## Consequence phase
 
 Atomic deterministic application of consumption, maintenance, and storage after
