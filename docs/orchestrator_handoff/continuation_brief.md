@@ -10,16 +10,16 @@ be changed.
 At this handoff checkpoint:
 
 - current branch: `milestone/v0.6`;
-- last implementation merge: `bba7549` (`Merge Task 19a consumption and maintenance`);
-- current milestone head and `origin/milestone/v0.6`: `bba7549` before the
-  Task 20 planning-only amendment that follows this brief;
+- last implementation merge: `bb9fa53` (`Merge Task 20 work orders and reservations`);
+- implementation baseline on `milestone/v0.6` and its origin: `bb9fa53`; this
+  checkpoint-only documentation update follows that merge;
 - `origin/main`: `12f2f17` and intentionally unchanged;
-- worktree: clean before the Task 20 planning-only amendment;
-- next authorized task: Task 20 on `task/20-work-orders`;
-- Task 20's plan and prompt have been reconciled against the merged Task 19a
-  implementation and now bind the exact implementation contract;
-- Tasks 20a and 20b must not start before Task 20 is independently reviewed,
-  committed, merged, and pushed.
+- worktree: clean after the reviewed Task 20 merge;
+- next authorized task: Task 20a, subject to a fresh orchestrator checkpoint
+  and a decision-complete review of its plan and saved prompt;
+- Task 20 is independently reviewed, validated, committed, merged, and pushed;
+- Task 20b must not start before Task 20a is independently reviewed, committed,
+  merged, and pushed.
 
 Always verify these statements with `git status --short`, `git branch -vv`, and
 recent history before acting. The repository is authoritative if external
@@ -44,56 +44,49 @@ reviewed, corrected where necessary, validated, committed, merged with
 | 15d | NPC-safe qualitative spatial and direct-road perception | `43405ee` |
 | 19 | Settlement needs, sustained pressure evaluation, schema-v7 persistence, inspection, and filtered interpretations | `a3f4bc5` |
 | 19a | Consumption, storage/spoilage, maintenance consequences, and schema-v8 persistence | `bba7549` |
+| 20 | Authoritative work orders, aggregate reservations, schema-v9 persistence, inspection, and filtered interpretations | `bb9fa53` |
 
 Task reports under `docs/subagent_execution_plan/v0_6/` contain exact files,
 interfaces, review corrections, and validation evidence. ADR-0015 through
-ADR-0020 capture the scenario, spatial, partial-world, dispatch, goal, and need
-contracts.
+ADR-0021 capture the scenario, spatial, partial-world, dispatch, goal, need,
+and work-order contracts.
 
-SQLite snapshot support now spans schema versions 1 through 8. The v0.6
+SQLite snapshot support now spans schema versions 1 through 9. The v0.6
 progression is run identity in schema 2, spatial placements in schema 3,
 external references in schema 4, external dispatches in schema 5, goals and
 objectives in schema 6, settlement needs in schema 7, and consequences in
-schema 8. Legacy versions load newer collections as empty; Task 20 must define
-the next migration explicitly
-if it adds persisted policy or consequence state.
+schema 8, followed by work definitions, states, and reservations in schema 9.
+Legacy versions load newer collections as empty and write forward.
 
 ## Current validation baseline
 
-The final reviewed Task 19 delivery passed:
+The final reviewed Task 20 delivery passed:
 
 | Command | Result |
 | --- | --- |
-| Focused Task 19 needs/goal/persistence/inspection/context suite | 126 tests passed |
-| `make` | Ruff and Black passed; 729 pytest tests passed; examples 001–033 passed |
-| `make examples` | Examples 001–033 passed |
+| Focused Task 20 named-file matrix | 301 passed; 10 deliberate valid-family matrix skips |
+| `make` | Ruff and Black passed; 826 pytest tests passed, 10 deliberate skips; examples 001–034 passed |
+| `make examples` | Examples 001–034 passed |
 | `git diff --check` | Passed |
 
 These results are a checkpoint, not a substitute for rerunning validation on
 future task branches.
 
-## Next task: Task 20
+## Next task: Task 20a
 
-Task 20 is authorized because Task 19a is reviewed, merged, and pushed. Its
-current artifacts are:
+Task 20a is next because Task 20 is reviewed, merged, and pushed. Its current
+artifacts are:
 
-- `docs/subagent_execution_plan/v0_6/20_work_orders_reservations.md`
-- `docs/subagent_execution_plan/v0_6/20_work_orders_reservations-prombt.md`
+- `docs/subagent_execution_plan/v0_6/20a_proposal_work_gateway.md`
+- `docs/subagent_execution_plan/v0_6/20a_proposal_work_gateway-prombt.md`
 
-The reconciled plan and prompt bind exact work/requirement/reservation records,
-settlement/objective/location/prerequisite references, aggregate locks without
-resource deduction, manager lifecycle and release rules, immutable events,
-schema-v9 persistence/migration/validation, detached inspection, fixed
-qualitative NPC-visible translation, rollback, tests, and the exact allowed
-file boundary. Commit and push this planning-only change on `milestone/v0.6`,
-then create and push `task/20-work-orders` from that amended head and delegate
-only the binding contract.
-
-Before implementation, reread the Task 19a report, Tasks 20a/20b plans,
-ADR-0016, ADR-0019, ADR-0020, goal/objective ownership, spatial containment,
-resource mutation APIs, schema-v8 persistence, inspection, and NPC boundaries.
-Task 20 adds no action handler, work system, scheduler phase, resource charge,
-domain effect, or direct goal mutation.
+Before Task 20a implementation, reconcile its high-level plan and prompt against
+the merged Task 20 domain/report and existing action-resolution trust boundary.
+The contract must bind proposal shape, label-to-authoritative-work resolution,
+actor authorization, duplicate/stale proposal handling, validation failures,
+events, NPC-visible inputs, tests, and allowed files. Task 20a may add only the
+proposal gateway; Task 20b remains the sole owner of scheduling, progress,
+charging, and domain effects.
 
 ## Remaining approved sequence
 
