@@ -9,18 +9,19 @@ be changed.
 
 At this handoff checkpoint:
 
-- current branch: `task/20b-work-execution`;
-- last implementation merge: `0b6760f` (`Merge Task 20a work action gateway`);
-- implementation baseline on `milestone/v0.6` and its origin: `0b6760f`; this
+- current branch: `milestone/v0.6`;
+- last implementation merge: `5489b73` (`Merge Task 20b deterministic work execution`);
+- implementation baseline on `milestone/v0.6` and its origin: `5489b73`; this
   checkpoint-only documentation update follows that merge;
 - `origin/main`: `12f2f17` and intentionally unchanged;
-- worktree: the user-owned `.codex/config.toml` edit is preserved; the Task 20b
-  contract documents are the only root-authored task changes;
-- current authorized task: Task 20b; its fresh checkpoint and decision-complete
-  contract reconciliation are complete and implementation is next;
+- worktree: the user-owned `.codex/config.toml` edit is preserved; this
+  continuation checkpoint is the only milestone change after the Task 20b merge;
+- current authorized task: Task 21 is next in the approved dependency order;
+  begin it in a fresh root-orchestrator session by reconciling its existing plan
+  and saved prompt against the merged code before implementation;
 - Task 20 is independently reviewed, validated, committed, merged, and pushed;
 - Task 20a is independently reviewed, validated, committed, merged, and pushed;
-- Task 20b implementation has not started.
+- Task 20b is independently reviewed, validated, committed, merged, and pushed.
 
 Always verify these statements with `git status --short`, `git branch -vv`, and
 recent history before acting. The repository is authoritative if external
@@ -47,56 +48,49 @@ reviewed, corrected where necessary, validated, committed, merged with
 | 19a | Consumption, storage/spoilage, maintenance consequences, and schema-v8 persistence | `bba7549` |
 | 20 | Authoritative work orders, aggregate reservations, schema-v9 persistence, inspection, and filtered interpretations | `bb9fa53` |
 | 20a | Actor-bound proposal-to-work gateway, authoritative preflights, and self-volunteering | `0b6760f` |
+| 20b | Deterministic work execution, atomic work-phase rollback, and schema-v10 charge evidence | `5489b73` |
 
 Task reports under `docs/subagent_execution_plan/v0_6/` contain exact files,
 interfaces, review corrections, and validation evidence. ADR-0015 through
-ADR-0022 capture the scenario, spatial, partial-world, dispatch, goal, need,
-work-order, and proposal-gateway contracts.
+ADR-0023 capture the scenario, spatial, partial-world, dispatch, goal, need,
+work-order, proposal-gateway, and deterministic work execution contracts.
 
-SQLite snapshot support now spans schema versions 1 through 9. The v0.6
+SQLite snapshot support now spans schema versions 1 through 10. The v0.6
 progression is run identity in schema 2, spatial placements in schema 3,
 external references in schema 4, external dispatches in schema 5, goals and
 objectives in schema 6, settlement needs in schema 7, and consequences in
-schema 8, followed by work definitions, states, and reservations in schema 9.
-Legacy versions load newer collections as empty and write forward.
+schema 8, followed by work definitions, states, and reservations in schema 9,
+and exact-once work input charge evidence in schema 10. Legacy versions load
+newer fields and collections with compatible defaults and write forward.
 
 ## Current validation baseline
 
-The final reviewed Task 20a delivery passed:
+The final reviewed and merged Task 20b delivery passed:
 
 | Command | Result |
 | --- | --- |
-| Focused Task 20a named-file matrix | 295 passed; 10 deliberate Task 20 matrix skips |
-| `make` | Ruff and Black passed; 893 pytest tests passed, 10 deliberate skips; examples 001–035 passed |
-| `make examples` | Examples 001–035 passed |
+| Focused Task 20b named-file matrix | 261 passed; 10 deliberate skips |
+| `make` | Ruff and Black passed; 927 pytest tests passed, 10 deliberate skips; examples 001–036 passed |
+| `make examples` | Examples 001–036 passed |
 | `git diff --check` | Passed |
 
 These results are a checkpoint, not a substitute for rerunning validation on
 future task branches.
 
-## Next task: Task 20b
+## Next task: Task 21
 
-Task 20b is next because Task 20a is reviewed, merged, and pushed. Its current
+Task 21 is next because Task 20b is reviewed, merged, and pushed. Its current
 artifacts are:
 
-- `docs/subagent_execution_plan/v0_6/20b_work_execution.md`
-- `docs/subagent_execution_plan/v0_6/20b_work_execution-prombt.md`
+- `docs/subagent_execution_plan/v0_6/21_settlement_development_stages.md`
+- `docs/subagent_execution_plan/v0_6/21_settlement_development_stages-prombt.md`
 
-Before Task 20b implementation, reconcile its high-level plan and prompt against
-the merged Task 20 work lifecycle/reservation contract, Task 20a proposal
-boundary, existing scheduler phase order, and each authoritative domain-effect
-manager. The contract must bind automatic selection, labor availability,
-undercollateralization, charge-once semantics, progress arithmetic, blockage and
-recovery, exact domain effects for all six categories, events, rollback,
-save/resume, scheduler placement, tests, and allowed files.
-
-That reconciliation is now complete. ADR-0023 and the amended plan/prompt bind
-the shadow-state work-phase transaction, schema-10 exact-once charge evidence,
-stable labor selection and progress, blockage/recovery, all six manager-owned
-effects, scheduler placement before consequences/needs/goals, save/resume, the
-focused test matrix, and the allowed-file boundary. The pushed task branch is
-ready for one bounded implementation worker after owner review of the written
-contract.
+Start with the required bootstrap and reconcile the Task 21 contract against
+the merged goal, need, consequence, work-order, and work-execution authority
+paths. Do not implement until stage ownership, transition criteria, scheduler
+placement, persistence/migration, rollback, inspection, NPC visibility, tests,
+and allowed files are decision-complete. The recommended session grouping is a
+fresh root context for Tasks 21 and 22, still executing only one task at a time.
 
 ## Remaining approved sequence
 
