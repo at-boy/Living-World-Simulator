@@ -4,6 +4,10 @@
 Task 20 work orders and reservations, Task 20a's actor-bound proposal gateway,
 and Task 20b deterministic execution are implemented.
 
+Task 21's objective-backed settlement-stage contract and ADR-0024 are accepted
+for the active isolated implementation task. Reusable stage templates,
+decline/demotion, and scenario-YAML binding remain deliberately deferred.
+
 Task 19 settlement needs and pressure is complete for v0.6. Task 19a
 consumption, storage, and maintenance consequences are implemented on their task
 branch and await review and milestone integration.
@@ -102,7 +106,7 @@ state, persistence, privileged inspection, and filtered NPC interpretations.
 Task 18a implements deterministic criterion evaluation and evidence production
 for resources, constructed capabilities, capacity, external connections, and,
 after Task 19, sustained need pressure. Settlement-stage evaluation remains
-Task 21 integration.
+Task 21 implementation is active under its decision-complete isolated plan.
 
 Task 19 now implements authoritative food, water, shelter, and storage needs,
 bounded assessment history, sustained-need objective evidence, schema-v7

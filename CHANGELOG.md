@@ -4,6 +4,10 @@
 
 ### Added
 
+- Define ADR-0024 and the decision-complete Task 21 contract for objective-backed
+  engine-owned settlement stages, adjacent deterministic promotion, schema-11
+  persistence, privileged inspection, and qualitative NPC-safe projection.
+
 - Execute authorized work in stable order with persisted exact-once input
   charging, bounded progress evidence, manager-owned domain effects, atomic
   phase rollback, schema-10 save/resume behavior, and no new NPC-visible data.
