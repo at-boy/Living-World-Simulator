@@ -89,7 +89,7 @@ def test_schema_nine_does_not_persist_or_inspect_ephemeral_work_offers(
         schema_version, payload = connection.execute(
             "SELECT schema_version, payload FROM world_snapshots WHERE id = 1"
         ).fetchone()
-    assert schema_version == 9
+    assert schema_version == 10
     assert "work_offers" not in payload
     assert offer.label not in payload
     inspector = EngineWorldInspector(SimulationEngine(repository))
@@ -122,7 +122,7 @@ def test_sqlite_repository_round_trips_schema_eight_needs(tmp_path: Path) -> Non
             connection.execute(
                 "SELECT schema_version FROM world_snapshots WHERE id = 1"
             ).fetchone()[0]
-            == 9
+            == 10
         )
 
 
@@ -200,6 +200,42 @@ def test_schema_nine_rejects_missing_or_extra_keys_for_every_work_shape(
         repository.load_world()
 
 
+def test_schema_nine_active_work_loads_unpaid_then_charges_once_on_resume(
+    tmp_path: Path,
+) -> None:
+    from test_work_orders import _create, _engine
+
+    database = tmp_path / "schema-nine-active.sqlite3"
+    repository = SQLiteRepository(str(database))
+    engine, settlement_id, npc_id = _engine()
+    work = _create(engine, settlement_id)
+    engine.work.mark_ready(work.id)
+    engine.work.assign_and_reserve(work.id, (npc_id,))
+    engine.work.activate(work.id)
+    repository.save_world(engine.state)
+    with sqlite3.connect(database) as connection:
+        payload = json.loads(
+            connection.execute(
+                "SELECT payload FROM world_snapshots WHERE id = 1"
+            ).fetchone()[0]
+        )
+        for state in payload["work_states"]:
+            state.pop("inputs_charged_tick")
+        connection.execute(
+            "UPDATE world_snapshots SET schema_version = 9, payload = ? WHERE id = 1",
+            (json.dumps(payload),),
+        )
+    resumed = SimulationEngine(repository)
+    for definition in engine.definitions.all():
+        resumed.definitions.register(definition)
+    assert resumed.state.work_states[work.id].inputs_charged_tick is None
+    resumed.step()
+    assert resumed.state.entities[settlement_id].attributes["resources"]["seed"] == 3
+    assert [e.kind for e in resumed.state.events.values()].count(
+        "work_inputs_charged"
+    ) == 1
+
+
 @pytest.mark.parametrize("schema_version", range(1, 7))
 def test_legacy_schema_loads_empty_needs_and_rewrites_eight(
     tmp_path: Path, schema_version: int
@@ -228,7 +264,7 @@ def test_legacy_schema_loads_empty_needs_and_rewrites_eight(
             connection.execute(
                 "SELECT schema_version FROM world_snapshots WHERE id = 1"
             ).fetchone()[0]
-            == 9
+            == 10
         )
 
 
@@ -444,7 +480,7 @@ def test_unsupported_schema_version_raises_without_returning_partial_state(
     repository.save_world(_world_state())
     with sqlite3.connect(database_path) as connection:
         connection.execute(
-            "UPDATE world_snapshots SET schema_version = ? WHERE id = 1", (10,)
+            "UPDATE world_snapshots SET schema_version = ? WHERE id = 1", (11,)
         )
 
     with pytest.raises(RepositoryLoadError, match="Unsupported world schema version"):
@@ -560,7 +596,7 @@ def test_versions_one_through_seven_ignore_stray_consequences_and_write_forward(
             connection.execute(
                 "SELECT schema_version FROM world_snapshots WHERE id = 1"
             ).fetchone()[0]
-            == 9
+            == 10
         )
 
 
@@ -591,7 +627,7 @@ def test_schema_eight_ignores_stray_work_and_writes_forward(tmp_path: Path) -> N
             connection.execute(
                 "SELECT schema_version FROM world_snapshots WHERE id = 1"
             ).fetchone()[0]
-            == 9
+            == 10
         )
 
 

@@ -146,6 +146,7 @@ class WorkState:
     reservation_id: str | None = None
     status_reason: str | None = None
     started_tick: int | None = None
+    inputs_charged_tick: int | None = None
     resolution_tick: int | None = None
 
     def __post_init__(self) -> None:

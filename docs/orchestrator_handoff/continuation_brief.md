@@ -1,4 +1,4 @@
-# Continuation brief — August 22, 2026
+# Continuation brief — August 24, 2026
 
 ## Current repository state
 
@@ -9,17 +9,18 @@ be changed.
 
 At this handoff checkpoint:
 
-- current branch: `milestone/v0.6`;
+- current branch: `task/20b-work-execution`;
 - last implementation merge: `0b6760f` (`Merge Task 20a work action gateway`);
 - implementation baseline on `milestone/v0.6` and its origin: `0b6760f`; this
   checkpoint-only documentation update follows that merge;
 - `origin/main`: `12f2f17` and intentionally unchanged;
-- worktree: clean after the reviewed Task 20 merge;
-- next authorized task: Task 20b, subject to a fresh orchestrator checkpoint
-  and a decision-complete review of its plan and saved prompt;
+- worktree: the user-owned `.codex/config.toml` edit is preserved; the Task 20b
+  contract documents are the only root-authored task changes;
+- current authorized task: Task 20b; its fresh checkpoint and decision-complete
+  contract reconciliation are complete and implementation is next;
 - Task 20 is independently reviewed, validated, committed, merged, and pushed;
 - Task 20a is independently reviewed, validated, committed, merged, and pushed;
-- Task 20b has not started.
+- Task 20b implementation has not started.
 
 Always verify these statements with `git status --short`, `git branch -vv`, and
 recent history before acting. The repository is authoritative if external
@@ -88,6 +89,14 @@ manager. The contract must bind automatic selection, labor availability,
 undercollateralization, charge-once semantics, progress arithmetic, blockage and
 recovery, exact domain effects for all six categories, events, rollback,
 save/resume, scheduler placement, tests, and allowed files.
+
+That reconciliation is now complete. ADR-0023 and the amended plan/prompt bind
+the shadow-state work-phase transaction, schema-10 exact-once charge evidence,
+stable labor selection and progress, blockage/recovery, all six manager-owned
+effects, scheduler placement before consequences/needs/goals, save/resume, the
+focused test matrix, and the allowed-file boundary. The pushed task branch is
+ready for one bounded implementation worker after owner review of the written
+contract.
 
 ## Remaining approved sequence
 

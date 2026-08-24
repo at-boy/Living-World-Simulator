@@ -28,6 +28,7 @@ __all__ = [
     "WorkCategory",
     "WorkCreationOffer",
     "WorkDefinition",
+    "WorkExecutionSystem",
     "WorkPriorityOffer",
     "WorkReservation",
     "WorkState",
@@ -36,6 +37,10 @@ __all__ = [
 
 
 def __getattr__(name: str) -> object:
+    if name == "WorkExecutionSystem":
+        from living_world.work.execution import WorkExecutionSystem
+
+        return WorkExecutionSystem
     if name in {
         "PRIORITIZE_WORK_ACTION_KEY",
         "VOLUNTEER_FOR_WORK_ACTION_KEY",

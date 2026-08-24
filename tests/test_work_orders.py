@@ -117,6 +117,17 @@ def test_lifecycle_reserves_without_deducting_and_releases_in_event_order() -> N
     assert engine.work.active_reservations() == ()
 
 
+def test_inputs_are_charged_exactly_once() -> None:
+    engine, settlement_id, npc_id = _engine()
+    work = _create(engine, settlement_id)
+    engine.work.mark_ready(work.id)
+    engine.work.assign_and_reserve(work.id, (npc_id,))
+    charged = engine.work.record_inputs_charged(work.id)
+    assert charged.inputs_charged_tick == engine.state.tick
+    with pytest.raises(ValueError, match="already"):
+        engine.work.record_inputs_charged(work.id)
+
+
 def test_labor_and_aggregate_inputs_cannot_be_double_reserved() -> None:
     engine, settlement_id, npc_id = _engine()
     first = _create(engine, settlement_id)
@@ -151,6 +162,24 @@ def test_block_releases_and_reassignment_creates_history() -> None:
     engine.work.assign_and_reserve(work.id, (npc_id,))
     assert len(engine.work.reservations_for(work.id)) == 2
     assert engine.state.work_states[work.id].progress == 1
+
+
+def test_charged_blocked_work_recovers_without_consumables_or_ready_event() -> None:
+    engine, settlement_id, npc_id = _engine()
+    work = _create(engine, settlement_id)
+    engine.work.mark_ready(work.id)
+    engine.work.assign_and_reserve(work.id, (npc_id,))
+    engine.work.record_inputs_charged(work.id)
+    engine.state.entities[settlement_id].attributes["resources"]["seed"] = 0
+    engine.work.block(work.id, "Waiting for eligible labor.")
+    engine.work.mark_ready(work.id)
+    reassigned = engine.work.assign_and_reserve(work.id, (npc_id,))
+    assert reassigned.inputs_charged_tick == 0
+    assert [event.kind for event in engine.state.events.values()][-3:] == [
+        "work_order_recovered",
+        "work_reservation_created",
+        "work_order_assigned",
+    ]
 
 
 def test_creation_reference_and_target_validation_is_atomic() -> None:
@@ -223,6 +252,14 @@ def test_loaded_state_rejects_noncanonical_keys_and_reservation_graph() -> None:
         reservation, id="work_reservation_000002"
     )
     with pytest.raises(ValueError, match="canonical IDs"):
+        engine.work.validate_loaded_state()
+
+
+def test_loaded_state_rejects_charge_marker_before_activation_lifecycle() -> None:
+    engine, settlement_id, _ = _engine()
+    work = _create(engine, settlement_id)
+    engine.state.work_states[work.id] = WorkState(work.id, inputs_charged_tick=0)
+    with pytest.raises(ValueError, match="Proposed work"):
         engine.work.validate_loaded_state()
 
 

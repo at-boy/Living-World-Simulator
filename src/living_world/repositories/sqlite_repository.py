@@ -85,8 +85,8 @@ from living_world.work import (
 )
 from living_world.work.manager import WorkManager
 
-_SCHEMA_VERSION = 9
-_SUPPORTED_SCHEMA_VERSIONS = frozenset({1, 2, 3, 4, 5, 6, 7, 8, 9})
+_SCHEMA_VERSION = 10
+_SUPPORTED_SCHEMA_VERSIONS = frozenset({1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
 Record = (
     Entity
     | Relationship
@@ -817,6 +817,7 @@ def _serialize_work_state(x: WorkState) -> dict[str, object]:
         "reservation_id": x.reservation_id,
         "status_reason": x.status_reason,
         "started_tick": x.started_tick,
+        "inputs_charged_tick": x.inputs_charged_tick,
         "resolution_tick": x.resolution_tick,
     }
 
@@ -957,7 +958,10 @@ def _deserialize_world(payload: object, *, schema_version: int) -> WorldState:
         else {}
     )
     state.work_states = (
-        _records(payload_mapping["work_states"], _deserialize_work_state)
+        _records(
+            payload_mapping["work_states"],
+            lambda value: _deserialize_work_state(value, schema_version=schema_version),
+        )
         if schema_version >= 9
         else {}
     )
@@ -1452,7 +1456,9 @@ def _deserialize_work_definition(value: Mapping[str, object]) -> WorkDefinition:
     )
 
 
-def _deserialize_work_state(value: Mapping[str, object]) -> WorkState:
+def _deserialize_work_state(
+    value: Mapping[str, object], *, schema_version: int
+) -> WorkState:
     v = _checked(
         value,
         {
@@ -1462,6 +1468,7 @@ def _deserialize_work_state(value: Mapping[str, object]) -> WorkState:
             "reservation_id",
             "status_reason",
             "started_tick",
+            *({"inputs_charged_tick"} if schema_version >= 10 else set()),
             "resolution_tick",
         },
     )
@@ -1472,6 +1479,7 @@ def _deserialize_work_state(value: Mapping[str, object]) -> WorkState:
         _optional_string(v["reservation_id"]),
         _optional_string(v["status_reason"]),
         _optional_integer(v["started_tick"]),
+        _optional_integer(v["inputs_charged_tick"]) if schema_version >= 10 else None,
         _optional_integer(v["resolution_tick"]),
     )
 
