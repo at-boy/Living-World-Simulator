@@ -4,6 +4,10 @@
 
 ### Added
 
+- Define ADR-0023 and the decision-complete Task 20b contract for deterministic
+  manager-owned work execution, schema-10 exact-once charging, atomic work-phase
+  rollback, and engine-only effects.
+
 - Add actor-bound, engine-authored work offers that translate safe qualitative
   NPC proposals into validated manager-owned creation, priority, or
   self-assignment operations without exposing work policy.

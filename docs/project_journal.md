@@ -1,5 +1,13 @@
 # Living World Simulator – Project Journal
 
+## Task 20b execution contract
+
+ADR-0023 resolves the execution boundary before code delegation: stable work
+selection runs in an atomic shadow-state phase before consequences, needs, and
+goals; schema 10 records exact-once input charging; and each of the six founding
+work categories reaches world truth only through its existing domain managers.
+Execution adds no NPC-visible state and cannot complete goals or stages.
+
 ## Task 20a implementation
 
 Engine-authored work offers now give one eligible NPC a narrow qualitative
