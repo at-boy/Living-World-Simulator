@@ -26,6 +26,11 @@ implemented inside it, stop and report the exact blocker rather than expanding
 scope. Preserve the pre-existing `.codex/config.toml` modification without
 editing, staging, reverting, or reporting it as Task 20b work.
 
+The root's first implementation-boundary review authorized
+`tests/test_scenario_run_contract.py` and `tests/test_spatial_domain.py` solely
+for their schema rewrite expectations from 9 to 10. No other edits in those
+files are authorized.
+
 Create the truthful Task 20b report. Run the focused matrices while iterating,
 then `make`, `make examples`, and `git diff --check`. Report commands, results,
 counts, and meaningful warnings; do not paste successful output. Do not commit,

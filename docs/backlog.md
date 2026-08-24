@@ -1,9 +1,8 @@
 
 # Living World Simulator Backlog
 
-Task 20 work orders and reservations and Task 20a's actor-bound proposal
-gateway are implemented and merged. Task 20b's deterministic execution contract
-is approved in ADR-0023 and implementation is active on its isolated branch.
+Task 20 work orders and reservations, Task 20a's actor-bound proposal gateway,
+and Task 20b deterministic execution are implemented.
 
 Task 19 settlement needs and pressure is complete for v0.6. Task 19a
 consumption, storage, and maintenance consequences are implemented on their task

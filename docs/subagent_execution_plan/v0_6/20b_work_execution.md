@@ -74,6 +74,8 @@ Implementation may modify only:
 - `tests/test_work_orders.py`
 - `tests/test_sqlite_repository.py`
 - `tests/test_simulation_scheduler.py`
+- `tests/test_scenario_run_contract.py`
+- `tests/test_spatial_domain.py`
 - `examples/036_work_execution.py` (new)
 - `docs/adr/ADR-0023-deterministic-work-execution.md`
 - `docs/subagent_execution_plan/v0_6/20b_work_execution.md`
@@ -217,6 +219,9 @@ plan and saved prompt before any additional file is authorized.
 - [ ] Run `PYTHONPATH=src .venv/bin/pytest tests/test_work_execution.py
   tests/test_simulation_scheduler.py tests/test_sqlite_repository.py -q` and
   retain the result for the report.
+- [ ] Update only the schema rewrite expectations in
+  `tests/test_scenario_run_contract.py` and `tests/test_spatial_domain.py` from
+  version 9 to version 10; do not otherwise change their legacy contracts.
 
 ### Task 5: Example, documentation, and worker validation
 

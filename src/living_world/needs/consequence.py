@@ -41,6 +41,41 @@ class ConsequenceManager:
         )
         self._work_guard = work_guard
 
+    def restore(self, policy_id: str, amount: int) -> MaintenanceState:
+        if not isinstance(amount, int) or isinstance(amount, bool) or amount <= 0:
+            raise ValueError("amount must be a positive integer.")
+        policy = self._state.maintenance_policies.get(policy_id)
+        current = self._state.maintenance_states.get(policy_id)
+        if policy is None or current is None:
+            raise ValueError("Unknown maintenance policy.")
+        capability = self._state.entities.get(policy.capability_id)
+        if (
+            capability is None
+            or capability.destroyed_tick is not None
+            or current.condition <= 0
+        ):
+            raise ValueError("Maintenance target must be live with positive condition.")
+        actual = min(amount, policy.maximum_condition - current.condition)
+        updated = replace(current, condition=current.condition + actual)
+        events = frozenset(self._state.events)
+        try:
+            self._events.record(
+                kind="capability_condition_restored",
+                subject_id=policy_id,
+                attributes={
+                    "capability_id": policy.capability_id,
+                    "previous_condition": current.condition,
+                    "current_condition": updated.condition,
+                    "amount": actual,
+                },
+            )
+            self._state.maintenance_states[policy_id] = updated
+        except Exception:
+            self._state.maintenance_states[policy_id] = current
+            self._remove_events(events)
+            raise
+        return updated
+
     def create_consumption(self, policy: ConsumptionPolicy) -> ConsumptionPolicy:
         if type(policy) is not ConsumptionPolicy:
             raise TypeError("policy must be a ConsumptionPolicy.")
@@ -470,11 +505,11 @@ class ConsequenceManager:
             if not 0 <= s.condition <= p.maximum_condition:
                 raise ValueError("Maintenance condition is out of bounds.")
             if s.last_processed_tick is None and (
-                s.condition != p.initial_condition
+                s.condition < p.initial_condition
                 or s.upkeep_shortage
                 or target.destroyed_tick is not None
             ):
-                raise ValueError("Unprocessed maintenance state must use defaults.")
+                raise ValueError("Unprocessed maintenance state is invalid.")
             if (s.condition == 0) != (target.destroyed_tick is not None):
                 raise ValueError("Terminal maintenance state disagrees with lifecycle.")
             if s.condition == 0 and (

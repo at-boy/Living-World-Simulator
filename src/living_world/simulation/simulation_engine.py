@@ -54,6 +54,7 @@ from living_world.systems.settlement_system import SettlementSystem
 from living_world.systems.simulation_system import SimulationSystem
 from living_world.systems.trade_system import TradeSystem
 from living_world.systems.weather_system import WeatherSystem
+from living_world.work.execution import WorkExecutionSystem
 from living_world.work.manager import WorkManager
 
 
@@ -129,6 +130,7 @@ class SimulationEngine:
         self._need_assessment_system: NeedAssessmentSystem | None = None
         self._goal_evaluation_system: GoalEvaluationSystem | None = None
         self._consequence_system: ConsequenceSystem | None = None
+        self._work_execution_system = WorkExecutionSystem(self._definitions)
 
         self._resources = ResourceSystem()
 
@@ -330,6 +332,7 @@ class SimulationEngine:
         self._scheduler = SimulationScheduler(self._state)
         for registered in self._registered_systems:
             self._scheduler.register(registered)
+        self._scheduler.register(self._work_execution_system)
         if self._consequence_system is not None:
             self._scheduler.register(self._consequence_system)
         if self._need_assessment_system is not None:

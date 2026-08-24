@@ -1,5 +1,12 @@
 # Living World Simulator – Project Journal
 
+## Task 20b implementation
+
+Deterministic work execution now runs in an atomic shadow phase before
+consequences, needs, and goals. Persisted charge evidence prevents duplicate
+consumption across blockage and reload, while all six effects remain owned by
+their domain managers and execution state remains engine-only.
+
 ## Task 20b execution contract
 
 ADR-0023 resolves the execution boundary before code delegation: stable work

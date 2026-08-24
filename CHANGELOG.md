@@ -4,6 +4,10 @@
 
 ### Added
 
+- Execute authorized work in stable order with persisted exact-once input
+  charging, bounded progress evidence, manager-owned domain effects, atomic
+  phase rollback, schema-10 save/resume behavior, and no new NPC-visible data.
+
 - Define ADR-0023 and the decision-complete Task 20b contract for deterministic
   manager-owned work execution, schema-10 exact-once charging, atomic work-phase
   rollback, and engine-only effects.

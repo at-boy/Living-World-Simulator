@@ -171,7 +171,13 @@ class WorkManager:
             quantities = self._settlement_resources(settlement_id)
             locked: dict[str, int] = {}
             for reservation in self.active_reservations():
-                for requirement in (*reservation.tools, *reservation.resources):
+                work_state = self._state.work_states[reservation.work_id]
+                requirements = reservation.tools + (
+                    ()
+                    if work_state.inputs_charged_tick is not None
+                    else reservation.resources
+                )
+                for requirement in requirements:
                     name = (
                         requirement.tool
                         if isinstance(requirement, ToolRequirement)
@@ -233,7 +239,11 @@ class WorkManager:
         return self._simple_transition(
             current,
             replace(current, status=WorkStatus.READY, status_reason=None),
-            "work_order_ready",
+            (
+                "work_order_recovered"
+                if current.status is WorkStatus.BLOCKED
+                else "work_order_ready"
+            ),
         )
 
     def assign_and_reserve(
@@ -303,14 +313,23 @@ class WorkManager:
         quantities = self._settlement_resources(definition.settlement_id)
         locked: dict[str, int] = {}
         for reservation in self.active_reservations():
-            for requirement in (*reservation.tools, *reservation.resources):
+            work_state = self._state.work_states[reservation.work_id]
+            requirements = reservation.tools + (
+                ()
+                if work_state.inputs_charged_tick is not None
+                else reservation.resources
+            )
+            for requirement in requirements:
                 name = (
                     requirement.tool
                     if isinstance(requirement, ToolRequirement)
                     else requirement.resource
                 )
                 locked[name] = locked.get(name, 0) + requirement.quantity
-        for requirement in (*definition.tools, *definition.resources):
+        requirements = definition.tools + (
+            () if current.inputs_charged_tick is not None else definition.resources
+        )
+        for requirement in requirements:
             name = (
                 requirement.tool
                 if isinstance(requirement, ToolRequirement)
@@ -341,6 +360,28 @@ class WorkManager:
                 ),
             ),
             "work_order_activated",
+        )
+
+    def record_inputs_charged(self, work_id: str) -> WorkState:
+        definition, current = self._required(work_id)
+        if current.status not in {WorkStatus.ASSIGNED, WorkStatus.ACTIVE}:
+            raise ValueError("Only assigned or active work can charge inputs.")
+        if current.inputs_charged_tick is not None:
+            raise ValueError("Work inputs are already charged.")
+        if current.reservation_id is None:
+            raise ValueError("Charging requires an active reservation.")
+        reservation = self._state.work_reservations.get(current.reservation_id)
+        if reservation is None or reservation.released_tick is not None:
+            raise ValueError("Charging requires an active reservation.")
+        updated = replace(current, inputs_charged_tick=self._state.tick)
+        return self._event_update(
+            current,
+            updated,
+            "work_inputs_charged",
+            {
+                "reservation_id": reservation.id,
+                "resources": self._resources(definition.resources),
+            },
         )
 
     def record_progress(self, work_id: str, amount: int) -> WorkState:
@@ -784,7 +825,7 @@ class WorkManager:
         integer(s.progress, "progress")
         if s.progress > d.required_progress:
             raise ValueError("Progress exceeds requirement.")
-        for tick in (s.started_tick, s.resolution_tick):
+        for tick in (s.started_tick, s.inputs_charged_tick, s.resolution_tick):
             if tick is not None:
                 integer(tick, "lifecycle tick")
                 if tick < d.created_tick or tick > self._state.tick:
@@ -819,6 +860,7 @@ class WorkManager:
                     s.reservation_id,
                     s.status_reason,
                     s.started_tick,
+                    s.inputs_charged_tick,
                     s.resolution_tick,
                 )
             )
