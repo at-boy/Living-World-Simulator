@@ -791,3 +791,29 @@ goal manager. A lifecycle transition carries evidence and emits exactly one
 event. Material progress while status is unchanged may append evidence without
 an event; identical normalized description and source provenance do not append
 again on later ticks.
+
+
+**Settlement stage program** is immutable configuration bound directly to one
+settlement, containing the canonical founding-camp, settlement, and town
+sequence and typed objective-backed requirements. It is neither a reusable
+template nor a scenario-YAML binding.
+
+**Settlement stage state** is a manager-owned immutable record of the current
+canonical stage and transition ticks. Stage promotion consumes completed
+settlement-owned objectives after goals evaluate; it advances one adjacent
+stage per tick and records privileged provenance in an immutable event.
+
+**Stage requirement evidence** normalizes each requirement kind, objective ID,
+and sorted unique progress/lifecycle source event IDs for one transition event.
+It is not duplicated in durable stage state.
+
+**Population minimum criterion** evaluates authoritative live owner population;
+missing population is unavailable and malformed population fails loudly.
+
+**Maintained capability criterion** evaluates directly owned live constructed
+capabilities by exact definition key and owner-matching maintenance condition.
+Missing matching state is unsatisfied; authoritative contradictions fail loudly.
+
+**NPC settlement-stage interpretation** contains only fixed qualitative label
+and description selected explicitly by the caller; exact stage state and
+thresholds never enter NPC cognition automatically.

@@ -14,13 +14,20 @@ from living_world.goals.model import (
     GoalCriterion,
     GoalDefinition,
     GoalStatus,
+    MaintainedCapabilityCriterion,
     ObjectiveDefinition,
+    PopulationMinimumCriterion,
     ProgressEvidence,
     ResourceMinimumCriterion,
     SettlementStageCriterion,
     SustainedNeedCriterion,
 )
-from living_world.needs.model import NeedKind, NeedLevel
+from living_world.needs.model import (
+    MaintenancePolicy,
+    MaintenanceState,
+    NeedKind,
+    NeedLevel,
+)
 from living_world.state.world_state import WorldState
 
 
@@ -61,6 +68,8 @@ class CriterionEvaluator(Protocol):
 _CRITERION_TYPES = (
     ResourceMinimumCriterion,
     ConstructedCapabilityCriterion,
+    MaintainedCapabilityCriterion,
+    PopulationMinimumCriterion,
     CapacityCriterion,
     ExternalConnectionCriterion,
     SustainedNeedCriterion,
@@ -337,6 +346,155 @@ class _SustainedNeedEvaluator:
         )
 
 
+class _PopulationMinimumEvaluator:
+    def evaluate(
+        self, criterion: GoalCriterion, *, owner_id: str, state: WorldState
+    ) -> CriterionEvaluation:
+        item = cast(PopulationMinimumCriterion, criterion)
+        owner = state.entities.get(owner_id)
+        if owner is None or owner.destroyed_tick is not None:
+            raise ValueError("Population goal owner must be live.")
+        if "population" not in owner.attributes:
+            return CriterionEvaluation(
+                CriterionDisposition.UNAVAILABLE,
+                "Population is not authoritatively available.",
+            )
+        value = owner.attributes["population"]
+        if not isinstance(value, int) or isinstance(value, bool):
+            raise TypeError("Population must be an integer.")
+        if value < 0:
+            raise ValueError("Population cannot be negative.")
+        return CriterionEvaluation(
+            (
+                CriterionDisposition.SATISFIED
+                if value >= item.minimum
+                else CriterionDisposition.UNSATISFIED
+            ),
+            f"Population: {value} of {item.minimum} required.",
+            _event_ids(state, {owner_id}),
+        )
+
+
+class _MaintainedCapabilityEvaluator:
+    def evaluate(
+        self, criterion: GoalCriterion, *, owner_id: str, state: WorldState
+    ) -> CriterionEvaluation:
+        item = cast(MaintainedCapabilityCriterion, criterion)
+        entities = tuple(
+            entity
+            for entity in _scoped_entities(owner_id, state)
+            if entity.id != owner_id and entity.definition_key == item.capability
+        )
+        matches: list[str] = []
+        sources: set[str] = set()
+        for entity in entities:
+            constructed = entity.attributes.get("is_constructed", False)
+            if not isinstance(constructed, bool):
+                raise TypeError("is_constructed must be a boolean.")
+            if not constructed:
+                continue
+            policies = [
+                policy
+                for policy in state.maintenance_policies.values()
+                if policy.capability_id == entity.id
+            ]
+            if len(policies) > 1 or any(
+                policy.owner_id != owner_id for policy in policies
+            ):
+                raise ValueError("Maintenance policy ownership is contradictory.")
+            if not policies:
+                continue
+            policy = policies[0]
+            if not isinstance(policy, MaintenancePolicy):
+                raise TypeError("Maintenance policies must be typed records.")
+            policy.__post_init__()
+            if state.maintenance_policies.get(policy.id) != policy:
+                raise ValueError("Maintenance policy key does not match its ID.")
+            current = state.maintenance_states.get(policy.id)
+            if current is None:
+                continue
+            if not isinstance(current, MaintenanceState):
+                raise TypeError("Maintenance states must be typed records.")
+            current.__post_init__()
+            if current.condition == 0:
+                raise ValueError(
+                    "Live maintained capability cannot have terminal condition."
+                )
+            if current.last_processed_tick is None and (
+                current.condition < policy.initial_condition or current.upkeep_shortage
+            ):
+                raise ValueError("Unprocessed maintenance state contradicts policy.")
+            if current.policy_id != policy.id:
+                raise ValueError("Maintenance state belongs to a different policy.")
+            if not isinstance(current.condition, int) or isinstance(
+                current.condition, bool
+            ):
+                raise TypeError("Maintenance condition must be an integer.")
+            if current.condition < 0 or current.condition > policy.maximum_condition:
+                raise ValueError("Maintenance condition is outside policy limits.")
+            if current.last_processed_tick is not None and (
+                not isinstance(current.last_processed_tick, int)
+                or isinstance(current.last_processed_tick, bool)
+                or not 0 <= current.last_processed_tick <= state.tick
+            ):
+                raise ValueError("Maintenance processing tick is invalid.")
+            sources.update(_event_ids(state, {entity.id, policy.id}))
+            if current.condition >= item.minimum_condition:
+                matches.append(entity.id)
+        return CriterionEvaluation(
+            (
+                CriterionDisposition.SATISFIED
+                if len(matches) >= item.count
+                else CriterionDisposition.UNSATISFIED
+            ),
+            f"Maintained {item.capability}: {len(matches)} of {item.count} required at minimum condition {item.minimum_condition}.",
+            tuple(sorted(sources)),
+        )
+
+
+class _SettlementStageEvaluator:
+    def evaluate(
+        self, criterion: GoalCriterion, *, owner_id: str, state: WorldState
+    ) -> CriterionEvaluation:
+        from living_world.stages.model import SettlementStage
+
+        item = cast(SettlementStageCriterion, criterion)
+        try:
+            requested = SettlementStage(item.stage)
+        except ValueError:
+            return CriterionEvaluation(
+                CriterionDisposition.UNAVAILABLE,
+                "Settlement stage criterion is not authoritatively available.",
+            )
+        current = state.settlement_stage_states.get(owner_id)
+        if current is None or owner_id not in state.settlement_stage_programs:
+            return CriterionEvaluation(
+                CriterionDisposition.UNAVAILABLE,
+                "Settlement stage criterion is not authoritatively available.",
+            )
+        stages = tuple(SettlementStage)
+        return CriterionEvaluation(
+            (
+                CriterionDisposition.SATISFIED
+                if stages.index(current.current_stage) >= stages.index(requested)
+                else CriterionDisposition.UNSATISFIED
+            ),
+            f"Settlement stage: {current.current_stage.value}; requested {requested.value}.",
+            tuple(
+                sorted(
+                    event.id
+                    for event in state.events.values()
+                    if event.subject_id == owner_id
+                    and event.kind
+                    in {
+                        "settlement_stage_program_configured",
+                        "settlement_stage_transitioned",
+                    }
+                )
+            ),
+        )
+
+
 def default_criterion_evaluators() -> dict[type[object], CriterionEvaluator]:
     return {
         ResourceMinimumCriterion: _ResourceMinimumEvaluator(),
@@ -344,7 +502,9 @@ def default_criterion_evaluators() -> dict[type[object], CriterionEvaluator]:
         CapacityCriterion: _CapacityEvaluator(),
         ExternalConnectionCriterion: _ExternalConnectionEvaluator(),
         SustainedNeedCriterion: _SustainedNeedEvaluator(),
-        SettlementStageCriterion: _UnavailableEvaluator("Settlement stage"),
+        SettlementStageCriterion: _SettlementStageEvaluator(),
+        PopulationMinimumCriterion: _PopulationMinimumEvaluator(),
+        MaintainedCapabilityCriterion: _MaintainedCapabilityEvaluator(),
     }
 
 

@@ -12,9 +12,11 @@ from living_world.goals.model import (
     GoalOwnerKind,
     GoalState,
     GoalStatus,
+    MaintainedCapabilityCriterion,
     NPCGoalInterpretation,
     ObjectiveDefinition,
     ObjectiveState,
+    PopulationMinimumCriterion,
     ProgressEvidence,
     ResourceMinimumCriterion,
     SettlementStageCriterion,
@@ -411,6 +413,21 @@ class GoalManager:
                 )
             )
             GoalManager._text(text_value, "Criterion name")
+        elif isinstance(
+            value, (PopulationMinimumCriterion, MaintainedCapabilityCriterion)
+        ):
+            numbers = (
+                (value.minimum,)
+                if isinstance(value, PopulationMinimumCriterion)
+                else (value.count, value.minimum_condition)
+            )
+            for number in numbers:
+                if not isinstance(number, int) or isinstance(number, bool):
+                    raise TypeError("Criterion thresholds must be integers.")
+                if number <= 0:
+                    raise ValueError("Criterion thresholds must be positive.")
+            if isinstance(value, MaintainedCapabilityCriterion):
+                GoalManager._text(value.capability, "Capability")
         elif isinstance(value, SustainedNeedCriterion):
             GoalManager._text(value.need, "Sustained need")
             if not isinstance(value.duration_ticks, int) or isinstance(

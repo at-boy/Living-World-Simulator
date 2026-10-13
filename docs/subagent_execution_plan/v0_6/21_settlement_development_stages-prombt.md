@@ -27,3 +27,8 @@ run the complete focused Task 21 matrix, `make`, separate `make examples`, and
 `git diff --check`; report commands, results, counts, and meaningful warnings.
 
 Do not expand scope, change branches, commit, merge, push, or modify `main`.
+
+Execution amendment (2026-10-13): the binding plan now permits focused
+schema-11 assertion updates in tests/test_scenario_run_contract.py and
+tests/test_spatial_domain.py, plus the trailing stage-phase assertion in
+tests/test_simulation_scheduler.py. Do not broaden those changes.

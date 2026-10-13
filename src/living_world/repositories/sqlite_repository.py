@@ -33,8 +33,10 @@ from living_world.goals import (
     GoalOwnerKind,
     GoalState,
     GoalStatus,
+    MaintainedCapabilityCriterion,
     ObjectiveDefinition,
     ObjectiveState,
+    PopulationMinimumCriterion,
     ProgressEvidence,
     ResourceMinimumCriterion,
     SettlementStageCriterion,
@@ -68,6 +70,15 @@ from living_world.spatial.model import (
     Placement,
     Point,
 )
+from living_world.stages import (
+    SettlementStage,
+    SettlementStageDefinition,
+    SettlementStageManager,
+    SettlementStageProgram,
+    SettlementStageState,
+    StageObjectiveRequirement,
+    StageRequirementKind,
+)
 from living_world.state.world_state import WorldState
 from living_world.systems.resource_system import ResourceSystem
 from living_world.work import (
@@ -85,8 +96,8 @@ from living_world.work import (
 )
 from living_world.work.manager import WorkManager
 
-_SCHEMA_VERSION = 10
-_SUPPORTED_SCHEMA_VERSIONS = frozenset({1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
+_SCHEMA_VERSION = 11
+_SUPPORTED_SCHEMA_VERSIONS = frozenset({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11})
 Record = (
     Entity
     | Relationship
@@ -166,6 +177,7 @@ class SQLiteRepository:
         """Serialize and atomically replace the persisted world snapshot."""
 
         try:
+            SettlementStageManager(state, EventManager(state)).validate_loaded_state()
             payload = json.dumps(
                 _serialize_world(state),
                 sort_keys=True,
@@ -230,6 +242,14 @@ def _serialize_world(state: WorldState) -> dict[str, object]:
             for dispatch in sorted(
                 state.external_dispatches.values(), key=lambda item: item.id
             )
+        ],
+        "settlement_stage_programs": [
+            _serialize_stage_program(state.settlement_stage_programs[key])
+            for key in sorted(state.settlement_stage_programs)
+        ],
+        "settlement_stage_states": [
+            _serialize_stage_state(state.settlement_stage_states[key])
+            for key in sorted(state.settlement_stage_states)
         ],
         "goal_definitions": [
             _serialize_goal(item)
@@ -436,7 +456,46 @@ def _serialize_external_dispatch(dispatch: ExternalDispatch) -> dict[str, object
     }
 
 
+def _serialize_stage_program(value: SettlementStageProgram) -> dict[str, object]:
+    return {
+        "settlement_id": value.settlement_id,
+        "stages": [
+            {
+                "stage": definition.stage.value,
+                "requirements": [
+                    {"kind": item.kind.value, "objective_id": item.objective_id}
+                    for item in sorted(
+                        definition.requirements,
+                        key=lambda item: (item.kind.value, item.objective_id),
+                    )
+                ],
+            }
+            for definition in value.stages
+        ],
+    }
+
+
+def _serialize_stage_state(value: SettlementStageState) -> dict[str, object]:
+    return {
+        "settlement_id": value.settlement_id,
+        "current_stage": value.current_stage.value,
+        "entered_tick": value.entered_tick,
+        "last_transition_tick": value.last_transition_tick,
+    }
+
+
 def _serialize_criterion(value: object) -> dict[str, object]:
+    if isinstance(value, PopulationMinimumCriterion):
+        GoalManager._criterion(value)
+        return {"kind": "population_minimum", "minimum": value.minimum}
+    if isinstance(value, MaintainedCapabilityCriterion):
+        GoalManager._criterion(value)
+        return {
+            "kind": "maintained_capability",
+            "capability": value.capability,
+            "count": value.count,
+            "minimum_condition": value.minimum_condition,
+        }
     if isinstance(value, ResourceMinimumCriterion):
         return {
             "kind": "resource_minimum",
@@ -1001,6 +1060,13 @@ def _deserialize_world(payload: object, *, schema_version: int) -> WorldState:
     state.knowledge = _records(
         payload_mapping.get("knowledge", []), _deserialize_knowledge
     )
+    if schema_version >= 11:
+        state.settlement_stage_programs = _stage_records(
+            payload_mapping["settlement_stage_programs"], _deserialize_stage_program
+        )
+        state.settlement_stage_states = _stage_records(
+            payload_mapping["settlement_stage_states"], _deserialize_stage_state
+        )
     SpatialManager(state, EventManager(state)).validate_loaded_state()
     GoalManager(state, EventManager(state)).validate_loaded_state()
     NeedManager(state, EventManager(state)).validate_loaded_state()
@@ -1012,6 +1078,7 @@ def _deserialize_world(payload: object, *, schema_version: int) -> WorldState:
         EventManager(state),
     ).validate_loaded_state()
     WorkManager(state, EventManager(state)).validate_loaded_state()
+    SettlementStageManager(state, EventManager(state)).validate_loaded_state()
     return state
 
 
@@ -1153,6 +1220,16 @@ def _deserialize_external_dispatch(value: Mapping[str, object]) -> ExternalDispa
 def _deserialize_criterion(value: object) -> object:
     item = _mapping(value)
     kind = _string(item["kind"])
+    if kind == "population_minimum":
+        _exact_keys(item, {"kind", "minimum"})
+        return PopulationMinimumCriterion(_integer(item["minimum"]))
+    if kind == "maintained_capability":
+        _exact_keys(item, {"kind", "capability", "count", "minimum_condition"})
+        return MaintainedCapabilityCriterion(
+            _string(item["capability"]),
+            _integer(item["count"]),
+            _integer(item["minimum_condition"]),
+        )
     if kind == "resource_minimum":
         return ResourceMinimumCriterion(
             _string(item["resource"]), _integer(item["minimum"])
@@ -1698,3 +1775,61 @@ def _boolean(value: object) -> bool:
     if not isinstance(value, bool):
         raise TypeError("Persisted value must be a boolean.")
     return value
+
+
+StageRecord = TypeVar("StageRecord", SettlementStageProgram, SettlementStageState)
+
+
+def _stage_records(
+    values: object, decoder: Callable[[Mapping[str, object]], StageRecord]
+) -> dict[str, StageRecord]:
+    result: dict[str, StageRecord] = {}
+    previous: str | None = None
+    for value in _list(values):
+        record = decoder(_mapping(value))
+        if previous is not None and record.settlement_id <= previous:
+            raise ValueError("Stage records must have unique lexically ordered owners.")
+        previous = record.settlement_id
+        result[record.settlement_id] = record
+    return result
+
+
+def _deserialize_stage_program(value: Mapping[str, object]) -> SettlementStageProgram:
+    _exact_keys(value, {"settlement_id", "stages"})
+    definitions: list[SettlementStageDefinition] = []
+    for raw in _list(value["stages"]):
+        definition = _mapping(raw)
+        _exact_keys(definition, {"stage", "requirements"})
+        requirements: list[StageObjectiveRequirement] = []
+        for raw_requirement in _list(definition["requirements"]):
+            requirement = _mapping(raw_requirement)
+            _exact_keys(requirement, {"kind", "objective_id"})
+            requirements.append(
+                StageObjectiveRequirement(
+                    StageRequirementKind(_string(requirement["kind"])),
+                    _string(requirement["objective_id"]),
+                )
+            )
+        if requirements != sorted(
+            requirements, key=lambda item: (item.kind.value, item.objective_id)
+        ):
+            raise ValueError("Persisted requirements must be canonically ordered.")
+        definitions.append(
+            SettlementStageDefinition(
+                SettlementStage(_string(definition["stage"])), tuple(requirements)
+            )
+        )
+    return SettlementStageProgram(_string(value["settlement_id"]), tuple(definitions))
+
+
+def _deserialize_stage_state(value: Mapping[str, object]) -> SettlementStageState:
+    _exact_keys(
+        value,
+        {"settlement_id", "current_stage", "entered_tick", "last_transition_tick"},
+    )
+    return SettlementStageState(
+        _string(value["settlement_id"]),
+        SettlementStage(_string(value["current_stage"])),
+        _integer(value["entered_tick"]),
+        _optional_integer(value["last_transition_tick"]),
+    )

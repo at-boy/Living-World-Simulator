@@ -522,3 +522,47 @@ An NPC receives only `NPCGoalInterpretation(label, description)`. Definition
 IDs, owner IDs, criteria, evidence, deadlines, action policy, and authoritative
 status remain engine/inspection data. Both visible fields reject internal ID
 forms; operator-only purpose text remains unrestricted and privileged.
+
+
+## Settlement development stages
+
+`WorldState.settlement_stage_programs` and `settlement_stage_states` are keyed
+by settlement entity ID. Immutable `SettlementStageProgram` records bind
+exactly `founding_camp`, `settlement`, and `town` in order. Founding camp has no
+requirements; both promotion stages contain typed objective requirements and
+cannot be population-only. `SettlementStageManager.configure` validates live
+ownership, unique settlement-goal ownership, matching completion criteria, and
+unique matching need definitions with sufficient assessment windows. It
+normalizes requirement order and atomically creates founding-camp state and a
+configuration event. Configured owners cannot be removed or destroyed.
+
+`PopulationMinimumCriterion` evaluates a live owner's non-negative integer
+population (missing is unavailable). `MaintainedCapabilityCriterion` counts
+live directly owned constructed entities with exactly matching definition keys,
+owner-matching maintenance policy and sufficiently high condition. Missing
+policy/state is unsatisfied; invalid or contradictory authoritative records
+raise. Both use normalized descriptions and sorted source event IDs.
+
+After ordinary systems, work execution, consequences, need assessment, and
+goal evaluation, `SettlementStageEvaluationSystem` consumes only completed
+objective statuses and evidence. It never reevaluates raw domains. It visits
+settlement IDs lexically, promotes only to the next stage and at most once per
+tick, and treats town as terminal. State records contain entered and last
+transition ticks; provenance is kept in one immutable transition event containing
+previous/current stage and ordered kind/objective/source evidence. Individual
+manager failure restores its prior state/events; whole-phase failure restores
+all stage states and removes all new phase events while retaining earlier
+phases. `SettlementStageCriterion` sees this state on the following tick.
+
+Schema 11 stores programs/states and the new goal criteria. Schemas 1–10 load
+empty stage collections and write forward without inventing objective mappings.
+Loaded stages are validated after prerequisite records and events. Strict
+records, stable ordering and atomic snapshot replacement preserve resume
+behavior. Privileged inspection exposes exact detached program/state at
+`GET /world/settlement-stages` and the program count in the world summary.
+
+NPCs may receive only explicitly selected `NPCSettlementStageInterpretation`
+fixed qualitative prose. IDs, enum state, criteria, population/condition
+thresholds, ticks, objective statuses, evidence, and events remain engine-only.
+No LLM action configures or promotes stages, and prose is never automatically
+injected into perception or cognition.

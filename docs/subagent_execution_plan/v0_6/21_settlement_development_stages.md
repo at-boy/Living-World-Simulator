@@ -320,6 +320,9 @@ Record commands, results, counts, and meaningful warnings only.
   `tests/test_entity_manager.py`, `tests/test_simulation_engine.py`,
   `tests/test_sqlite_repository.py`, `tests/test_inspection_api.py`,
   `tests/test_npc_information_boundary.py`, and `tests/test_npc_context.py`
+- focused schema-version/phase-order assertion updates in
+  `tests/test_scenario_run_contract.py`, `tests/test_spatial_domain.py`, and
+  `tests/test_simulation_scheduler.py`
 - `examples/037_settlement_development_stages.py`
 - `docs/adr/ADR-0024-engine-owned-settlement-development-stages.md`
 - `CHANGELOG.md`, `docs/project_journal.md`, `docs/backlog.md`,
@@ -334,3 +337,11 @@ Record unrelated discoveries for later rather than fixing them.
 
 Create
 `docs/subagent_execution_plan/v0_6/21_settlement_development_stages-report.md`.
+
+## Execution amendment — 2026-10-13
+
+The full regression suite exposed existing schema-10 assertions in scenario
+and spatial tests and a scheduler assertion that goal evaluation was the final
+phase. Extend the allowed-file boundary only to update these assertions for
+schema 11 and the specified trailing settlement-stage phase. Preserve the
+existing scenario/spatial/scheduler behavior checks; no adjacent redesign.

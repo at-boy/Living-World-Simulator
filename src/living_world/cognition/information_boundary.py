@@ -105,9 +105,21 @@ class NPCInformationBoundary:
             raise ValueError(
                 f"NPC context {field_name} cannot expose raw coordinate notation."
             )
+        if re.search(
+            r"\b(?:entity|relationship|event|observation|memory|belief|experience|knowledge|npc_relationship|placement|need|goal|objective|external_reference|external_dispatch|dispatch|consumption|storage|maintenance|work|work_reservation)_[A-Za-z0-9][A-Za-z0-9_-]*\b",
+            value,
+        ):
+            raise ValueError("NPC prose cannot expose internal engine identifiers.")
         if self._PRIVILEGED_SPATIAL_PATTERN.search(value) is not None:
             raise ValueError(
                 f"NPC context {field_name} cannot expose privileged spatial terms."
+            )
+        if re.search(
+            r"\b(?:settlement_stage_programs|settlement_stage_states|current_stage|entered_tick|last_transition_tick|founding_camp)\b",
+            value,
+        ):
+            raise ValueError(
+                "NPC prose cannot expose privileged settlement stage fields."
             )
         if self._NEED_NUMERIC_NOTATION_PATTERN.search(value) is not None:
             raise ValueError(
@@ -130,6 +142,8 @@ class NPCInformationBoundary:
             self._state.npc_relationships,
             self._state.knowledge,
             self._state.placements,
+            self._state.settlement_stage_programs,
+            self._state.settlement_stage_states,
             self._state.need_definitions,
             self._state.need_states,
             self._state.consumption_policies,
@@ -142,8 +156,15 @@ class NPCInformationBoundary:
             self._state.work_states,
             self._state.work_reservations,
         )
-        return tuple(
-            identifier for collection in collections for identifier in collection
+        stage_identifiers = tuple(
+            item.objective_id
+            for program in self._state.settlement_stage_programs.values()
+            for definition in program.stages
+            for item in definition.requirements
+        )
+        return (
+            tuple(identifier for collection in collections for identifier in collection)
+            + stage_identifiers
         )
 
     def _contains_authoritative_number(self, value: str) -> bool:
@@ -219,6 +240,21 @@ class NPCInformationBoundary:
             + need_numbers
             + consequence_numbers
             + work_numbers
+            + tuple(
+                number
+                for program in self._state.settlement_stage_programs.values()
+                for definition in program.stages
+                for requirement in definition.requirements
+                for criterion in self._state.objective_definitions[
+                    requirement.objective_id
+                ].completion_criteria
+                for number in self._numeric_values(criterion)
+            )
+            + tuple(
+                number
+                for record in self._state.settlement_stage_states.values()
+                for number in self._numeric_values(record)
+            )
         )
 
     def _numeric_values(self, value: object) -> tuple[int | float, ...]:

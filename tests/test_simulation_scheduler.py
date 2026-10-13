@@ -47,10 +47,11 @@ def test_scheduler_run() -> None:
 def test_work_execution_phase_precedes_consequences_needs_and_goals() -> None:
     engine = SimulationEngine()
     names = [type(system).__name__ for system in engine._scheduler._systems]
-    assert names[-4:] == [
+    assert names[-5:] == [
         "WorkExecutionSystem",
         "ConsequenceSystem",
         "NeedAssessmentSystem",
         "GoalEvaluationSystem",
+        "SettlementStageEvaluationSystem",
     ]
     assert not hasattr(engine, "work_action_handler")
