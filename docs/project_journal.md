@@ -1,5 +1,13 @@
 # Living World Simulator – Project Journal
 
+## October 13, 2026 — Task 21 milestone checkpoint
+
+Task 21 delivery `c821efe` passed independent review and root gates, then merged
+and pushed to milestone/v0.6 as `1ab288b`. The merged gate passed 1086 tests with
+10 existing skips and examples 001–037. Main remains `12f2f17`. The owner approved
+the remaining completion workflow and selected release candidate `0.6.0rc1`;
+Task 22 contract preparation is next. The user configuration edit is preserved.
+
 ## Task 21 implementation
 
 Added immutable per-settlement programs and manager-owned stage state with
@@ -9,9 +17,8 @@ so a stage-dependent goal observes promotion on the next tick. Population and
 maintained-capability criteria use the existing closed goal registry. Schema 11
 persists these records; legacy snapshots retain empty stage collections.
 Privileged inspection is detached and GET-only. Fixed NPC prose is selected
-explicitly and never automatically enters cognition. The isolated implementation
-awaits independent review and milestone integration; validation evidence is in
-the Task 21 report.
+explicitly and never automatically enters cognition. The delivery passed independent review after a strict test-typing correction
+and was merged as `1ab288b`; current validation evidence is in the Task 21 report.
 
 ## Task 21 settlement-stage contract
 

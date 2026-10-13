@@ -4,8 +4,8 @@
 
 Implemented on `task/21-settlement-development-stages` in the isolated Task 21
 worktree. No commit, merge, push, branch/configuration change, or main change was
-performed by this worker. Independent review and root final acceptance remain
-pending. ADR-0024 remains accurate and unchanged.
+performed by this worker. Worker delivery subsequently passed independent review and root acceptance;
+see root sections below. ADR-0024 remains accurate and unchanged.
 
 The root amended the task plan and saved prompt before edits to three additional
 regression files: schema-version assertions in `test_scenario_run_contract.py`
@@ -162,3 +162,11 @@ Root final current-tree validation after re-review:
 The root accepts Task 21 for task-branch commit and milestone integration.
 This report does not claim that integration or remote verification has already
 occurred; the milestone continuation checkpoint records those results.
+
+## Integration checkpoint
+
+Root committed the reviewed delivery as `c821efe`, merged it into
+`milestone/v0.6` with `1ab288b`, and verified both pushed remote tips. The merged
+`make VENV=.worktrees/task21/.venv` gate passed 1086 tests with 10 existing skips
+and all 37 examples; separate examples and whitespace checks passed. Live
+`main` remained `12f2f17`. User configuration changes were excluded.

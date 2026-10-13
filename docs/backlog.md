@@ -4,14 +4,15 @@
 Task 20 work orders and reservations, Task 20a's actor-bound proposal gateway,
 and Task 20b deterministic execution are implemented.
 
-Task 21's objective-backed settlement stages are implemented on the isolated
-task branch and await independent review and milestone integration. Reusable
+Task 21's objective-backed settlement stages are independently reviewed,
+validated, merged, and pushed to milestone/v0.6. Task 22 recorded proposal
+replay is next in the approved sequence. Reusable
 stage templates, decline/demotion, scenario-YAML binding (Task 23), and automatic
 NPC perception of stages remain deliberately deferred.
 
 Task 19 settlement needs and pressure is complete for v0.6. Task 19a
-consumption, storage, and maintenance consequences are implemented on their task
-branch and await review and milestone integration.
+consumption, storage, and maintenance consequences are reviewed and integrated
+into milestone/v0.6.
 
 This document is intentionally **not** a specification.
 

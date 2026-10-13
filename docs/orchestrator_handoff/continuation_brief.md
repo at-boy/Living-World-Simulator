@@ -1,4 +1,4 @@
-# Continuation brief — August 24, 2026
+# Continuation brief — October 13, 2026
 
 ## Current repository state
 
@@ -10,22 +10,30 @@ be changed.
 At this handoff checkpoint:
 
 - current branch: `milestone/v0.6`;
-- last implementation merge: `5489b73` (`Merge Task 20b deterministic work execution`);
-- implementation baseline on `milestone/v0.6` and its origin: `5489b73`; this
-  checkpoint-only documentation update follows that merge;
-- `origin/main`: `12f2f17` and intentionally unchanged;
-- worktree: the user-owned `.codex/config.toml` edit is preserved; this
-  continuation checkpoint is the only milestone change after the Task 20b merge;
-- current authorized task: Task 21 is next in the approved dependency order;
-  begin it in a fresh root-orchestrator session by reconciling its existing plan
-  and saved prompt against the merged code before implementation;
-- Task 20 is independently reviewed, validated, committed, merged, and pushed;
-- Task 20a is independently reviewed, validated, committed, merged, and pushed;
-- Task 20b is independently reviewed, validated, committed, merged, and pushed.
+- last implementation merge: `1ab288b` (Task 21 settlement development stages);
+- Task 21 delivery: `c821efe`, independently reviewed and corrected for strict
+  test annotations, root-validated, committed, merged, and pushed;
+- live remote tips verified before this documentation checkpoint:
+  `milestone/v0.6` at `1ab288b`, Task 21 at `c821efe`, and unchanged `main` at
+  `12f2f17`;
+- the user-owned `.codex/config.toml` edit remains unstaged and preserved;
+- Task 21 recovered into the durable ignored `.worktrees/task21` checkout;
+  its missing `/tmp` registration was removed, and the unused read-only native
+  alternative was archived through the app;
+- the owner approved the completion plan on October 13 and chose `0.6.0rc1`
+  for release closeout; no main integration or tagging is authorized;
+- Task 22 is next. Expand its plan/prompt using the resolved replay integration
+  decisions before code delegation.
 
-Always verify these statements with `git status --short`, `git branch -vv`, and
-recent history before acting. The repository is authoritative if external
-state has changed.
+The approved delivery plan is `docs/subagent_execution_plan/v0_6_completion_plan.md`.
+Current root scratch recovery ledger and replay draft are under
+`.superpowers/sdd/v0_6_completion_plan/`; binding committed task documents remain
+canonical. Never depend solely on ignored scratch surviving cleanup.
+
+Always recheck status, current branches, history and live remote tips before
+acting. SSH currently requires the scoped invocation
+`GIT_SSH_COMMAND='ssh -F /dev/null -o BatchMode=yes'` because a system SSH Include
+has invalid ownership; normal host-key checking is retained.
 
 ## Completed v0.6 sequence
 
@@ -49,59 +57,62 @@ reviewed, corrected where necessary, validated, committed, merged with
 | 20 | Authoritative work orders, aggregate reservations, schema-v9 persistence, inspection, and filtered interpretations | `bb9fa53` |
 | 20a | Actor-bound proposal-to-work gateway, authoritative preflights, and self-volunteering | `0b6760f` |
 | 20b | Deterministic work execution, atomic work-phase rollback, and schema-v10 charge evidence | `5489b73` |
+| 21 | Objective-backed adjacent stages, population/maintenance criteria, schema-v11 persistence, inspection, and NPC filtering | `1ab288b` |
 
 Task reports under `docs/subagent_execution_plan/v0_6/` contain exact files,
 interfaces, review corrections, and validation evidence. ADR-0015 through
-ADR-0023 capture the scenario, spatial, partial-world, dispatch, goal, need,
+ADR-0024 capture the scenario, spatial, partial-world, dispatch, goal, need,
 work-order, proposal-gateway, and deterministic work execution contracts.
 
-SQLite snapshot support now spans schema versions 1 through 10. The v0.6
+SQLite snapshot support now spans schema versions 1 through 11. The v0.6
 progression is run identity in schema 2, spatial placements in schema 3,
 external references in schema 4, external dispatches in schema 5, goals and
 objectives in schema 6, settlement needs in schema 7, and consequences in
 schema 8, followed by work definitions, states, and reservations in schema 9,
-and exact-once work input charge evidence in schema 10. Legacy versions load
+exact-once work input charge evidence in schema 10, and objective-backed
+settlement stage programs/state plus population/maintenance criteria in schema 11. Legacy versions load
 newer fields and collections with compatible defaults and write forward.
 
 ## Current validation baseline
 
-The final reviewed and merged Task 20b delivery passed:
+Task 21 passed independent spec/quality review after one typing correction.
+Root validation passed on both the task tree and merged milestone:
 
 | Command | Result |
 | --- | --- |
-| Focused Task 20b named-file matrix | 261 passed; 10 deliberate skips |
-| `make` | Ruff and Black passed; 927 pytest tests passed, 10 deliberate skips; examples 001–036 passed |
-| `make examples` | Examples 001–036 passed |
+| `make` | Ruff/Black passed; 1086 tests passed, 10 existing deliberate skips; examples 001–037 passed |
+| Separate `make examples` | Examples 001–037 passed |
 | `git diff --check` | Passed |
 
-These results are a checkpoint, not a substitute for rerunning validation on
-future task branches.
+The primary checkout's old environment lacked Black. Merged validation used
+`make VENV=.worktrees/task21/.venv` and the same override for examples; its
+fresh environment is Python 3.13.5. These results are checkpoint evidence,
+not a substitute for future task validation.
 
-## Next task: Task 21
+## Next task: Task 22
 
-Task 21 is next because Task 20b is reviewed, merged, and pushed. Its current
-artifacts are:
+Task 22 follows the reviewed and pushed Task 21 merge. Its binding artifacts:
 
-- `docs/subagent_execution_plan/v0_6/21_settlement_development_stages.md`
-- `docs/subagent_execution_plan/v0_6/21_settlement_development_stages-prombt.md`
+- `docs/subagent_execution_plan/v0_6/22_recorded_proposal_tapes.md`
+- `docs/subagent_execution_plan/v0_6/22_recorded_proposal_tapes-prombt.md`
 
-Start with the required bootstrap and reconcile the Task 21 contract against
-the merged goal, need, consequence, work-order, and work-execution authority
-paths. Do not implement until stage ownership, transition criteria, scheduler
-placement, persistence/migration, rollback, inspection, NPC visibility, tests,
-and allowed files are decision-complete. The recommended session grouping is a
-fresh root context for Tasks 21 and 22, still executing only one task at a time.
+Before delegation, consolidate the root's reviewed replay design: persisted
+scenario-label bindings; immutable tape identity plus manager-owned durable
+cursor in schema 12; one entry per tick after ordinary systems and before work;
+filtered context and ordinary action gateways; read-only offer composition;
+failed-tick advance/save refusal with checkpoint reload; preparation,
+finalization and intermediate-checkpoint CLI semantics. No live model or
+canonical founders content belongs in Task 22. Task 23 owns canonical domain
+setup and goal/stage-based terminal outcome integration.
 
 ## Remaining approved sequence
 
 Continue one reviewed task at a time in this order:
 
-1. Tasks 20, 20a, and 20b — work records, proposal gateway, and execution.
-2. Task 21 — settlement development stages.
-3. Task 22 — deterministic recorded proposal tapes.
-4. Tasks 15 and 15c — FastAPI-hosted inspector and spatial view.
-5. Task 23 — canonical success, stall, and failure founders scenarios.
-6. Task 24 — milestone release-readiness closeout.
+1. Task 22 — deterministic recorded proposal tapes.
+2. Tasks 15 and 15c — FastAPI-hosted inspector and spatial view.
+3. Task 23 — canonical success, stall, and failure founders scenarios.
+4. Task 24 — milestone release-readiness closeout at `0.6.0rc1`.
 
 Task 24 leaves `milestone/v0.6` ready for owner integration. It does not merge
 or push anything to `main`.

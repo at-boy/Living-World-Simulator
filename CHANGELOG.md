@@ -4,6 +4,9 @@
 
 ### Added
 
+- Record the reviewed Task 21 milestone checkpoint and owner-approved remaining
+  completion workflow, with `0.6.0rc1` selected for release closeout.
+
 - Implement manager-owned settlement development from founding camp through
   settlement to town using completed settlement objectives, deterministic
   adjacent promotions, atomic stage-phase rollback, schema-11 snapshots,
