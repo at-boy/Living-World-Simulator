@@ -1,5 +1,13 @@
 # Living World Simulator – Project Journal
 
+## Task 22 replay contract — October 13, 2026
+
+Resolved proposal scheduling, label binding, durable cursor/checkpoint semantics,
+read-only offer composition, failed-tick recovery and finalization before code.
+ADR-0025 and the exact task plan/prompt retain the ordinary NPC information and
+action authority boundaries. Canonical founders initialization and terminal
+outcomes remain Task 23 scope. Root owns final full validation after review.
+
 ## October 13, 2026 — Task 21 milestone checkpoint
 
 Task 21 delivery `c821efe` passed independent review and root gates, then merged

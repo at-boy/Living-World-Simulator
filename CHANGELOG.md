@@ -4,6 +4,10 @@
 
 ### Added
 
+- Define ADR-0025 and the Task 22 tape/cursor/runtime contract, including
+  schema-12 identity binding, ordinary proposal validation and failed-tick
+  checkpoint recovery.
+
 - Record the reviewed Task 21 milestone checkpoint and owner-approved remaining
   completion workflow, with `0.6.0rc1` selected for release closeout.
 

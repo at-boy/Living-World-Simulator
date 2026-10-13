@@ -6,7 +6,9 @@ and Task 20b deterministic execution are implemented.
 
 Task 21's objective-backed settlement stages are independently reviewed,
 validated, merged, and pushed to milestone/v0.6. Task 22 recorded proposal
-replay is next in the approved sequence. Reusable
+replay is next in the approved sequence; its strict runtime/cursor contract
+and ADR-0025 are defined before implementation. Legacy replay enablement on
+populated saves without label bindings remains unsupported. Reusable
 stage templates, decline/demotion, scenario-YAML binding (Task 23), and automatic
 NPC perception of stages remain deliberately deferred.
 
