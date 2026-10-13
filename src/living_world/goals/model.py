@@ -62,6 +62,18 @@ class SettlementStageCriterion:
     stage: str
 
 
+@dataclass(frozen=True, slots=True)
+class PopulationMinimumCriterion:
+    minimum: int
+
+
+@dataclass(frozen=True, slots=True)
+class MaintainedCapabilityCriterion:
+    capability: str
+    count: int
+    minimum_condition: int
+
+
 GoalCriterion = (
     ResourceMinimumCriterion
     | ConstructedCapabilityCriterion
@@ -69,6 +81,8 @@ GoalCriterion = (
     | ExternalConnectionCriterion
     | SustainedNeedCriterion
     | SettlementStageCriterion
+    | PopulationMinimumCriterion
+    | MaintainedCapabilityCriterion
 )
 
 

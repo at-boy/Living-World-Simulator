@@ -289,6 +289,7 @@ def test_inspection_endpoints_return_authoritative_snapshots_in_id_order() -> No
         "placement_count": 0,
         "external_world_reference_count": 0,
         "external_dispatch_count": 0,
+        "settlement_stage_program_count": 0,
         "goal_count": 0,
         "objective_count": 0,
         "need_count": 0,

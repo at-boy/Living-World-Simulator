@@ -663,3 +663,29 @@ This separation is essential for NPCs to have:
 * meaningful experiences
 
 and ultimately for the world to feel like a world that NPCs actually **live in**, rather than a database that they can inspect.
+
+
+## Task 21 settlement development boundary
+
+Engine truth consists of exact immutable stage programs, settlement/objective
+IDs, typed completion criteria and thresholds, manager-owned enum state,
+entered/transition ticks, progress evidence and lifecycle/transition events.
+Goal evaluation owns objective completion and stage evaluation consumes only
+that completion after the goal phase. LLM text has no stage configuration,
+mutation, or promotion gateway.
+
+The sole stage translation is an explicitly requested fixed
+`NPCSettlementStageInterpretation(label, description)` describing a newly
+established community, established settlement, or developed town. Internal ID
+forms and empty prose are rejected. Perception does not automatically discover
+this projection; no stage observation, memory, inference, retrieval record,
+`NPCContext` field, or LLM prompt is added by Task 21. A caller may deliberately
+select the qualitative prose through the existing validated prose pathway.
+
+Programs, state mappings, identifiers, exact criteria, statuses, thresholds,
+ticks, evidence, events, and arbitrary runtime objects remain engine-only.
+`NPCInformationBoundary` includes stage owners/objective references in its
+identifier inventory and stage ticks and referenced objective thresholds in numeric rejection, rejects raw stage
+collection/field vocabulary, and retains fail-closed validation of runtime
+objects and authoritative numeric values. Privileged detached inspection at
+`GET /world/settlement-stages` is for engine/operators and is not NPC context.

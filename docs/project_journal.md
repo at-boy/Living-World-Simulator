@@ -1,5 +1,28 @@
 # Living World Simulator – Project Journal
 
+## Task 21 implementation
+
+Added immutable per-settlement programs and manager-owned stage state with
+objective-role validation, normalized provenance, adjacent promotion once per
+tick, and rollback of the complete stage phase. Goal evaluation precedes stages
+so a stage-dependent goal observes promotion on the next tick. Population and
+maintained-capability criteria use the existing closed goal registry. Schema 11
+persists these records; legacy snapshots retain empty stage collections.
+Privileged inspection is detached and GET-only. Fixed NPC prose is selected
+explicitly and never automatically enters cognition. The isolated implementation
+awaits independent review and milestone integration; validation evidence is in
+the Task 21 report.
+
+## Task 21 settlement-stage contract
+
+ADR-0024 resolves settlement development before implementation: one immutable
+program is bound directly to each configured settlement; typed requirements
+consume only completed settlement-owned objectives and their evidence; and the
+manager-owned stage advances by at most one adjacent transition per tick after
+goal evaluation. Schema 11, privileged inspection, rollback, and qualitative
+NPC projection are explicit, while population-only or LLM-directed promotion,
+decline, templates, and scenario binding remain out of scope.
+
 ## Task 20b implementation
 
 Deterministic work execution now runs in an atomic shadow phase before

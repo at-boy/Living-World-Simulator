@@ -29,6 +29,7 @@ from living_world.needs.model import (
     StorageState,
 )
 from living_world.spatial.model import Placement
+from living_world.stages.model import SettlementStageProgram, SettlementStageState
 from living_world.work.model import WorkDefinition, WorkReservation, WorkState
 
 
@@ -56,6 +57,13 @@ class WorldState:
     goal_states: dict[str, GoalState] = field(default_factory=dict)
     objective_definitions: dict[str, ObjectiveDefinition] = field(default_factory=dict)
     objective_states: dict[str, ObjectiveState] = field(default_factory=dict)
+
+    settlement_stage_programs: dict[str, SettlementStageProgram] = field(
+        default_factory=dict
+    )
+    settlement_stage_states: dict[str, SettlementStageState] = field(
+        default_factory=dict
+    )
 
     need_definitions: dict[str, NeedDefinition] = field(default_factory=dict)
     need_states: dict[str, NeedState] = field(default_factory=dict)

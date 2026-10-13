@@ -41,6 +41,7 @@ from living_world.scenarios.scenario import (
 )
 from living_world.simulation.simulation_scheduler import SimulationScheduler
 from living_world.spatial.manager import SpatialManager
+from living_world.stages import SettlementStageEvaluationSystem, SettlementStageManager
 from living_world.state.world_state import WorldState
 from living_world.systems.construction_system import ConstructionSystem
 from living_world.systems.housing_system import HousingSystem
@@ -78,6 +79,7 @@ class SimulationEngine:
         self._work = WorkManager(self._state, self._events)
 
         self._goals = GoalManager(self._state, self._events)
+        self._settlement_stages = SettlementStageManager(self._state, self._events)
 
         self._needs = NeedManager(self._state, self._events)
 
@@ -130,6 +132,9 @@ class SimulationEngine:
         self._need_assessment_system: NeedAssessmentSystem | None = None
         self._goal_evaluation_system: GoalEvaluationSystem | None = None
         self._consequence_system: ConsequenceSystem | None = None
+        self._settlement_stage_evaluation_system: (
+            SettlementStageEvaluationSystem | None
+        ) = None
         self._work_execution_system = WorkExecutionSystem(self._definitions)
 
         self._resources = ResourceSystem()
@@ -236,6 +241,9 @@ class SimulationEngine:
         self._consequence_system = ConsequenceSystem(self._consequences)
         self._need_assessment_system = NeedAssessmentSystem(self._needs)
         self._goal_evaluation_system = GoalEvaluationSystem(self._goals)
+        self._settlement_stage_evaluation_system = SettlementStageEvaluationSystem(
+            self._settlement_stages
+        )
         self._rebuild_scheduler()
 
     @property
@@ -279,6 +287,10 @@ class SimulationEngine:
     @property
     def goals(self) -> GoalManager:
         return self._goals
+
+    @property
+    def settlement_stages(self) -> SettlementStageManager:
+        return self._settlement_stages
 
     @property
     def needs(self) -> NeedManager:
@@ -339,6 +351,8 @@ class SimulationEngine:
             self._scheduler.register(self._need_assessment_system)
         if self._goal_evaluation_system is not None:
             self._scheduler.register(self._goal_evaluation_system)
+        if self._settlement_stage_evaluation_system is not None:
+            self._scheduler.register(self._settlement_stage_evaluation_system)
 
     def load_definitions(self, path: Path) -> tuple[Definition, ...]:
         """Load and atomically register definition vocabulary from YAML."""

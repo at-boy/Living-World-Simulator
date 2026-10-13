@@ -46,6 +46,8 @@ class WorldInspector(Protocol):
 
     def goals(self) -> tuple[Mapping[str, object], ...]: ...
 
+    def settlement_stages(self) -> tuple[Mapping[str, object], ...]: ...
+
     def needs(self) -> tuple[Mapping[str, object], ...]: ...
 
     def consequences(self) -> Mapping[str, object]: ...
@@ -85,6 +87,7 @@ class EngineWorldInspector:
             "placement_count": len(state.placements),
             "external_world_reference_count": len(state.external_world_references),
             "external_dispatch_count": len(state.external_dispatches),
+            "settlement_stage_program_count": len(state.settlement_stage_programs),
             "goal_count": len(state.goal_definitions),
             "objective_count": len(state.objective_definitions),
             "need_count": len(state.need_definitions),
@@ -180,6 +183,21 @@ class EngineWorldInspector:
                 ),
             )
             for goal_id in sorted(state.goal_definitions)
+        )
+
+    def settlement_stages(self) -> tuple[Mapping[str, object], ...]:
+        state = self._engine.state
+        return tuple(
+            cast(
+                Mapping[str, object],
+                _snapshot_value(
+                    {
+                        "program": state.settlement_stage_programs[key],
+                        "state": state.settlement_stage_states[key],
+                    }
+                ),
+            )
+            for key in sorted(state.settlement_stage_programs)
         )
 
     def needs(self) -> tuple[Mapping[str, object], ...]:

@@ -76,6 +76,7 @@ class EntityManager:
         return entity_id in self._state.entities
 
     def remove(self, entity_id: str) -> None:
+        self._validate_stage_owner(entity_id)
         if any(
             policy.owner_id == entity_id
             for policies in (
@@ -136,6 +137,7 @@ class EntityManager:
             if entity.destroyed_tick == tick:
                 return
             raise ValueError("Entity was destroyed at a different tick.")
+        self._validate_stage_owner(entity_id)
         if self._work_guard is not None:
             self._work_guard.validate_entity_destruction(entity_id)
         if (
@@ -158,6 +160,13 @@ class EntityManager:
         ):
             raise ValueError("Entity occupies a role that requires it to remain live.")
         entity.destroyed_tick = tick
+
+    def _validate_stage_owner(self, entity_id: str) -> None:
+        if (
+            entity_id in self._state.settlement_stage_programs
+            or entity_id in self._state.settlement_stage_states
+        ):
+            raise ValueError("Entity owns a settlement stage program or state.")
 
     def set_attribute(
         self,
