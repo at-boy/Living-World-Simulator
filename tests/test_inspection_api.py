@@ -2,9 +2,9 @@ import asyncio
 import json
 import tomllib
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from fastapi import FastAPI
 
@@ -41,6 +41,7 @@ from living_world.spatial import Point
 class HTTPResponse:
     status_code: int
     body: bytes
+    headers: Mapping[str, str] = field(default_factory=dict)
 
     def json(self) -> Any:
         return json.loads(self.body)
@@ -107,7 +108,12 @@ class ASGIClient:
             for message in messages
             if message["type"] == "http.response.body"
         )
-        return HTTPResponse(status_code=int(status_message["status"]), body=body)
+        headers = cast(list[tuple[bytes, bytes]], status_message.get("headers", []))
+        return HTTPResponse(
+            status_code=int(status_message["status"]),
+            body=body,
+            headers={key.decode(): value.decode() for key, value in headers},
+        )
 
 
 def make_client() -> tuple[SimulationEngine, ASGIClient]:

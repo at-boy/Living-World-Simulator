@@ -140,3 +140,13 @@ ticks, and exact state are privileged and must not be used as NPC context.
 `GET /world/goals` returns a deterministic, detached privileged snapshot of
 goal definitions, lifecycle state, objectives, typed criteria, and evidence.
 This operator endpoint is not an NPC-context or mutation interface.
+
+## Packaged browser inspector
+
+`GET /inspector` serves the packaged read-only World Inspector. Its fixed CSS
+and JavaScript assets are served under `/inspector/assets/`; unknown assets
+return 404 and mutating methods return 405. See [World Inspector](world_inspector_ui.md)
+for view sources, independent snapshot semantics, browser verification and the
+extension entry points. The module-level server owns an empty engine; an app
+created with `create_app(engine)` reads that supplied engine. A separately loaded
+database remains a snapshot rather than synchronizing another process.

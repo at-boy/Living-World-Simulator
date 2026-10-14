@@ -136,10 +136,10 @@ separately scoped to Task 19a; work selection remains Task 20 and later.
 - Emergent quests
 - Dynamic rumours
 - Player influence on history
-- **Read-only World Inspector UI** backed exclusively by the HTTP inspection
-  API, with world/entity detail views, deterministic time-series/statistical
-  graphs, event/history views, and relationship graphs. It must remain an
-  operator observability client, never a simulation, NPC, or LLM API.
+- **Inspector visualization follow-up:** Task 15 supplies packaged read-only
+  world/entity/lifecycle details and event history. Statistical/time-series and
+  relationship graphs remain future explicitly authorized operator work; they
+  must never become a simulation, NPC, or LLM API.
 - **Spatial World Inspector visualization** showing areas, settlements,
   buildings, and other placed world elements with click-through inspection.
   This requires a canonical engine-owned spatial layout/placement contract

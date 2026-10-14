@@ -1,5 +1,14 @@
 # Living World Simulator – Project Journal
 
+## Task 15 implementation — October 14, 2026
+
+Added packaged same-origin GET-only inspector views without changing domain DTOs
+or NPC/cognition paths. Exact resource attributes, lifecycle records, goals, work,
+stages and evidence remain reported engine truth. Typed ASGI and real Chrome
+checks cover navigation, errors, literal text, stale requests and unchanged state.
+Independent review and root full/browser/installed-wheel gates remain pending;
+see the Task 15 report for focused evidence.
+
 ## Task 22 implementation — October 14, 2026
 
 Implemented strict proposal-only tape loading, canonical identity, stateless
