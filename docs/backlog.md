@@ -9,7 +9,8 @@ validated, merged, and pushed to milestone/v0.6. Task 22 recorded proposal
 replay is independently reviewed, validated and integrated; its strict
 runtime/cursor contract and ADR-0025 remain authoritative. Task15
 operator inspector is independently reviewed and integrated. Task15c spatial
-view is next with a reviewed precise contract, followed by Task23 canonical
+view has pushed precise contracte6e9870; initial TDD is paused at the owner usage
+boundary, unfinished and unreviewed. Follow it with Task23 canonical
 composition. Legacy replay enablement on
 populated saves without label bindings remains unsupported. Reusable
 stage templates, decline/demotion, scenario-YAML binding (Task 23), and automatic

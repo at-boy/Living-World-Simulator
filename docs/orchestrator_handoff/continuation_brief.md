@@ -2,6 +2,13 @@
 
 ## Current repository state
 
+**USAGE PAUSED October14.** See `v0_6_usage_pause_2026_10_14_second.md`. Root
+stopped Task15c at18% five-hour remaining to preserve buffer above the owner10%
+floor. Tasks22/15 are integrated; Task15c contracte6e9870 is pushed, initial
+uncommitted TDD/report preserved in .worktrees/task15c, implementation unfinished.
+No automatic resume or usage reset. Resume original worker after state/usage check.
+
+
 The v0.6 autonomous founding-settlement milestone is authorized and active.
 Reviewed task branches merge only into `milestone/v0.6`; never change `main`.
 
@@ -103,11 +110,12 @@ requires PYTHONPATH=src for direct project imports; make already sets it.
 
 ## Next task: Task15c
 
-Reviewed drafts in `.superpowers/sdd/v0_6_completion_plan/`:
-`task15c-final-plan-draft.md` and `task15c-prompt-draft.md`. Transfer them to
-binding task artifacts on task/15c-spatial-inspector-view from this milestone
-checkpoint before dispatch. Independent final contract/seam verdict CONTRACT READY.
-Exact projection, safe integer range, backend order, unplaced categories and
+Binding plan/prompt on task/15c-spatial-inspector-view at e6e9870 are canonical.
+Independent final contract/seam verdict CONTRACT READY. Initial Spatial browser
+RED1failed/31deselected is preserved; no asset implementation. Original worker
+paused; read the partial report and pending diff before resuming.
+The binding plan/prompt are now on task branch at e6e9870; original worker is
+paused after initial TDD. Exact projection, safe integer range, backend order, unplaced categories and
 compatible Back-to-Spatial behavior are explicit. Dedicated renderer preserves
 placement order; generic renderRecords sorts by ID and is unsuitable for maps.
 No domain/DTO/server/persistence/cognition changes or write requests.

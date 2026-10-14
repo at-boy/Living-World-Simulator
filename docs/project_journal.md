@@ -883,3 +883,12 @@ Deliverydea51cb merged91e33bf after four reviewed corrections. Root task/merged
 1229passed/10existing skips,31Chrome cases,examples001–038; installed assets and
 real wide/narrow layout passed. Task15c contract is ready. Owner usage rule
 remains stop before10% remaining, with durable checkpoint buffer.
+
+
+## 2026-10-14 — Second usage pause
+
+Owner hard boundary is stop before10% five-hour remains. Root interrupted Task15c
+at18% and requested report-only checkpoint; initial TDD is preserved, unfinished
+and unreviewed. Task15c contracte6e9870 is pushed from reviewed e06f79c; main and
+user configuration remain untouched. Resume from actual pending work, not old
+Task15/22 discussion. Exact handoff is v0_6_usage_pause_2026_10_14_second.md.

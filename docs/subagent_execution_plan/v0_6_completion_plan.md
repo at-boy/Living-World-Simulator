@@ -311,3 +311,8 @@ Task15 deliverydea51cb, merge91e33bf: independent review PASS after four bounded
 corrections; task/merged1229passed/10existing skips,31Chrome cases,examples001–038,
 installed assets/routes and wide/narrow visual gates passed. Task15c draft final
 contract/seam review CONTRACT READY; implementation follows isolated transfer.
+
+Second usage pause: root stopped Task15c at18% remaining and completed a
+report-only handoff at15% remaining, above owner10% floor. Exact contracte6e9870
+is pushed; initial browser RED and partial report are uncommitted, unfinished
+and unreviewed. Resume Task15c from .worktrees/task15c before Task23/24.

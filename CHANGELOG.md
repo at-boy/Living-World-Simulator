@@ -4,6 +4,9 @@
 
 ### Added
 
+- Save the owner-requested usage pause with reviewed Tasks22/15 integrated and
+  Task15c initial TDD preserved under its pushed exact contract.
+
 - Checkpoint independently reviewed Task15 integration and the precise Spatial
   inspector contract for the next isolated task.
 
