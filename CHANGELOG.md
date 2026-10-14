@@ -4,6 +4,9 @@
 
 ### Added
 
+- Checkpoint independently reviewed Task15 integration and the precise Spatial
+  inspector contract for the next isolated task.
+
 - Add the packaged GET-only World Inspector with ten operator views, literal
   snapshot details, entity/evidence navigation, accessible responsive controls,
   malformed/unsupported-state handling and real Chrome browser verification.

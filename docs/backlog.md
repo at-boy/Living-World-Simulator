@@ -7,9 +7,10 @@ and Task 20b deterministic execution are implemented.
 Task 21's objective-backed settlement stages are independently reviewed,
 validated, merged, and pushed to milestone/v0.6. Task 22 recorded proposal
 replay is independently reviewed, validated and integrated; its strict
-runtime/cursor contract and ADR-0025 remain authoritative. Tasks15 and15c
-operator inspection are next, followed by Task23 canonical composition. Task15
-now has an independently reviewed decision-complete route/browser/package contract. Legacy replay enablement on
+runtime/cursor contract and ADR-0025 remain authoritative. Task15
+operator inspector is independently reviewed and integrated. Task15c spatial
+view is next with a reviewed precise contract, followed by Task23 canonical
+composition. Legacy replay enablement on
 populated saves without label bindings remains unsupported. Reusable
 stage templates, decline/demotion, scenario-YAML binding (Task 23), and automatic
 NPC perception of stages remain deliberately deferred.

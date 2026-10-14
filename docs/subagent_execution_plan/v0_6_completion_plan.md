@@ -1,8 +1,8 @@
 # v0.6 milestone completion plan
 
 Date: 2026-10-07
-Status: owner-approved execution on 2026-10-13; Phase0 and Tasks21–22 completed.
-Release version confirmed by owner: `0.6.0rc1`. Task15 is next.
+Status: owner-approved execution on 2026-10-13; Phase0 and Tasks21–22 and15 completed.
+Release version confirmed by owner: `0.6.0rc1`. Task15c is next.
 
 **Goal:** Complete the autonomous founding-settlement vertical slice on
 `milestone/v0.6`, with reproducible success, stall, and failure runs,
@@ -168,14 +168,14 @@ and obtain authorization before adding it to the sequence.
 
 Execute and merge separately, in that order.
 
-- [ ] Expand Task 15's contract with exact route, packaged asset paths, API-to-
+- [x] Expand Task 15's contract with exact route, packaged asset paths, API-to-
   view mappings, ordering, refresh/freshness behavior, and browser test method.
-- [ ] Implement same-origin read-only views for world/tick, entities,
+- [x] Implement same-origin read-only views for world/tick, entities,
   relationships, resources, history, needs, goals, work, dispatches, and stages.
-- [ ] Test actual navigation/drill-down, loading/empty/error/unavailable states,
+- [x] Test actual navigation/drill-down, loading/empty/error/unavailable states,
   accessible controls, read-only requests, DTO detachment, and installed-package
   asset availability. Static request-string inspection alone is insufficient.
-- [ ] Review, validate, report, and merge Task 15 before starting Task 15c.
+- [x] Review, validate, report, and merge Task 15 before starting Task 15c.
 - [ ] Specify and implement deterministic map scaling, labels, overlaps,
   unplaced entities, resizing, and entity click-through from detached spatial
   DTOs. Test empty and degenerate bounds and malformed/error responses.
@@ -306,3 +306,8 @@ replay/event bijection enforced. Task15 contract independently CONTRACT READY;
 transfer into isolated branch before code. Remaining sequence15,15c,23,24.
 Owner resumed with hard usage boundary: stop before10% five-hour allowance
 remains, save checkpoint and interrupt active workers with buffer.
+
+Task15 deliverydea51cb, merge91e33bf: independent review PASS after four bounded
+corrections; task/merged1229passed/10existing skips,31Chrome cases,examples001–038,
+installed assets/routes and wide/narrow visual gates passed. Task15c draft final
+contract/seam review CONTRACT READY; implementation follows isolated transfer.

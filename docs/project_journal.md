@@ -875,3 +875,11 @@ static inspector, strict GET-only source mappings, real browser tests, wheel
 asset gate and exact file boundary. Independent root contract review concluded
 CONTRACT READY. Root owns final gates; worker focused tests only. Task15c owns
 spatial view and Task23 owns canonical setup/terminal/inspection CLI.
+
+
+## 2026-10-14 — Task15 reviewed integration
+
+Deliverydea51cb merged91e33bf after four reviewed corrections. Root task/merged
+1229passed/10existing skips,31Chrome cases,examples001–038; installed assets and
+real wide/narrow layout passed. Task15c contract is ready. Owner usage rule
+remains stop before10% remaining, with durable checkpoint buffer.

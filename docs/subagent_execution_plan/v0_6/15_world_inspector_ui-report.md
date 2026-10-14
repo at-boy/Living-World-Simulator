@@ -118,3 +118,10 @@ warning; repository API/browser tests use the dependency-free ASGI helper and
 reported no warnings. No runtime dependency or product behavior was changed for
 that warning. Wheel retains current0.5.0 metadata until owner-selected0.6.0rc1
 Task24 closeout. No unexplained new skips.
+
+## Milestone integration
+
+Deliverydea51cb merged into milestone/v0.6 as91e33bf. Root merged full gate
+passed1229tests/10existing skips,31Chrome cases and examples001–038; separate
+examples passed. Asset source is unchanged from installed-wheel acceptance.
+Main remains outside scope; remote verification is in continuation checkpoint.

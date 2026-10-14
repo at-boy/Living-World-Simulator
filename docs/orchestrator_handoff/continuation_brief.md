@@ -7,11 +7,15 @@ Reviewed task branches merge only into `milestone/v0.6`; never change `main`.
 
 At this checkpoint:
 
-- current branch `milestone/v0.6`; Task22 delivery `02b35fe`, merge `7806f29`;
+- current branch `milestone/v0.6`; Task15 delivery `dea51cb`, merge `91e33bf`;
+- Task15 reviewed after four bounded corrections; task and merged gates1229
+  passed/10 existing skips,31 Chrome cases,examples001–038; installed assets and
+  actual wide/narrow layouts passed;
+- Task22 delivery `02b35fe`, merge `7806f29` remains complete;
 - Task22 independent spec/quality PASS after Unicode and work-phase compatibility
   corrections; task and merged gates1194 passed/10 existing skips, examples001–038;
 - Task21 delivery `c821efe`, merge `1ab288b`, checkpoint `b055619` remains complete;
-- live remote tips verified: milestone `7806f29`, Task22 `02b35fe`, unchanged
+- live remote tips verified: milestone `91e33bf`, Task15 `dea51cb`, unchanged
   main `12f2f17`;
 - user-owned `.codex/config.toml` edit is preserved unstaged;
 - writable isolated checkouts are `.worktrees/task21` and `.worktrees/task22`;
@@ -20,9 +24,9 @@ At this checkpoint:
 - owner resumed after the historical usage pause; **stop before the five-hour
   allowance falls below10% remaining**, checking at task boundaries and saving a
   durable checkpoint with enough buffer to interrupt workers;
-- Task15 is next. Its consolidated contract has independent CONTRACT READY
-  review; transfer the reviewed draft and saved prompt into its new task branch
-  before implementation. Task15c follows its reviewed merge.
+- Task15c is next. Its consolidated geometric/ordering/numeric and final UI
+  seam contract has independent CONTRACT READY review; transfer reviewed plan
+  and prompt into isolated task branch before implementation.
 
 The historical first pause is retained in `v0_6_usage_pause_2026_10_14.md`; its
 Task22 pending state is superseded by this checkpoint and the final task report.
@@ -62,6 +66,7 @@ reviewed, corrected where necessary, validated, committed, merged with
 | 20b | Deterministic work execution, atomic work-phase rollback, and schema-v10 charge evidence | `5489b73` |
 | 21 | Objective-backed adjacent stages, population/maintenance criteria, schema-v11 persistence, inspection, and NPC filtering | `1ab288b` |
 | 22 | Recorded proposal tapes, durable cursor/labels, schema12, checkpoint recovery and detached replay inspection | `7806f29` |
+| 15 | Packaged GET-only inspector, ten views, real browser/error/navigation/read-only and installed asset checks | `91e33bf` |
 
 Task reports under `docs/subagent_execution_plan/v0_6/` contain exact files,
 interfaces, review corrections, and validation evidence. ADR-0015 through
@@ -79,45 +84,44 @@ newer fields and collections with compatible defaults and write forward.
 
 ## Current validation baseline
 
-Task22 independent spec/quality review passed after two scoped corrections.
-Root task and merged milestone validation:
+Task15 independent spec/quality PASS after reservation/criterion validation,
+maintenance references and narrow-table corrections. Root task and merged gates:
 
-| Command | Result |
+| Gate | Result |
 | --- | --- |
-| `make` | Ruff/Black PASS;1194 tests passed,10 existing deliberate skips; examples001–038 passed |
-| Separate `make examples` | Examples001–038 passed |
-| `git diff --check` | PASS |
+| `make VENV=.worktrees/task15/.venv` (merged) | Ruff/Black PASS;1229 passed,10 existing deliberate skips;examples001–038 |
+| Separate examples | PASS;001–038 |
+| Actual Chrome browser cases in full suite |31 passed,no skips |
+| Whitespace | PASS |
+| Isolated wheel/install/resource/route check | PASS;3 byte-identical assets,3 routes,404/405/health,state unchanged |
+| Actual wide/narrow visual inspection | PASS after reviewed correction |
 
-Merged gates use `VENV=.worktrees/task22/.venv`, Python3.13.5, dependencies-only
-with make's PYTHONPATH=src. The old primary venv lacks Black. These results are
-checkpoint evidence, not future-task verification. Schema12 adds immutable
-replay binding/cursor and persisted initial label mappings; complete-boundary
-cursor/resolution-event bijection is validated. Legacy1–11 defaults remain
-compatible; missing legacy label bindings are never guessed for replay.
+Wheel smoke's optional TestClient/httpx emitted a Starlette deprecation warning;
+project tests use dependency-free ASGI transport and had no warnings. Current
+version remains0.5.0 until0.6.0rc1 Task24. Dependencies-only Python3.13.5 venv
+requires PYTHONPATH=src for direct project imports; make already sets it.
 
-## Next task: Task15
+## Next task: Task15c
 
-Copy independently reviewed `.superpowers/sdd/v0_6_completion_plan/`
-`task15-final-plan-draft.md` and `task15-prompt-draft.md` into binding Task15
-artifacts on `task/15-world-inspector-ui` from this reviewed milestone head.
-Review decision-completeness if drafts are unavailable; never reconstruct
-implementation from historical chats. Exact UI scope is packaged same-origin
-GET-only inspector views, strict response/error/race handling, accessible
-navigation and actual Chrome/Playwright tests. No spatial view in15, no Node
-build, no inspector DTO/domain/cognition changes. Root owns full/browsers/wheel
-gates; worker focused checks and reviewer independent diff inspection.
+Reviewed drafts in `.superpowers/sdd/v0_6_completion_plan/`:
+`task15c-final-plan-draft.md` and `task15c-prompt-draft.md`. Transfer them to
+binding task artifacts on task/15c-spatial-inspector-view from this milestone
+checkpoint before dispatch. Independent final contract/seam verdict CONTRACT READY.
+Exact projection, safe integer range, backend order, unplaced categories and
+compatible Back-to-Spatial behavior are explicit. Dedicated renderer preserves
+placement order; generic renderRecords sorts by ID and is unsuitable for maps.
+No domain/DTO/server/persistence/cognition changes or write requests.
 
-Task23 owns canonical domain setup, deterministic engine-owned goal/stage
-terminal policy and saved-world inspection CLI. Narrow probe confirms existing
-production/work paths suffice; ordinary registered composition accepts explicit
-housing delay rather than adding a new scheduler phase. Formal23contract still
-requires exact decisions before dispatch. No Task23 implementation is ready.
+Task23 preparation is documented separately in
+`v0_6_canonical_preparation_2026_10_14.md`. It is a non-binding design checkpoint,
+not worker authorization or a completed contract. Formal23plan/prompt must still
+resolve exact interfaces/fixtures/validation before implementation.
 
 ## Remaining approved sequence
 
 Continue one reviewed task at a time in this order:
 
-1. Tasks 15 and 15c — FastAPI-hosted inspector and spatial view.
+1. Task15c — spatial inspector view.
 2. Task 23 — canonical success, stall, and failure founders scenarios.
 3. Task 24 — milestone release-readiness closeout at `0.6.0rc1`.
 
