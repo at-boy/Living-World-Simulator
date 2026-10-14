@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
 
 from living_world.core.belief import Belief
 from living_world.core.entity import Entity
@@ -28,6 +31,9 @@ from living_world.needs.model import (
     StoragePolicy,
     StorageState,
 )
+
+if TYPE_CHECKING:
+    from living_world.replay.model import ReplayBinding, ReplayState
 from living_world.spatial.model import Placement
 from living_world.stages.model import SettlementStageProgram, SettlementStageState
 from living_world.work.model import WorkDefinition, WorkReservation, WorkState
@@ -40,6 +46,10 @@ class WorldState:
     tick: int = 0
 
     run_metadata: RunMetadata | None = None
+
+    scenario_entity_bindings: dict[str, str] = field(default_factory=dict)
+    replay_binding: ReplayBinding | None = None
+    replay_state: ReplayState | None = None
 
     entities: dict[str, Entity] = field(default_factory=dict)
 

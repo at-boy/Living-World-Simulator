@@ -817,3 +817,24 @@ Missing matching state is unsatisfied; authoritative contradictions fail loudly.
 **NPC settlement-stage interpretation** contains only fixed qualitative label
 and description selected explicitly by the caller; exact stage state and
 thresholds never enter NPC cognition automatically.
+
+**Proposal tape** is an immutable, canonical-content-hashed sequence of
+untrusted speech/action decisions bound to one scenario fingerprint. Actor
+labels are public scenario labels, not entity IDs or NPC identity names.
+
+**Recorded proposal client** is a stateless per-entry cognition adapter receiving
+only filtered NPC context and ordinary offered action vocabulary.
+
+**Replay binding and cursor** are manager-owned durable driver identity and
+progress. They grant no domain authority and persist atomically with world
+effects. Accepted, rejected and speech-only attempts each consume one entry.
+
+**Proposal slot** is one replaceable ephemeral scheduler phase after ordinary
+systems and before work. Exhausted tapes idle; no second actor scheduler exists.
+
+**Failed tick** is a process-local error marker refusing further engine advance
+or persistence until a complete checkpoint is reloaded. It retains the original
+exception and does not disable inspection or direct manager access.
+
+**Proposal finalization** verifies all tape entries were consumed before a final
+stopping checkpoint. Operator stops and checkpoint-only runs preserve leftovers.

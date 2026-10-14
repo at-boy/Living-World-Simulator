@@ -21,6 +21,10 @@ def create_app(engine: SimulationEngine) -> FastAPI:
     async def world_tick() -> dict[str, int]:
         return {"tick": inspector.tick()}
 
+    @application.get("/world/replay")
+    async def world_replay() -> Mapping[str, object]:
+        return inspector.replay()
+
     @application.get("/world/run")
     async def world_run() -> Mapping[str, object]:
         snapshot = inspector.run_metadata()

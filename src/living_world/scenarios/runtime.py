@@ -1,3 +1,7 @@
+from collections.abc import Mapping
+from dataclasses import fields
+from types import MappingProxyType
+
 from living_world.core.definition import Definition
 from living_world.managers.definition_manager import DefinitionManager
 from living_world.managers.entity_manager import EntityManager
@@ -36,6 +40,7 @@ class ScenarioRuntimeManager:
             )
         self._validate_definitions(scenario, definitions)
         if metadata is not None:
+            self._validate_bindings(scenario)
             self._definitions.register_many(definitions)
             return False
 
@@ -51,6 +56,10 @@ class ScenarioRuntimeManager:
                 name=item.name,
                 attributes=mutable_attributes(item.attributes),
             )
+            if item.label in labels:
+                raise ScenarioCompatibilityError(
+                    "Scenario entity labels must be unique."
+                )
             labels[item.label] = entity.id
         for item in scenario.relationships:
             relationships.create(
@@ -63,6 +72,7 @@ class ScenarioRuntimeManager:
         self._definitions.register_many(definitions)
         self._state.entities.update(staged_state.entities)
         self._state.relationships.update(staged_state.relationships)
+        self._state.scenario_entity_bindings.update(labels)
         self._state.run_metadata = scenario.run_metadata
         return True
 
@@ -83,18 +93,29 @@ class ScenarioRuntimeManager:
                 f"Scenario uses unknown definition(s): {', '.join(unknown)}."
             )
 
-    def _world_has_records(self) -> bool:
-        state = self._state
-        return state.tick != 0 or any(
-            (
-                state.entities,
-                state.relationships,
-                state.events,
-                state.observations,
-                state.beliefs,
-                state.experiences,
-                state.memories,
-                state.npc_relationships,
-                state.knowledge,
+    def entity_bindings(self) -> Mapping[str, str]:
+        return MappingProxyType(dict(self._state.scenario_entity_bindings))
+
+    def validate_entity_removal(self, entity_id: str) -> None:
+        if entity_id in self._state.scenario_entity_bindings.values():
+            raise ScenarioCompatibilityError(
+                "Scenario entity history must be retained."
             )
-        )
+
+    def _validate_bindings(self, scenario: LoadedScenario) -> None:
+        labels = self._state.scenario_entity_bindings
+        if not labels:  # Legacy snapshots remain usable without replay.
+            return
+        if set(labels) != {item.label for item in scenario.entities} or len(
+            set(labels.values())
+        ) != len(labels):
+            raise ScenarioCompatibilityError("Scenario entity bindings do not match.")
+        for item in scenario.entities:
+            entity = self._state.entities.get(labels[item.label])
+            if entity is None or entity.definition_key != item.definition_key:
+                raise ScenarioCompatibilityError(
+                    "Scenario entity bindings do not match."
+                )
+
+    def _world_has_records(self) -> bool:
+        return any(getattr(self._state, item.name) for item in fields(self._state))

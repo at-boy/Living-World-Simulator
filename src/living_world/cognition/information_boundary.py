@@ -121,6 +121,34 @@ class NPCInformationBoundary:
             raise ValueError(
                 "NPC prose cannot expose privileged settlement stage fields."
             )
+        if re.search(
+            r"\b(?:scenario_entity_bindings|replay_binding|replay_state|scenario_fingerprint|tape_fingerprint|actor_sequence|configured_tick|next_index|last_attempt_tick|replay_configured)\b",
+            value,
+        ):
+            raise ValueError("NPC prose cannot expose privileged replay fields.")
+        fingerprints = tuple(
+            item
+            for item in (
+                (
+                    None
+                    if self._state.run_metadata is None
+                    else self._state.run_metadata.configuration_fingerprint
+                ),
+                (
+                    None
+                    if self._state.replay_binding is None
+                    else self._state.replay_binding.scenario_fingerprint
+                ),
+                (
+                    None
+                    if self._state.replay_binding is None
+                    else self._state.replay_binding.tape_fingerprint
+                ),
+            )
+            if item is not None
+        )
+        if any(item in value for item in fingerprints):
+            raise ValueError("NPC prose cannot expose replay fingerprints.")
         if self._NEED_NUMERIC_NOTATION_PATTERN.search(value) is not None:
             raise ValueError(
                 f"NPC context {field_name} cannot expose authoritative numeric values."
@@ -165,6 +193,7 @@ class NPCInformationBoundary:
         return (
             tuple(identifier for collection in collections for identifier in collection)
             + stage_identifiers
+            + tuple(self._state.scenario_entity_bindings.values())
         )
 
     def _contains_authoritative_number(self, value: str) -> bool:
@@ -236,6 +265,11 @@ class NPCInformationBoundary:
         )
         return (
             entity_numbers
+            + tuple(
+                number
+                for record in (self._state.replay_binding, self._state.replay_state)
+                for number in self._numeric_values(record)
+            )
             + spatial_numbers
             + need_numbers
             + consequence_numbers

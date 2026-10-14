@@ -7,6 +7,9 @@ from collections.abc import Callable, Sequence
 from pathlib import Path
 from types import FrameType
 
+from living_world.replay.loader import YAMLProposalTapeLoader
+from living_world.replay.model import ProposalTapeError
+from living_world.replay.runtime import ReplayPreparation
 from living_world.repositories.sqlite_repository import (
     RepositoryError,
     SQLiteRepository,
@@ -53,6 +56,8 @@ def build_parser() -> argparse.ArgumentParser:
     limits.add_argument("--max-ticks", type=_non_negative_integer)
     limits.add_argument("--continuous", action="store_true")
     run.add_argument("--save-every", type=_positive_integer, default=1)
+    run.add_argument("--proposal-tape", type=Path)
+    run.add_argument("--checkpoint-only", action="store_true")
     return parser
 
 
@@ -71,14 +76,37 @@ def main(
         try:
             repository = SQLiteRepository(str(arguments.database))
             engine = engine_factory(repository)
-            result = ScenarioRunner(engine).run(
+            preparation = (
+                None
+                if arguments.proposal_tape is None
+                else ReplayPreparation(
+                    YAMLProposalTapeLoader().load(arguments.proposal_tape)
+                )
+            )
+            result = ScenarioRunner(engine, preparation).run(
                 arguments.scenario,
                 RunConfiguration(
                     max_ticks=arguments.max_ticks,
                     save_every=arguments.save_every,
                     continuous=arguments.continuous,
+                    finalize_proposals=not arguments.checkpoint_only,
                 ),
                 stop_control=control,
+            )
+        except ProposalTapeError as exc:
+            incompatible = {
+                "scenario_mismatch",
+                "actor_mismatch",
+                "missing_replay_preparation",
+                "replay_state_invalid",
+            }
+            return _error(
+                (
+                    INCOMPATIBLE_SAVE
+                    if exc.code in incompatible
+                    else INVALID_CONFIGURATION
+                ),
+                exc,
             )
         except ScenarioCompatibilityError as exc:
             return _error(INCOMPATIBLE_SAVE, exc)
@@ -96,6 +124,11 @@ def main(
             f"scenario={result.scenario_key} status={status} "
             f"start_tick={result.start_tick} end_tick={result.end_tick} "
             f"stop_reason={reason}"
+            + (
+                ""
+                if result.proposals_finalized is None
+                else f" proposals_finalized={result.proposals_finalized}"
+            )
         )
         return 0
     finally:

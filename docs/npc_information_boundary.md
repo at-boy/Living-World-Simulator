@@ -689,3 +689,32 @@ identifier inventory and stage ticks and referenced objective thresholds in nume
 collection/field vocabulary, and retains fail-closed validation of runtime
 objects and authoritative numeric values. Privileged detached inspection at
 `GET /world/settlement-stages` is for engine/operators and is not NPC context.
+
+## Task 22 recorded proposal boundary
+
+Engine truth includes scenario label-to-ID bindings, scenario/tape fingerprints,
+replay actor order, cursor/ticks, gateway outcomes and immutable resolution
+events. The simulation retains all world mutation, objective and stage authority.
+A tape entry is an untrusted proposal, including speech and rationale.
+
+The engine resolves a public actor label to its stored ID and asks
+`NPCContextAssembler` for that holder's ordinary filtered context. The context
+identity remains the actor's current entity name; duplicate names do not change
+the holder binding. Perception and retrieval retain their existing holder-scoped
+translation and hidden-record filtering. No replay data is automatically added
+to perception, self knowledge, memory, inference or conversation history.
+
+The stateless adapter receives only this context, ordinary safe `ActionOption`
+values and the expected public identity. It receives no world, holder/entity ID,
+manager, inspector, provider, handler, tape header or cursor. Its returned
+`NPCDecision` passes `DecisionEngine` and state-aware prose validation before
+any action reaches the ordinary `NPCActionResolver` and authoritative domain
+handler. Tape speech is not automatically recorded as history or cognition.
+
+Read-only offer providers are engine-side typed composition, with trusted
+handler factories supplied by application code; arbitrary Python is not
+sandboxed. Provider construction does not decide outcomes. Replay fingerprints,
+internal binding values, cursor/tick numbers and privileged replay field names
+are rejected at the prose boundary. Public label keys remain available as prose
+when they contain no other hidden data. Detached GET-only replay inspection is
+for operators and is never injected into NPC context.

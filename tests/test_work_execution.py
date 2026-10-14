@@ -545,7 +545,7 @@ def test_late_effect_or_completion_failure_rolls_back_every_work_phase_field(
 
 
 def test_failed_construction_phase_preserves_next_entity_relationship_and_event_ids(
-    monkeypatch,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     engine, settlement_id, _ = _engine()
     engine.definitions.register(Definition("shelter"))
@@ -559,20 +559,29 @@ def test_failed_construction_phase_preserves_next_entity_relationship_and_event_
         resources=(),
         required_progress=1,
     )
+    from living_world.core.event import Event
+
+    work_system: WorkExecutionSystem = WorkExecutionSystem(engine.definitions)
     original = EventManager.record
 
-    def fail_complete(self, *, kind, subject_id, attributes):
+    def fail_complete(
+        self: EventManager,
+        *,
+        kind: str,
+        subject_id: str | None,
+        attributes: dict[str, object] | None,
+    ) -> Event:
         if kind == "work_order_completed":
             raise RuntimeError("completion failed")
         return original(self, kind=kind, subject_id=subject_id, attributes=attributes)
 
     monkeypatch.setattr(EventManager, "record", fail_complete)
     with pytest.raises(RuntimeError):
-        engine.step()
+        work_system.step(engine.state)
     assert "entity_000003" not in engine.state.entities
     assert "relationship_000001" not in engine.state.relationships
     monkeypatch.setattr(EventManager, "record", original)
-    engine.step()
+    work_system.step(engine.state)
     constructed = next(
         e
         for e in engine.state.events.values()

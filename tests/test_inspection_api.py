@@ -284,6 +284,7 @@ def test_inspection_endpoints_return_authoritative_snapshots_in_id_order() -> No
     assert client.get("/world").json() == {
         "tick": 0,
         "run": None,
+        "replay_configured": False,
         "entity_count": 2,
         "relationship_count": 2,
         "placement_count": 0,

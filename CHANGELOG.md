@@ -4,6 +4,15 @@
 
 ### Added
 
+- Implement strict deterministic recorded proposal tapes through filtered NPC
+  context and the ordinary action gateway, with one proposal per tick, durable
+  schema-12 cursor/label bindings, checkpoint-only CLI runs, detached inspection,
+  and failed-tick checkpoint recovery. Add executable example 038.
+
+- Define ADR-0025 and the Task 22 tape/cursor/runtime contract, including
+  schema-12 identity binding, ordinary proposal validation and failed-tick
+  checkpoint recovery.
+
 - Record the reviewed Task 21 milestone checkpoint and owner-approved remaining
   completion workflow, with `0.6.0rc1` selected for release closeout.
 

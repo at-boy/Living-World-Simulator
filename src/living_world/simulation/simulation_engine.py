@@ -33,6 +33,8 @@ from living_world.managers.resource_definition_manager import ResourceDefinition
 from living_world.needs.consequence import ConsequenceManager, ConsequenceSystem
 from living_world.needs.manager import NeedManager
 from living_world.needs.system import NeedAssessmentSystem
+from living_world.replay.manager import ReplayManager
+from living_world.replay.model import ProposalTapeError
 from living_world.repositories.graph_repository import GraphRepository
 from living_world.scenarios.runtime import ScenarioRuntimeManager
 from living_world.scenarios.scenario import (
@@ -59,6 +61,10 @@ from living_world.work.execution import WorkExecutionSystem
 from living_world.work.manager import WorkManager
 
 
+class FailedTickError(RuntimeError):
+    """A partially failed tick must recover from a complete checkpoint."""
+
+
 class SimulationEngine:
     """High-level façade over the Living World runtime."""
 
@@ -75,6 +81,9 @@ class SimulationEngine:
         self._events = EventManager(
             self._state,
         )
+
+        self._replay = ReplayManager(self._state, self._events)
+        self._failed_tick: Exception | None = None
 
         self._work = WorkManager(self._state, self._events)
 
@@ -94,6 +103,7 @@ class SimulationEngine:
             self._definitions,
             self._spatial,
             self._work,
+            lifecycle_guards=(self._replay,),
         )
 
         self._relationships = RelationshipManager(
@@ -128,6 +138,7 @@ class SimulationEngine:
         self._scheduler = SimulationScheduler(
             self._state,
         )
+        self._proposal_system: SimulationSystem | None = None
         self._registered_systems: list[SimulationSystem] = []
         self._need_assessment_system: NeedAssessmentSystem | None = None
         self._goal_evaluation_system: GoalEvaluationSystem | None = None
@@ -340,10 +351,32 @@ class SimulationEngine:
             return
         self._rebuild_scheduler()
 
+    @property
+    def replay(self) -> ReplayManager:
+        return self._replay
+
+    @property
+    def scenarios(self) -> ScenarioRuntimeManager:
+        return self._scenarios
+
+    def configure_proposal_system(self, system: SimulationSystem | None) -> None:
+        if system is not None and not callable(getattr(system, "step", None)):
+            raise TypeError("Proposal system must provide step.")
+        previous = self._proposal_system
+        try:
+            self._proposal_system = system
+            self._rebuild_scheduler()
+        except Exception:
+            self._proposal_system = previous
+            self._rebuild_scheduler()
+            raise
+
     def _rebuild_scheduler(self) -> None:
         self._scheduler = SimulationScheduler(self._state)
         for registered in self._registered_systems:
             self._scheduler.register(registered)
+        if self._proposal_system is not None:
+            self._scheduler.register(self._proposal_system)
         self._scheduler.register(self._work_execution_system)
         if self._consequence_system is not None:
             self._scheduler.register(self._consequence_system)
@@ -424,18 +457,47 @@ class SimulationEngine:
             raise TypeError("service must be a CouncilService.")
         return service.convene(call=call)
 
+    def _check_failed_tick(self) -> None:
+        if self._failed_tick is not None:
+            raise FailedTickError(
+                "Cannot advance or save a failed tick; reload the last checkpoint."
+            ) from self._failed_tick
+
+    def _check_replay_preparation(self) -> None:
+        if self._state.replay_binding is not None:
+            from living_world.replay.system import ReplayProposalSystem
+
+            if not isinstance(self._proposal_system, ReplayProposalSystem):
+                raise ProposalTapeError("missing_replay_preparation")
+            self._proposal_system.validate_preparation(self._state)
+
     def step(self) -> None:
-        self._scheduler.step()
+        self._check_failed_tick()
+        self._check_replay_preparation()
+        try:
+            self._scheduler.step()
+        except Exception as exc:
+            self._failed_tick = exc
+            raise
 
     def run(
         self,
         steps: int,
     ) -> None:
-        self._scheduler.run(steps)
+        if not isinstance(steps, int) or isinstance(steps, bool):
+            raise TypeError("steps must be an integer.")
+        if steps < 0:
+            raise ValueError("steps must be non-negative.")
+        self._check_failed_tick()
+        self._check_replay_preparation()
+        for _ in range(steps):
+            self.step()
 
     def save_world(self) -> None:
         """Persist the current state when this engine was composed with a repository."""
 
+        self._check_failed_tick()
+        self._check_replay_preparation()
         if self._repository is None:
             return
 
