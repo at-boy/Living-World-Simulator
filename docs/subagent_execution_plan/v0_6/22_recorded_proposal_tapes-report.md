@@ -289,3 +289,11 @@ The initial full-gate1193-pass/1-fail result remains recorded above; the fresh
 1194-pass result supersedes it for acceptance. No new unexplained warnings or
 skips were reported. Root retained the intentional failed-engine reload boundary
 and all original work-phase rollback/ID assertions. Main remains outside scope.
+
+## Milestone integration
+
+Task22 delivery `02b35fe` merged into milestone/v0.6 as `7806f29`. Root repeated
+make using VENV=.worktrees/task22/.venv:1194 passed,10 existing skips and
+examples001–038; separate examples passed. Whitespace checks passed. No main
+integration or tagging occurred. Live remote verification is recorded in the
+orchestrator continuation checkpoint.

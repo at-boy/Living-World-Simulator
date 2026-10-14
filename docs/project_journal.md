@@ -849,3 +849,11 @@ external-contact criteria read their defined authoritative sources. Sustained
 need and settlement stage remain explicitly unavailable until their planned
 domains land. Exact evidence and authority remain engine-only; NPC goal
 interpretations are unchanged.
+
+
+## 2026-10-14 — Task22 reviewed integration checkpoint
+
+Delivery02b35fe merged7806f29 after two narrow reviewed corrections. Root task
+and merged gates1194passed/10existing skips, examples001–038. Task15 contract
+is ready for isolated implementation. Owner resumed with stop-before10%
+five-hour remaining rule; no reset/automation/main integration/tag authorized.

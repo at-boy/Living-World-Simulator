@@ -1,29 +1,32 @@
-# Continuation brief — October 13, 2026
+# Continuation brief — October 14, 2026
 
 ## Current repository state
 
 The v0.6 autonomous founding-settlement milestone is authorized and active.
-Work uses a pushed milestone branch plus one pushed branch per isolated task.
-Reviewed task branches are merged only into `milestone/v0.6`; `main` must not
-be changed.
+Reviewed task branches merge only into `milestone/v0.6`; never change `main`.
 
-At this handoff checkpoint:
+At this checkpoint:
 
-- current branch: `milestone/v0.6`;
-- last implementation merge: `1ab288b` (Task 21 settlement development stages);
-- Task 21 delivery: `c821efe`, independently reviewed and corrected for strict
-  test annotations, root-validated, committed, merged, and pushed;
-- live remote tips verified before this documentation checkpoint:
-  `milestone/v0.6` at `1ab288b`, Task 21 at `c821efe`, and unchanged `main` at
-  `12f2f17`;
-- the user-owned `.codex/config.toml` edit remains unstaged and preserved;
-- Task 21 recovered into the durable ignored `.worktrees/task21` checkout;
-  its missing `/tmp` registration was removed, and the unused read-only native
-  alternative was archived through the app;
-- the owner approved the completion plan on October 13 and chose `0.6.0rc1`
-  for release closeout; no main integration or tagging is authorized;
-- Task 22 is next. Expand its plan/prompt using the resolved replay integration
-  decisions before code delegation.
+- current branch `milestone/v0.6`; Task22 delivery `02b35fe`, merge `7806f29`;
+- Task22 independent spec/quality PASS after Unicode and work-phase compatibility
+  corrections; task and merged gates1194 passed/10 existing skips, examples001–038;
+- Task21 delivery `c821efe`, merge `1ab288b`, checkpoint `b055619` remains complete;
+- live remote tips verified: milestone `7806f29`, Task22 `02b35fe`, unchanged
+  main `12f2f17`;
+- user-owned `.codex/config.toml` edit is preserved unstaged;
+- writable isolated checkouts are `.worktrees/task21` and `.worktrees/task22`;
+  native read-only alternative was archived; no task implementation was lost;
+- owner approved remaining execution and chose `0.6.0rc1`; no main integration/tag;
+- owner resumed after the historical usage pause; **stop before the five-hour
+  allowance falls below10% remaining**, checking at task boundaries and saving a
+  durable checkpoint with enough buffer to interrupt workers;
+- Task15 is next. Its consolidated contract has independent CONTRACT READY
+  review; transfer the reviewed draft and saved prompt into its new task branch
+  before implementation. Task15c follows its reviewed merge.
+
+The historical first pause is retained in `v0_6_usage_pause_2026_10_14.md`; its
+Task22 pending state is superseded by this checkpoint and the final task report.
+No automatic resume or usage-reset action is configured.
 
 The approved delivery plan is `docs/subagent_execution_plan/v0_6_completion_plan.md`.
 Current root scratch recovery ledger and replay draft are under
@@ -58,13 +61,14 @@ reviewed, corrected where necessary, validated, committed, merged with
 | 20a | Actor-bound proposal-to-work gateway, authoritative preflights, and self-volunteering | `0b6760f` |
 | 20b | Deterministic work execution, atomic work-phase rollback, and schema-v10 charge evidence | `5489b73` |
 | 21 | Objective-backed adjacent stages, population/maintenance criteria, schema-v11 persistence, inspection, and NPC filtering | `1ab288b` |
+| 22 | Recorded proposal tapes, durable cursor/labels, schema12, checkpoint recovery and detached replay inspection | `7806f29` |
 
 Task reports under `docs/subagent_execution_plan/v0_6/` contain exact files,
 interfaces, review corrections, and validation evidence. ADR-0015 through
-ADR-0024 capture the scenario, spatial, partial-world, dispatch, goal, need,
+ADR-0025 capture the scenario, spatial, partial-world, dispatch, goal, need,
 work-order, proposal-gateway, and deterministic work execution contracts.
 
-SQLite snapshot support now spans schema versions 1 through 11. The v0.6
+SQLite snapshot support now spans schema versions 1 through 12. The v0.6
 progression is run identity in schema 2, spatial placements in schema 3,
 external references in schema 4, external dispatches in schema 5, goals and
 objectives in schema 6, settlement needs in schema 7, and consequences in
@@ -75,44 +79,47 @@ newer fields and collections with compatible defaults and write forward.
 
 ## Current validation baseline
 
-Task 21 passed independent spec/quality review after one typing correction.
-Root validation passed on both the task tree and merged milestone:
+Task22 independent spec/quality review passed after two scoped corrections.
+Root task and merged milestone validation:
 
 | Command | Result |
 | --- | --- |
-| `make` | Ruff/Black passed; 1086 tests passed, 10 existing deliberate skips; examples 001–037 passed |
-| Separate `make examples` | Examples 001–037 passed |
-| `git diff --check` | Passed |
+| `make` | Ruff/Black PASS;1194 tests passed,10 existing deliberate skips; examples001–038 passed |
+| Separate `make examples` | Examples001–038 passed |
+| `git diff --check` | PASS |
 
-The primary checkout's old environment lacked Black. Merged validation used
-`make VENV=.worktrees/task21/.venv` and the same override for examples; its
-fresh environment is Python 3.13.5. These results are checkpoint evidence,
-not a substitute for future task validation.
+Merged gates use `VENV=.worktrees/task22/.venv`, Python3.13.5, dependencies-only
+with make's PYTHONPATH=src. The old primary venv lacks Black. These results are
+checkpoint evidence, not future-task verification. Schema12 adds immutable
+replay binding/cursor and persisted initial label mappings; complete-boundary
+cursor/resolution-event bijection is validated. Legacy1–11 defaults remain
+compatible; missing legacy label bindings are never guessed for replay.
 
-## Next task: Task 22
+## Next task: Task15
 
-Task 22 follows the reviewed and pushed Task 21 merge. Its binding artifacts:
+Copy independently reviewed `.superpowers/sdd/v0_6_completion_plan/`
+`task15-final-plan-draft.md` and `task15-prompt-draft.md` into binding Task15
+artifacts on `task/15-world-inspector-ui` from this reviewed milestone head.
+Review decision-completeness if drafts are unavailable; never reconstruct
+implementation from historical chats. Exact UI scope is packaged same-origin
+GET-only inspector views, strict response/error/race handling, accessible
+navigation and actual Chrome/Playwright tests. No spatial view in15, no Node
+build, no inspector DTO/domain/cognition changes. Root owns full/browsers/wheel
+gates; worker focused checks and reviewer independent diff inspection.
 
-- `docs/subagent_execution_plan/v0_6/22_recorded_proposal_tapes.md`
-- `docs/subagent_execution_plan/v0_6/22_recorded_proposal_tapes-prombt.md`
-
-Before delegation, consolidate the root's reviewed replay design: persisted
-scenario-label bindings; immutable tape identity plus manager-owned durable
-cursor in schema 12; one entry per tick after ordinary systems and before work;
-filtered context and ordinary action gateways; read-only offer composition;
-failed-tick advance/save refusal with checkpoint reload; preparation,
-finalization and intermediate-checkpoint CLI semantics. No live model or
-canonical founders content belongs in Task 22. Task 23 owns canonical domain
-setup and goal/stage-based terminal outcome integration.
+Task23 owns canonical domain setup, deterministic engine-owned goal/stage
+terminal policy and saved-world inspection CLI. Narrow probe confirms existing
+production/work paths suffice; ordinary registered composition accepts explicit
+housing delay rather than adding a new scheduler phase. Formal23contract still
+requires exact decisions before dispatch. No Task23 implementation is ready.
 
 ## Remaining approved sequence
 
 Continue one reviewed task at a time in this order:
 
-1. Task 22 — deterministic recorded proposal tapes.
-2. Tasks 15 and 15c — FastAPI-hosted inspector and spatial view.
-3. Task 23 — canonical success, stall, and failure founders scenarios.
-4. Task 24 — milestone release-readiness closeout at `0.6.0rc1`.
+1. Tasks 15 and 15c — FastAPI-hosted inspector and spatial view.
+2. Task 23 — canonical success, stall, and failure founders scenarios.
+3. Task 24 — milestone release-readiness closeout at `0.6.0rc1`.
 
 Task 24 leaves `milestone/v0.6` ready for owner integration. It does not merge
 or push anything to `main`.

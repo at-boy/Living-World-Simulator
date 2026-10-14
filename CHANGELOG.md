@@ -4,6 +4,9 @@
 
 ### Added
 
+- Checkpoint reviewed Task22 integration and the resumed v0.6 sequence; retain
+  the owner usage-stop boundary and preserved local configuration edit.
+
 - Implement strict deterministic recorded proposal tapes through filtered NPC
   context and the ordinary action gateway, with one proposal per tick, durable
   schema-12 cursor/label bindings, checkpoint-only CLI runs, detached inspection,

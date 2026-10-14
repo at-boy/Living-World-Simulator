@@ -1,8 +1,8 @@
 # v0.6 milestone completion plan
 
 Date: 2026-10-07
-Status: owner-approved execution on 2026-10-13; Phase 0 and Task 21 completed.
-Release version confirmed by owner: `0.6.0rc1`. Task 22 is next.
+Status: owner-approved execution on 2026-10-13; Phase0 and Tasks21–22 completed.
+Release version confirmed by owner: `0.6.0rc1`. Task15 is next.
 
 **Goal:** Complete the autonomous founding-settlement vertical slice on
 `milestone/v0.6`, with reproducible success, stall, and failure runs,
@@ -109,27 +109,27 @@ the reviewed Task 21 milestone merge.
 
 ## Phase 2 — Task 22: recorded proposals and replay integration
 
-This task needs a more detailed contract before a worker starts.
+Completed under the refined Task22 plan/prompt and ADR-0025.
 
-- [ ] Specify exact tape schema, scenario/tape identity binding, actor-label
+- [x] Specify exact tape schema, scenario/tape identity binding, actor-label
   mapping, offered-action matching, sequence ordering, exhaustion, unused
   entries, safe diagnostics, and public interfaces.
-- [ ] Specify who schedules actor decisions and when, relative to ordinary
+- [x] Specify who schedules actor decisions and when, relative to ordinary
   systems, work execution, need/goal/stage evaluation, and checkpointing.
-- [ ] Specify a durable replay cursor and its atomic relationship to accepted,
+- [x] Specify a durable replay cursor and its atomic relationship to accepted,
   rejected, and failed proposals. Assign persistence ownership and migration
   explicitly; do not use a process-local cursor as resume evidence.
-- [ ] Separate engine-side actor binding from the cognition adapter. The
+- [x] Separate engine-side actor binding from the cognition adapter. The
   adapter receives only `NPCContext` and offered `ActionOption` values and
   returns ordinary untrusted decisions; it never resolves internal IDs.
-- [ ] Assign concrete runtime/CLI composition hooks and allowed files so Task
+- [x] Assign concrete runtime/CLI composition hooks and allowed files so Task
   23 can select a tape without constructing a special engine in a test.
-- [ ] Implement loader, adapter, and agreed hooks through TDD and a numbered
+- [x] Implement loader, adapter, and agreed hooks through TDD and a numbered
   example; preserve the ordinary action-gateway validation path.
-- [ ] Test malformed tapes, identity mismatch, actor/action mismatch, gateway
+- [x] Test malformed tapes, identity mismatch, actor/action mismatch, gateway
   rejection, exhaustion/unused entries, cursor recovery, and uninterrupted vs
   resumed replay. Show diagnostics contain no hidden payloads or secrets.
-- [ ] Independently review, correct, validate, report, and integrate.
+- [x] Independently review, correct, validate, report, and integrate.
 
 Exit: a bounded replay can run through public runtime interfaces and resume
 without duplicated or skipped proposal execution. No live model is required.
@@ -296,3 +296,13 @@ test annotations, validated, and merged as `1ab288b`. Both task and merged gates
 passed 1086 tests / 10 existing skips and examples 001–037; live remote tips
 confirmed the merge and unchanged `main` at `12f2f17`. Task 22 is next; its
 contract amendments precede implementation.
+
+## Execution checkpoint — 2026-10-14
+
+Task22 delivery `02b35fe`, reviewed spec/quality PASS after safe Unicode validation
+and exact work-phase compatibility-test correction, merged as `7806f29`. Root
+task and merged gates1194 passed/10 existing skips, examples001–038; schema12
+replay/event bijection enforced. Task15 contract independently CONTRACT READY;
+transfer into isolated branch before code. Remaining sequence15,15c,23,24.
+Owner resumed with hard usage boundary: stop before10% five-hour allowance
+remains, save checkpoint and interrupt active workers with buffer.
