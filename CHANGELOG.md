@@ -4,6 +4,13 @@
 
 ### Added
 
+- Add the packaged GET-only World Inspector with ten operator views, literal
+  snapshot details, entity/evidence navigation, accessible responsive controls,
+  malformed/unsupported-state handling and real Chrome browser verification.
+
+- Refine the Task15 packaged read-only inspector contract with exact routes,
+  API mappings, browser verification and installed-asset acceptance gates.
+
 - Checkpoint reviewed Task22 integration and the resumed v0.6 sequence; retain
   the owner usage-stop boundary and preserved local configuration edit.
 

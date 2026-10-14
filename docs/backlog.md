@@ -8,7 +8,8 @@ Task 21's objective-backed settlement stages are independently reviewed,
 validated, merged, and pushed to milestone/v0.6. Task 22 recorded proposal
 replay is independently reviewed, validated and integrated; its strict
 runtime/cursor contract and ADR-0025 remain authoritative. Tasks15 and15c
-operator inspection are next, followed by Task23 canonical composition. Legacy replay enablement on
+operator inspection are next, followed by Task23 canonical composition. Task15
+now has an independently reviewed decision-complete route/browser/package contract. Legacy replay enablement on
 populated saves without label bindings remains unsupported. Reusable
 stage templates, decline/demotion, scenario-YAML binding (Task 23), and automatic
 NPC perception of stages remain deliberately deferred.
@@ -135,10 +136,10 @@ separately scoped to Task 19a; work selection remains Task 20 and later.
 - Emergent quests
 - Dynamic rumours
 - Player influence on history
-- **Read-only World Inspector UI** backed exclusively by the HTTP inspection
-  API, with world/entity detail views, deterministic time-series/statistical
-  graphs, event/history views, and relationship graphs. It must remain an
-  operator observability client, never a simulation, NPC, or LLM API.
+- **Inspector visualization follow-up:** Task 15 supplies packaged read-only
+  world/entity/lifecycle details and event history. Statistical/time-series and
+  relationship graphs remain future explicitly authorized operator work; they
+  must never become a simulation, NPC, or LLM API.
 - **Spatial World Inspector visualization** showing areas, settlements,
   buildings, and other placed world elements with click-through inspection.
   This requires a canonical engine-owned spatial layout/placement contract

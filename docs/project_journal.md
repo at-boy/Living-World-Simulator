@@ -1,5 +1,14 @@
 # Living World Simulator – Project Journal
 
+## Task 15 implementation — October 14, 2026
+
+Added packaged same-origin GET-only inspector views without changing domain DTOs
+or NPC/cognition paths. Exact resource attributes, lifecycle records, goals, work,
+stages and evidence remain reported engine truth. Typed ASGI and real Chrome
+checks cover navigation, errors, literal text, stale requests and unchanged state.
+Independent review and root full/browser/installed-wheel gates remain pending;
+see the Task 15 report for focused evidence.
+
 ## Task 22 implementation — October 14, 2026
 
 Implemented strict proposal-only tape loading, canonical identity, stateless
@@ -857,3 +866,12 @@ Delivery02b35fe merged7806f29 after two narrow reviewed corrections. Root task
 and merged gates1194passed/10existing skips, examples001–038. Task15 contract
 is ready for isolated implementation. Owner resumed with stop-before10%
 five-hour remaining rule; no reset/automation/main integration/tag authorized.
+
+
+## 2026-10-14 — Task15 decision-complete contract
+
+From reviewed milestone checkpoint e8c817e, refined plan/prompt specify packaged
+static inspector, strict GET-only source mappings, real browser tests, wheel
+asset gate and exact file boundary. Independent root contract review concluded
+CONTRACT READY. Root owns final gates; worker focused tests only. Task15c owns
+spatial view and Task23 owns canonical setup/terminal/inspection CLI.

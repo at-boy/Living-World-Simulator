@@ -13,6 +13,7 @@ dependencies=["fastapi", "PyYAML"]
 living-world="living_world.cli:main"
 
 [project.optional-dependencies]
+browser-tests=["playwright"]
 dev=["pytest","ruff","black","uvicorn"]
 
 [tool.setuptools]
@@ -27,3 +28,6 @@ line-length=88
 [tool.black]
 line-length = 88
 target-version = ["py311"]
+
+[tool.setuptools.package-data]
+"living_world.api"=["static/inspector.html", "static/inspector.css", "static/inspector.js"]
