@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from enum import Enum
 from pathlib import Path
 from typing import Protocol
 
+from living_world.replay.model import ProposalTapeError
 from living_world.scenarios.scenario import LoadedScenario, ScenarioLoadError
 from living_world.simulation.simulation_engine import SimulationEngine
 
@@ -21,6 +22,7 @@ class RunConfiguration:
     max_ticks: int | None = None
     save_every: int = 1
     continuous: bool = False
+    finalize_proposals: bool = True
 
     def __post_init__(self) -> None:
         if self.max_ticks is not None and (
@@ -35,6 +37,8 @@ class RunConfiguration:
             raise ValueError("save_every must be positive.")
         if not isinstance(self.continuous, bool):
             raise TypeError("continuous must be a boolean.")
+        if not isinstance(self.finalize_proposals, bool):
+            raise TypeError("finalize_proposals must be a boolean.")
         if self.continuous and self.max_ticks is not None:
             raise ValueError("continuous and max_ticks cannot be combined.")
 
@@ -47,6 +51,15 @@ class RunResult:
     resumed: bool
     stop_reason: StopReason
     terminal_condition: str | None = None
+    proposals_finalized: bool | None = None
+
+
+class ScenarioPreparation(Protocol):
+    def prepare(self, engine: SimulationEngine, scenario: LoadedScenario) -> None: ...
+
+    def finish(
+        self, engine: SimulationEngine, result: RunResult, *, finalize_proposals: bool
+    ) -> None: ...
 
 
 class StopControl(Protocol):
@@ -95,8 +108,11 @@ class ScenarioRunner:
 
     _SUPPORTED_TERMINAL_CONDITIONS = frozenset({"tick_limit", "operator_stop"})
 
-    def __init__(self, engine: SimulationEngine) -> None:
+    def __init__(
+        self, engine: SimulationEngine, preparation: ScenarioPreparation | None = None
+    ) -> None:
         self._engine = engine
+        self._preparation = preparation
         self._terminal_predicates: Mapping[
             str, Callable[[int, int | None, bool], bool]
         ] = {
@@ -121,10 +137,15 @@ class ScenarioRunner:
         resumed = self._engine.state.run_metadata is not None
         scenario = self._engine.load_scenario(scenario_path)
         self._validate_terminal_conditions(scenario)
+        if self._engine.state.replay_binding is not None and self._preparation is None:
+            raise ProposalTapeError("missing_replay_preparation")
+        if self._preparation is not None:
+            self._preparation.prepare(self._engine, scenario)
+        self._engine._check_failed_tick()
+        self._engine._check_replay_preparation()
         start_tick = self._engine.state.tick
         tick_limit = self._tick_limit(scenario, configuration)
         completed = 0
-        last_saved_tick: int | None = None
         terminal_condition: str | None = None
         checkpoints = checkpoint_control or IntervalCheckpointControl(
             configuration.save_every
@@ -144,24 +165,26 @@ class ScenarioRunner:
                     f"Simulation failed while advancing tick {self._engine.state.tick}."
                 ) from exc
             completed += 1
-            if checkpoints.checkpoint_due(completed):
-                self._save()
-                last_saved_tick = self._engine.state.tick
+            stop_requested = stop_control is not None and stop_control.stop_requested()
             terminal_condition = self._matched_terminal_condition(
                 scenario,
                 completed=completed,
                 tick_limit=tick_limit,
-                stop_requested=(
-                    stop_control is not None and stop_control.stop_requested()
-                ),
+                stop_requested=stop_requested,
             )
             if terminal_condition is not None:
                 reason = StopReason.TERMINAL_CONDITION
                 break
+            if tick_limit is not None and completed >= tick_limit:
+                reason = StopReason.TICK_LIMIT
+                break
+            if stop_requested:
+                reason = StopReason.OPERATOR_STOP
+                break
+            if checkpoints.checkpoint_due(completed):
+                self._save()
 
-        if last_saved_tick != self._engine.state.tick:
-            self._save()
-        return RunResult(
+        result = RunResult(
             scenario_key=scenario.key,
             start_tick=start_tick,
             end_tick=self._engine.state.tick,
@@ -169,6 +192,21 @@ class ScenarioRunner:
             stop_reason=reason,
             terminal_condition=terminal_condition,
         )
+        if self._preparation is not None:
+            self._preparation.finish(
+                self._engine,
+                result,
+                finalize_proposals=configuration.finalize_proposals,
+            )
+        if self._engine.state.replay_binding is not None:
+            result = replace(
+                result,
+                proposals_finalized=configuration.finalize_proposals
+                and reason != StopReason.OPERATOR_STOP
+                and terminal_condition != "operator_stop",
+            )
+        self._save()
+        return result
 
     @staticmethod
     def _tick_limit(

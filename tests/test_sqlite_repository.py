@@ -89,7 +89,7 @@ def test_schema_nine_does_not_persist_or_inspect_ephemeral_work_offers(
         schema_version, payload = connection.execute(
             "SELECT schema_version, payload FROM world_snapshots WHERE id = 1"
         ).fetchone()
-    assert schema_version == 11
+    assert schema_version == 12
     assert "work_offers" not in payload
     assert offer.label not in payload
     inspector = EngineWorldInspector(SimulationEngine(repository))
@@ -122,7 +122,7 @@ def test_sqlite_repository_round_trips_schema_eight_needs(tmp_path: Path) -> Non
             connection.execute(
                 "SELECT schema_version FROM world_snapshots WHERE id = 1"
             ).fetchone()[0]
-            == 11
+            == 12
         )
 
 
@@ -264,7 +264,7 @@ def test_legacy_schema_loads_empty_needs_and_rewrites_eight(
             connection.execute(
                 "SELECT schema_version FROM world_snapshots WHERE id = 1"
             ).fetchone()[0]
-            == 11
+            == 12
         )
 
 
@@ -480,7 +480,7 @@ def test_unsupported_schema_version_raises_without_returning_partial_state(
     repository.save_world(_world_state())
     with sqlite3.connect(database_path) as connection:
         connection.execute(
-            "UPDATE world_snapshots SET schema_version = ? WHERE id = 1", (12,)
+            "UPDATE world_snapshots SET schema_version = ? WHERE id = 1", (13,)
         )
 
     with pytest.raises(RepositoryLoadError, match="Unsupported world schema version"):
@@ -596,7 +596,7 @@ def test_versions_one_through_seven_ignore_stray_consequences_and_write_forward(
             connection.execute(
                 "SELECT schema_version FROM world_snapshots WHERE id = 1"
             ).fetchone()[0]
-            == 11
+            == 12
         )
 
 
@@ -627,7 +627,7 @@ def test_schema_eight_ignores_stray_work_and_writes_forward(tmp_path: Path) -> N
             connection.execute(
                 "SELECT schema_version FROM world_snapshots WHERE id = 1"
             ).fetchone()[0]
-            == 11
+            == 12
         )
 
 

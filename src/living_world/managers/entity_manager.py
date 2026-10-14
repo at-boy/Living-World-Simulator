@@ -24,11 +24,13 @@ class EntityManager:
         definition_manager: DefinitionManager,
         removal_guard: EntityRemovalGuard | None = None,
         work_guard: WorkEntityGuard | None = None,
+        lifecycle_guards: tuple[WorkEntityGuard, ...] = (),
     ) -> None:
         self._state = state
         self._definitions = definition_manager
         self._removal_guard = removal_guard
         self._work_guard = work_guard
+        self._lifecycle_guards = lifecycle_guards
         self._next_entity_id = 1
 
     def create(
@@ -123,6 +125,8 @@ class EntityManager:
             self._removal_guard.validate_entity_removal(entity_id)
         if self._work_guard is not None:
             self._work_guard.validate_entity_removal(entity_id)
+        for guard in self._lifecycle_guards:
+            guard.validate_entity_removal(entity_id)
         self._state.entities.pop(entity_id, None)
 
     def mark_destroyed(self, entity_id: str, tick: int) -> None:
@@ -138,6 +142,8 @@ class EntityManager:
                 return
             raise ValueError("Entity was destroyed at a different tick.")
         self._validate_stage_owner(entity_id)
+        for guard in self._lifecycle_guards:
+            guard.validate_entity_destruction(entity_id)
         if self._work_guard is not None:
             self._work_guard.validate_entity_destruction(entity_id)
         if (

@@ -859,7 +859,7 @@ def test_schema_eleven_roundtrip_resume_and_failed_save(tmp_path: Path) -> None:
             connection.execute("SELECT schema_version FROM world_snapshots").fetchone()[
                 0
             ]
-            == 11
+            == 12
         )
     resumed = SimulationEngine(repository)
     resumed.definitions.register(Definition("settlement"))
@@ -909,7 +909,7 @@ def test_legacy_schemas_default_empty_and_write_forward(
             connection.execute("SELECT schema_version FROM world_snapshots").fetchone()[
                 0
             ]
-            == 11
+            == 12
         )
 
 

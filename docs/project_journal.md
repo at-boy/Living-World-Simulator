@@ -1,5 +1,17 @@
 # Living World Simulator – Project Journal
 
+## Task 22 implementation — October 14, 2026
+
+Implemented strict proposal-only tape loading, canonical identity, stateless
+filtered-context cognition and ordinary gateway resolution. Scenario labels and
+manager-owned replay cursor persist together with domain effects in schema 12.
+The proposal slot runs before work, while a failed scheduler tick now refuses
+advance/save until reload. Runner preparation reattaches ephemeral composition;
+finalization runs before a stopping save and preserves operator/checkpoint-only
+leftovers. Replay inspection and fingerprints remain engine-only. Example 038
+shows a manager-gateway greeting and durable resume. Independent review and root
+full validation remain pending; the Task 22 report records focused evidence.
+
 ## Task 22 replay contract — October 13, 2026
 
 Resolved proposal scheduling, label binding, durable cursor/checkpoint semantics,

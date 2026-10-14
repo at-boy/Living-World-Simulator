@@ -30,3 +30,18 @@ choosing; do not broaden scope. No canonical founders content, inspector UI,
 live provider or goal/stage terminal integration in this task.
 
 No agents, branches, staging, commits, merges, pushes, config or main changes.
+
+2026-10-14 amendment: the plan now permits only schema12 expectation updates
+in existing tests/test_settlement_stages.py; preserve its stage behavior tests.
+Direct engine advance/save also enforces missing replay preparation as a
+configuration error distinct from failed-tick poisoning.
+
+Resume clarification (2026-10-14): the binding plan now requires complete-state
+replay cursor/event bijection validation and its corrupt-snapshot regressions.
+Read that section before the narrow manager/test/report correction.
+
+Root full-gate amendment: only the named failed-construction next-ID test in
+`tests/test_work_execution.py` may change. Preserve all rollback/ID/completion
+assertions, exercising `WorkExecutionSystem.step(engine.state)` directly for
+phase-local retry rather than reusing a failed engine. No other work tests or
+production work changes. Update report with root gate failure and focused fix.

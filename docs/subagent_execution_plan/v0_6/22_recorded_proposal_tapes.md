@@ -305,6 +305,8 @@ This validation ownership supersedes repeated worker full runs in the old prompt
 - focused tests/test_{runner_cli,scenario_run_contract,simulation_engine,
   simulation_scheduler,sqlite_repository,spatial_domain,inspection_api,
   npc_information_boundary}.py changes
+- tests/test_settlement_stages.py: only existing current-schema expectations
+  updated from 11 to 12; no stage behavior changes
 - examples/038_recorded_proposal_tapes.py
 - docs/adr/ADR-0025-deterministic-recorded-proposals.md
 - CHANGELOG.md; docs/{core_model,engine_glossary,npc_information_boundary,
@@ -316,3 +318,40 @@ ADR-0025 must document the accepted tape/phase/cursor/identity/lifecycle/recover
 contracts before implementation. The report records behavior, files, red/green
 checks, review corrections, counts, warnings and limitations, without successful
 logs. Amend this plan and saved prompt before any boundary expansion.
+
+## Execution amendment — 2026-10-14
+
+Permit only the current-schema assertions in existing settlement-stage tests
+to move from 11 to 12. Keep all stage behavior/migration checks intact. Direct
+engine advance/save, as well as the runner, reject replay-bound state without
+its prepared controlled proposal system, including exhausted tapes; this is
+a safe missing_replay_preparation error, not failed-tick poisoning. Raw
+repository serialization remains independent for valid snapshot tests.
+
+## Resume review clarification — 2026-10-14
+
+For a present ReplayBinding, loaded/complete-snapshot validation also requires
+a bijection between next_index and immutable replay_proposal_resolved events:
+exactly sequences1..next_index, no duplicates/gaps/extra resolutions, tick
+configured_tick+sequence-1, actor_label matching actor_sequence, subject matching
+the stored label binding, and exactly the defined three event attributes with
+a valid closed outcome. Reject missing, mismatched or future resolution evidence
+with replay_state_invalid. Apply this check at loaded/complete boundaries, not
+while prevalidating the next state before its event is created. No binding means
+legacy replay-like history is not used to invent progress. Configuration must
+reject contradictory reserved replay resolution history. Add corruption tests
+for each invariant plus valid checkpoint/resume. This closes the worker's
+explicitly recorded cursor/history question within the existing allowed files.
+
+## Root validation amendment — work-phase retry test
+
+The root full gate found one old test retries `engine.step()` after an injected
+failed tick. That conflicts with Task22's explicit checkpoint-reload requirement.
+Extend allowed files only to
+`tests/test_work_execution.py::test_failed_construction_phase_preserves_next_entity_relationship_and_event_ids`.
+Preserve its injected failure, rollback, next-ID and successful completion
+assertions, but exercise `WorkExecutionSystem.step(engine.state)` directly for
+the phase retry. This tests the existing phase-local rollback contract without
+claiming that a poisoned whole engine is reusable. No other work behavior test
+or production work code change is authorized. Existing replay tests separately
+prove failed engine step/run/save refusal and checkpoint recovery.

@@ -26,6 +26,8 @@ class WorldInspector(Protocol):
 
     def tick(self) -> int: ...
 
+    def replay(self) -> Mapping[str, object]: ...
+
     def run_metadata(self) -> Mapping[str, object] | None: ...
 
     def entities(self) -> tuple[Mapping[str, object], ...]: ...
@@ -82,6 +84,7 @@ class EngineWorldInspector:
         return {
             "tick": state.tick,
             "run": self.run_metadata(),
+            "replay_configured": state.replay_binding is not None,
             "entity_count": len(state.entities),
             "relationship_count": len(state.relationships),
             "placement_count": len(state.placements),
@@ -117,6 +120,16 @@ class EngineWorldInspector:
             if metadata is None
             else cast(Mapping[str, object], _snapshot_value(metadata))
         )
+
+    def replay(self) -> Mapping[str, object]:
+        state = self._engine.state
+        if state.replay_binding is None:
+            return {}
+        return {
+            "binding": _snapshot_value(state.replay_binding),
+            "state": _snapshot_value(state.replay_state),
+            "entity_bindings": dict(state.scenario_entity_bindings),
+        }
 
     def entities(self) -> tuple[Mapping[str, object], ...]:
         return self._records(self._engine.state.entities)

@@ -62,6 +62,8 @@ from living_world.needs import (
     StorageResourceRule,
     StorageState,
 )
+from living_world.replay.manager import ReplayManager
+from living_world.replay.model import ReplayBinding, ReplayState
 from living_world.spatial.manager import SpatialManager, placement_order_key
 from living_world.spatial.model import (
     Bounds,
@@ -96,8 +98,8 @@ from living_world.work import (
 )
 from living_world.work.manager import WorkManager
 
-_SCHEMA_VERSION = 11
-_SUPPORTED_SCHEMA_VERSIONS = frozenset({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11})
+_SCHEMA_VERSION = 12
+_SUPPORTED_SCHEMA_VERSIONS = frozenset({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12})
 Record = (
     Entity
     | Relationship
@@ -178,6 +180,7 @@ class SQLiteRepository:
 
         try:
             SettlementStageManager(state, EventManager(state)).validate_loaded_state()
+            ReplayManager(state, EventManager(state)).validate_loaded_state()
             payload = json.dumps(
                 _serialize_world(state),
                 sort_keys=True,
@@ -222,6 +225,16 @@ def _serialize_world(state: WorldState) -> dict[str, object]:
     return {
         "tick": state.tick,
         "run_metadata": _serialize_run_metadata(state.run_metadata),
+        "scenario_entity_bindings": dict(state.scenario_entity_bindings),
+        "replay_binding": _serialize_replay_binding(state.replay_binding),
+        "replay_state": (
+            None
+            if state.replay_state is None
+            else {
+                "next_index": state.replay_state.next_index,
+                "last_attempt_tick": state.replay_state.last_attempt_tick,
+            }
+        ),
         "entities": [_serialize_entity(entity) for entity in state.entities.values()],
         "relationships": [
             _serialize_relationship(relationship)
@@ -1067,6 +1080,25 @@ def _deserialize_world(payload: object, *, schema_version: int) -> WorldState:
         state.settlement_stage_states = _stage_records(
             payload_mapping["settlement_stage_states"], _deserialize_stage_state
         )
+    if schema_version >= 12:
+        state.scenario_entity_bindings = {
+            key: _string(value)
+            for key, value in _mapping(
+                payload_mapping["scenario_entity_bindings"]
+            ).items()
+        }
+        state.replay_binding = _deserialize_replay_binding(
+            payload_mapping["replay_binding"]
+        )
+        raw_replay = payload_mapping["replay_state"]
+        if raw_replay is not None:
+            cursor = _mapping(raw_replay)
+            _exact_keys(cursor, {"next_index", "last_attempt_tick"})
+            state.replay_state = ReplayState(
+                _integer(cursor["next_index"]),
+                _optional_integer(cursor["last_attempt_tick"]),
+            )
+    ReplayManager(state, EventManager(state)).validate_loaded_state()
     SpatialManager(state, EventManager(state)).validate_loaded_state()
     GoalManager(state, EventManager(state)).validate_loaded_state()
     NeedManager(state, EventManager(state)).validate_loaded_state()
@@ -1832,4 +1864,41 @@ def _deserialize_stage_state(value: Mapping[str, object]) -> SettlementStageStat
         SettlementStage(_string(value["current_stage"])),
         _integer(value["entered_tick"]),
         _optional_integer(value["last_transition_tick"]),
+    )
+
+
+def _serialize_replay_binding(
+    binding: ReplayBinding | None,
+) -> dict[str, object] | None:
+    if binding is None:
+        return None
+    return {
+        "scenario_key": binding.scenario_key,
+        "scenario_fingerprint": binding.scenario_fingerprint,
+        "tape_fingerprint": binding.tape_fingerprint,
+        "actor_sequence": list(binding.actor_sequence),
+        "configured_tick": binding.configured_tick,
+    }
+
+
+def _deserialize_replay_binding(value: object) -> ReplayBinding | None:
+    if value is None:
+        return None
+    item = _mapping(value)
+    _exact_keys(
+        item,
+        {
+            "scenario_key",
+            "scenario_fingerprint",
+            "tape_fingerprint",
+            "actor_sequence",
+            "configured_tick",
+        },
+    )
+    return ReplayBinding(
+        _string(item["scenario_key"]),
+        _string(item["scenario_fingerprint"]),
+        _string(item["tape_fingerprint"]),
+        _strings(item["actor_sequence"]),
+        _integer(item["configured_tick"]),
     )

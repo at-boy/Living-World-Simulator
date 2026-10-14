@@ -566,3 +566,56 @@ fixed qualitative prose. IDs, enum state, criteria, population/condition
 thresholds, ticks, objective statuses, evidence, and events remain engine-only.
 No LLM action configures or promotes stages, and prose is never automatically
 injected into perception or cognition.
+
+## Recorded proposal replay
+
+A version-1 `ProposalTape` contains a strict ordered nonempty sequence of frozen
+`ProposalTapeEntry` records. Each entry names a public scenario actor label and
+contains an ordinary untrusted `NPCDecision` plus rationale. Content identity
+is SHA256 of canonical UTF-8 JSON; Unicode codepoints and explicit null fields
+are preserved. YAML loading rejects duplicate keys, unknown fields, malformed
+proposals and internal ID forms with fixed payload-free error codes.
+
+`ScenarioRuntimeManager` alone stages and retains the initial public-label to
+entity-ID map. Resume checks labels and initial definition keys, allowing later
+name changes. Mapped records cannot be removed; they remain historical records
+after destruction. `ReplayManager` prevents destruction while any remaining
+entry names the actor. Existing domain lifecycle guards continue to apply.
+Legacy populated snapshots without labels can run normally but cannot enable
+replay by guessing identities.
+
+`ReplayBinding` stores scenario/tape fingerprints, actor sequence and configured
+tick. `ReplayState` stores the next index and last attempt tick. The replay
+manager validates the pair, exact tick/index relation and live pending actors,
+then consumes exactly one immutable proposal-resolution event per attempt.
+Accepted and rejected gateway results and validated speech-only proposals all
+advance the cursor; errors do not. The event carries only sequence, actor label
+and accepted/rejected/no_action outcome. Manager event failure restores only
+its cursor and new transaction events.
+
+The scheduler order is ordinary systems, optional proposal slot, work,
+consequences, needs, goals, settlement stages, then tick increment. The stateless
+`RecordedProposalClient` receives only filtered context and offered vocabulary;
+identity is the bound entity's current name. The engine assembles context for
+the stored actor ID even when names duplicate. Read-only offer composition
+must provide canonical vocabulary and exactly one handler per offered key.
+`DecisionEngine` validates proposals and `NPCActionResolver` retains action
+authority. Exhausted tapes idle without further events.
+
+Any exception escaping a scheduler tick prevents further engine advance or save
+and retains the original cause. Inspection and direct managers remain available;
+no whole-world rollback is claimed. Recover by recreating the engine from a
+complete checkpoint. Preparation/configuration and repository-save errors alone
+do not poison the engine. A replay-bound engine must reinstall matching replay
+preparation before advance, save or runner finalization, including exhausted and
+zero-tick runs.
+
+Schema 12 persists label bindings and replay records in the atomic world
+snapshot. Schemas 1–11 default to empty labels and absent replay records.
+Runner preparation is atomic for binding/cursor and the prior proposal slot.
+Finalization precedes stopping checkpoints; unused entries reject final tick
+limits or terminal stops. Operator stops and explicit checkpoint-only bounds
+retain resumable leftovers. The CLI accepts `--proposal-tape PATH` and
+`--checkpoint-only`; default offers are empty and support speech-only tapes.
+Detached `GET /world/replay` is privileged operator data. Runtime objects,
+tape decisions and source paths are never persisted in replay state.
