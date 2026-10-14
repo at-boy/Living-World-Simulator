@@ -4,6 +4,9 @@
 
 ### Added
 
+- Define the Task15c Spatial inspector contract with exact projection/order,
+  explicit unplaced states, safe ranges and browser verification.
+
 - Checkpoint independently reviewed Task15 integration and the precise Spatial
   inspector contract for the next isolated task.
 
