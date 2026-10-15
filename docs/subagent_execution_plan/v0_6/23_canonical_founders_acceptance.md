@@ -416,3 +416,50 @@ RunSimulationError("Terminal condition evaluation failed.") with original cause.
 Nonbool return wraps TypeError("Terminal condition must return bool.") as cause.
 No callback value/name/payload appears in outer prose. Do not poison an otherwise
 completed engine tick, mutate goals or save final checkpoint on callback failure.
+
+## Root resolution — population authorization
+
+GoalManager requires nonempty authorization categories for every goal and
+objective. Set both goal_growth and objective_founders_population to exactly
+("settlement_work",). This existing generic goal category is inert here: no
+canonical offered work references the population objective, and existing work
+authorization still requires its exact WorkCategory value. Do not add a work
+category, growth action, provider offer, or domain manager exception. Preserve
+this exact category in setup/resume validation and focused assertions.
+
+## Root resolution — real history accumulation and explicit zero capacity
+
+The first actual founders run exposed an existing goal-evaluation classification
+bug, not a missing domain capability: authoritative but still accumulating need
+history was classified identically to absent data and deadlocked the unchanged
+ACTIVE-only work gateway. Keep WorkActionHandler and all its existing exact-ACTIVE
+authorization tests unchanged. Never bypass dependencies, seed synthetic history,
+add fake authorization objectives or mutate statuses/outcomes directly.
+
+Expand allowed files solely to src/living_world/goals/evaluation.py,
+tests/test_goal_evaluation.py, and docs/adr/ADR-0019-engine-owned-goals.md for this
+bounded correction and documentation. No public model/schema/manager changes.
+For SustainedNeedCriterion with adequate configured window and a valid need state,
+a nonempty history shorter than required duration is UNSATISFIED (pending) only
+when its unique matching immutable need_created event anchors exactly that
+history: event.tick<=current tick, history ticks equal every integer from event.tick
+through state.tick, current is the last history entry, and all assessments have
+available numeric pressure and non-UNAVAILABLE level. Missing/duplicate creation
+provenance, empty history, missing/ambiguous domain, inadequate configured window,
+gaps/truncation/stale history or unavailable assessment remains UNAVAILABLE.
+History still reaches SATISFIED only through the existing full-duration criterion.
+Use stable safe pending prose and existing filtered source-event provenance;
+no lifecycle mutation in criterion evaluation. Existing dependency/terminal/deadline
+precedence remains unchanged. Add late-created need and checkpoint/resume coverage.
+
+Canonical camp initial scenario data additionally explicitly declares
+housing_capacity=0 and storage_capacity=0. Validate those exact initial integers;
+they participate in existing scenario fingerprint. Existing capacity evaluator
+stays unchanged: authoritative zero is unsatisfied, absent capacity is unavailable.
+Actual constructed owned capabilities add capacity normally. No fake capability.
+
+TDD must prove pending-to-real-window progression, malformed/missing/gapped/stale/
+unavailable prefix rejection, active authorization at canonical tick2, unchanged
+exact-ACTIVE gateway rules and deadline/terminal behavior. Run focused goal, work
+gateway and canonical tests. Report initial deadlock and compatibility change;
+retain original 10/5/13 outcome predictions until actual evidence confirms them.

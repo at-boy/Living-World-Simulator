@@ -31,3 +31,14 @@ staging/commit/push/merge/branch changes/agents. Preserve any user edits. Notify
 root of concrete necessary scope changes BEFORE edits. Stable uncommitted
 delivery for independent review; user usage rule stops before10% remains, so
 preserve early checkpoints if interrupted.
+
+Binding population authorization amendment: goal_growth and its population
+objective use exactly ("settlement_work",), satisfying existing nonempty goal
+validation. No work references that objective; no new category/action/offer.
+Read the matching plan resolution and assert immutable resume equality.
+
+Binding history-accumulation amendment: read final plan resolution before edits.
+Allowed-file expansion is limited to goals/evaluation.py, test_goal_evaluation.py
+and ADR-0019-engine-owned-goals.md. Implement exact provenance-anchored pending
+prefix rule, canonical explicit zero capacities, and regression matrix. No gateway
+relaxation or synthetic histories/statuses. This is existing classification repair.
