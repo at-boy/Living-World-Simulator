@@ -922,3 +922,13 @@ task/merged1271passed/10existing skips,73Chrome cases,examples001–038; install
 assets/routes and actual wide/narrow visuals passed. Documentation conflicts
 preserved pause and task history. Task23 contract refinement next; main/user
 configuration preserved.
+
+
+### October 15 — canonical founders usage checkpoint
+
+Task23 independently reviewed contracts070ea59/8b8cbf5/e013ae4 are pushed.
+Preserved unfinished uncommitted implementation in .worktrees/task23; worker
+reports221focused passes and success10/stall5/failure13 with exact fresh/resume
+payload candidates. No implementation review/full gates/integration claim.
+Stopped active worker cleanly with usage headroom; current continuation and pause
+handoff record remaining work. Main and user configuration edit preserved.

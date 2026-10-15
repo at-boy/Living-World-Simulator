@@ -39,26 +39,34 @@ venv lacks Black. Package remains0.5.0 until Task24's0.6.0rc1 change.
 ## Next: Task23 canonical founders acceptance
 
 The approved completion plan is docs/subagent_execution_plan/v0_6_completion_plan.md.
-Task23 starts only from this reviewed milestone, on task/23-founders-acceptance.
-Root draft .superpowers/sdd/v0_6_completion_plan/task23-final-plan-draft.md includes
-exact fixed manifest, public APIs, setup/attachment ownership, keyed ordinary
-registration, terminal callbacks, read-only inspect, CLI/assets and verification.
-Independent initial contract review required five decisions; root resolved them,
-scoped final contract review pending. Transfer consolidated plan/prompt into task
-branch and establish CONTRACT READY before implementation. No Task23 product code
-exists yet. Do not use earlier short plan or obsolete candidate fixture details.
+Task23 is in progress on task/23-founders-acceptance in .worktrees/task23.
+Binding contract070ea59 plus independently reviewed amendments8b8cbf5/e013ae4
+are pushed. Product code/tests/report are preserved UNCOMMITTED, unfinished and
+NOT independently reviewed. Resume the existing /root/task23_implementation worker
+or use its incremental report; do not reconstruct completed tasks or restart it.
+Read v0_6_usage_pause_2026_10_15.md for precise current evidence and remaining gates.
+Use binding task plan/prompt rather than the obsolete ignored initial draft.
 
-Key resolved source facts:
-- Four stage needs require matching sustained criteria; shelter first secure5–7.
-- Initial storage policy would discard provisions: attach after constructed storage
- with spoilage0. Existing recipe/consumption/upkeep then sustainfood10/water8.
-- Large shelter target count2/labor3 gives distinct work identity and valid labor
- block with two founders; success target count1/labor1.
-- Existing work shadow pattern copies all maps and deep-copies mutable entities/
- relationships; deepcopy of frozen Event mappingproxy is invalid.
-- Setup and replay preparation are separate atomic boundaries; no generic tick
- rollback. Exactly-once cursor/event bijection and failed-engine reload remain.
-- Inspect must use narrow repository read_only mode; no file/schema creation/save.
+Root baseline make check passed1271/10 including73Chrome. Worker focused evidence
+reports221focused passes, success10/stall5/failure13, two fresh and resume1/3/4
+exact schema/payload equality. Worker stopped cleanly. Example039, edge tests,
+cleanup/docs, success/stall Chrome, independent review and root gates remain.
+Two real integration defects required bounded contract amendments before edits:
+- Valid nonempty sustained history, anchored by unique need_created event and
+ contiguous through current tick, is pending UNSATISFIED while accumulating;
+ malformed/missing/stale/unavailable history remains UNAVAILABLE. Canonical camp
+ explicitly starts housing/storage capacity0. ACTIVE-only gateway is unchanged.
+- Existing dispatch_external_trade is public structured action vocabulary but
+ replay treated it as forbidden prose. Exact public key is allowed only in
+ option/request key fields; descriptions/labels/prose/arguments/context retain
+ unchanged information-boundary checks. No global regex or gateway weakening.
+
+All amendments passed independent contract review. Final implementation review,
+full task/merged gates, canonical CLI matrix, browser/wheel/install and example039
+remain required. Do not claim Task23 complete from focused worker evidence.
+Root prepared persistent supplemental scripts at
+.superpowers/sdd/v0_6_completion_plan/founders-{matrix,inspector}.py; inspect/adapt
+before running AFTER review. /tmp copies are disposable across desktop sessions.
 
 After Task23 reviewed acceptance, Task24 performs whole-milestone review and
 release/package/docs closure at0.6.0rc1, with no main merge/tag/v0.7 work.
@@ -80,7 +88,7 @@ not a live LLM's ability to choose strategy. Schema1–12 load compatible defaul
 legacy missing label bindings never guessed for replay. Inspectors GET-only,
 separate snapshots; module app empty world, create_app(engine) same engine.
 
-Active durable checkouts .worktrees/task21,task22,task15,task15c. Native alternative
+Active durable checkouts .worktrees/task21,task22,task15,task15c,task23. Native alternative
 was read-only and archived; fallback intentional. Remote access uses scoped
 GIT_SSH_COMMAND='ssh -F /dev/null -o BatchMode=yes' for broken system Include;
 host-key verification retained. Verify current status/history/live remote tips

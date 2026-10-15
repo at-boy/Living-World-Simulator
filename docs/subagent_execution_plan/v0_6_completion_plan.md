@@ -324,3 +324,11 @@ delivery9d9dbf0 merged0a81a11 after one reviewed numeric-extra correction; task 
 merged gates1271passed/10existing skips,73Chrome cases,examples001–038,installed
 assets/routes and wide/narrow visuals passed. Task23 exact contract refinement
 and scoped final contract review precede its implementation.
+
+
+Usage checkpoint October15: Task23 contract070ea59 plus reviewed amendments
+8b8cbf5/e013ae4 pushed; implementation preserved unfinished/uncommitted in
+.worktrees/task23. Worker221focused passes, predicted10/5/13 outcomes and exact
+fresh/resume1/3/4 payload candidates. No implementation review/full gates or
+integration yet. Root stopped with headroom before owner10% floor; see current
+continuation brief and v0_6_usage_pause_2026_10_15.md. No automatic resume/reset.
