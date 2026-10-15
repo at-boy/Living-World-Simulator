@@ -1,8 +1,8 @@
 # v0.6 milestone completion plan
 
 Date: 2026-10-07
-Status: owner-approved execution on 2026-10-13; Phase0 and Tasks21–22 and15 completed.
-Release version confirmed by owner: `0.6.0rc1`. Task15c is next.
+Status: owner-approved execution on 2026-10-13; Phase0 and Tasks21–22,15 and15c completed.
+Release version confirmed by owner: `0.6.0rc1`. Task23 is next.
 
 **Goal:** Complete the autonomous founding-settlement vertical slice on
 `milestone/v0.6`, with reproducible success, stall, and failure runs,
@@ -176,10 +176,10 @@ Execute and merge separately, in that order.
   accessible controls, read-only requests, DTO detachment, and installed-package
   asset availability. Static request-string inspection alone is insufficient.
 - [x] Review, validate, report, and merge Task 15 before starting Task 15c.
-- [ ] Specify and implement deterministic map scaling, labels, overlaps,
+- [x] Specify and implement deterministic map scaling, labels, overlaps,
   unplaced entities, resizing, and entity click-through from detached spatial
   DTOs. Test empty and degenerate bounds and malformed/error responses.
-- [ ] Review, validate, report, and merge Task 15c.
+- [x] Review, validate, report, and merge Task 15c.
 
 Exit: operators can explain domain state and inspect placement through a
 packaged browser client without mutation requests or NPC integration.
@@ -316,3 +316,11 @@ Second usage pause: root stopped Task15c at18% remaining and completed a
 report-only handoff at15% remaining, above owner10% floor. Exact contracte6e9870
 is pushed; initial browser RED and partial report are uncommitted, unfinished
 and unreviewed. Resume Task15c from .worktrees/task15c before Task23/24.
+
+## Execution checkpoint —2026-10-15
+
+Owner resumed with full allowance and unchanged stop-before10% rule. Task15c
+delivery9d9dbf0 merged0a81a11 after one reviewed numeric-extra correction; task and
+merged gates1271passed/10existing skips,73Chrome cases,examples001–038,installed
+assets/routes and wide/narrow visuals passed. Task23 exact contract refinement
+and scoped final contract review precede its implementation.

@@ -4,6 +4,9 @@
 
 ### Added
 
+- Checkpoint reviewed Spatial integration and the resumed canonical acceptance
+  sequence, with current browser/package evidence.
+
 - Save the owner-requested usage pause with reviewed Tasks22/15 integrated and
   Task15c initial TDD preserved under its pushed exact contract.
 

@@ -913,3 +913,12 @@ Spatial through Refresh and missing records. Focused actual Chrome tests cover
 geometry, order, lifecycle, errors, race cancellation, literal labels and GET-only
 state preservation. Independent review and root full/visual/wheel gates remain
 pending; this entry is not integration approval.
+
+
+##2026-10-15 — Task15c reviewed integration checkpoint
+
+Delivery9d9dbf0 merged0a81a11 after one reviewed payload-safety correction. Root
+task/merged1271passed/10existing skips,73Chrome cases,examples001–038; installed
+assets/routes and actual wide/narrow visuals passed. Documentation conflicts
+preserved pause and task history. Task23 contract refinement next; main/user
+configuration preserved.

@@ -152,3 +152,10 @@ can overlap as documented; the literal accessible list retains every record.
 No new warnings or unexplained skips. Installed smoke used dependency-free ASGI
 transport, avoiding the previous optional TestClient adapter warning. Wheel
 remains0.5.0 until owner-selected0.6.0rc1 release closeout. Main not in scope.
+
+## Milestone integration
+
+Delivery9d9dbf0 merged0a81a11. Root merged make1271passed/10existing skips,73Chrome
+cases,examples001–038; separate examples and whitespace passed. Documentation-only
+conflicts retained task and pause history; source/tests/package match reviewed
+delivery exactly. Installed assets/routes match merged tree. Main unchanged.

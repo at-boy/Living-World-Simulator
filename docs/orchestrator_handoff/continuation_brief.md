@@ -1,192 +1,88 @@
-# Continuation brief — October 14, 2026
+# Continuation brief — October15,2026
 
-## Current repository state
+## Current state and authority
 
-**USAGE PAUSED October14.** See `v0_6_usage_pause_2026_10_14_second.md`. Root
-stopped Task15c at18% five-hour remaining to preserve buffer above the owner10%
-floor. Tasks22/15 are integrated; Task15c contracte6e9870 is pushed, initial
-uncommitted TDD/report preserved in .worktrees/task15c, implementation unfinished.
-No automatic resume or usage reset. Resume original worker after state/usage check.
+Owner explicitly resumed on October15. Continue approved v0.6 execution; stop
+BEFORE five-hour allowance falls below10%, leaving checkpoint/interruption buffer.
+No reset/automatic resume. Primary branch milestone/v0.6; never commit/merge/tag/
+push v0.6 to main. Owner chose0.6.0rc1 for Task24 release-readiness. Main integration
+and tagging are separate owner actions. User .codex/config.toml edit is preserved
+unstaged and excluded from all milestone commits.
 
+Task15c delivery9d9dbf0 merged0a81a11 after independent spec/quality PASS, one
+numeric-extra validation correction and root full/browser/visual/package gates.
+Documentation-only merge conflicts retained both usage-pause and task history;
+no source/test/package differences from reviewed task. Earlier pause files are
+historical; do not resume completed15c or repeat completed21/22/15.
 
-The v0.6 autonomous founding-settlement milestone is authorized and active.
-Reviewed task branches merge only into `milestone/v0.6`; never change `main`.
+## Completed sequence and validation
 
-At this checkpoint:
+Completed reviewed/pushed tasks16,16a,15a,15b,17,17a,18,18a,15d,19,19a,20,20a,
+20b,21,22,15,15c. Canonical reports/plans/prompts are under
+ docs/subagent_execution_plan/v0_6/ (without the leading display space).
 
-- current branch `milestone/v0.6`; Task15 delivery `dea51cb`, merge `91e33bf`;
-- Task15 reviewed after four bounded corrections; task and merged gates1229
-  passed/10 existing skips,31 Chrome cases,examples001–038; installed assets and
-  actual wide/narrow layouts passed;
-- Task22 delivery `02b35fe`, merge `7806f29` remains complete;
-- Task22 independent spec/quality PASS after Unicode and work-phase compatibility
-  corrections; task and merged gates1194 passed/10 existing skips, examples001–038;
-- Task21 delivery `c821efe`, merge `1ab288b`, checkpoint `b055619` remains complete;
-- live remote tips verified: milestone `91e33bf`, Task15 `dea51cb`, unchanged
-  main `12f2f17`;
-- user-owned `.codex/config.toml` edit is preserved unstaged;
-- writable isolated checkouts are `.worktrees/task21` and `.worktrees/task22`;
-  native read-only alternative was archived; no task implementation was lost;
-- owner approved remaining execution and chose `0.6.0rc1`; no main integration/tag;
-- owner resumed after the historical usage pause; **stop before the five-hour
-  allowance falls below10% remaining**, checking at task boundaries and saving a
-  durable checkpoint with enough buffer to interrupt workers;
-- Task15c is next. Its consolidated geometric/ordering/numeric and final UI
-  seam contract has independent CONTRACT READY review; transfer reviewed plan
-  and prompt into isolated task branch before implementation.
+Recent deliveries/merges:
+-21:c821efe/1ab288b — objective-backed stages, schema11.
+-22:02b35fe/7806f29 — recorded proposals, persisted labels/cursor, schema12.
+-15:dea51cb/91e33bf — ten packaged read-only inspector views.
+-15c:9d9dbf0/0a81a11 — north-up Spatial map, canonical order, safe numeric states,
+ accessible overlap/list and entity-origin return navigation.
 
-The historical first pause is retained in `v0_6_usage_pause_2026_10_14.md`; its
-Task22 pending state is superseded by this checkpoint and the final task report.
-No automatic resume or usage-reset action is configured.
+Root15c task AND merged gates: make1271passed/10existing deliberate skips,73actual
+Chrome cases; examples001–038 pass, separate examples pass, whitespace pass.
+Installed-wheel assets/routes byte-identical to current tree, read-only snapshot
+state preservation and wide/narrow actual-app visual checks pass. No new warnings.
+Task15c's venv is dependency-only Python3.13.5; direct imports need PYTHONPATH=src;
+make sets it. Primary gate override VENV=.worktrees/task15c/.venv. Old primary
+venv lacks Black. Package remains0.5.0 until Task24's0.6.0rc1 change.
 
-The approved delivery plan is `docs/subagent_execution_plan/v0_6_completion_plan.md`.
-Current root scratch recovery ledger and replay draft are under
-`.superpowers/sdd/v0_6_completion_plan/`; binding committed task documents remain
-canonical. Never depend solely on ignored scratch surviving cleanup.
+## Next: Task23 canonical founders acceptance
 
-Always recheck status, current branches, history and live remote tips before
-acting. SSH currently requires the scoped invocation
-`GIT_SSH_COMMAND='ssh -F /dev/null -o BatchMode=yes'` because a system SSH Include
-has invalid ownership; normal host-key checking is retained.
+The approved completion plan is docs/subagent_execution_plan/v0_6_completion_plan.md.
+Task23 starts only from this reviewed milestone, on task/23-founders-acceptance.
+Root draft .superpowers/sdd/v0_6_completion_plan/task23-final-plan-draft.md includes
+exact fixed manifest, public APIs, setup/attachment ownership, keyed ordinary
+registration, terminal callbacks, read-only inspect, CLI/assets and verification.
+Independent initial contract review required five decisions; root resolved them,
+scoped final contract review pending. Transfer consolidated plan/prompt into task
+branch and establish CONTRACT READY before implementation. No Task23 product code
+exists yet. Do not use earlier short plan or obsolete candidate fixture details.
 
-## Completed v0.6 sequence
+Key resolved source facts:
+- Four stage needs require matching sustained criteria; shelter first secure5–7.
+- Initial storage policy would discard provisions: attach after constructed storage
+ with spoilage0. Existing recipe/consumption/upkeep then sustainfood10/water8.
+- Large shelter target count2/labor3 gives distinct work identity and valid labor
+ block with two founders; success target count1/labor1.
+- Existing work shadow pattern copies all maps and deep-copies mutable entities/
+ relationships; deepcopy of frozen Event mappingproxy is invalid.
+- Setup and replay preparation are separate atomic boundaries; no generic tick
+ rollback. Exactly-once cursor/event bijection and failed-engine reload remain.
+- Inspect must use narrow repository read_only mode; no file/schema creation/save.
 
-The following tasks were implemented on pushed task branches, independently
-reviewed, corrected where necessary, validated, committed, merged with
-`--no-ff`, and pushed to `milestone/v0.6`:
+After Task23 reviewed acceptance, Task24 performs whole-milestone review and
+release/package/docs closure at0.6.0rc1, with no main merge/tag/v0.7 work.
 
-| Task | Result | Milestone merge |
-| --- | --- | --- |
-| 16 | Versioned YAML scenario/run identity and deterministic initial graph | `808bdde` |
-| 16a | Bounded/continuous runner, checkpoints, resume, and CLI | `ca5b75c` |
-| 15a | Canonical two-dimensional spatial ADR | `a6d77a9` |
-| 15b | Spatial domain, schema-v3 persistence, and inspection | `2e43ada` |
-| 17 | Partial external-world references and schema-v4 persistence | `c909d8a` |
-| 17a | Deterministic dispatch lifecycle, gateway, and schema-v5 persistence | `9c006fc` |
-| 18 | Engine-owned goals/objectives, schema-v6 persistence, inspection, and filtered interpretations | `0fe099d` |
-| 18a | Deterministic criterion evaluation, lifecycle transitions, and evidence | `033ed60` |
-| 15d | NPC-safe qualitative spatial and direct-road perception | `43405ee` |
-| 19 | Settlement needs, sustained pressure evaluation, schema-v7 persistence, inspection, and filtered interpretations | `a3f4bc5` |
-| 19a | Consumption, storage/spoilage, maintenance consequences, and schema-v8 persistence | `bba7549` |
-| 20 | Authoritative work orders, aggregate reservations, schema-v9 persistence, inspection, and filtered interpretations | `bb9fa53` |
-| 20a | Actor-bound proposal-to-work gateway, authoritative preflights, and self-volunteering | `0b6760f` |
-| 20b | Deterministic work execution, atomic work-phase rollback, and schema-v10 charge evidence | `5489b73` |
-| 21 | Objective-backed adjacent stages, population/maintenance criteria, schema-v11 persistence, inspection, and NPC filtering | `1ab288b` |
-| 22 | Recorded proposal tapes, durable cursor/labels, schema12, checkpoint recovery and detached replay inspection | `7806f29` |
-| 15 | Packaged GET-only inspector, ten views, real browser/error/navigation/read-only and installed asset checks | `91e33bf` |
+## Execution and architecture invariants
 
-Task reports under `docs/subagent_execution_plan/v0_6/` contain exact files,
-interfaces, review corrections, and validation evidence. ADR-0015 through
-ADR-0025 capture the scenario, spatial, partial-world, dispatch, goal, need,
-work-order, proposal-gateway, and deterministic work execution contracts.
+One durable isolated task branch at a time; one bounded worker and independent
+read-only reviewer for nontrivial tasks. Root owns architecture, scope amendments,
+review disposition, final gates and integration. Amend plan AND saved -prombt.md
+before expanding allowed files. Every implementation needs truthful -report.md.
+Workers focused checks; root full make, separate examples, whitespace plus task
+acceptance gates, repeated on merged milestone. Preserve user-owned changes.
 
-SQLite snapshot support now spans schema versions 1 through 12. The v0.6
-progression is run identity in schema 2, spatial placements in schema 3,
-external references in schema 4, external dispatches in schema 5, goals and
-objectives in schema 6, settlement needs in schema 7, and consequences in
-schema 8, followed by work definitions, states, and reservations in schema 9,
-exact-once work input charge evidence in schema 10, and objective-backed
-settlement stage programs/state plus population/maintenance criteria in schema 11. Legacy versions load
-newer fields and collections with compatible defaults and write forward.
+Managers own mutation, systems behavior, immutable events. NPC flow remains
+WorldState->perception->immutable cognitive records->filtered context->untrusted
+proposal->action gateway->engine mutation. No IDs/rawattrs/thresholds/privileged
+inspector DTOs/runtime objects in NPC context. Tapes prove deterministic drivers,
+not a live LLM's ability to choose strategy. Schema1–12 load compatible defaults;
+legacy missing label bindings never guessed for replay. Inspectors GET-only,
+separate snapshots; module app empty world, create_app(engine) same engine.
 
-## Current validation baseline
-
-Task15 independent spec/quality PASS after reservation/criterion validation,
-maintenance references and narrow-table corrections. Root task and merged gates:
-
-| Gate | Result |
-| --- | --- |
-| `make VENV=.worktrees/task15/.venv` (merged) | Ruff/Black PASS;1229 passed,10 existing deliberate skips;examples001–038 |
-| Separate examples | PASS;001–038 |
-| Actual Chrome browser cases in full suite |31 passed,no skips |
-| Whitespace | PASS |
-| Isolated wheel/install/resource/route check | PASS;3 byte-identical assets,3 routes,404/405/health,state unchanged |
-| Actual wide/narrow visual inspection | PASS after reviewed correction |
-
-Wheel smoke's optional TestClient/httpx emitted a Starlette deprecation warning;
-project tests use dependency-free ASGI transport and had no warnings. Current
-version remains0.5.0 until0.6.0rc1 Task24. Dependencies-only Python3.13.5 venv
-requires PYTHONPATH=src for direct project imports; make already sets it.
-
-## Next task: Task15c
-
-Binding plan/prompt on task/15c-spatial-inspector-view at e6e9870 are canonical.
-Independent final contract/seam verdict CONTRACT READY. Initial Spatial browser
-RED1failed/31deselected is preserved; no asset implementation. Original worker
-paused; read the partial report and pending diff before resuming.
-The binding plan/prompt are now on task branch at e6e9870; original worker is
-paused after initial TDD. Exact projection, safe integer range, backend order, unplaced categories and
-compatible Back-to-Spatial behavior are explicit. Dedicated renderer preserves
-placement order; generic renderRecords sorts by ID and is unsuitable for maps.
-No domain/DTO/server/persistence/cognition changes or write requests.
-
-Task23 preparation is documented separately in
-`v0_6_canonical_preparation_2026_10_14.md`. It is a non-binding design checkpoint,
-not worker authorization or a completed contract. Formal23plan/prompt must still
-resolve exact interfaces/fixtures/validation before implementation.
-
-## Remaining approved sequence
-
-Continue one reviewed task at a time in this order:
-
-1. Task15c — spatial inspector view.
-2. Task 23 — canonical success, stall, and failure founders scenarios.
-3. Task 24 — milestone release-readiness closeout at `0.6.0rc1`.
-
-Task 24 leaves `milestone/v0.6` ready for owner integration. It does not merge
-or push anything to `main`.
-
-## Branch, review, and delivery rules
-
-- Start each task from the current reviewed milestone head and push the task
-  branch immediately.
-- Execute or delegate only one documented task at a time.
-- Every implementation task requires its existing plan and `-prombt.md`, plus a
-  truthful `-report.md` before approval.
-- Independently inspect every delivery. Require corrections for behavior,
-  strict typing, tests, report accuracy, file-boundary compliance, persistence,
-  or NPC-boundary defects.
-- Run focused tests while correcting, then `make`, separate `make examples`,
-  and `git diff --check` before approval.
-- Commit and push only reviewed work, merge with a descriptive `--no-ff` commit
-  into `milestone/v0.6`, and push that branch.
-- Never commit, merge, or push to `main` during this milestone workflow.
-
-## Non-negotiable architecture
-
-Preserve this authority and information flow:
-
-`WorldState -> perception -> immutable cognitive records -> filtered NPC
-context -> cognition proposal -> action gateway -> world event/state change`
-
-NPC-facing input must never contain raw `WorldState`, internal record/entity
-IDs, privileged inspection DTOs, unrestricted attributes, another NPC's hidden
-cognition, exact hidden criteria/policy, or arbitrary runtime objects. Model
-output remains an untrusted proposal until the gateway and domain manager
-validate and apply it.
-
-Recent concrete boundaries to preserve:
-
-- exact spatial coordinates and containment are privileged engine truth;
-- external references are deliberately partial, not simulated remote places;
-- dispatch IDs, costs, delays, reliability, seed calculation, reservations,
-  and outcomes are engine-only;
-- NPC dispatch proposals choose only engine-authored qualitative labels;
-- filtered goal interpretations in Task 18 must hide internal IDs, exact
-  criteria, evidence, and authoritative status unless legitimately perceived.
-- need definitions, owners, thresholds, quantities, pressure, windows, and
-  history are privileged; NPCs receive only selected qualitative need prose;
-- Task 19 assessment runs after ordinary systems and before goal evaluation;
-  Task 19a consequences must run before assessment and must use manager-owned
-  authoritative mutation and immutable events.
-- Task 20 reservations are engine-owned aggregate locks, not resource
-  deductions or item identities; Task 20 adds no scheduler or execution path.
-
-## Historical context
-
-The v0.5 release and Tasks 01–14/14a/14b are complete and archived under
-`docs/subagent_execution_plan/initial_v0_2_3_to_v0_5/`. The prior council and
-local-model decisions remain documented in their reports and ADRs; do not
-reconstruct them from chat history. The cross-milestone index is
-`docs/subagent_execution_plan/README.md`, and the approved v0.6 objective and
-sequence are in `docs/subagent_execution_plan/v0_6.md`.
+Active durable checkouts .worktrees/task21,task22,task15,task15c. Native alternative
+was read-only and archived; fallback intentional. Remote access uses scoped
+GIT_SSH_COMMAND='ssh -F /dev/null -o BatchMode=yes' for broken system Include;
+host-key verification retained. Verify current status/history/live remote tips
+before writes. Main last live-verified12f2f17. Ignored root ledger is supplemental;
+committed task contracts/reports and this brief remain authoritative.
