@@ -922,3 +922,12 @@ task/merged1271passed/10existing skips,73Chrome cases,examples001–038; install
 assets/routes and actual wide/narrow visuals passed. Documentation conflicts
 preserved pause and task history. Task23 contract refinement next; main/user
 configuration preserved.
+
+
+##2026-10-15 — Task23 exact contract
+
+Independent contract review resolved public API ownership, counttwo shelter
+cardinality, canonical IDs/extras, manifest digest and detached terminal-error
+semantics. Exact fixed-v1 assets/rules, atomic setup/attachments, existing gateways,
+read-only repository/inspect and fresh/resume payload matrix are decision-complete.
+From reviewed Spatial milestone d4dcdff; no implementation in this contract commit.

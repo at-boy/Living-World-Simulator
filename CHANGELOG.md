@@ -4,6 +4,9 @@
 
 ### Added
 
+- Define the reviewed canonical founders setup, terminal, packaged CLI and
+  read-only snapshot acceptance contract.
+
 - Checkpoint reviewed Spatial integration and the resumed canonical acceptance
   sequence, with current browser/package evidence.
 
