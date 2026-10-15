@@ -150,3 +150,11 @@ for view sources, independent snapshot semantics, browser verification and the
 extension entry points. The module-level server owns an empty engine; an app
 created with `create_app(engine)` reads that supplied engine. A separately loaded
 database remains a snapshot rather than synchronizing another process.
+
+## Packaged Spatial inspector
+
+The packaged `/inspector` Spatial view consumes the existing detached
+`GET /world/placements` and entity snapshots. Placement ordering and geometry
+remain engine-owned. The browser adds no endpoints or mutating operations and
+makes no atomic consistency claim across requests. See [World Inspector](world_inspector_ui.md)
+for projection, accessibility, unplaced states and numeric-range handling.

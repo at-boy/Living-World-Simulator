@@ -40,6 +40,7 @@ def test_inspector_reads_leave_engine_and_events_unchanged() -> None:
         "/inspector",
         "/world",
         "/world/entities",
+        "/world/placements",
         f"/world/entities/{entity.id}",
         "/world/events",
     ):

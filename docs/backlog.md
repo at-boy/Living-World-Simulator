@@ -9,9 +9,8 @@ validated, merged, and pushed to milestone/v0.6. Task 22 recorded proposal
 replay is independently reviewed, validated and integrated; its strict
 runtime/cursor contract and ADR-0025 remain authoritative. Task15
 operator inspector is independently reviewed and integrated. Task15c spatial
-view has pushed precise contracte6e9870; initial TDD is paused at the owner usage
-boundary, unfinished and unreviewed. Follow it with Task23 canonical
-composition. Legacy replay enablement on
+view is independently reviewed and accepted for milestone integration. Task23
+canonical composition follows its merged validation checkpoint. Legacy replay enablement on
 populated saves without label bindings remains unsupported. Reusable
 stage templates, decline/demotion, scenario-YAML binding (Task 23), and automatic
 NPC perception of stages remain deliberately deferred.
@@ -142,11 +141,11 @@ separately scoped to Task 19a; work selection remains Task 20 and later.
   world/entity/lifecycle details and event history. Statistical/time-series and
   relationship graphs remain future explicitly authorized operator work; they
   must never become a simulation, NPC, or LLM API.
-- **Spatial World Inspector visualization** showing areas, settlements,
-  buildings, and other placed world elements with click-through inspection.
-  This requires a canonical engine-owned spatial layout/placement contract
-  before a map renderer is implemented; no UI should infer coordinates from
-  arbitrary attributes.
+- **Spatial inspector follow-up:** Task15c implements the canonical placement
+  map and entity inspection; independent review and root acceptance are pending.
+  Editing, inferred roads, and statistical overlays remain separately authorized
+  work. Spatial views must consume engine-owned placements without inferring
+  coordinates from arbitrary attributes.
 - Web administration interface, separately authorized from the read-only
   inspector and subject to explicit command/action authorization design.
 - **Council opposition and political realignment:** NPCs may later organize

@@ -1,6 +1,6 @@
 "use strict";
 (() => {
-  const routes = Object.freeze({world: "/world", run: "/world/run", replay: "/world/replay", entities: "/world/entities", entity: "/world/entities/", relationships: "/world/relationships", resources: "/world/resources", needs: "/world/needs", consequences: "/world/consequences", goals: "/world/goals", work: "/world/work-orders", external: "/world/external-references", dispatches: "/world/external-dispatches", stages: "/world/settlement-stages", events: "/world/events"});
+  const routes = Object.freeze({world: "/world", run: "/world/run", replay: "/world/replay", placements: "/world/placements", entities: "/world/entities", entity: "/world/entities/", relationships: "/world/relationships", resources: "/world/resources", needs: "/world/needs", consequences: "/world/consequences", goals: "/world/goals", work: "/world/work-orders", external: "/world/external-references", dispatches: "/world/external-dispatches", stages: "/world/settlement-stages", events: "/world/events"});
   const object = value => value !== null && typeof value === "object" && !Array.isArray(value);
   const str = value => typeof value === "string";
   const integer = value => Number.isSafeInteger(value);
@@ -57,6 +57,23 @@
     storage: list(v => fields(v, {policy: p => fields(p, {id: str, owner_id: str, resources: list(r => fields(r, {resource: str, spoilage_per_tick: integer}))}), state: s => fields(s, {policy_id: str, last_processed_tick: nullableInteger, overflowing: boolean, spoiling: boolean})})),
     maintenance: list(v => fields(v, {policy: p => fields(p, {id: str, owner_id: str, capability_id: str, label: str, upkeep: list(r => fields(r, {resource: str, amount: integer})), initial_condition: integer, maximum_condition: integer, deterioration_per_unpaid_tick: integer, recovery_per_paid_tick: integer}), state: s => fields(s, {policy_id: str, last_processed_tick: nullableInteger, condition: integer, upkeep_shortage: boolean})}))
   };
+  function spatialInteger(value) {
+    if (typeof value !== "number" || !Number.isInteger(value)) throw new Error("malformed");
+    if (!integer(value)) throw new Error("spatialRange");
+    return true;
+  }
+  function placementShape(value) {
+    if (!fields(value, {entity_id: str, containing_entity_id: nullableString,
+      bounds_kind: v => v === null || ["area", "structure"].includes(v),
+      overlap_policy: v => ["reject", "allow_sibling_overlap"].includes(v)})) return false;
+    const g = value.geometry;
+    if (g === null) return value.containing_entity_id === null && value.bounds_kind === null && value.overlap_policy === "reject";
+    if (!object(g) || !["point", "bounds"].includes(g.kind)) return false;
+    spatialInteger(g.x); spatialInteger(g.y);
+    if (g.kind === "point") return value.bounds_kind === null && value.overlap_policy === "reject";
+    spatialInteger(g.width); spatialInteger(g.height);
+    return g.width > 0 && g.height > 0 && value.bounds_kind !== null;
+  }
   const validators = {
     world: value => fields(value, {tick: integer, entity_count: integer, event_count: integer, replay_configured: v => typeof v === "boolean"}) && Object.entries(value).every(([key, v]) => !key.endsWith("_count") || integer(v)),
     run: value => fields(value, {scenario_key: str, schema_version: integer, seed: integer, configuration_fingerprint: str}),
@@ -73,7 +90,7 @@
     stages: list(v => fields(v, {program: p => fields(p, {settlement_id: str, stages: list(s => fields(s, {stage: str, requirements: list(r => fields(r, {kind: str, objective_id: str}))}))}), state: s => fields(s, {settlement_id: str, current_stage: str, entered_tick: integer, last_transition_tick: nullableInteger})})),
     events: list(v => fields(v, {id: str, tick: integer, kind: str, subject_id: nullableString, attributes: object}))
   };
-  const prose = {missing: "Snapshot not found.", unavailable: "Snapshot unavailable. Try Refresh.", malformed: "Malformed or unsupported snapshot."};
+  const prose = {missing: "Snapshot not found.", unavailable: "Snapshot unavailable. Try Refresh.", spatialRange: "Unsupported spatial numeric range.", malformed: "Malformed or unsupported snapshot."};
   async function fetchSnapshot(key, entityId = null) {
     if (!Object.hasOwn(routes, key) || (key === "entity" && !str(entityId))) throw new Error("malformed");
     let response;
@@ -83,7 +100,7 @@
     if (!response.ok) throw new Error("unavailable");
     let value;
     try { value = await response.json(); } catch { throw new Error("malformed"); }
-    if (!safe(value) || !validators[key](value)) throw new Error("malformed");
+    if (!(key === "placements" ? Array.isArray(value) && value.every(placementShape) && safe(value) : safe(value) && validators[key](value))) throw new Error("malformed");
     return value;
   }
   const content = document.querySelector("#content");
@@ -127,9 +144,67 @@
       article.append(renderValue(value)); records.append(article);
     }
   }
-  // Task15c extension: add a registry entry with sources and render(snapshotMap).
+  function renderSpatial(data) {
+    const entities = new Map(data.entities.map(e => [e.id, e]));
+    const seen = new Set();
+    for (const p of data.placements) {
+      if (seen.has(p.entity_id) || !entities.has(p.entity_id) ||
+        (p.containing_entity_id !== null && !entities.has(p.containing_entity_id))) throw new Error("malformed");
+      seen.add(p.entity_id);
+    }
+    const placed = data.placements.filter(p => p.geometry !== null);
+    let svg;
+    if (placed.length) {
+      let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+      for (const {geometry: g} of placed) {
+        const right = g.kind === "bounds" ? g.x + g.width : g.x;
+        const top = g.kind === "bounds" ? g.y + g.height : g.y;
+        spatialInteger(right); spatialInteger(top);
+        minX = Math.min(minX, g.x); maxX = Math.max(maxX, right);
+        minY = Math.min(minY, g.y); maxY = Math.max(maxY, top);
+      }
+      for (const n of [maxX - minX, maxY - minY, minX + maxX, minY + maxY]) spatialInteger(n);
+      const spanX = Math.max(maxX - minX, 1), spanY = Math.max(maxY - minY, 1);
+      const centerX = (minX + maxX) / 2, centerY = (minY + maxY) / 2;
+      const scale = Math.max(spanX, spanY), padding = scale / 10;
+      const svgnode = (tag, attrs, text = "") => {
+        const result = document.createElementNS("http://www.w3.org/2000/svg", tag);
+        for (const [key, value] of Object.entries(attrs)) result.setAttribute(key, String(value));
+        result.textContent = text; return result;
+      };
+      svg = svgnode("svg", {id: "spatial-map", viewBox: `${centerX-spanX/2-padding} ${-centerY-spanY/2-padding} ${spanX+2*padding} ${spanY+2*padding}`, preserveAspectRatio: "xMidYMid meet", role: "group", "aria-label": "Reported spatial geometry; east right, north up"});
+      for (const p of placed) {
+        const g = p.geometry, e = entities.get(p.entity_id);
+        const name = e.name;
+        const mark = svgnode("g", {"data-entity-id": e.id, tabindex: "0", role: "button", "aria-label": `Inspect ${name} (${e.id})`, class: "spatial-mark"});
+        const activate = () => openEntityDetail(e.id, "Spatial");
+        mark.addEventListener("click", activate);
+        mark.addEventListener("keydown", event => { if (["Enter", " "].includes(event.key)) { event.preventDefault(); activate(); } });
+        mark.append(g.kind === "point" ? svgnode("circle", {cx: g.x, cy: -g.y, r: scale/100}) : svgnode("rect", {x: g.x, y: -(g.y+g.height), width: g.width, height: g.height, class: p.bounds_kind}));
+        mark.append(svgnode("text", {x: g.x+scale/100, y: -(g.kind === "bounds" ? g.y+g.height : g.y)-scale/100, "font-size": scale/20}, name));
+        svg.append(mark);
+      }
+    }
+    records.append(node("p", "Reported coordinates: +x east/right; +y north/up. Endpoints are separate snapshots."));
+    records.append(svg || node("p", "No placed geometry reported."));
+    function entry(p, missing = false) {
+      const e = entities.get(p.entity_id), article = node("article");
+      article.dataset.entityId = e.id;
+      article.append(button(e.name, () => openEntityDetail(e.id, "Spatial")));
+      article.append(node("p", missing ? "No placement record" : p.geometry === null ? "Unplaced" : "Placed"));
+      article.append(renderValue(missing ? {entity_id: e.id, created_tick: e.created_tick, destroyed_tick: e.destroyed_tick} : {...p, created_tick: e.created_tick, destroyed_tick: e.destroyed_tick}));
+      records.append(article);
+    }
+    records.append(node("h3", "Placed records"));
+    for (const p of placed) entry(p);
+    records.append(node("h3", "Unplaced entities"));
+    for (const p of data.placements.filter(p => p.geometry === null)) entry(p);
+    for (const e of ordered(data.entities).filter(e => !seen.has(e.id))) entry({entity_id: e.id}, true);
+  }
+  // Views declare closed snapshot sources and their dedicated renderers.
   const views = {
     Overview: {sources: ["world", "run", "replay"], render: data => { for (const key of ["world", "run", "replay"]) { records.append(node("h3", key)); records.append(data[key] === null ? node("p", "Run unbound.") : renderValue(data[key])); } }},
+    Spatial: {sources: ["placements", "entities"], render: renderSpatial},
     Entities: {sources: ["entities"], render: data => renderRecords("Entities", data.entities, true)},
     Relationships: {sources: ["relationships", "entities"], render: data => renderRecords("Relationships", data.relationships)},
     Resources: {sources: ["resources", "entities"], render: data => { renderRecords("Resource definitions", data.resources); const quantities = data.entities.filter(e => Object.hasOwn(e.attributes, "resources")).map(e => ({id: e.id, name: e.name, resources: e.attributes.resources})); if (quantities.some(e => !object(e.resources) || !Object.values(e.resources).every(integer))) throw new Error("malformed"); renderRecords("Reported entity quantities", quantities); }},
@@ -153,20 +228,20 @@
     if (current.eventId) records.append(button("Show all history", () => show("History")));
     input.addEventListener("input", draw); draw();
   }
-  // Task15c entity-detail extension entry point. Only exact fetched references.
-  function openEntityDetail(entityId) { return show("Entity detail", entityId); }
+  // Entity entry point accepts only exact fetched references.
+  function openEntityDetail(entityId, returnView = "Entities") { return show("Entity detail", entityId, null, true, returnView); }
   function references(value, entityId, field = "") {
     if (Array.isArray(value)) return value.some(item => references(item, entityId, field));
     if (object(value)) return Object.entries(value).some(([key, item]) => references(item, entityId, key));
     return value === entityId && ["owner_id", "source_id", "target_id", "subject_id", "source_entity_id", "settlement_id", "location_id", "labor_entity_ids", "entity_id", "capability_id"].includes(field);
   }
-  async function show(view, entityId = null, eventId = null, focus = true) {
-    const token = ++generation; current = {view, entityId, eventId};
+  async function show(view, entityId = null, eventId = null, focus = true, returnView = "Entities") {
+    const token = ++generation; current = {view, entityId, eventId, returnView};
     document.querySelector("#tick").textContent = "Reported tick: unavailable";
     title.textContent = view; records.replaceChildren(); status.textContent = "Loading snapshots…"; content.setAttribute("aria-busy", "true");
-    document.querySelectorAll("#navigation button").forEach(b => { if (b.textContent === view || (view === "Entity detail" && b.textContent === "Entities")) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
+    document.querySelectorAll("#navigation button").forEach(b => { if (b.textContent === view || (view === "Entity detail" && b.textContent === returnView)) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
     if (focus) title.focus();
-    if (entityId !== null) records.append(button("Back to Entities", () => show("Entities")));
+    if (entityId !== null) records.append(button(`Back to ${returnView}`, () => show(returnView)));
     try {
       const sources = entityId === null ? views[view].sources : ["entity", "relationships", "needs", "goals", "work", "dispatches", "stages", "events", "consequences"];
       const keys = [...new Set(["world", ...sources])];
@@ -187,11 +262,11 @@
       status.textContent = "Snapshots loaded.";
     } catch (error) {
       if (token !== generation) return;
-      records.replaceChildren(); if (entityId !== null) records.append(button("Back to Entities", () => show("Entities")));
+      records.replaceChildren(); if (entityId !== null) records.append(button(`Back to ${returnView}`, () => show(returnView)));
       status.textContent = prose[error.message] || prose.malformed;
     } finally { if (token === generation) content.setAttribute("aria-busy", "false"); }
   }
   for (const view of Object.keys(views)) document.querySelector("#navigation").append(button(view, () => show(view)));
-  document.querySelector("#refresh").addEventListener("click", () => show(current.view, current.entityId, current.eventId));
+  document.querySelector("#refresh").addEventListener("click", () => show(current.view, current.entityId, current.eventId, true, current.returnView));
   show("Overview", null, null, false);
 })();

@@ -7,6 +7,13 @@
 - Save the owner-requested usage pause with reviewed Tasks22/15 integrated and
   Task15c initial TDD preserved under its pushed exact contract.
 
+- Add the packaged Spatial inspector with deterministic north-up projection,
+  backend placement order, accessible overlap/list navigation, explicit missing
+  and unplaced records, safe numeric-range errors and Spatial detail return.
+
+- Define the Task15c Spatial inspector contract with exact projection/order,
+  explicit unplaced states, safe ranges and browser verification.
+
 - Checkpoint independently reviewed Task15 integration and the precise Spatial
   inspector contract for the next isolated task.
 
