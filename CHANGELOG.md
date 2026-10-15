@@ -4,6 +4,10 @@
 
 ### Added
 
+- Add the packaged Spatial inspector with deterministic north-up projection,
+  backend placement order, accessible overlap/list navigation, explicit missing
+  and unplaced records, safe numeric-range errors and Spatial detail return.
+
 - Define the Task15c Spatial inspector contract with exact projection/order,
   explicit unplaced states, safe ranges and browser verification.
 

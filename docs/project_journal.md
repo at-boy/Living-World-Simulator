@@ -892,3 +892,16 @@ after geometric, numeric, order and delivered UI seam review. Dedicated renderer
 preserves canonical placement order; compatible entity return target and actual
 browser/visual/package gates are explicit. No domain or mutation changes. Root
 owns review/final gates and usage checkpoint; worker focused checks only.
+
+
+## 2026-10-15 — Task15c implementation for review
+
+Resumed the preserved test-first checkpoint and implemented Spatial in the
+existing packaged inspector assets. Dedicated rendering preserves placement
+order and exact north-up projection, validates core DTO/numeric combinations,
+and distinguishes explicit null placement from absent records. Accessible marks
+and the complete list retain overlap access; entity-detail navigation preserves
+Spatial through Refresh and missing records. Focused actual Chrome tests cover
+geometry, order, lifecycle, errors, race cancellation, literal labels and GET-only
+state preservation. Independent review and root full/visual/wheel gates remain
+pending; this entry is not integration approval.

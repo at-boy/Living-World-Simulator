@@ -13,3 +13,12 @@ main { min-width: 0; } #view-title:focus { outline: none; } article, .snapshot {
 .values { padding-left: 1rem; } .skip { position: absolute; left: -10000px; } .skip:focus { left: 1rem; top: .5rem; background: white; padding: .5rem; z-index: 1; }
 .selected { border: 3px solid #175f9c; } label { display: block; margin: .5rem 0; }
 @media (max-width: 640px) { header { padding: 1rem; } .layout { grid-template-columns: minmax(0, 1fr); padding: 1rem; gap: .6rem; } nav { flex-direction: row; flex-wrap: wrap; } nav button { flex: 1 1 auto; } th { width: 7rem; } article { padding: .6rem; } }
+
+#spatial-map { display: block; width: 100%; height: min(65vh, 36rem); background: white; border: 1px solid #a8b8c8; }
+.spatial-mark { cursor: pointer; }
+.spatial-mark rect { fill: #5a92b8; fill-opacity: .18; stroke: #305d85; stroke-width: 1px; vector-effect: non-scaling-stroke; }
+.spatial-mark rect.structure { fill: #cc8d42; stroke: #885620; }
+.spatial-mark circle { fill: #175f9c; }
+.spatial-mark text { fill: #243342; paint-order: stroke; stroke: white; stroke-width: 2px; vector-effect: non-scaling-stroke; }
+.spatial-mark:focus { outline: none; }
+.spatial-mark:focus rect, .spatial-mark:focus circle { stroke: #111; stroke-width: 3px; vector-effect: non-scaling-stroke; }

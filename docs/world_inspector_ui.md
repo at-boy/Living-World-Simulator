@@ -17,6 +17,7 @@ Task 23 owns the convenient saved-world inspection CLI composition.
 | --- | --- |
 | Overview | World counts, run metadata (404 means unbound), replay binding/cursor |
 | Entities | Names, definitions, lifecycle, attributes and exact matching references |
+| Spatial | Existing placements and entity snapshots, projected map, complete placement/lifecycle list |
 | Relationships | Direct kind/source/target/lifecycle, known entity names and ID fallback |
 | Resources | Resource definitions and explicit entity `attributes.resources` quantities |
 | Needs | Definitions, nullable current assessments/history, consequence policies/state |
@@ -57,13 +58,45 @@ Chrome through an ASGI transport and exercise actual DOM behavior, request
 methods and before/after engine state. The root orchestrator separately checks
 an installed wheel's asset contents and full repository gates.
 
-## Spatial extension entry points
+## Spatial view
 
-`inspector.js` separates `fetchSnapshot`/validators, DOM helpers (`renderValue`,
-`renderRecords`) and the `views` registry. Task 15c can register Spatial with a
-closed route key, validator, source list and renderer. `openEntityDetail(id)` is
-the existing drill-down entry point. Preserve the `show` generation guard,
-focus/status behavior and literal text rendering when adding a view.
+Spatial consumes only `GET /world/placements`, `GET /world/entities` and the
+usual world summary. These remain independent snapshots; an entity reference
+missing from the fetched entities is a malformed response. Refresh can retry
+if the world changed between requests. The browser never generates placements.
+
+The map displays +x east/right and +y north/up. Point `(x,y)` becomes SVG
+`(x,-y)`; bounds begin at `(x,-(y+height))`. The view box includes all reported
+geometry endpoints, minimum spans of one unit, and padding of one tenth of the
+larger span. Marker radius is that larger span divided by 100; upright label
+font size is the same span divided by 20. Padding, marker size and physical
+scale describe presentation, not engine geometry. Resizing preserves the view
+box, geometry and ordering. Unsafe integer coordinates, dimensions, endpoints,
+extent differences or center numerator sums show **Unsupported spatial numeric
+range.** No partial map or rounded coordinate details are shown on failure. Unknown
+extra fields must also pass recursive numeric safety checks; safe extras display
+literally, while unsafe or nonfinite extra quantities are malformed.
+
+The dedicated renderer preserves backend placement order for marks, labels and
+placed records. Translucent area/structure bounds can overlap. Every mark is a
+keyboard button (Enter or Space); the complete list gives each entity a regular
+button regardless of overlap. Reported containment, bounds kind, overlap policy,
+coordinates and lifecycle remain visible in structured details. Explicit null
+geometry is **Unplaced**, in backend order; entities without any placement record
+follow in entity-ID order as **No placement record**. Neither receives a map
+marker. Empty/all-unplaced geometry has an empty map message.
+
+Spatial entity activation returns through **Back to Spatial**; detail Refresh,
+missing-entity errors and the current-navigation marker preserve that origin.
+Existing entity entry points retain **Back to Entities**. Names and details are
+literal text, including HTML-shaped names. The map and list are operator output
+and never supply NPC perception or cognition.
+
+`inspector.js` separates closed-route `fetchSnapshot`/validators, DOM helpers,
+the `views` registry, and the dedicated `renderSpatial` renderer. Generic
+`renderRecords` sorts IDs and must not be used for placement order.
+`openEntityDetail(id, returnView="Entities")` is the compatible drill-down entry
+point. Extensions preserve the `show` generation guard and focus/status handling.
 
 Inspector data is privileged operator output. It does not flow into NPC context,
 retrieval, cognition, perception or action resolution. Use the API's existing
