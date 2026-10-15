@@ -42,3 +42,8 @@ Allowed-file expansion is limited to goals/evaluation.py, test_goal_evaluation.p
 and ADR-0019-engine-owned-goals.md. Implement exact provenance-anchored pending
 prefix rule, canonical explicit zero capacities, and regression matrix. No gateway
 relaxation or synthetic histories/statuses. This is existing classification repair.
+
+Binding dispatch-key amendment: final plan resolution permits only replay/system.py
+and test_recorded_proposal_tapes.py for exact existing public dispatch-key handling
+in structured key fields. Every prose/context/argument field keeps its boundary.
+No broad prefix exception or NPCInformationBoundary/gateway change.

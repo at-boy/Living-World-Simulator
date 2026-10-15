@@ -463,3 +463,26 @@ unavailable prefix rejection, active authorization at canonical tick2, unchanged
 exact-ACTIVE gateway rules and deadline/terminal behavior. Run focused goal, work
 gateway and canonical tests. Report initial deadlock and compatibility change;
 retain original 10/5/13 outcome predictions until actual evidence confirms them.
+
+## Root resolution — public dispatch action key versus prose
+
+Real success reaches tick6 through the unchanged gateway but replay wrongly
+validates the existing public DISPATCH_ACTION_KEY (dispatch_external_trade) as
+conversation prose, mistaking its prefix for an engine record ID. Expand allowed
+files solely to src/living_world/replay/system.py and
+tests/test_recorded_proposal_tapes.py for this existing integration correction.
+Keep the public key, tape key, dispatch handler and NPCInformationBoundary unchanged.
+In ReplayProposalSystem, validate option/request action keys as structured action
+vocabulary: exactly existing DISPATCH_ACTION_KEY may pass its key-field validation;
+all other keys retain current prose validation. Apply the same rule both before
+DecisionEngine and before resolver execution. Existing offered-vocabulary matching,
+exact one supporting handler, ordering, actor/domain authorization and pure
+preflight remain mandatory. Do not exempt target labels, descriptions, rationales,
+speech, argument keys/values or any context field: even the public key string
+must still reject when embedded there as prohibited prose. Reject other dispatch_*
+IDs as keys and all engine identifiers in prose, with no broad prefix allowlist.
+
+TDD: real dispatch key proceeds through ordinary replay+gateway; unknown/unoffered
+or internal-ID keys still reject; same string in prose/labels/descriptions/arguments
+still rejects without mutation. Canonical success must still demonstrate actual
+ARRIVED dispatch. No boundary regex/global cognition/gateway changes.
