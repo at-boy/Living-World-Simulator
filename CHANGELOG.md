@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 0.6.0rc1 — Release candidate preparation
+
+Release metadata and documentation prepared for owner integration; final current
+review/validation is tracked in the [Task 24 report](docs/subagent_execution_plan/v0_6/24_v06_release_closeout-report.md).
+No main integration, tag or publication is claimed.
+
 ### Fixed
 
 - Close the non-stage goal/objective NPC information boundary, preserve reservation
@@ -10,7 +16,7 @@
 
 ### Added
 
-- Add fixed packaged founders composition, bounded outcome aliases, trusted terminal callbacks and read-only saved-world inspection. Task 23 acceptance and independent review are in progress.
+- Add fixed packaged founders composition, bounded outcome aliases, trusted terminal callbacks and read-only saved-world inspection. Task 23 was independently reviewed and integrated as `58b6ba7`; deterministic success10/stall5/failure13 and exact fresh/resume state are established. Live-model strategy validation remains future work.
 
 
 

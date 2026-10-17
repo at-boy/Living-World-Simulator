@@ -1,5 +1,8 @@
 # Canonical founders acceptance
 
+Release candidate `0.6.0rc1`: see [release notes](releases/v0_6_0rc1.md)
+and [current closeout evidence](subagent_execution_plan/v0_6/24_v06_release_closeout-report.md).
+
 The fixed `canonical_founders_v1` preset composes existing simulation managers,
 work execution, needs, consequences, goals, stages and external dispatch. Its
 three packaged proposal tapes are deterministic untrusted drivers. They do not

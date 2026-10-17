@@ -122,3 +122,16 @@ from published release. Root alone concludes completion after independent review
 required current merged gates and verified push. No planned/unavailable check may
 be marked passed. Save durable checkpoint/stop active agents before owner five-hour
 allowance falls below10%, leaving buffer. Resume only on owner instruction.
+
+
+## Corrected prerequisite checkpoint — October17
+
+Task24a deliverycfa50b6/mergec1d93cd resolves all4wholeauditfindings. Independent
+scoped spec/qualityPASS; source+merged1416/10existing skips,76Chrome/examples001–039,
+separateexamples/whitespace and canonicalmatrices passed. Remainingwholeaudit
+coverage completed. Currentcloseoutbranch prerequisite mergee60262d contains this
+reviewedbase. Ownedmetadata stash was applied withoutdrop; reconcile5docconflicts
+within existingallowlist, retaining correctionevidence and originalhistory, then
+update candidate0.6.0rc1 docs/status accurately. No further runtimechanges allowed.
+Finalindependentmetadata/docreview and allrootrelease/installed/minimumPythongates
+stillrequired. Sourcecodeblockers are resolved, releasecandidateisnotyetapproved.

@@ -1,8 +1,13 @@
 # v0.6 milestone completion plan
 
 Date: 2026-10-07
-Status: owner-approved execution on 2026-10-13; Phase0 and Tasks21–22,15 and15c completed.
-Release version confirmed by owner: `0.6.0rc1`. Task23 is next.
+Status: owner-approved execution on 2026-10-13; Phase0 and twenty tasks through
+Task24a completed. Task24a deliverycfa50b6/mergec1d93cd resolved all four audit
+findings; remaining targeted audit coverage completed. Corrected task/merged gates
+passed1416tests/10existing skips,76Chrome and examples001–039 with unchanged
+canonical hashes. Task24 candidate metadata/docs on prerequisite mergee60262d
+remain pending final review, current root release gates and integration.
+Release version confirmed by owner: `0.6.0rc1`; no main/tag/publication authorized.
 
 **Goal:** Complete the autonomous founding-settlement vertical slice on
 `milestone/v0.6`, with reproducible success, stall, and failure runs,
@@ -23,7 +28,7 @@ HTML/CSS/JavaScript without a Node toolchain.
 `AGENTS.md`. This document coordinates delivery. It does not replace the
 decision-complete implementation contracts or authorize a new correction task.
 
-## Verified starting point
+## Historical verified starting point — superseded by current status
 
 - Integration branch: `milestone/v0.6`, commit `32bc83e`.
 - Last implementation merge: Task 20b, `5489b73`.
@@ -334,7 +339,28 @@ integration yet. Root stopped with headroom before owner10% floor; see current
 continuation brief and v0_6_usage_pause_2026_10_15.md. No automatic resume/reset.
 
 
-October17 usagecheckpoint: Task23 delivery87af71a/merge58b6ba7 complete; Task24
+Historical October17 usagecheckpoint: Task23 delivery87af71a/merge58b6ba7 complete; Task24
 contract6f033c2 pushed, metadata/docs uncommitted. Partialwholeaudit2P1blocks
 readiness; boundedcorrection and completedauditcoverage requiredbeforecloseout.
 See currentcontinuation/October17audit+pause; allagentsstoppedbefore10%floor.
+
+## Release candidate checkpoint — October 17, 2026
+
+Task23 delivery87af71a/merge58b6ba7 passed independent review after five bounded
+corrections. Task and merged root gates each passed1376tests/10existing skips,
+76Chrome cases and examples001–039. Exact complete fresh/resume1/3/4 schema12
+payload equality and source/installed CLI/browser/loopback inspection passed.
+Task24 metadata/docs preparation is in progress at0.6.0rc1 on prerequisite
+e60262d. Task24a deliverycfa50b6/mergec1d93cd resolved all four audit findings;
+independent scoped review passed and remaining targeted code coverage completed
+without additional findings. Task and merged1416tests/10existing skips,76Chrome,
+examples001–039 and canonical full matrices passed with unchanged payload hashes.
+Final metadata/docs review, current root release gates and integration remain
+pending. Phase5 boxes remain open until root verifies each claim. See the
+[Task24a report](v0_6/24a_v06_audit_corrections-report.md),
+[committed audit](../orchestrator_handoff/v0_6_release_audit_2026_10_17.md) and
+[Task24 report](v0_6/24_v06_release_closeout-report.md).
+No main/tag or publication claim.
+
+Earlier starting-state and usage checkpoints above are historical evidence;
+they do not override this checkpoint or authorize automatically resuming work.

@@ -1,5 +1,8 @@
 # World Inspector
 
+Release candidate `0.6.0rc1`: see [release notes](releases/v0_6_0rc1.md)
+and [current closeout evidence](subagent_execution_plan/v0_6/24_v06_release_closeout-report.md).
+
 Open `/inspector` on the read-only FastAPI inspection application. The packaged
 page uses same-origin GET requests and contains no simulation controls. Refresh
 fetches new reported snapshots and never advances the engine. Each endpoint is
@@ -9,7 +12,7 @@ The header labels the summary's tick as **Reported tick**.
 The module-level `living_world.api.server:app` owns a new empty world. To inspect
 a composed simulation, serve `create_app(engine)` with that same supplied engine.
 A separately loaded database is a snapshot and will not follow another process.
-Task 23 owns the convenient saved-world inspection CLI composition.
+Task 23 delivers the saved-world inspection CLI composition described below.
 
 ## Views
 

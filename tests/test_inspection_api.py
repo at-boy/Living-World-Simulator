@@ -395,7 +395,7 @@ def test_release_version_surfaces_are_consistent() -> None:
         project_version = tomllib.load(metadata_file)["project"]["version"]
     _, client = make_client()
 
-    assert version_file == "0.5.0"
+    assert version_file == "0.6.0rc1"
     assert project_version == version_file
     assert __version__ == version_file
     assert client.get("/health").json() == {

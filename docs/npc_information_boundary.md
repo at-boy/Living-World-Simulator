@@ -10,6 +10,9 @@ remain explicit projections through the existing perception/retrieval/context
 flow. No goal evidence, raw state or other NPC's hidden records are added to
 context or memory. LLM context remains filtered and LLM actions remain proposals.
 
+Release candidate `0.6.0rc1`: see [release notes](releases/v0_6_0rc1.md)
+and [current closeout evidence](subagent_execution_plan/v0_6/24_v06_release_closeout-report.md).
+
 Work IDs, reservation IDs, targets, exact requirements, assignments, progress,
 priority, deadlines, ticks, and events remain engine-only. Explicitly selected
 `NPCWorkInterpretation` contains only a public label and fixed qualitative

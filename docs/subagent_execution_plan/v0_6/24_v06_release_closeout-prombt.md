@@ -25,3 +25,9 @@ exact scope. Record originalTask23delivery87af71a/merge58b6ba7, currentTask24sta
 futurework/limitations and owneronlyintegration/tag. Keep .codex/config.toml outside
 commits. Stop/checkpoint if root interrupts for userusagefloor10%. Return stable
 uncommitted diff for independentreview with focused commands/counts and limits.
+
+Resumecheckpoint: corrected24adeliverycfa50b6/mergec1d93cd is integrated via
+closeoutprerequisitemergee60262d. Exactownedmetadata stash restored,5docconflicts
+require editorialreconciliation. Retainall4fix/audit/currentvalidationevidence,
+update24areports/indexlinks,0.6.0rc1statuspendingfinalrootgates. No newruntime
+behavior or otherscope; rootmarks conflictsresolved inGit afterstabledelivery.
