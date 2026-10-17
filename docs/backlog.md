@@ -1,10 +1,16 @@
 
 # Living World Simulator Backlog
 
-Task 24a implements the four concrete release-audit corrections with focused
-regressions. Independent review and authoritative root/release gates remain
-pending. These repairs add no deferred domain capability; the paused Task 24
-checkpoint must resume only after correction integration.
+Twenty v0.6 tasks through Task24a are reviewed and integrated. Task24a delivery
+`cfa50b6`, merged `c1d93cd`, resolved all four release-audit findings; remaining
+targeted whole-milestone audit coverage completed without additional findings.
+Task and merged gates each passed1416tests/10existing skips,76Chrome cases and
+examples001–039, separate examples/whitespace and full canonical matrices with
+unchanged hashes. Task24 prepares0.6.0rc1 on corrected prerequisite mergee60262d;
+final candidate review, current root release gates and integration remain pending.
+See the [Task24a report](subagent_execution_plan/v0_6/24a_v06_audit_corrections-report.md)
+and [current closeout report](subagent_execution_plan/v0_6/24_v06_release_closeout-report.md).
+These corrections add no deferred domain capability.
 
 Task 20 work orders and reservations, Task 20a's actor-bound proposal gateway,
 and Task 20b deterministic execution are implemented.
@@ -15,9 +21,11 @@ replay is independently reviewed, validated and integrated; its strict
 runtime/cursor contract and ADR-0025 remain authoritative. Task15
 operator inspector is independently reviewed and integrated. Task15c spatial
 view is independently reviewed, validated and integrated. Task23 canonical
-composition is implemented on its isolated task branch with focused canonical
-acceptance at success10, stall5 and failure13. Independent implementation review
-and authoritative root validation remain pending. Legacy replay enablement on
+composition is independently reviewed, fully validated and integrated as58b6ba7,
+with deterministic success10, stall5 and failure13. Task24 prepares0.6.0rc1; final
+review/root gates and integration status are in its
+[report](subagent_execution_plan/v0_6/24_v06_release_closeout-report.md).
+Live-model strategy validation remains future work. Legacy replay enablement on
 populated saves without label bindings remains unsupported. Reusable
 stage templates, decline/demotion, general scenario-YAML binding beyond the fixed
 Task23 preset, and automatic NPC perception of stages remain deliberately deferred.
@@ -149,7 +157,8 @@ separately scoped to Task 19a; work selection remains Task 20 and later.
   relationship graphs remain future explicitly authorized operator work; they
   must never become a simulation, NPC, or LLM API.
 - **Spatial inspector follow-up:** Task15c implements the canonical placement
-  map and entity inspection; independent review and root acceptance are pending.
+  map and entity inspection; independent review and root acceptance passed in
+  reviewed merge0a81a11.
   Editing, inferred roads, and statistical overlays remain separately authorized
   work. Spatial views must consume engine-owned placements without inferring
   coordinates from arbitrary attributes.
@@ -195,6 +204,15 @@ institutional quorums, legitimacy, factions, and secession remain future work.
 The temporary unanimous explicit-decline caller fallback must be replaced by
 engine-owned, organization-specific governance rules and auditable records.
 
+## Historical October17 audit checkpoint — superseded
+
+The paragraphs below retain the pre-correction checkpoint. Their pending findings,
+audit-coverage and correction-integration instructions are superseded by reviewed
+Task24a mergec1d93cd and the current status at the top of this document. All four
+code findings are now resolved; final Task24 candidate release gates remain pending.
+
+Task24 release closeout in progress from reviewed Task23 merge58b6ba7; no main
+integration or tag authorized. Final release-readiness report/gates pending.
 Release audit checkpoint October17: Task23 is integrated58b6ba7. Task24 final
 readiness is blocked by two P1 auditfindings, recorded in committed orchestrator
 handoff auditreport. Correctexisting NPCgoalboundary/reservationID defects in

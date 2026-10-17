@@ -56,30 +56,28 @@ The historical execution order and all associated artifacts are indexed below.
 
 ## v0.6 authorized milestone
 
-- **15 Read-only World Inspector UI:** [plan](v0_6/15_world_inspector_ui.md), [prompt](v0_6/15_world_inspector_ui-prombt.md)
-- **15a Spatial contract ADR:** [plan](v0_6/15a_spatial_world_inspection.md), [prompt](v0_6/15a_spatial_world_inspection-prombt.md)
-- **15b Spatial domain/persistence/inspection:** [plan](v0_6/15b_spatial_domain_persistence_inspection.md), [prompt](v0_6/15b_spatial_domain_persistence_inspection-prombt.md)
-- **15c Spatial Inspector view:** [plan](v0_6/15c_spatial_inspector_view.md), [prompt](v0_6/15c_spatial_inspector_view-prombt.md)
-- **15d NPC-safe spatial perception:** [plan](v0_6/15d_npc_safe_spatial_perception.md), [prompt](v0_6/15d_npc_safe_spatial_perception-prombt.md)
+- **15 — FastAPI-hosted read-only World Inspector** (reviewed and integrated): [plan](v0_6/15_world_inspector_ui.md), [prompt](v0_6/15_world_inspector_ui-prombt.md), [report](v0_6/15_world_inspector_ui-report.md)
+- **15a — Canonical two-dimensional spatial contract ADR** (reviewed and integrated): [plan](v0_6/15a_spatial_world_inspection.md), [prompt](v0_6/15a_spatial_world_inspection-prombt.md), [report](v0_6/15a_spatial_world_inspection-report.md)
+- **15b — Spatial domain, persistence, and inspection** (reviewed and integrated): [plan](v0_6/15b_spatial_domain_persistence_inspection.md), [prompt](v0_6/15b_spatial_domain_persistence_inspection-prombt.md), [report](v0_6/15b_spatial_domain_persistence_inspection-report.md)
+- **15c — Spatial Inspector view** (reviewed and integrated): [plan](v0_6/15c_spatial_inspector_view.md), [prompt](v0_6/15c_spatial_inspector_view-prombt.md), [report](v0_6/15c_spatial_inspector_view-report.md)
+- **15d — NPC-safe spatial perception translation** (reviewed and integrated): [plan](v0_6/15d_npc_safe_spatial_perception.md), [prompt](v0_6/15d_npc_safe_spatial_perception-prombt.md), [report](v0_6/15d_npc_safe_spatial_perception-report.md)
+- **16 — Scenario and deterministic run contract** (reviewed and integrated): [plan](v0_6/16_scenario_run_contract.md), [prompt](v0_6/16_scenario_run_contract-prombt.md), [report](v0_6/16_scenario_run_contract-report.md)
+- **16a — Runner, checkpointing, and resume** (reviewed and integrated): [plan](v0_6/16a_runner_checkpoint_resume.md), [prompt](v0_6/16a_runner_checkpoint_resume-prombt.md), [report](v0_6/16a_runner_checkpoint_resume-report.md)
+- **17 — External-world references** (reviewed and integrated): [plan](v0_6/17_external_world_references.md), [prompt](v0_6/17_external_world_references-prombt.md), [report](v0_6/17_external_world_references-report.md)
+- **17a — External dispatch lifecycle** (reviewed and integrated): [plan](v0_6/17a_external_dispatch_lifecycle.md), [prompt](v0_6/17a_external_dispatch_lifecycle-prombt.md), [report](v0_6/17a_external_dispatch_lifecycle-report.md)
+- **18 — Engine-owned goals and objective graphs** (reviewed and integrated): [plan](v0_6/18_goals_objective_graphs.md), [prompt](v0_6/18_goals_objective_graphs-prombt.md), [report](v0_6/18_goals_objective_graphs-report.md)
+- **18a — Objective evaluation and events** (reviewed and integrated): [plan](v0_6/18a_objective_evaluation_events.md), [prompt](v0_6/18a_objective_evaluation_events-prombt.md), [report](v0_6/18a_objective_evaluation_events-report.md)
+- **19 — Settlement needs and resource pressure** (reviewed and integrated): [plan](v0_6/19_settlement_needs_pressure.md), [prompt](v0_6/19_settlement_needs_pressure-prombt.md), [report](v0_6/19_settlement_needs_pressure-report.md)
+- **19a — Consumption, maintenance, and consequences** (reviewed and integrated): [plan](v0_6/19a_consumption_maintenance_consequences.md), [prompt](v0_6/19a_consumption_maintenance_consequences-prombt.md), [report](v0_6/19a_consumption_maintenance_consequences-report.md)
+- **20 — Work orders and reservations** (reviewed and integrated): [plan](v0_6/20_work_orders_reservations.md), [prompt](v0_6/20_work_orders_reservations-prombt.md), [report](v0_6/20_work_orders_reservations-report.md)
+- **20a — Proposal-to-work action gateway** (reviewed and integrated): [plan](v0_6/20a_proposal_work_gateway.md), [prompt](v0_6/20a_proposal_work_gateway-prombt.md), [report](v0_6/20a_proposal_work_gateway-report.md)
+- **20b — Deterministic work execution implementation plan** (reviewed and integrated): [plan](v0_6/20b_work_execution.md), [prompt](v0_6/20b_work_execution-prombt.md), [report](v0_6/20b_work_execution-report.md)
+- **21 — Settlement development stages** (reviewed and integrated): [plan](v0_6/21_settlement_development_stages.md), [prompt](v0_6/21_settlement_development_stages-prombt.md), [report](v0_6/21_settlement_development_stages-report.md)
+- **22 — Deterministic recorded proposal tapes** (reviewed and integrated): [plan](v0_6/22_recorded_proposal_tapes.md), [prompt](v0_6/22_recorded_proposal_tapes-prombt.md), [report](v0_6/22_recorded_proposal_tapes-report.md)
+- **23 — Canonical founders acceptance and runtime composition** (reviewed and integrated): [plan](v0_6/23_canonical_founders_acceptance.md), [prompt](v0_6/23_canonical_founders_acceptance-prombt.md), [report](v0_6/23_canonical_founders_acceptance-report.md)
+- **24 — v0.6.0rc1 release-readiness closeout** (closeout in progress; corrected base reviewed, final root gates pending): [plan](v0_6/24_v06_release_closeout.md), [prompt](v0_6/24_v06_release_closeout-prombt.md), [report](v0_6/24_v06_release_closeout-report.md)
 
-The milestone is authorized on `milestone/v0.6`. Implementation still proceeds
-one documented, reviewed task branch at a time. Current additional plans:
-
-- **16 Scenario and deterministic run contract:** [plan](v0_6/16_scenario_run_contract.md), [prompt](v0_6/16_scenario_run_contract-prombt.md)
-- **16a Runner, checkpointing, and resume:** [plan](v0_6/16a_runner_checkpoint_resume.md), [prompt](v0_6/16a_runner_checkpoint_resume-prombt.md)
-- **17 External-world references:** [plan](v0_6/17_external_world_references.md), [prompt](v0_6/17_external_world_references-prombt.md)
-- **17a External dispatch lifecycle:** [plan](v0_6/17a_external_dispatch_lifecycle.md), [prompt](v0_6/17a_external_dispatch_lifecycle-prombt.md)
-- **18 Goals and objective graphs:** [plan](v0_6/18_goals_objective_graphs.md), [prompt](v0_6/18_goals_objective_graphs-prombt.md)
-- **18a Objective evaluation/events:** [plan](v0_6/18a_objective_evaluation_events.md), [prompt](v0_6/18a_objective_evaluation_events-prombt.md)
-- **19 Settlement needs/pressure (complete):** [plan](v0_6/19_settlement_needs_pressure.md), [prompt](v0_6/19_settlement_needs_pressure-prombt.md), [report](v0_6/19_settlement_needs_pressure-report.md)
-- **19a Consumption/maintenance:** [plan](v0_6/19a_consumption_maintenance_consequences.md), [prompt](v0_6/19a_consumption_maintenance_consequences-prombt.md)
-- **20 Work orders/reservations:** [plan](v0_6/20_work_orders_reservations.md), [prompt](v0_6/20_work_orders_reservations-prombt.md)
-- **20a Proposal-to-work gateway:** [plan](v0_6/20a_proposal_work_gateway.md), [prompt](v0_6/20a_proposal_work_gateway-prombt.md)
-- **20b Work execution:** [plan](v0_6/20b_work_execution.md), [prompt](v0_6/20b_work_execution-prombt.md)
-- **21 Settlement development stages:** [plan](v0_6/21_settlement_development_stages.md), [prompt](v0_6/21_settlement_development_stages-prombt.md)
-- **22 Recorded proposal tapes:** [plan](v0_6/22_recorded_proposal_tapes.md), [prompt](v0_6/22_recorded_proposal_tapes-prombt.md)
-- **23 Canonical founders acceptance:** [plan](v0_6/23_canonical_founders_acceptance.md), [prompt](v0_6/23_canonical_founders_acceptance-prombt.md)
-- **24 v0.6 release closeout:** [plan](v0_6/24_v06_release_closeout.md), [prompt](v0_6/24_v06_release_closeout-prombt.md)
+- **24a v0.6 audit corrections** (reviewed and integrated c1d93cd): [plan](v0_6/24a_v06_audit_corrections.md), [prompt](v0_6/24a_v06_audit_corrections-prombt.md), [report](v0_6/24a_v06_audit_corrections-report.md)
 
 ## Delivery rule
 

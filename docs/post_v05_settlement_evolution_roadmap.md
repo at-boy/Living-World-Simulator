@@ -94,8 +94,12 @@ probabilities, internal ID, or future result.
 
 ### v0.6 — Autonomous founding settlement vertical slice
 
-The first milestone should make one settlement scenario runnable and
-inspectable end to end.
+Task23 delivery87af71a/merge58b6ba7 delivers the fixed founding scenario with
+reviewed deterministic success10, stall5 and failure13, exact fresh/resume state
+and GET-only inspection. Task24 prepares0.6.0rc1; final current review/gates and
+owner handoff are tracked in the [closeout report](subagent_execution_plan/v0_6/24_v06_release_closeout-report.md).
+Recorded tapes prove reproducibility, not live-model strategy; this is not generic
+scenario authoring or later-milestone population/governance delivery.
 
 1. **Scenario and run contract**
    Define reproducible scenario seeds, simulation configuration, bounded and

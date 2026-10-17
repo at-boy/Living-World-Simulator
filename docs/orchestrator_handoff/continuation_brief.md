@@ -13,7 +13,7 @@ withoutmanualreset, so rootcontinued transparently. Currentexecution Task24next.
 Completed16,16a,15a,15b,17,17a,18,18a,15d,19,19a,20,20a,20b,21,22,15,15c,23,24a.
 Recent delivery/merges:21c821efe/1ab288b;22 02b35fe/7806f29;
 15dea51cb/91e33bf;15c9d9dbf0/0a81a11;23 87af71a/58b6ba7.
-24adeliverycfa50b6 is reviewed and integrated; currentmerge ref in Gitlog.
+24adeliverycfa50b6 is reviewed and integrated as c1d93cd.
 
 Task23 task/merged1376/10,76Chrome/examples001–039 and source/installed CLI matrix,
 read-onlybrowser/wheel/console/loopbackinspect passed. Its finalfixedscenario
@@ -31,25 +31,33 @@ substantivefindings. Committedauditreport and24areport arecanonicalevidence.
 ExistingEventManagerexceptionalgapsaccepted; no gaplessretryeventclaim/newAPI.
 Primarypackageversion remains0.5.0 until reviewedTask24metadata0.6.0rc1 lands.
 
-## Task24 preserved work and exact restoration
+## Task24 current candidate checkpoint
 
-Branch task/24-v06-closeout/worktree .worktrees/task24 atcontract6f033c2 before
-prerequisiteupdate. Original25-file uncommittedmetadata/docs checkpoint is safely
-held in ownedstash29d9f3cf7811a9c8fd53f16f3dda4add5e84e0e1. Exactfilebackup+
-SHAmanifest under .superpowers/sdd/v0_6_completion_plan/task24-preserved-before-corrections.
-Task24checkout currentlyclean; metadataNOTdiscarded/committed/reviewed. Worker
-/root/task24_closeout paused. Focused1version/healthtest,65exports/whitespacepassed;
-no finalrootreleasegates/linkchecks yet. Metadataincludes3versionliterals+test,
-3generatedegg-info, release notes/indexes/hand-offs/report within24allowedfiles.
+Reviewed Task24a delivery `cfa50b6` merged as `c1d93cd`; Task24 prerequisite
+merge `e60262d` contains that corrected base. The exact owned stash
+`29d9f3cf7811a9c8fd53f16f3dda4add5e84e0e1` was applied without dropping it.
+The independent file backup and SHA manifest remain under primary
+`.superpowers/sdd/v0_6_completion_plan/task24-preserved-before-corrections`.
+The five documentation conflicts are editorially reconciled in the working tree;
+root alone stages their resolution. Candidate metadata/docs remain uncommitted
+and unapproved pending final independent review and current root release gates.
 
-Next root: merge currentcorrectedmilestone into24branch, preservebothcontract/docs
-if conflicts, commitprerequisitemerge, apply exactownedstash WITHOUTdrop. Resolve
-onlymetadata/docconflicts by restoringcurrentaudit4resolved/actualrefs +0.6.0rc1
-candidateversion. Resume24worker forfinalsync/linkchecks, independentboundedfinal
-metadata/docdiffreview; root make/separateexamples/whitespace/source+installed+
-Python3.11 minimumCLI matrices,8assets/exports/health/actualoptionalserver+loopback
-inspect/Chrome, thencommit/push/merge and repeatedmergedgates/live refs. Owner
-integration/tag remain separate. Do not treat candidate aspublished/readyearly.
+Candidate VERSION, project metadata, runtime version and existing health test
+expectation are0.6.0rc1. Generated packaging metadata, release notes, artifact
+index and current handoff retain historical checkpoints and all four corrections.
+See the [Task24 report](../subagent_execution_plan/v0_6/24_v06_release_closeout-report.md)
+for current focused checks, architecture rulings and pending root gates. See the
+[committed audit](v0_6_release_audit_2026_10_17.md) and
+[Task24a report](../subagent_execution_plan/v0_6/24a_v06_audit_corrections-report.md)
+for completed code review and correction evidence. All four code findings are
+resolved; remaining targeted audit coverage completed without additional findings.
+
+Next root: independently review final metadata/docs, run make/separate examples/
+whitespace, source and installed canonical matrices, Python3.11 minimum gates,
+wheel/8assets/exports/health/entrypoint/optional-server/real-loopback inspect and
+actual all-outcome browser checks; commit/push/merge only reviewed work, repeat
+required merged gates and verify live refs/main. Owner integration/tag remain
+separate. Candidate0.6.0rc1 is not yet approved or published.
 
 ## Runtime/work practices
 

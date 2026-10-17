@@ -9,8 +9,25 @@ and corrupt ancestor cycles hanging reload. Added bounded corrections and public
 API regressions, including live/resume equivalence, assignment rollback and
 historical spatial integrity. Existing schemas, public signatures, mutation
 ownership, qualitative projections and canonical rules remain unchanged.
-Independent review and authoritative root validation remain pending; see the
-Task 24a report for commands, counts and precise failure-injection limits.
+Task24a deliverycfa50b6/mergec1d93cd passed independent spec/quality review;
+task and merged root gates each passed1416tests/10existing skips,76Chrome and
+examples001–039, separate examples/whitespace and full canonical matrices with
+unchanged payload hashes. Remaining targeted code-audit coverage completed.
+See the [Task24a report](subagent_execution_plan/v0_6/24a_v06_audit_corrections-report.md)
+for commands, counts and precise failure-injection limits. Final Task24 release
+metadata/docs review and root release gates remain pending.
+
+## Task 24 release candidate preparation — October 17, 2026
+
+Prepared version `0.6.0rc1`, generated packaging metadata/assets manifest and
+consistent operator/release/handoff documentation. Task23 delivery87af71a merged
+58b6ba7 after independent review and corrections; task and merged gates each
+passed1376 tests/10existing skips,76Chrome cases and examples001–039. Its report
+is canonical historical evidence; earlier journal entries below retain their
+original checkpoint status. Task24 independent review, current root gates and
+integration remain pending in the [closeout report](subagent_execution_plan/v0_6/24_v06_release_closeout-report.md).
+No main integration, tag or publication is authorized. Future live-model strategy,
+generic authoring and deferred lifecycle capabilities remain outside this candidate.
 
 ## Task 23 implementation — October 15, 2026
 
@@ -976,6 +993,12 @@ Merged validation passed1376/10,76Chrome,examples001–039, separateexamples,
 whitespace and exact public CLI fresh/resume matrix. Task24 next; main/userconfig preserved.
 
 
+## 2026-10-17 — Task24 release-readiness contract
+
+Task23 delivery87af71a/merge58b6ba7 fully reviewed and task/merged gates1376/10,
+76Chrome,examples001–039 plus CLI/replay/install/inspect passed. Task24 starts
+from that head, version0.6.0rc1, documentation/metadata only. Independent whole
+milestone implementation audit and final root gates remain pending.
 ## 2026-10-17 — Release audit and usage pause
 
 Task23 complete at58b6ba7 after reviewed task/merged1376tests/10existing skips,

@@ -8,11 +8,14 @@ Start the new session by providing
 It directs the session to read
 [`continuation_brief.md`](continuation_brief.md) before it acts.
 
-The current checkpoint is the reviewed merge of Task 19 on
-`milestone/v0.6`. The next authorized task is Task 19a. Its existing plan and
-prompt must first be reconciled with the merged Task 19 implementation and
-amended into a decision-complete contract. The startup prompt and brief direct
-the new session to verify Git before planning or creating the next task branch.
+The current checkpoint is reviewed Task24a delivery `cfa50b6`, integrated as
+`c1d93cd`, resolving all four whole-milestone audit findings. Remaining targeted
+code-audit coverage completed without further findings. Task24 prepares
+`0.6.0rc1` on prerequisite merge `e60262d`; candidate metadata/docs are uncommitted
+pending independent final review and current root release/installed/minimum-Python
+and merged gates. See the continuation brief and
+[Task24 report](../subagent_execution_plan/v0_6/24_v06_release_closeout-report.md).
+No main integration, tag or publication is claimed.
 
 The cross-milestone task index is
 [`docs/subagent_execution_plan/README.md`](../subagent_execution_plan/README.md).

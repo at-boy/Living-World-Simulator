@@ -1,7 +1,14 @@
 fastapi
+PyYAML
+
+[browser-tests]
+playwright
 
 [dev]
 pytest
 ruff
 black
+uvicorn
+
+[server]
 uvicorn

@@ -1,5 +1,8 @@
 # HTTP inspection API
 
+Release candidate `0.6.0rc1`: see [release notes](releases/v0_6_0rc1.md)
+and [current closeout evidence](subagent_execution_plan/v0_6/24_v06_release_closeout-report.md).
+
 `GET /world/work-orders` returns detached ID-ordered work definition/state pairs
 with ID-ordered reservation history. `/world` includes work and reservation
 counts. This privileged data is not NPC context.
