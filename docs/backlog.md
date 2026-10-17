@@ -1,6 +1,11 @@
 
 # Living World Simulator Backlog
 
+Task 24a implements the four concrete release-audit corrections with focused
+regressions. Independent review and authoritative root/release gates remain
+pending. These repairs add no deferred domain capability; the paused Task 24
+checkpoint must resume only after correction integration.
+
 Task 20 work orders and reservations, Task 20a's actor-bound proposal gateway,
 and Task 20b deterministic execution are implemented.
 

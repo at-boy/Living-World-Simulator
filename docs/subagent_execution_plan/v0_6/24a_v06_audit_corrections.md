@@ -84,3 +84,60 @@ and restore Task24 work dependency-order without overwriting its dirtycheckpoint
 Whole-milestone review coverage remains incomplete beyond these fixes. Complete
 remaining targeted audit and final Task24diffreview/release gates before readiness.
 Stop/checkpoint before ownerfivehour10%floor. No main/tag/publication/v0.7.
+
+
+## Root clarification — assignment failure scope
+
+Failed public assignment restores the existing WorkManager snapshot surface:
+world work/reservation/event mappings and work/reservation counters. Its retry
+reservation ID remains authoritative and deterministic. The existing EventManager
+private allocator can retain gaps after an event-record failure; this correction
+does not rewind that separate allocator, add EventManager snapshot APIs, or claim
+gapless event IDs/full-payload equivalence after injected exceptional calls.
+Successful uninterrupted vs saved/reloaded equivalent operations still require
+full payload/ID equality. Failure tests prove no event/history/state from the
+failed call remains and subsequent valid events are unique, not gapless.
+
+## C — historical placements must reload after capability destruction
+
+Additional public runtime repro: ordinary maintenance destroys an ordinarily
+placed capability, preserves its placement as Task19a requires, completes/saves,
+but reload fails because spatial loaded-state validation requires every subject
+live. Retain Task19a lifecycle history; never cascade-delete spatial records or
+change entity/maintenance ownership. Schema/model/data representation unchanged.
+
+Allow destroyed existing entities ONLY during SpatialManager.validate_loaded_state
+record validation, for both placement subject and containing parent. Still require
+all referenced entities exist and validate typed geometry, parent bounds/containment,
+acyclicity, area/structure restrictions, mutual sibling overlap and children.
+Mutation place/replace stays live-only for subject AND containing parent; no new
+placement into a destroyed container. Existing explicit leaf-first unplace/remove
+behavior is unchanged. This is a narrow internal validation-mode distinction,
+not a new public placement API or permission to create destroyed placements.
+
+TDD public maintenance destruction ->save/reload exactworld/history/placement
+preservation; live child in retained destroyed container also reloads; place/replace
+on destroyed subjects or into destroyed parents still reject/read-only; missing
+entities/invalid geometry/containment/overlap/cycles still reject. Legacy schema
+field gates/compatibility unchanged. Clarify ADR0016 historical-load versus live
+mutation semantics consistent with Task19a, don't rewrite historical task reports.
+
+## D — reject an existing ancestor cycle without hanging
+
+Corrupt snapshot Leaf->Child->Root->Child causes _reject_cycle to loop forever
+when validating Leaf first. Extend its pure ancestor traversal with a visited set:
+reject if ancestor is candidateentity OR alreadyvisited; otherwise add ancestor
+before following its containing parent. Keep safe existing cycle error and all
+normal placement ordering/semantics. No traversal mutation/cascade/schema changes.
+
+Regression: save manager-created 3level hierarchy, corrupt parent linkage/roworder,
+reload in a bounded child process (always timeout/kill/reap on RED) and assert
+prompt RepositoryLoadError after fix, not timeout. Test valid deep ancestry and
+self/candidate cycles as well. Missing references remain their existing errors.
+
+Expand exact allowed files BEFORE edits solely to src/living_world/spatial/manager.py,
+tests/test_spatial_domain.py,tests/test_consumption_maintenance.py,
+tests/test_sqlite_repository.py,docs/adr/ADR-0016-canonical-two-dimensional-spatial-contract.md.
+These join existing A/B wave; no separate workers or overlapping writers. Root
+independent amendment review precedes C/D source edits. No other lifecycle/domain
+changes; all4findings require independent code review and current rootgates.

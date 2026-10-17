@@ -170,6 +170,10 @@ class NPCInformationBoundary:
             self._state.npc_relationships,
             self._state.knowledge,
             self._state.placements,
+            self._state.goal_definitions,
+            self._state.goal_states,
+            self._state.objective_definitions,
+            self._state.objective_states,
             self._state.settlement_stage_programs,
             self._state.settlement_stage_states,
             self._state.need_definitions,
@@ -263,6 +267,17 @@ class NPCInformationBoundary:
             for record in collections
             for number in self._numeric_values(record)
         )
+        goal_numbers = tuple(
+            number
+            for collections in (
+                self._state.goal_definitions.values(),
+                self._state.goal_states.values(),
+                self._state.objective_definitions.values(),
+                self._state.objective_states.values(),
+            )
+            for record in collections
+            for number in self._numeric_values(record)
+        )
         return (
             entity_numbers
             + tuple(
@@ -274,6 +289,7 @@ class NPCInformationBoundary:
             + need_numbers
             + consequence_numbers
             + work_numbers
+            + goal_numbers
             + tuple(
                 number
                 for program in self._state.settlement_stage_programs.values()

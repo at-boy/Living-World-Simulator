@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Fixed
+
+- Close the non-stage goal/objective NPC information boundary, preserve reservation
+  history after automatic execution, reload maintenance-retained historical
+  placements, and reject corrupt ancestor cycles without hanging (Task 24a).
+
 ### Added
 
 - Add fixed packaged founders composition, bounded outcome aliases, trusted terminal callbacks and read-only saved-world inspection. Task 23 acceptance and independent review are in progress.

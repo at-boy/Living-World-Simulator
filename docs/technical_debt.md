@@ -20,6 +20,13 @@ part of the same pull request.
 
 # High Priority
 
+Task 24a addresses four concrete v0.6 release-audit findings in its isolated
+correction wave; independent review and root validation remain pending. They
+are tracked by the authorized Task 24a plan/report, rather than deferred debt.
+Existing EventManager private allocation can retain gaps after an exceptional
+recording call; Task 24a preserves that behavior and makes no gapless retry-event
+claim. Reservation state/history/counter rollback remains required.
+
 There are no active high-priority technical-debt entries at the v0.5 closeout.
 The former entity lifecycle, relationship lifecycle, immutable history,
 repository, and baseline-audit entries were removed only after their recorded

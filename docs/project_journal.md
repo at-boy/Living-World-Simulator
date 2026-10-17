@@ -1,5 +1,17 @@
 # Living World Simulator – Project Journal
 
+## Task 24a audit corrections — October 17, 2026
+
+Reproduced four audit findings before changing their runtime paths: non-stage
+goal secrets crossing the final NPC boundary, stale live reservation allocation
+after shadow execution, maintenance-retained destroyed placements failing reload,
+and corrupt ancestor cycles hanging reload. Added bounded corrections and public
+API regressions, including live/resume equivalence, assignment rollback and
+historical spatial integrity. Existing schemas, public signatures, mutation
+ownership, qualitative projections and canonical rules remain unchanged.
+Independent review and authoritative root validation remain pending; see the
+Task 24a report for commands, counts and precise failure-injection limits.
+
 ## Task 23 implementation — October 15, 2026
 
 Implemented canonical setup staging, delayed capability composition, replay offers,

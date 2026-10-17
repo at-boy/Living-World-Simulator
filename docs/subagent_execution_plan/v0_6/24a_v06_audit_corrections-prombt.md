@@ -14,3 +14,12 @@ allowed docs/changelog/journal/backlog. No VCS/agents/fullmake/all-examples/whee
 Stable uncommitteddelivery for independentreview; rootownsfullgates/integration.
 Report actualcommands/counts/repros and remainingcoverage truthfully. Stop early
 if root requests userusagecheckpoint; never silently broaden scope.
+
+
+Binding amendments: assignment failure restores existing WorkManager surface;
+EventManager privateallocator gaps remain existingbehavior, no new APIs/gapless
+retryeventclaim. Successful live/resume full equivalence stillrequired.
+Read final C/D lifecycle/cycle sections: historical destroyed placements reload
+with complete structural validation, while place/replace subject/parent stayslive;
+visitedancestor traversal rejects existingloops. Five listedspatial/test/ADRfiles
+now allowed only for these corrections after rootamendmentreview. Samewave/worker.
