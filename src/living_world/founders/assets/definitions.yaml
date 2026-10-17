@@ -1,0 +1,14 @@
+definitions:
+- key: area
+- key: settlement
+  systems:
+  - production
+- key: founder
+- key: shelter
+  systems:
+  - housing
+  initial_attributes:
+    housing_capacity: 2
+- key: storage
+  initial_attributes:
+    storage_capacity: 20

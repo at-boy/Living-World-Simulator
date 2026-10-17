@@ -140,10 +140,13 @@ class RepositorySaveError(RepositoryError):
 class SQLiteRepository:
     """Store an atomic, versioned WorldState snapshot in a SQLite database."""
 
-    def __init__(self, database_path: str) -> None:
+    def __init__(self, database_path: str, *, read_only: bool = False) -> None:
         if not database_path:
             raise RepositoryError("SQLite database path cannot be empty.")
 
+        if type(read_only) is not bool:
+            raise TypeError("read_only must be a boolean.")
+        self._read_only = read_only
         self._database_path = Path(database_path)
 
     def load_world(self) -> WorldState:
@@ -151,7 +154,8 @@ class SQLiteRepository:
 
         try:
             with self._connect() as connection:
-                self._create_schema(connection)
+                if not self._read_only:
+                    self._create_schema(connection)
                 row = connection.execute(
                     "SELECT schema_version, payload FROM world_snapshots WHERE id = 1"
                 ).fetchone()
@@ -161,6 +165,8 @@ class SQLiteRepository:
             ) from exc
 
         if row is None:
+            if self._read_only:
+                raise RepositoryLoadError("Saved world snapshot is required.")
             return WorldState()
 
         schema_version, payload = row
@@ -178,6 +184,8 @@ class SQLiteRepository:
     def save_world(self, state: WorldState) -> None:
         """Serialize and atomically replace the persisted world snapshot."""
 
+        if self._read_only:
+            raise RepositorySaveError("Read-only repository cannot save.")
         try:
             SettlementStageManager(state, EventManager(state)).validate_loaded_state()
             ReplayManager(state, EventManager(state)).validate_loaded_state()
@@ -208,6 +216,10 @@ class SQLiteRepository:
             ) from exc
 
     def _connect(self) -> sqlite3.Connection:
+        if self._read_only:
+            return sqlite3.connect(
+                self._database_path.resolve().as_uri() + "?mode=ro", uri=True
+            )
         return sqlite3.connect(self._database_path)
 
     @staticmethod

@@ -1,0 +1,72 @@
+schema_version: 1
+scenario_key: canonical_founders_v1
+scenario_fingerprint: a4f9ebff93dee63d29768758d39f1962818da020cc8b08b4a6c0c7e211b536a8
+entries:
+- sequence: 1
+  actor_label: ada
+  action: null
+  rationale: Let us work toward a lasting home.
+  speech: We can find a way forward.
+- sequence: 2
+  actor_label: bryn
+  action:
+    key: produce_food
+    target_label: Produce food
+    arguments: {}
+  rationale: Let us work toward a lasting home.
+  speech: null
+- sequence: 3
+  actor_label: ada
+  action:
+    key: gather_water
+    target_label: Gather water
+    arguments: {}
+  rationale: Let us work toward a lasting home.
+  speech: null
+- sequence: 4
+  actor_label: bryn
+  action:
+    key: build_shelter
+    target_label: Build a modest shelter
+    arguments: {}
+  rationale: Let us work toward a lasting home.
+  speech: null
+- sequence: 5
+  actor_label: ada
+  action:
+    key: build_storage
+    target_label: Build storage
+    arguments: {}
+  rationale: Let us work toward a lasting home.
+  speech: null
+- sequence: 6
+  actor_label: bryn
+  action:
+    key: establish_external_trade_connection
+    target_label: Contact the homeland
+    arguments: {}
+  rationale: Let us work toward a lasting home.
+  speech: null
+- sequence: 7
+  actor_label: ada
+  action:
+    key: dispatch_external_trade
+    target_label: Request homeland supplies
+    arguments: {}
+  rationale: Let us work toward a lasting home.
+  speech: null
+- sequence: 8
+  actor_label: bryn
+  action: null
+  rationale: Let us work toward a lasting home.
+  speech: We can find a way forward.
+- sequence: 9
+  actor_label: ada
+  action: null
+  rationale: Let us work toward a lasting home.
+  speech: We can find a way forward.
+- sequence: 10
+  actor_label: bryn
+  action: null
+  rationale: Let us work toward a lasting home.
+  speech: We can find a way forward.

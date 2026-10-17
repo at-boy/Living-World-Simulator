@@ -158,3 +158,12 @@ The packaged `/inspector` Spatial view consumes the existing detached
 remain engine-owned. The browser adds no endpoints or mutating operations and
 makes no atomic consistency claim across requests. See [World Inspector](world_inspector_ui.md)
 for projection, accessibility, unplaced states and numeric-range handling.
+
+## Saved-world serving
+
+The public `load_inspection_engine(scenario_path, database_path)` factory requires
+saved metadata, validates exact scenario identity and opens SQLite in read-only
+mode. Canonical setup must already exist. `create_app(engine)` then exposes the
+same GET-only API against that fixed snapshot. CLI serving binds only loopback;
+install the optional `server` extra. Ordinary same-engine live reads remain
+available by supplying the running engine directly to `create_app`.

@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from pathlib import Path
+from typing import cast
 
 import pytest
 
@@ -303,3 +305,134 @@ def test_unknown_terminal_condition_is_invalid_configuration(tmp_path: Path) -> 
         ScenarioRunner(SimulationEngine(RecordingRepository())).run(
             scenario, RunConfiguration()
         )
+
+
+def test_custom_terminal_checks_before_zero_budget_and_copies_mapping(
+    tmp_path: Path,
+) -> None:
+    repository = RecordingRepository()
+    engine = SimulationEngine(repository)
+    conditions = {"founding_failure": lambda engine: True}
+    runner = ScenarioRunner(engine, terminal_conditions=conditions)
+    conditions.clear()
+    result = runner.run(
+        _scenario(tmp_path, conditions="[founding_failure]"),
+        RunConfiguration(max_ticks=0),
+    )
+    assert result.end_tick == 0
+    assert result.terminal_condition == "founding_failure"
+    assert result.stop_reason is StopReason.TERMINAL_CONDITION
+
+
+def test_terminal_callback_failure_does_not_save_or_poison(tmp_path: Path) -> None:
+    repository = RecordingRepository()
+    engine = SimulationEngine(repository)
+    runner = ScenarioRunner(engine, terminal_conditions={"custom": lambda engine: 1})
+    with pytest.raises(
+        RunSimulationError, match="Terminal condition evaluation failed"
+    ) as error:
+        runner.run(_scenario(tmp_path, conditions="[custom]"), RunConfiguration())
+    assert isinstance(error.value.__cause__, TypeError)
+    assert repository.saved_ticks == []
+    assert engine.state.tick == 0
+    engine.step()
+
+
+def test_custom_terminal_runs_once_per_complete_boundary_and_before_checkpoints(
+    tmp_path: Path,
+) -> None:
+    repository = RecordingRepository()
+    engine = SimulationEngine(repository)
+    calls = []
+
+    def terminal(engine: SimulationEngine) -> bool:
+        calls.append(engine.state.tick)
+        return engine.state.tick == 2
+
+    result = ScenarioRunner(engine, terminal_conditions={"custom": terminal}).run(
+        _scenario(tmp_path, conditions="[custom]"),
+        RunConfiguration(max_ticks=4, save_every=1),
+    )
+    assert calls == [0, 1, 2]
+    assert repository.saved_ticks == [1, 2]
+    assert result.end_tick == 2
+
+
+@pytest.mark.parametrize(
+    "conditions",
+    [
+        {"tick_limit": lambda engine: False},
+        {"": lambda engine: False},
+        {"Upper": lambda engine: False},
+        {"valid": None},
+    ],
+)
+def test_custom_terminal_rejects_invalid_registry(
+    conditions: Mapping[str, object],
+) -> None:
+    with pytest.raises(ValueError):
+        ScenarioRunner(
+            SimulationEngine(RecordingRepository()),
+            terminal_conditions=cast(
+                Mapping[str, Callable[[SimulationEngine], bool]], conditions
+            ),
+        )
+
+
+def test_pre_step_operator_stop_precedes_custom_callback(tmp_path: Path) -> None:
+    repository = RecordingRepository()
+    engine = SimulationEngine(repository)
+
+    def forbidden(engine: SimulationEngine) -> bool:
+        raise AssertionError("must not evaluate")
+
+    result = ScenarioRunner(engine, terminal_conditions={"custom": forbidden}).run(
+        _scenario(tmp_path, conditions="[custom]"),
+        RunConfiguration(),
+        stop_control=TickStopControl(engine.state, 0),
+    )
+    assert result.stop_reason is StopReason.OPERATOR_STOP
+    assert result.end_tick == 0
+
+
+def test_callback_exception_after_complete_tick_preserves_last_checkpoint_and_tick(
+    tmp_path: Path,
+) -> None:
+    database = tmp_path / "callback.sqlite3"
+    engine = SimulationEngine(SQLiteRepository(str(database)))
+    failure = RuntimeError("private callback payload")
+
+    def terminal(current: SimulationEngine) -> bool:
+        if current.state.tick == 2:
+            raise failure
+        return False
+
+    with pytest.raises(RunSimulationError) as caught:
+        ScenarioRunner(engine, terminal_conditions={"custom": terminal}).run(
+            _scenario(tmp_path, conditions="[custom]"), RunConfiguration()
+        )
+    assert str(caught.value) == "Terminal condition evaluation failed."
+    assert caught.value.__cause__ is failure
+    assert engine.state.tick == 2
+    assert SQLiteRepository(str(database), read_only=True).load_world().tick == 1
+    engine.step()
+    assert engine.state.tick == 3
+
+
+def test_selected_custom_order_precedes_legacy_terminal_and_after_tick_operator(
+    tmp_path: Path,
+) -> None:
+    engine = SimulationEngine(RecordingRepository())
+    result = ScenarioRunner(
+        engine,
+        terminal_conditions={
+            "first": lambda current: current.state.tick == 1,
+            "second": lambda current: current.state.tick == 1,
+        },
+    ).run(
+        _scenario(tmp_path, conditions="[tick_limit, first, second, operator_stop]"),
+        RunConfiguration(max_ticks=1),
+        stop_control=TickStopControl(engine.state, 1),
+    )
+    assert result.terminal_condition == "first"
+    assert result.end_tick == 1

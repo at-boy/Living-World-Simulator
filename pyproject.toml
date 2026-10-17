@@ -13,6 +13,7 @@ dependencies=["fastapi", "PyYAML"]
 living-world="living_world.cli:main"
 
 [project.optional-dependencies]
+server=["uvicorn"]
 browser-tests=["playwright"]
 dev=["pytest","ruff","black","uvicorn"]
 
@@ -30,4 +31,5 @@ line-length = 88
 target-version = ["py311"]
 
 [tool.setuptools.package-data]
+"living_world.founders"=["assets/founders.yaml", "assets/definitions.yaml", "assets/success.yaml", "assets/stall.yaml", "assets/failure.yaml"]
 "living_world.api"=["static/inspector.html", "static/inspector.css", "static/inspector.js"]

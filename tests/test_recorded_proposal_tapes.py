@@ -14,7 +14,7 @@ from fastapi.routing import APIRoute
 from living_world.api.inspection import EngineWorldInspector, WorldInspector
 from living_world.api.server import create_app
 from living_world.cli import main
-from living_world.cognition.action_resolution import ActionResolution
+from living_world.cognition.action_resolution import ActionResolution, NPCActionHandler
 from living_world.cognition.information_boundary import NPCInformationBoundary
 from living_world.cognition.npc_cognition_client import (
     ActionOption,
@@ -585,7 +585,7 @@ class FixedOffers:
     def __init__(
         self,
         options: tuple[ActionOption, ...],
-        handlers: tuple[GatewayHandler, ...],
+        handlers: tuple[NPCActionHandler, ...],
         actor_id: str = "entity_000001",
     ) -> None:
         self.options, self.handlers, self.actor_id = options, handlers, actor_id
@@ -1335,3 +1335,166 @@ def test_supplementary_unicode_has_exact_utf8_identity(tmp_path: Path) -> None:
     ).hexdigest()
     assert loaded.entries[0].decision.spoken_text == "Welcome \U0001f30d"
     assert loaded.fingerprint == direct.fingerprint == expected
+
+
+def test_public_dispatch_action_key_replays_through_real_domain_gateway(
+    tmp_path: Path,
+) -> None:
+    from living_world.external_world import ContactState
+    from living_world.external_world.dispatch import DispatchDirection
+    from living_world.external_world.dispatch_action import (
+        DISPATCH_ACTION_KEY,
+        DispatchOffer,
+        ExternalDispatchActionHandler,
+    )
+
+    engine = SimulationEngine()
+    scenario = engine.load_scenario(scenario_path(tmp_path))
+    reference = engine.external_world_references.create(
+        name="Homeland",
+        role="homeland",
+        allowed_exports=("food",),
+        capacity=1,
+        delay_ticks=2,
+        cost_per_unit=0,
+        reliability=1.0,
+        contact_state=ContactState.CONTACTABLE,
+    )
+    handler = ExternalDispatchActionHandler(
+        engine.external_dispatches,
+        (
+            DispatchOffer(
+                "Request supplies", reference.id, DispatchDirection.INBOUND, "food", 1
+            ),
+        ),
+    )
+    tape = ProposalTape(
+        1,
+        scenario.key,
+        scenario.configuration_fingerprint,
+        (
+            ProposalTapeEntry(
+                1,
+                "founder",
+                NPCDecision(
+                    None,
+                    ActionRequest(
+                        DISPATCH_ACTION_KEY, "Request supplies", "Bring supplies."
+                    ),
+                ),
+                "Bring supplies.",
+            ),
+        ),
+    )
+    ReplayPreparation(tape, FixedOffers((handler.action_option,), (handler,))).prepare(
+        engine, scenario
+    )
+    engine.step()
+    assert len(engine.state.external_dispatches) == 1
+    assert (
+        next(iter(engine.state.external_dispatches.values())).source_entity_id
+        == engine.state.scenario_entity_bindings["founder"]
+    )
+    assert engine.replay.current() == ReplayState(1, 0)
+
+
+@pytest.mark.parametrize(
+    "text", ["dispatch_external_trade", "dispatch_000123", "entity_000001"]
+)
+def test_public_dispatch_exception_does_not_change_conversation_boundary(
+    text: str,
+) -> None:
+    with pytest.raises(ValueError):
+        NPCInformationBoundary(WorldState()).validate_conversation_prose(text)
+
+
+@pytest.mark.parametrize(
+    "field",
+    [
+        "description",
+        "option_target",
+        "request_target",
+        "rationale",
+        "speech",
+        "argument_key",
+        "argument_value",
+        "unknown_key",
+        "internal_key",
+        "unoffered_key",
+    ],
+)
+def test_dispatch_structured_key_exception_never_admits_hidden_prose_or_other_keys(
+    tmp_path: Path, field: str
+) -> None:
+    from dataclasses import replace
+
+    from living_world.external_world import ContactState
+    from living_world.external_world.dispatch import DispatchDirection
+    from living_world.external_world.dispatch_action import (
+        DISPATCH_ACTION_KEY,
+        DispatchOffer,
+        ExternalDispatchActionHandler,
+    )
+
+    engine = SimulationEngine()
+    scenario = engine.load_scenario(scenario_path(tmp_path))
+    reference = engine.external_world_references.create(
+        name="Homeland",
+        role="homeland",
+        allowed_exports=("food",),
+        capacity=1,
+        delay_ticks=2,
+        cost_per_unit=0,
+        reliability=1.0,
+        contact_state=ContactState.CONTACTABLE,
+    )
+    handler = ExternalDispatchActionHandler(
+        engine.external_dispatches,
+        (
+            DispatchOffer(
+                "Request supplies", reference.id, DispatchDirection.INBOUND, "food", 1
+            ),
+        ),
+    )
+    option = handler.action_option
+    request = ActionRequest(DISPATCH_ACTION_KEY, "Request supplies", "Bring supplies.")
+    speech = None
+    rationale = "Bring supplies."
+    if field == "description":
+        option = replace(option, description=DISPATCH_ACTION_KEY)
+    elif field == "option_target":
+        option = replace(option, target_labels=(DISPATCH_ACTION_KEY,))
+    elif field == "request_target":
+        request = replace(request, target_label=DISPATCH_ACTION_KEY)
+    elif field == "rationale":
+        request = replace(request, rationale=DISPATCH_ACTION_KEY)
+        rationale = DISPATCH_ACTION_KEY
+    elif field == "speech":
+        speech = DISPATCH_ACTION_KEY
+    elif field == "argument_key":
+        request = replace(request, arguments={DISPATCH_ACTION_KEY: "supplies"})
+    elif field == "argument_value":
+        request = replace(request, arguments={"purpose": DISPATCH_ACTION_KEY})
+    elif field == "unknown_key":
+        option = replace(option, key="dispatch_other")
+        request = replace(request, action_key="dispatch_other")
+    elif field == "internal_key":
+        option = replace(option, key="dispatch_secret")
+    else:
+        request = replace(request, action_key="unoffered")
+    tape = ProposalTape(
+        1,
+        scenario.key,
+        scenario.configuration_fingerprint,
+        (ProposalTapeEntry(1, "founder", NPCDecision(speech, request), rationale),),
+    )
+    ReplayPreparation(tape, FixedOffers((option,), (handler,))).prepare(
+        engine, scenario
+    )
+    with pytest.raises(ValueError):
+        engine.step()
+    assert not engine.state.external_dispatches
+    assert engine.replay.current() == ReplayState(0)
+    assert not any(
+        e.kind == "replay_proposal_resolved" for e in engine.state.events.values()
+    )

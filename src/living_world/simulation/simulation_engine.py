@@ -342,14 +342,29 @@ class SimulationEngine:
         return self._npc_relationships
 
     def register_system(
-        self,
-        system: SimulationSystem,
+        self, system: SimulationSystem, *, key: str | None = None
     ) -> None:
-        self._registered_systems.append(system)
-        if self._need_assessment_system is None:
-            self._scheduler.register(system)
-            return
-        self._rebuild_scheduler()
+        if not callable(getattr(system, "step", None)):
+            raise TypeError("System must provide step.")
+        if key is not None and (not isinstance(key, str) or not key.strip()):
+            raise ValueError("System key must be nonempty text.")
+        registry = getattr(self, "_system_keys", {})
+        previous, scheduler = list(self._registered_systems), self._scheduler
+        keys = dict(registry)
+        try:
+            if key is not None and key in keys:
+                self._registered_systems[keys[key]] = system
+            else:
+                if key is not None:
+                    keys[key] = len(self._registered_systems)
+                self._registered_systems.append(system)
+            self._system_keys = keys
+            self._rebuild_scheduler()
+        except Exception:
+            self._registered_systems = previous
+            self._system_keys = registry
+            self._scheduler = scheduler
+            raise
 
     @property
     def replay(self) -> ReplayManager:

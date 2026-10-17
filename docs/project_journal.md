@@ -1,5 +1,17 @@
 # Living World Simulator – Project Journal
 
+## Task 23 implementation — October 15, 2026
+
+Implemented canonical setup staging, delayed capability composition, replay offers,
+terminal hooks, packaged assets and read-only saved-world CLI serving. Real
+acceptance reaches success10, stall5 and failure13 with exact fresh/checkpoint
+payload comparisons. Root-resolved corrections distinguish provenance-anchored
+pending need history from unavailable data and accept the existing public dispatch
+key only as structured replay vocabulary. Initial capacities are explicitly zero;
+the NPC boundary and action gateways remain unchanged. All three Chrome saved
+outcomes pass GET-only inspection; example039 exercises public composition.
+Independent implementation review and authoritative root gates remain pending.
+
 ## Task 15 implementation — October 14, 2026
 
 Added packaged same-origin GET-only inspector views without changing domain DTOs
@@ -932,3 +944,21 @@ reports221focused passes and success10/stall5/failure13 with exact fresh/resume
 payload candidates. No implementation review/full gates/integration claim.
 Stopped active worker cleanly with usage headroom; current continuation and pause
 handoff record remaining work. Main and user configuration edit preserved.
+##2026-10-15 — Task23 exact contract
+
+Independent contract review resolved public API ownership, counttwo shelter
+cardinality, canonical IDs/extras, manifest digest and detached terminal-error
+semantics. Exact fixed-v1 assets/rules, atomic setup/attachments, existing gateways,
+read-only repository/inspect and fresh/resume payload matrix are decision-complete.
+From reviewed Spatial milestone d4dcdff; no implementation in this contract commit.
+
+
+## 2026-10-17 — Task23 reviewed integration
+
+Delivery87af71a passed independent spec/quality review after five corrected P2
+validation findings. Root task make1376passed/10existing skips,76Chrome cases,
+examples001–039, separate examples, exact public CLI fresh/resume matrices,
+read-only browser and isolated installed-wheel/entrypoint/loopback inspect passed.
+Journal-only merge conflict preserves earlier checkpoint and contract history.
+Merged validation passed1376/10,76Chrome,examples001–039, separateexamples,
+whitespace and exact public CLI fresh/resume matrix. Task24 next; main/userconfig preserved.

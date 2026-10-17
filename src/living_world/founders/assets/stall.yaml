@@ -1,0 +1,38 @@
+schema_version: 1
+scenario_key: canonical_founders_v1
+scenario_fingerprint: a4f9ebff93dee63d29768758d39f1962818da020cc8b08b4a6c0c7e211b536a8
+entries:
+- sequence: 1
+  actor_label: ada
+  action: null
+  rationale: Let us work toward a lasting home.
+  speech: We can find a way forward.
+- sequence: 2
+  actor_label: bryn
+  action:
+    key: produce_food
+    target_label: Produce food
+    arguments: {}
+  rationale: Let us work toward a lasting home.
+  speech: null
+- sequence: 3
+  actor_label: ada
+  action:
+    key: gather_water
+    target_label: Gather water
+    arguments: {}
+  rationale: Let us work toward a lasting home.
+  speech: null
+- sequence: 4
+  actor_label: bryn
+  action:
+    key: build_shelter
+    target_label: Build a larger shelter group
+    arguments: {}
+  rationale: Let us work toward a lasting home.
+  speech: null
+- sequence: 5
+  actor_label: ada
+  action: null
+  rationale: Let us work toward a lasting home.
+  speech: We can find a way forward.

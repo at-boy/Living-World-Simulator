@@ -10,6 +10,7 @@ from living_world.cognition.decision_engine import DecisionEngine
 from living_world.cognition.information_boundary import NPCInformationBoundary
 from living_world.cognition.npc_cognition_client import ActionOption
 from living_world.cognition.npc_context import NPCContextAssembler
+from living_world.external_world.dispatch_action import DISPATCH_ACTION_KEY
 from living_world.replay.client import RecordedProposalClient
 from living_world.replay.manager import ReplayManager
 from living_world.replay.model import ProposalTape, ProposalTapeError, ReplayOutcome
@@ -98,8 +99,8 @@ class ReplayProposalSystem(SimulationSystem):
         if request is None:
             outcome = ReplayOutcome.NO_ACTION
         else:
+            self._validate_action_key(request.action_key)
             for text in (
-                request.action_key,
                 request.target_label,
                 request.rationale,
                 *request.arguments.keys(),
@@ -148,5 +149,11 @@ class ReplayProposalSystem(SimulationSystem):
                 raise ProposalTapeError("offered_action_mismatch")
             if sum(handler.supports(option.key) for handler in bundle.handlers) != 1:
                 raise ProposalTapeError("offered_action_mismatch")
-            for text in (option.key, option.description, *option.target_labels):
+            self._validate_action_key(option.key)
+            for text in (option.description, *option.target_labels):
                 self._boundary.validate_conversation_prose(text)
+
+    def _validate_action_key(self, key: str) -> None:
+        # This existing public key is structured vocabulary, never a prose exemption.
+        if key != DISPATCH_ACTION_KEY:
+            self._boundary.validate_conversation_prose(key)

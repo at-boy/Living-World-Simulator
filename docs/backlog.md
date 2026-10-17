@@ -10,10 +10,12 @@ replay is independently reviewed, validated and integrated; its strict
 runtime/cursor contract and ADR-0025 remain authoritative. Task15
 operator inspector is independently reviewed and integrated. Task15c spatial
 view is independently reviewed, validated and integrated. Task23 canonical
-composition is next. Legacy replay enablement on
+composition is implemented on its isolated task branch with focused canonical
+acceptance at success10, stall5 and failure13. Independent implementation review
+and authoritative root validation remain pending. Legacy replay enablement on
 populated saves without label bindings remains unsupported. Reusable
-stage templates, decline/demotion, scenario-YAML binding (Task 23), and automatic
-NPC perception of stages remain deliberately deferred.
+stage templates, decline/demotion, general scenario-YAML binding beyond the fixed
+Task23 preset, and automatic NPC perception of stages remain deliberately deferred.
 
 Task 19 settlement needs and pressure is complete for v0.6. Task 19a
 consumption, storage, and maintenance consequences are reviewed and integrated

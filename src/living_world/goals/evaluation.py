@@ -308,6 +308,37 @@ class _SustainedNeedEvaluator:
             range(state.tick - item.duration_ticks + 1, state.tick + 1)
         )
         if len(history) != item.duration_ticks:
+            creation = tuple(
+                event
+                for event in state.events.values()
+                if event.kind == "need_created" and event.subject_id == definition.id
+            )
+            if (
+                history
+                and len(creation) == 1
+                and creation[0].tick <= state.tick
+                and tuple(assessment.tick for assessment in history)
+                == tuple(range(creation[0].tick, state.tick + 1))
+                and need_state.current == history[-1]
+                and all(
+                    assessment.level is not NeedLevel.UNAVAILABLE
+                    and assessment.pressure is not None
+                    for assessment in history
+                )
+            ):
+                event_ids = tuple(
+                    sorted(
+                        event.id
+                        for event in state.events.values()
+                        if event.subject_id == definition.id
+                        and event.kind in {"need_created", "need_level_changed"}
+                    )
+                )
+                return CriterionEvaluation(
+                    CriterionDisposition.UNSATISFIED,
+                    "Sustained need assessment history is still accumulating.",
+                    event_ids,
+                )
             return self._unavailable("the assessment history is incomplete")
         if tuple(assessment.tick for assessment in history) != expected_ticks:
             return self._unavailable("the assessment history is not consecutive")

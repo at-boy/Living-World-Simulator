@@ -718,3 +718,15 @@ internal binding values, cursor/tick numbers and privileged replay field names
 are rejected at the prose boundary. Public label keys remain available as prose
 when they contain no other hidden data. Detached GET-only replay inspection is
 for operators and is never injected into NPC context.
+
+## Canonical founders composition
+
+The founders policy and inspector are engine-only. The preset retains existing
+holder-scoped context assembly without adding perception, memories or inference.
+A pure offer provider translates current engine authorization into qualitative
+labels. Resource/work quantities, labor, deadlines, criteria, internal IDs and
+raw attributes never enter those options. Recorded decisions remain untrusted
+proposals routed through the ordinary resolver and actor-bound work/dispatch
+handlers. Engine managers alone change work, resources, needs, goals, stages and
+terminal truth. The deterministic tapes are acceptance drivers, not evidence
+that a live LLM selects successful strategies.

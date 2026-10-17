@@ -101,3 +101,11 @@ point. Extensions preserve the `show` generation guard and focus/status handling
 Inspector data is privileged operator output. It does not flow into NPC context,
 retrieval, cognition, perception or action resolution. Use the API's existing
 loopback/access-control guidance when serving the application.
+
+## Saved canonical snapshots
+
+`living-world inspect --founders --database outcome.sqlite3` loads a validated
+existing canonical snapshot through a read-only SQLite repository and serves it
+at loopback. The optional `server` extra supplies uvicorn. The snapshot does not
+advance or refresh automatically from another running process; all inspector
+routes continue to be GET-only. See [canonical founders](canonical_founders.md).
