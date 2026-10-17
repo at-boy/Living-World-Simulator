@@ -1,0 +1,130 @@
+schema_version: 1
+key: canonical_founders_v1
+seed: 42
+definitions: definitions.yaml
+run:
+  max_ticks: 16
+  terminal_conditions:
+  - founding_failure
+  - settlement_success
+entities:
+- label: valley
+  definition: area
+  name: Founders Valley
+- label: camp
+  definition: settlement
+  name: Founders Camp
+  attributes:
+    population: 2
+    housing_capacity: 0
+    storage_capacity: 0
+    resources:
+      food: 0
+      water: 0
+      timber: 10
+    production_inputs:
+      food: 1
+    production_outputs:
+      food: 4
+      water: 2
+    founders_policy:
+      area_label: valley
+      founder_labels:
+      - ada
+      - bryn
+      placements:
+        ada:
+          bounds_kind: null
+          containing_label: camp
+          geometry:
+            kind: point
+            x: 1
+            y: 1
+          overlap_policy: reject
+        bryn:
+          bounds_kind: null
+          containing_label: camp
+          geometry:
+            kind: point
+            x: 2
+            y: 1
+          overlap_policy: reject
+        camp:
+          bounds_kind: area
+          containing_label: valley
+          geometry:
+            height: 8
+            kind: bounds
+            width: 12
+            x: 0
+            y: 0
+          overlap_policy: reject
+        valley:
+          bounds_kind: area
+          containing_label: null
+          geometry:
+            height: 40
+            kind: bounds
+            width: 40
+            x: -10
+            y: -10
+          overlap_policy: reject
+      rules:
+        deadline_tick: 12
+        dispatch_quantity: 1
+        food_per_person_per_tick: 1
+        food_work_quantity: 10
+        homeland_allowed_exports:
+        - food
+        homeland_allowed_imports:
+        - timber
+        homeland_capacity: 1
+        homeland_cost_per_unit: 0
+        homeland_delay_ticks: 2
+        homeland_reliability: 1.0
+        housing_capacity: 2
+        large_shelter_count: 2
+        large_shelter_labor: 3
+        large_shelter_timber: 4
+        maintenance_deterioration: 1
+        maintenance_food_upkeep: 1
+        maintenance_initial_condition: 3
+        maintenance_maximum_condition: 3
+        maintenance_minimum_condition: 2
+        maintenance_recovery: 1
+        modest_shelter_count: 1
+        modest_shelter_timber: 2
+        need_duration_ticks: 3
+        need_requirement_per_person: 1
+        need_secure_maximum: 0.0
+        need_strained_maximum: 0.5
+        need_window_ticks: 3
+        normal_labor: 1
+        required_progress: 1
+        storage_capacity: 20
+        storage_count: 1
+        storage_spoilage_per_tick: 0
+        storage_timber: 2
+        town_population: 3
+        water_per_person_per_tick: 1
+        water_work_quantity: 8
+      version: 1
+- label: ada
+  definition: founder
+  name: Ada
+  attributes:
+    npc_identity:
+      name: Ada
+      description: A founder seeking a lasting home.
+      capability_descriptions:
+      - Help the settlement.
+- label: bryn
+  definition: founder
+  name: Bryn
+  attributes:
+    npc_identity:
+      name: Bryn
+      description: A founder seeking a lasting home.
+      capability_descriptions:
+      - Help the settlement.
+relationships: []

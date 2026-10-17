@@ -919,3 +919,24 @@ def _world_state() -> WorldState:
             )
         },
     )
+
+
+def test_read_only_repository_requires_snapshot_and_never_writes(
+    tmp_path: Path,
+) -> None:
+    from living_world.repositories.sqlite_repository import (
+        RepositoryLoadError,
+        RepositorySaveError,
+    )
+
+    path = tmp_path / "world ?#.sqlite3"
+    with pytest.raises(RepositoryLoadError):
+        SQLiteRepository(str(path), read_only=True).load_world()
+    assert not path.exists()
+    SQLiteRepository(str(path)).save_world(WorldState())
+    before = path.read_bytes()
+    repository = SQLiteRepository(str(path), read_only=True)
+    state = repository.load_world()
+    with pytest.raises(RepositorySaveError):
+        repository.save_world(state)
+    assert path.read_bytes() == before

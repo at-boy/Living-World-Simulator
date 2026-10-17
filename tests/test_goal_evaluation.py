@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pytest
 
 from living_world.api.inspection import EngineWorldInspector
@@ -643,4 +645,135 @@ def test_consequence_need_sustained_goal_evidence_flow() -> None:
     assert all(
         engine.state.events[event_id].kind in {"need_created", "need_level_changed"}
         for event_id in evidence[-1].source_event_ids
+    )
+
+
+def test_real_need_prefix_is_pending_then_requires_full_secure_window() -> None:
+    engine, owner = _engine()
+    engine.entities.set_attribute(entity_id=owner, key="population", value=1)
+    engine.entities.set_attribute(entity_id=owner, key="resources", value={"food": 5})
+    engine.needs.create(
+        NeedDefinition("need_prefix", owner, NeedKind.FOOD, 1, 0.0, 0.5, 3)
+    )
+    criterion = SustainedNeedCriterion("food", 0.0, 3)
+    registry = CriterionEvaluatorRegistry()
+    for tick, expected in (
+        (0, CriterionDisposition.UNSATISFIED),
+        (1, CriterionDisposition.UNSATISFIED),
+        (2, CriterionDisposition.SATISFIED),
+    ):
+        engine.state.tick = tick
+        from living_world.needs.system import NeedAssessmentSystem
+
+        NeedAssessmentSystem(engine.needs).step(engine.state)
+        result = registry.evaluate(criterion, owner_id=owner, state=engine.state)
+        assert result.disposition is expected
+        assert result.source_event_ids
+
+
+@pytest.mark.parametrize(
+    "case",
+    [
+        "empty",
+        "missing_creation",
+        "duplicate_creation",
+        "gap",
+        "truncated",
+        "stale",
+        "unavailable",
+        "current_missing",
+    ],
+)
+def test_incomplete_need_prefix_without_complete_provenance_remains_unavailable(
+    case: str,
+) -> None:
+    from living_world.core.event import Event
+
+    engine, owner = _engine()
+    engine.needs.create(
+        NeedDefinition("need_prefix", owner, NeedKind.FOOD, 1, 0.0, 0.5, 4)
+    )
+    engine.state.tick = 1
+
+    def assessment(tick: int) -> NeedAssessment:
+        return NeedAssessment(tick, NeedLevel.SECURE, 1, 1, 0, 0.0)
+
+    history = (assessment(0), assessment(1))
+    if case == "empty":
+        history = ()
+    if case == "gap":
+        engine.state.tick = 2
+        history = (assessment(0), assessment(2))
+    if case == "truncated":
+        history = (assessment(1),)
+    if case == "stale":
+        history = (assessment(0),)
+    if case == "unavailable":
+        history = (
+            assessment(0),
+            NeedAssessment(1, NeedLevel.UNAVAILABLE, None, None, None, None),
+        )
+    engine.state.need_states["need_prefix"] = NeedState(
+        "need_prefix", history[-1] if history else None, history
+    )
+    if case == "missing_creation":
+        engine.state.events.clear()
+    if case == "duplicate_creation":
+        engine.events.add(Event("duplicate_creation", 0, "need_created", "need_prefix"))
+    if case == "current_missing":
+        engine.state.need_states["need_prefix"] = NeedState("need_prefix")
+    result = CriterionEvaluatorRegistry().evaluate(
+        SustainedNeedCriterion("food", 0.0, 3), owner_id=owner, state=engine.state
+    )
+    assert result.disposition is CriterionDisposition.UNAVAILABLE
+
+
+def test_late_created_need_prefix_survives_checkpoint_and_reaches_full_window(
+    tmp_path: Path,
+) -> None:
+    repository = SQLiteRepository(str(tmp_path / "late.sqlite3"))
+    engine = SimulationEngine(repository)
+    engine.definitions.register(Definition("settlement"))
+    owner = engine.entities.create(definition_key="settlement", name="Late Camp")
+    engine.state.tick = 7
+    engine.needs.create(
+        NeedDefinition("need_late", owner.id, NeedKind.FOOD, 1, 0.0, 0.5, 3)
+    )
+    engine.needs.record_assessment(
+        "need_late", NeedAssessment(7, NeedLevel.CRITICAL, 0, 1, -1, 1.0)
+    )
+    criterion = SustainedNeedCriterion("food", 0.0, 3)
+    registry = CriterionEvaluatorRegistry()
+    assert (
+        registry.evaluate(criterion, owner_id=owner.id, state=engine.state).disposition
+        is CriterionDisposition.UNSATISFIED
+    )
+    engine.save_world()
+    restored = SimulationEngine(repository)
+    assert (
+        registry.evaluate(
+            criterion, owner_id=owner.id, state=restored.state
+        ).disposition
+        is CriterionDisposition.UNSATISFIED
+    )
+    for tick in (8, 9):
+        restored.state.tick = tick
+        restored.needs.record_assessment(
+            "need_late", NeedAssessment(tick, NeedLevel.SECURE, 1, 1, 0, 0.0)
+        )
+    assert (
+        registry.evaluate(
+            criterion, owner_id=owner.id, state=restored.state
+        ).disposition
+        is CriterionDisposition.UNSATISFIED
+    )
+    restored.state.tick = 10
+    restored.needs.record_assessment(
+        "need_late", NeedAssessment(10, NeedLevel.SECURE, 1, 1, 0, 0.0)
+    )
+    assert (
+        registry.evaluate(
+            criterion, owner_id=owner.id, state=restored.state
+        ).disposition
+        is CriterionDisposition.SATISFIED
     )

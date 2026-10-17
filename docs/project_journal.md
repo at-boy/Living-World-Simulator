@@ -1,5 +1,17 @@
 # Living World Simulator – Project Journal
 
+## Task 23 implementation — October 15, 2026
+
+Implemented canonical setup staging, delayed capability composition, replay offers,
+terminal hooks, packaged assets and read-only saved-world CLI serving. Real
+acceptance reaches success10, stall5 and failure13 with exact fresh/checkpoint
+payload comparisons. Root-resolved corrections distinguish provenance-anchored
+pending need history from unavailable data and accept the existing public dispatch
+key only as structured replay vocabulary. Initial capacities are explicitly zero;
+the NPC boundary and action gateways remain unchanged. All three Chrome saved
+outcomes pass GET-only inspection; example039 exercises public composition.
+Independent implementation review and authoritative root gates remain pending.
+
 ## Task 15 implementation — October 14, 2026
 
 Added packaged same-origin GET-only inspector views without changing domain DTOs

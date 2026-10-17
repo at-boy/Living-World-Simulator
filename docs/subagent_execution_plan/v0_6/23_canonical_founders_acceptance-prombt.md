@@ -47,3 +47,7 @@ Binding dispatch-key amendment: final plan resolution permits only replay/system
 and test_recorded_proposal_tapes.py for exact existing public dispatch-key handling
 in structured key fields. Every prose/context/argument field keeps its boundary.
 No broad prefix exception or NPCInformationBoundary/gateway change.
+
+Review chronology clarification: match owned_capacity live/current ownership;
+composition marker is exactly created_tick+1 and <=state.tick, including staged
+validation at the ordinary phase. Preserve original pending intervals; no repair.

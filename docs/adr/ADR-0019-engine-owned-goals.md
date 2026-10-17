@@ -32,3 +32,17 @@ The engine has stable, auditable goal truth and derives lifecycle state from
 authoritative world state. Evaluator extensions must register a typed domain
 implementation and retain deterministic evidence. Exact criteria, evidence,
 status, identifiers, and runtime state remain outside NPC context.
+
+## Task 23 clarification: accumulating need evidence
+
+A short but authoritative need history is pending (unsatisfied), so the unchanged
+ACTIVE-only work gateway can continue collecting real provisions. Pending requires
+nonempty history shorter than the requested duration, an adequate configured
+window, exactly one immutable matching `need_created` event, history covering
+every tick from that event through the current tick, current equal to its final
+entry and available pressure on every assessment. Empty, stale, gapped, truncated,
+unavailable or ambiguously anchored histories remain unavailable. Full-duration
+satisfaction still uses the existing consecutive-window rule. This classification
+change adds no history/status mutation and preserves dependency/deadline/terminal
+precedence. Explicit initial zero capacities distinguish known insufficiency from
+absent data; no gateway authorization relaxation is needed.

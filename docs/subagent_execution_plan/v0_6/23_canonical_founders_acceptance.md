@@ -486,3 +486,17 @@ TDD: real dispatch key proceeds through ordinary replay+gateway; unknown/unoffer
 or internal-ID keys still reject; same string in prose/labels/descriptions/arguments
 still rejects without mutation. Canonical success must still demonstrate actual
 ARRIVED dispatch. No boundary regex/global cognition/gateway changes.
+
+
+## Review clarification — attachment chronology
+
+Qualifying ownership uses the same current-live rule as owned_capacity:
+kind owns, source camp, destroyed_tick is None, created_tick<=state.tick.
+Already-present attachments whose ownership no longer qualifies reject rather
+than repairing/removing their immutable history or policy. For canonical shelter
+and the first qualifying storage, attachment composition marker tick is exactly
+entity.created_tick+1 and never exceeds state.tick. This matches ordinary-before-
+work scheduling; staged validation during the composition phase permits marker
+at state.tick, while saved completed boundaries preserve it on subsequent ticks.
+Missing attachments retain the original complete-boundary pending interval.
+No new phase or manual same-construction-tick early attachment is supported.

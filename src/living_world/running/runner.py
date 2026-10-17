@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, replace
 from enum import Enum
@@ -109,8 +110,24 @@ class ScenarioRunner:
     _SUPPORTED_TERMINAL_CONDITIONS = frozenset({"tick_limit", "operator_stop"})
 
     def __init__(
-        self, engine: SimulationEngine, preparation: ScenarioPreparation | None = None
+        self,
+        engine: SimulationEngine,
+        preparation: ScenarioPreparation | None = None,
+        *,
+        terminal_conditions: (
+            Mapping[str, Callable[[SimulationEngine], bool]] | None
+        ) = None,
     ) -> None:
+        custom = {} if terminal_conditions is None else dict(terminal_conditions)
+        for name, predicate in custom.items():
+            if (
+                not isinstance(name, str)
+                or re.fullmatch(r"[a-z][a-z0-9]*(?:_[a-z0-9]+)*", name) is None
+                or name in self._SUPPORTED_TERMINAL_CONDITIONS
+                or not callable(predicate)
+            ):
+                raise ValueError("Invalid terminal condition configuration.")
+        self._custom_terminal_conditions = custom
         self._engine = engine
         self._preparation = preparation
         self._terminal_predicates: Mapping[
@@ -154,6 +171,12 @@ class ScenarioRunner:
         while True:
             if stop_control is not None and stop_control.stop_requested():
                 reason = StopReason.OPERATOR_STOP
+                break
+            terminal_condition = (
+                self._matched_custom_condition(scenario) if completed == 0 else None
+            )
+            if terminal_condition is not None:
+                reason = StopReason.TERMINAL_CONDITION
                 break
             if tick_limit is not None and completed >= tick_limit:
                 reason = StopReason.TICK_LIMIT
@@ -222,7 +245,9 @@ class ScenarioRunner:
 
     def _validate_terminal_conditions(self, scenario: LoadedScenario) -> None:
         unsupported = sorted(
-            set(scenario.terminal_conditions) - self._SUPPORTED_TERMINAL_CONDITIONS
+            set(scenario.terminal_conditions)
+            - self._SUPPORTED_TERMINAL_CONDITIONS
+            - self._custom_terminal_conditions.keys()
         )
         if unsupported:
             raise ScenarioLoadError(
@@ -237,8 +262,30 @@ class ScenarioRunner:
         tick_limit: int | None,
         stop_requested: bool,
     ) -> str | None:
+        custom = self._matched_custom_condition(scenario)
+        if custom is not None:
+            return custom
         for name in scenario.terminal_conditions:
+            if name in self._custom_terminal_conditions:
+                continue
             if self._terminal_predicates[name](completed, tick_limit, stop_requested):
+                return name
+        return None
+
+    def _matched_custom_condition(self, scenario: LoadedScenario) -> str | None:
+        for name in scenario.terminal_conditions:
+            predicate = self._custom_terminal_conditions.get(name)
+            if predicate is None:
+                continue
+            try:
+                matched = predicate(self._engine)
+                if type(matched) is not bool:
+                    raise TypeError("Terminal condition must return bool.")
+            except Exception as exc:
+                raise RunSimulationError(
+                    "Terminal condition evaluation failed."
+                ) from exc
+            if matched:
                 return name
         return None
 

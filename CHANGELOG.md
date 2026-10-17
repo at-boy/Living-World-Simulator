@@ -4,6 +4,10 @@
 
 ### Added
 
+- Add fixed packaged founders composition, bounded outcome aliases, trusted terminal callbacks and read-only saved-world inspection. Task 23 acceptance and independent review are in progress.
+
+
+
 - Define the reviewed canonical founders setup, terminal, packaged CLI and
   read-only snapshot acceptance contract.
 

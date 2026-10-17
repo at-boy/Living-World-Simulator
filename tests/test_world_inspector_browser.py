@@ -1201,3 +1201,99 @@ def test_spatial_nested_extra_fields_preserve_numeric_and_literal_safety(
             page.get_by_text("Malformed or unsupported snapshot.", exact=True)
         ).to_be_visible()
         expect(page.locator("#records article, #spatial-map")).to_have_count(0)
+
+
+@pytest.mark.parametrize("outcome", ["success", "stall", "failure"])
+def test_founders_saved_snapshot_views_are_get_only(
+    tmp_path: Path, outcome: str
+) -> None:
+    from living_world.cli import main
+    from living_world.founders import (
+        load_inspection_engine,
+        materialize_founders_assets,
+    )
+
+    executable = os.environ.get(
+        "LIVING_WORLD_BROWSER_EXECUTABLE", "/usr/bin/google-chrome"
+    )
+    if not Path(executable).is_file():
+        pytest.skip("Chrome absent; set LIVING_WORLD_BROWSER_EXECUTABLE")
+    database = tmp_path / f"{outcome}.sqlite3"
+    assert main(["run", "--founders", outcome, "--database", str(database)]) == 0
+    before = database.read_bytes()
+    with materialize_founders_assets() as assets:
+        engine = load_inspection_engine(assets.scenario, database)
+    state = _snapshot_value(engine.state)
+    app = create_app(engine)
+    methods: list[str] = []
+
+    def serve(route: Route) -> None:
+        methods.append(route.request.method)
+        with ThreadPoolExecutor(max_workers=1) as executor:
+            response = executor.submit(
+                ASGIClient(app).request,
+                route.request.method,
+                urlsplit(route.request.url).path,
+            ).result()
+        route.fulfill(
+            status=response.status_code,
+            headers=dict(response.headers),
+            body=response.body,
+        )
+
+    with sync_playwright() as driver:
+        browser = driver.chromium.launch(executable_path=executable, headless=True)
+        page = browser.new_page()
+        page.route("**/*", serve)
+        page.goto("http://inspector.test/inspector")
+        for view in (
+            "Needs",
+            "Work",
+            "Goals",
+            "Stages",
+            "External connections",
+            "History",
+            "Spatial",
+        ):
+            page.get_by_role("navigation").get_by_role(
+                "button", name=view, exact=True
+            ).click()
+            expect(
+                page.get_by_role("heading", name=view, level=2, exact=True)
+            ).to_be_visible()
+            expect(page.get_by_text("Snapshots loaded.", exact=True)).to_be_visible()
+            records = page.locator("#records")
+            if view == "Needs":
+                expect(records).to_contain_text("need_founders_food")
+                expect(records).to_contain_text("need_founders_water")
+            elif view == "Work" and outcome != "failure":
+                expect(records).to_contain_text("gather_water")
+                expect(records).to_contain_text("build_shelter")
+            elif view == "Goals":
+                expect(records).to_contain_text("goal_founding")
+                expect(records).to_contain_text(
+                    {"success": "completed", "stall": "active", "failure": "failed"}[
+                        outcome
+                    ]
+                )
+            elif view == "Stages":
+                expect(records).to_contain_text(
+                    "settlement" if outcome == "success" else "founding_camp"
+                )
+            elif view == "External connections" and outcome == "success":
+                expect(records).to_contain_text("arrived")
+            elif view == "History":
+                expect(records).to_contain_text("canonical_setup_completed")
+                expect(records).to_contain_text("replay_proposal_resolved")
+        camp = engine.state.scenario_entity_bindings["camp"]
+        page.locator(f"article[data-entity-id='{camp}']").get_by_role("button").click()
+        expect(
+            page.get_by_role("heading", name="Entity detail", exact=True)
+        ).to_be_visible()
+        expect(
+            page.get_by_role("button", name="Back to Spatial", exact=True)
+        ).to_be_visible()
+        browser.close()
+    assert methods and set(methods) == {"GET"}
+    assert _snapshot_value(engine.state) == state
+    assert database.read_bytes() == before
