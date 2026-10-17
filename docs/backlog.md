@@ -195,3 +195,7 @@ readiness is blocked by two P1 auditfindings, recorded in committed orchestrator
 handoff auditreport. Correctexisting NPCgoalboundary/reservationID defects in
 bounded isolatedtask before resuming uncommitted24metadata. These are release
 blockers, not deferredfuturefeatures; full audit coverage/gates remainpending.
+
+Task24a isolated existing-defect correction begins from7d75b20; Task24metadata
+checkpoint preserved. Both audit findings and remaining wholeauditcoverage still
+block release readiness until reviewed current validation.

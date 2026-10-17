@@ -973,3 +973,12 @@ auditfound2P1 (publicNPCgoaldata leak reproduced; reservationhistorycollision
 code-confirmed, runtimeprobe pending) and incompletecoverage. Root stoppedall
 agents at21%remaining; releaseblocked, correctioncontract/gatespending. Main and
 userconfig preserved. No automaticresume/reset.
+
+
+## 2026-10-17 — Task24a correction contract
+
+Independent partialwholeaudit identified reproducedNPCgoaldata leak and code-
+traced reservationhistorycollision. Approved closeout requires isolated fixes;
+24metadata remains paused/uncommitted. Exact24aplan/prompt specify public RED
+reproduction, finalboundary/highwaterallocation only, independentreview/rootgates.
+Usage refreshed during same owner-authorized turn; no manualreset invoked.
