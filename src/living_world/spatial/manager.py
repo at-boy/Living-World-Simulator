@@ -118,7 +118,9 @@ class SpatialManager:
         """Validate persisted placement invariants without recording events."""
 
         for placement in self._state.placements.values():
-            self._validate(placement, replacing=placement.entity_id)
+            self._validate(
+                placement, replacing=placement.entity_id, allow_destroyed=True
+            )
             self._validate_children(placement)
 
     def _required(self, entity_id: str) -> Placement:
@@ -127,13 +129,19 @@ class SpatialManager:
             raise ValueError(f"Entity '{entity_id}' has no placement state.")
         return placement
 
-    def _validate(self, placement: Placement, replacing: str | None = None) -> None:
-        self._live_entity(placement.entity_id)
+    def _validate(
+        self,
+        placement: Placement,
+        replacing: str | None = None,
+        *,
+        allow_destroyed: bool = False,
+    ) -> None:
+        self._live_entity(placement.entity_id, allow_destroyed=allow_destroyed)
         if placement.containing_entity_id == placement.entity_id:
             raise ValueError("A placement cannot contain itself.")
         if placement.containing_entity_id is not None:
             parent_entity_id = placement.containing_entity_id
-            self._live_entity(parent_entity_id)
+            self._live_entity(parent_entity_id, allow_destroyed=allow_destroyed)
             parent = self._state.placements.get(parent_entity_id)
             if parent is None or not isinstance(parent.geometry, Bounds):
                 raise ValueError("A placement container must have bounds.")
@@ -189,17 +197,19 @@ class SpatialManager:
 
     def _reject_cycle(self, entity_id: str, parent_id: str) -> None:
         current: str | None = parent_id
+        visited: set[str] = set()
         while current is not None:
-            if current == entity_id:
+            if current == entity_id or current in visited:
                 raise ValueError("Placement containment cannot contain a cycle.")
+            visited.add(current)
             placement = self._state.placements.get(current)
             current = None if placement is None else placement.containing_entity_id
 
-    def _live_entity(self, entity_id: str) -> None:
+    def _live_entity(self, entity_id: str, *, allow_destroyed: bool = False) -> None:
         entity = self._state.entities.get(entity_id)
         if entity is None:
             raise ValueError(f"Unknown entity '{entity_id}'.")
-        if entity.destroyed_tick is not None:
+        if not allow_destroyed and entity.destroyed_tick is not None:
             raise ValueError(f"Destroyed entity '{entity_id}' cannot be placed.")
 
     def _commit(

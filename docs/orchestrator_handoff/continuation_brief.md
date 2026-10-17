@@ -1,96 +1,72 @@
-# Continuation brief — October15,2026
+# Continuation brief — October17,2026, corrected milestone
 
-## Current state and authority
+## Authority and budget
 
-Owner explicitly resumed on October15. Continue approved v0.6 execution; stop
-BEFORE five-hour allowance falls below10%, leaving checkpoint/interruption buffer.
-No reset/automatic resume. Primary branch milestone/v0.6; never commit/merge/tag/
-push v0.6 to main. Owner chose0.6.0rc1 for Task24 release-readiness. Main integration
-and tagging are separate owner actions. User .codex/config.toml edit is preserved
-unstaged and excluded from all milestone commits.
+Ownerapproved fullv0.6 completion and selected0.6.0rc1; no main/tag/publication or
+v0.7. Preserve primary .codex/config.toml unstaged edit. Stop BEFORE fivehour
+allowance dropsbelow10%, savecheckpoint/stopagents withbuffer. EarlierOctober17
+pause was savedat21%; during same authorizedturn usage refreshed to99%remaining
+withoutmanualreset, so rootcontinued transparently. Currentexecution Task24next.
 
-Task15c delivery9d9dbf0 merged0a81a11 after independent spec/quality PASS, one
-numeric-extra validation correction and root full/browser/visual/package gates.
-Documentation-only merge conflicts retained both usage-pause and task history;
-no source/test/package differences from reviewed task. Earlier pause files are
-historical; do not resume completed15c or repeat completed21/22/15.
+## Reviewed completed work
 
-## Completed sequence and validation
+Completed16,16a,15a,15b,17,17a,18,18a,15d,19,19a,20,20a,20b,21,22,15,15c,23,24a.
+Recent delivery/merges:21c821efe/1ab288b;22 02b35fe/7806f29;
+15dea51cb/91e33bf;15c9d9dbf0/0a81a11;23 87af71a/58b6ba7.
+24adeliverycfa50b6 is reviewed and integrated; currentmerge ref in Gitlog.
 
-Completed reviewed/pushed tasks16,16a,15a,15b,17,17a,18,18a,15d,19,19a,20,20a,
-20b,21,22,15,15c. Canonical reports/plans/prompts are under
- docs/subagent_execution_plan/v0_6/ (without the leading display space).
+Task23 task/merged1376/10,76Chrome/examples001–039 and source/installed CLI matrix,
+read-onlybrowser/wheel/console/loopbackinspect passed. Its finalfixedscenario
+success10/stall5/failure13 remains exactfresh/resume1,3,4 schema12payloadsame.
 
-Recent deliveries/merges:
--21:c821efe/1ab288b — objective-backed stages, schema11.
--22:02b35fe/7806f29 — recorded proposals, persisted labels/cursor, schema12.
--15:dea51cb/91e33bf — ten packaged read-only inspector views.
--15c:9d9dbf0/0a81a11 — north-up Spatial map, canonical order, safe numeric states,
- accessible overlap/list and entity-origin return navigation.
+Wholeaudit initially found2P1, resumedremainingcoverage found2morespatialP1.
+24afixes all4: actualgoal/objectiveIDs+numbers protected byfinalNPCboundary;
+reservationcandidate uses authoritativehighwater aftershadowexecution; destroyed
+placements accepted asretainedhistory onload while liveplace/replace guards stay;
+visitedancestor walkrejects malformedcycles withoutloadhang. Independentscoped
+review all4ADDR/spec+qualityPASS. Root taskANDmergedmake1416/10existing skips,
+76Chrome/examples001–039, separateexamples/whitespace/canonicalmatrices passed;
+all3payloadhashesunchanged. Wholeauditremainingtargetedcoveragecompleted/noother
+substantivefindings. Committedauditreport and24areport arecanonicalevidence.
+ExistingEventManagerexceptionalgapsaccepted; no gaplessretryeventclaim/newAPI.
+Primarypackageversion remains0.5.0 until reviewedTask24metadata0.6.0rc1 lands.
 
-Root15c task AND merged gates: make1271passed/10existing deliberate skips,73actual
-Chrome cases; examples001–038 pass, separate examples pass, whitespace pass.
-Installed-wheel assets/routes byte-identical to current tree, read-only snapshot
-state preservation and wide/narrow actual-app visual checks pass. No new warnings.
-Task15c's venv is dependency-only Python3.13.5; direct imports need PYTHONPATH=src;
-make sets it. Primary gate override VENV=.worktrees/task15c/.venv. Old primary
-venv lacks Black. Package remains0.5.0 until Task24's0.6.0rc1 change.
+## Task24 preserved work and exact restoration
 
-## Next: Task23 canonical founders acceptance
+Branch task/24-v06-closeout/worktree .worktrees/task24 atcontract6f033c2 before
+prerequisiteupdate. Original25-file uncommittedmetadata/docs checkpoint is safely
+held in ownedstash29d9f3cf7811a9c8fd53f16f3dda4add5e84e0e1. Exactfilebackup+
+SHAmanifest under .superpowers/sdd/v0_6_completion_plan/task24-preserved-before-corrections.
+Task24checkout currentlyclean; metadataNOTdiscarded/committed/reviewed. Worker
+/root/task24_closeout paused. Focused1version/healthtest,65exports/whitespacepassed;
+no finalrootreleasegates/linkchecks yet. Metadataincludes3versionliterals+test,
+3generatedegg-info, release notes/indexes/hand-offs/report within24allowedfiles.
 
-The approved completion plan is docs/subagent_execution_plan/v0_6_completion_plan.md.
-Task23 is in progress on task/23-founders-acceptance in .worktrees/task23.
-Binding contract070ea59 plus independently reviewed amendments8b8cbf5/e013ae4
-are pushed. Product code/tests/report are preserved UNCOMMITTED, unfinished and
-NOT independently reviewed. Resume the existing /root/task23_implementation worker
-or use its incremental report; do not reconstruct completed tasks or restart it.
-Read v0_6_usage_pause_2026_10_15.md for precise current evidence and remaining gates.
-Use binding task plan/prompt rather than the obsolete ignored initial draft.
+Next root: merge currentcorrectedmilestone into24branch, preservebothcontract/docs
+if conflicts, commitprerequisitemerge, apply exactownedstash WITHOUTdrop. Resolve
+onlymetadata/docconflicts by restoringcurrentaudit4resolved/actualrefs +0.6.0rc1
+candidateversion. Resume24worker forfinalsync/linkchecks, independentboundedfinal
+metadata/docdiffreview; root make/separateexamples/whitespace/source+installed+
+Python3.11 minimumCLI matrices,8assets/exports/health/actualoptionalserver+loopback
+inspect/Chrome, thencommit/push/merge and repeatedmergedgates/live refs. Owner
+integration/tag remain separate. Do not treat candidate aspublished/readyearly.
 
-Root baseline make check passed1271/10 including73Chrome. Worker focused evidence
-reports221focused passes, success10/stall5/failure13, two fresh and resume1/3/4
-exact schema/payload equality. Worker stopped cleanly. Example039, edge tests,
-cleanup/docs, success/stall Chrome, independent review and root gates remain.
-Two real integration defects required bounded contract amendments before edits:
-- Valid nonempty sustained history, anchored by unique need_created event and
- contiguous through current tick, is pending UNSATISFIED while accumulating;
- malformed/missing/stale/unavailable history remains UNAVAILABLE. Canonical camp
- explicitly starts housing/storage capacity0. ACTIVE-only gateway is unchanged.
-- Existing dispatch_external_trade is public structured action vocabulary but
- replay treated it as forbidden prose. Exact public key is allowed only in
- option/request key fields; descriptions/labels/prose/arguments/context retain
- unchanged information-boundary checks. No global regex or gateway weakening.
+## Runtime/work practices
 
-All amendments passed independent contract review. Final implementation review,
-full task/merged gates, canonical CLI matrix, browser/wheel/install and example039
-remain required. Do not claim Task23 complete from focused worker evidence.
-Root prepared persistent supplemental scripts at
-.superpowers/sdd/v0_6_completion_plan/founders-{matrix,inspector}.py; inspect/adapt
-before running AFTER review. /tmp copies are disposable across desktop sessions.
+Rootownsarchitecture/scope/disposition/gates/integration. Exactplan/-prombt before
+scopechange, reportrequired; boundedworker + independentreadonlyreview. Managers
+mutate/systembehavior/eventimmutability; NPCfilteredcognition/untrustedproposal/
+gateway authority. No rawstate/internalIDs/numericpolicy/inspectorDTOs intoNPCs.
+Tapesprove deterministicdrivers notliveLLMstrategy. Schema1–12compatible,legacy
+replaywithoutlabelsunsupported, inspectorGETonlyfixedsnapshot (same-enginefactory
+live). Retain rootrulings/limitations in24finalreport forownerreview.
 
-After Task23 reviewed acceptance, Task24 performs whole-milestone review and
-release/package/docs closure at0.6.0rc1, with no main merge/tag/v0.7 work.
-
-## Execution and architecture invariants
-
-One durable isolated task branch at a time; one bounded worker and independent
-read-only reviewer for nontrivial tasks. Root owns architecture, scope amendments,
-review disposition, final gates and integration. Amend plan AND saved -prombt.md
-before expanding allowed files. Every implementation needs truthful -report.md.
-Workers focused checks; root full make, separate examples, whitespace plus task
-acceptance gates, repeated on merged milestone. Preserve user-owned changes.
-
-Managers own mutation, systems behavior, immutable events. NPC flow remains
-WorldState->perception->immutable cognitive records->filtered context->untrusted
-proposal->action gateway->engine mutation. No IDs/rawattrs/thresholds/privileged
-inspector DTOs/runtime objects in NPC context. Tapes prove deterministic drivers,
-not a live LLM's ability to choose strategy. Schema1–12 load compatible defaults;
-legacy missing label bindings never guessed for replay. Inspectors GET-only,
-separate snapshots; module app empty world, create_app(engine) same engine.
-
-Active durable checkouts .worktrees/task21,task22,task15,task15c,task23. Native alternative
-was read-only and archived; fallback intentional. Remote access uses scoped
-GIT_SSH_COMMAND='ssh -F /dev/null -o BatchMode=yes' for broken system Include;
-host-key verification retained. Verify current status/history/live remote tips
-before writes. Main last live-verified12f2f17. Ignored root ledger is supplemental;
-committed task contracts/reports and this brief remain authoritative.
+Durable .worktrees/task21,22,15,15c,23,24,24a; nativealternativewasreadonly/archived.
+Dependency-only3.13.5venvs requirePYTHONPATH=src (make setsit); primarygate
+VENV=.worktrees/task24a/.venv. Python3.11available, minimumreleasegatespending.
+Gitmutationsescalated, scopedSSH GIT_SSH_COMMAND='ssh -F /dev/null -o BatchMode=yes'.
+VerifyGitstatus/history/liveremotes; mainlast12f2f17. /tmp canclear acrosssessions;
+ignoredSDDledger/scripts/backups durable supplemental, contracts/reports/brief
+canonical. Roothelpers include founders-matrix.py (preservevenvsymlinkpath),
+founders-inspector.py,installed-founders-smoke.py,installed-inspect-smoke.py,
+document-links.py. No completedtask redispatch or automaticnewscope.

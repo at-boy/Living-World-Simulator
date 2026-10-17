@@ -1,5 +1,15 @@
 # NPC Information Boundary
 
+Goal and objective identifiers remain internal regardless of their spelling.
+The final boundary checks all definition and state keys, including non-stage
+goals, and recursively rejects their criterion, deadline and evidence numbers
+from selected interpretations, labels, cognitive text and visible conversation
+prose. Goal managers retain engine truth and arbitrary valid IDs; selection
+does not grant permission to expose hidden data. Safe qualitative descriptions
+remain explicit projections through the existing perception/retrieval/context
+flow. No goal evidence, raw state or other NPC's hidden records are added to
+context or memory. LLM context remains filtered and LLM actions remain proposals.
+
 Work IDs, reservation IDs, targets, exact requirements, assignments, progress,
 priority, deadlines, ticks, and events remain engine-only. Explicitly selected
 `NPCWorkInterpretation` contains only a public label and fixed qualitative

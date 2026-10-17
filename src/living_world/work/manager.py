@@ -286,7 +286,7 @@ class WorkManager:
                 },
             )
             self._state.work_states[work_id] = updated
-            self._next_reservation_id += 1
+            self._next_reservation_id = int(rid.rsplit("_", 1)[1]) + 1
         except Exception:
             self._restore(snapshot)
             raise
@@ -1019,7 +1019,11 @@ class WorkManager:
         return f"work_{self._next_work_id:06d}"
 
     def _candidate_reservation_id(self) -> str:
-        return f"work_reservation_{self._next_reservation_id:06d}"
+        candidate = max(
+            self._next_reservation_id,
+            self._next("work_reservation", self._state.work_reservations),
+        )
+        return f"work_reservation_{candidate:06d}"
 
     @staticmethod
     def _tools(values):
