@@ -502,3 +502,6 @@
 
 ### Changed
 - Architecture documentation aligned with property graph model.
+
+Task24 release-readiness contract refined after reviewed Task23 integration;
+version0.6.0rc1 and owner-only integration/tag boundary explicit.

@@ -962,3 +962,11 @@ read-only browser and isolated installed-wheel/entrypoint/loopback inspect passe
 Journal-only merge conflict preserves earlier checkpoint and contract history.
 Merged validation passed1376/10,76Chrome,examples001–039, separateexamples,
 whitespace and exact public CLI fresh/resume matrix. Task24 next; main/userconfig preserved.
+
+
+## 2026-10-17 — Task24 release-readiness contract
+
+Task23 delivery87af71a/merge58b6ba7 fully reviewed and task/merged gates1376/10,
+76Chrome,examples001–039 plus CLI/replay/install/inspect passed. Task24 starts
+from that head, version0.6.0rc1, documentation/metadata only. Independent whole
+milestone implementation audit and final root gates remain pending.
