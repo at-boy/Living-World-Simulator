@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Fixed
+
+- Close the non-stage goal/objective NPC information boundary, preserve reservation
+  history after automatic execution, reload maintenance-retained historical
+  placements, and reject corrupt ancestor cycles without hanging (Task 24a).
+
 ### Added
 
 - Add fixed packaged founders composition, bounded outcome aliases, trusted terminal callbacks and read-only saved-world inspection. Task 23 acceptance and independent review are in progress.
@@ -506,3 +512,6 @@
 Release closeout checkpoint: whole-milestone audit found two blocking validation/
 NPC-boundary issues. Task24 candidate metadata/docs remain uncommitted; no release
 readiness approval. See October17 audit and usage handoff.
+
+Task24a correction contract isolates two release-audit findings: NPC goal data
+boundary coverage and reservation-ID allocation after shadow execution.

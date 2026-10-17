@@ -1,80 +1,72 @@
-# Continuation brief — October17,2026
+# Continuation brief — October17,2026, corrected milestone
 
-## Authority and usage
+## Authority and budget
 
-Owner resumed October17. Continue approved v0.6 completion, but STOP BEFORE
-five-hour allowance falls below10%, preserving checkpoint/interruption buffer.
-Root stopped active agents at21% remaining; no automatic resume/reset. Owner
-release choice0.6.0rc1. Never commit/merge/tag/push v0.6 to main; integration/tag
-are separate owner actions. Preserve primary .codex/config.toml unstaged edit.
+Ownerapproved fullv0.6 completion and selected0.6.0rc1; no main/tag/publication or
+v0.7. Preserve primary .codex/config.toml unstaged edit. Stop BEFORE fivehour
+allowance dropsbelow10%, savecheckpoint/stopagents withbuffer. EarlierOctober17
+pause was savedat21%; during same authorizedturn usage refreshed to99%remaining
+withoutmanualreset, so rootcontinued transparently. Currentexecution Task24next.
 
-## Completed through Task23
+## Reviewed completed work
 
-Reviewed/integrated/pushed sequence16,16a,15a,15b,17,17a,18,18a,15d,19,19a,20,
-20a,20b,21,22,15,15c,23. Do not redispatch completed tasks. Recent deliveries/merges:
-21 c821efe/1ab288b;22 02b35fe/7806f29;15 dea51cb/91e33bf;
-15c9d9dbf0/0a81a11;23 87af71a/58b6ba7. Task23 is COMPLETE, not paused.
+Completed16,16a,15a,15b,17,17a,18,18a,15d,19,19a,20,20a,20b,21,22,15,15c,23,24a.
+Recent delivery/merges:21c821efe/1ab288b;22 02b35fe/7806f29;
+15dea51cb/91e33bf;15c9d9dbf0/0a81a11;23 87af71a/58b6ba7.
+24adeliverycfa50b6 is reviewed and integrated; currentmerge ref in Gitlog.
 
-Task23 initial review required5P2 corrections; scoped re-review allADDRESSED,
-spec/qualityPASS. Source and merged make1376passed/10existing deliberate skips,
-76actualChrome cases,examples001–039; separate examples/whitespace passed.
-Source,installed and merged public CLI matrices: success10,stall5,failure13,
-twofresh/resume1,3,4 exactschema12payload hashes; terminal no-step resume.
-ActualChrome alloutcomes GETonly/no pageerrors/fullstate+DB unchanged; wide/narrow
-visuals inspected. Isolated0.5.0wheel8assets/publicexports/routes/404/405 and actual
-installedconsole/loopbackinspect passed, including spaced/?/# DB path. Version
-remains0.5.0 on milestone until reviewed Task24 metadata lands. Root restored
-only known build-generated trackedegg-info after23build, outside23scope.
-Journal-only merge conflict retained both historical entries. Primary code58b6ba7.
+Task23 task/merged1376/10,76Chrome/examples001–039 and source/installed CLI matrix,
+read-onlybrowser/wheel/console/loopbackinspect passed. Its finalfixedscenario
+success10/stall5/failure13 remains exactfresh/resume1,3,4 schema12payloadsame.
 
-## Task24 unfinished and release BLOCKED
+Wholeaudit initially found2P1, resumedremainingcoverage found2morespatialP1.
+24afixes all4: actualgoal/objectiveIDs+numbers protected byfinalNPCboundary;
+reservationcandidate uses authoritativehighwater aftershadowexecution; destroyed
+placements accepted asretainedhistory onload while liveplace/replace guards stay;
+visitedancestor walkrejects malformedcycles withoutloadhang. Independentscoped
+review all4ADDR/spec+qualityPASS. Root taskANDmergedmake1416/10existing skips,
+76Chrome/examples001–039, separateexamples/whitespace/canonicalmatrices passed;
+all3payloadhashesunchanged. Wholeauditremainingtargetedcoveragecompleted/noother
+substantivefindings. Committedauditreport and24areport arecanonicalevidence.
+ExistingEventManagerexceptionalgapsaccepted; no gaplessretryeventclaim/newAPI.
+Primarypackageversion remains0.5.0 until reviewedTask24metadata0.6.0rc1 lands.
 
-Durable .worktrees/task24 branch task/24-v06-closeout, contract6f033c2 pushed from
-58b6ba7. Metadata/docs are UNCOMMITTED, UNREVIEWED and not rootfullyvalidated:
-25allowedfiles including0.6.0rc1metadata,3generatedegg-infofiles, release notes,
-indexes and report. Worker /root/task24_closeout stopped cleanly/no processes.
-Focused version/health1pass/11deselected,65publicexports and whitespacepassed;
-local-link checker notrun. No final candidate readiness claim is authorized.
-Read24plan/prompt/report and v0_6_usage_pause_2026_10_17.md before resuming.
+## Task24 preserved work and exact restoration
 
-Independent whole-milestone audit stopped for usage with2P1 findings. Report is
-committed as v0_6_release_audit_2026_10_17.md; exact coverage/limits explicit.
-- Reproduced: arbitrary non-prefix goal/objective IDs and hidden criterion987
-  pass public GoalManager.npc_interpretation -> NPCContextAssembler. Boundary
-  omits goal/objective dictionaries and numeric records outside stage programs.
-- Code-confirmed, runtime repro pending: WorkExecution shadow manager advances
-  reservation IDs but live engine.work counter stays stale; later public assign
-  overwrites completed reservation/history. Must reproduce before fixing.
+Branch task/24-v06-closeout/worktree .worktrees/task24 atcontract6f033c2 before
+prerequisiteupdate. Original25-file uncommittedmetadata/docs checkpoint is safely
+held in ownedstash29d9f3cf7811a9c8fd53f16f3dda4add5e84e0e1. Exactfilebackup+
+SHAmanifest under .superpowers/sdd/v0_6_completion_plan/task24-preserved-before-corrections.
+Task24checkout currentlyclean; metadataNOTdiscarded/committed/reviewed. Worker
+/root/task24_closeout paused. Focused1version/healthtest,65exports/whitespacepassed;
+no finalrootreleasegates/linkchecks yet. Metadataincludes3versionliterals+test,
+3generatedegg-info, release notes/indexes/hand-offs/report within24allowedfiles.
 
-Both require isolated bounded correction plan/prompt/report and independent
-review, not runtime edits inside24closeout. Root draft at ignored
-.superpowers/sdd/v0_6_completion_plan/task24a-correction-plan-draft.md; NOT bound,
-no correction branch/code started. Verify/amend before dispatch. Complete deferred
-whole-audit coverage after corrections; current report is not comprehensivePASS.
-Then resume preserved24docs (currently firstfinding in mostdocs, both in report),
-independentreview, rootfullmake/separateexamples/linkchecks/source+installedCLI
-matrices/Python3.11minimumsmoke/wheel/assets/actualinspect/browser/mergedgates,
-then reviewedcommit/push/merge and final ownerhandoff. No main/tag/v0.7.
+Next root: merge currentcorrectedmilestone into24branch, preservebothcontract/docs
+if conflicts, commitprerequisitemerge, apply exactownedstash WITHOUTdrop. Resolve
+onlymetadata/docconflicts by restoringcurrentaudit4resolved/actualrefs +0.6.0rc1
+candidateversion. Resume24worker forfinalsync/linkchecks, independentboundedfinal
+metadata/docdiffreview; root make/separateexamples/whitespace/source+installed+
+Python3.11 minimumCLI matrices,8assets/exports/health/actualoptionalserver+loopback
+inspect/Chrome, thencommit/push/merge and repeatedmergedgates/live refs. Owner
+integration/tag remain separate. Do not treat candidate aspublished/readyearly.
 
-## Execution practices
+## Runtime/work practices
 
-Rootowns architecture/scope/disposition/review/finalgates/integration. Mediumtask:
-oneboundedworker + independentreadonlyreview; no overlappingwriters. Amend exact
-allowedfiles in plan and -prombt before edits; report -report.md required. Managers
-mutate,systemsbehave,eventsimmutable. NPCfilteredperception/cognition thenuntrusted
-proposal->gateway; no rawstate/IDs/numericpolicy/privilegedinspectorDTOs in NPCs.
-Tapesprove deterministicdrivers, not liveLLMstrategy. Schema1–12 compatibility;
-legacy replaywithoutlabels unsupported. Inspectfixedreadonlysnapshot, GETonly.
+Rootownsarchitecture/scope/disposition/gates/integration. Exactplan/-prombt before
+scopechange, reportrequired; boundedworker + independentreadonlyreview. Managers
+mutate/systembehavior/eventimmutability; NPCfilteredcognition/untrustedproposal/
+gateway authority. No rawstate/internalIDs/numericpolicy/inspectorDTOs intoNPCs.
+Tapesprove deterministicdrivers notliveLLMstrategy. Schema1–12compatible,legacy
+replaywithoutlabelsunsupported, inspectorGETonlyfixedsnapshot (same-enginefactory
+live). Retain rootrulings/limitations in24finalreport forownerreview.
 
-Durable .worktrees/task21,22,15,15c,23,24. Native managed alternative was readonly
-and archived. Dependency-only Python3.13.5venvs need PYTHONPATH=src; make setsit.
-Primarygate VENV=.worktrees/task23/.venv. Python3.11isavailable but minimum-version
-release smoke remainspending. Gitmutationsrequireescalation. Scopedremoteaccess:
-GIT_SSH_COMMAND='ssh -F /dev/null -o BatchMode=yes', normalhostverification.
-Verifycurrentstatus/history/liveremotes beforewrites; mainlastverified12f2f17.
-
-IgnoredSDDledger/artifacts persistent supplemental, committedcontracts/reports/
-briefauthoritative. Root acceptancehelpers there: founders-matrix.py,
+Durable .worktrees/task21,22,15,15c,23,24,24a; nativealternativewasreadonly/archived.
+Dependency-only3.13.5venvs requirePYTHONPATH=src (make setsit); primarygate
+VENV=.worktrees/task24a/.venv. Python3.11available, minimumreleasegatespending.
+Gitmutationsescalated, scopedSSH GIT_SSH_COMMAND='ssh -F /dev/null -o BatchMode=yes'.
+VerifyGitstatus/history/liveremotes; mainlast12f2f17. /tmp canclear acrosssessions;
+ignoredSDDledger/scripts/backups durable supplemental, contracts/reports/brief
+canonical. Roothelpers include founders-matrix.py (preservevenvsymlinkpath),
 founders-inspector.py,installed-founders-smoke.py,installed-inspect-smoke.py,
-document-links.py. Preserve venv executable symlink path (absolute,notresolve).
-/tmp mayclear acrossdesktopsessions; do not depend on oldlogs/databases.
+document-links.py. No completedtask redispatch or automaticnewscope.

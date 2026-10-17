@@ -1,6 +1,11 @@
 
 # Living World Simulator Backlog
 
+Task 24a implements the four concrete release-audit corrections with focused
+regressions. Independent review and authoritative root/release gates remain
+pending. These repairs add no deferred domain capability; the paused Task 24
+checkpoint must resume only after correction integration.
+
 Task 20 work orders and reservations, Task 20a's actor-bound proposal gateway,
 and Task 20b deterministic execution are implemented.
 
@@ -195,3 +200,7 @@ readiness is blocked by two P1 auditfindings, recorded in committed orchestrator
 handoff auditreport. Correctexisting NPCgoalboundary/reservationID defects in
 bounded isolatedtask before resuming uncommitted24metadata. These are release
 blockers, not deferredfuturefeatures; full audit coverage/gates remainpending.
+
+Task24a isolated existing-defect correction begins from7d75b20; Task24metadata
+checkpoint preserved. Both audit findings and remaining wholeauditcoverage still
+block release readiness until reviewed current validation.

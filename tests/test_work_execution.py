@@ -1,10 +1,13 @@
 from copy import deepcopy
 from dataclasses import replace
+from pathlib import Path
 
 import pytest
 from test_work_orders import _create, _engine
 
+from living_world.cognition import ActionRequest, NPCActionResolver
 from living_world.core.definition import Definition
+from living_world.core.event import Event
 from living_world.external_world import ContactState
 from living_world.managers.event_manager import EventManager
 from living_world.needs import (
@@ -22,6 +25,8 @@ from living_world.work import (
     ExternalConnectionWorkTarget,
     MaintenanceWorkTarget,
     ResourceWorkTarget,
+    WorkActionHandler,
+    WorkAssignmentOffer,
     WorkCategory,
     WorkExecutionSystem,
     WorkStatus,
@@ -673,3 +678,136 @@ def test_save_resume_matches_uninterrupted_execution_at_every_checkpoint(
     left.run(4)
     right.run(4)
     assert right.state == left.state
+
+
+def _completed_shadow_work() -> tuple[SimulationEngine, str, str, str, str]:
+    engine, settlement_id, npc_id = _engine()
+    first = _create(
+        engine,
+        settlement_id,
+        required_progress=1,
+        tools=(),
+        resources=(),
+        target=ResourceWorkTarget("food", 1),
+    )
+    second = _create(
+        engine,
+        settlement_id,
+        public_label="Plant the next crop",
+        tools=(),
+        resources=(),
+        target=ResourceWorkTarget("food", 1),
+        prerequisite_work_ids=(first.id,),
+    )
+    engine.step()
+    assert engine.state.work_states[first.id].status is WorkStatus.COMPLETED
+    assert engine.work.reservations_for(first.id)[0].released_tick == 0
+    engine.work.mark_ready(second.id)
+    return engine, settlement_id, npc_id, first.id, second.id
+
+
+@pytest.mark.parametrize("operation", ("assign", "volunteer"))
+def test_live_assignment_after_shadow_execution_preserves_history_and_resume(
+    tmp_path: Path,
+    operation: str,
+) -> None:
+    engine, _, npc_id, first_id, second_id = _completed_shadow_work()
+    history = engine.work.reservations_for(first_id)
+    repository = SQLiteRepository(str(tmp_path / "shadow.sqlite3"))
+    repository.save_world(engine.state)
+    resumed = SimulationEngine(repository)
+    for definition in engine.definitions.all():
+        resumed.definitions.register(definition)
+    for current in (engine, resumed):
+        if operation == "assign":
+            current.work.assign_and_reserve(second_id, (npc_id,))
+        else:
+            handler = WorkActionHandler(
+                current.state,
+                current.definitions,
+                current.work,
+                npc_id,
+                assignment_offers=(
+                    WorkAssignmentOffer("Help with planting", second_id),
+                ),
+            )
+            result = NPCActionResolver(handler.action_options, (handler,)).resolve(
+                actor_id=npc_id,
+                request=ActionRequest(
+                    action_key="volunteer_for_work",
+                    target_label="Help with planting",
+                    rationale="I can help with planting.",
+                ),
+            )
+            assert result.reason == "The volunteer proposal was accepted."
+        assert current.work.reservations_for(first_id) == history
+        assert (
+            current.state.work_states[second_id].reservation_id
+            == "work_reservation_000002"
+        )
+        current.work.block(second_id, "Waiting for a new shift.")
+        current.work.mark_ready(second_id)
+        reassigned = current.work.assign_and_reserve(second_id, (npc_id,))
+        assert reassigned.reservation_id == "work_reservation_000003"
+        assert current.work._next_reservation_id == 4
+        current.work.validate_loaded_state()
+    assert engine.state == resumed.state
+    repository.save_world(engine.state)
+    assert SimulationEngine(repository).state == engine.state
+
+
+@pytest.mark.parametrize(
+    "failing_kind", ("work_reservation_created", "work_order_assigned")
+)
+def test_highwater_assignment_failure_restores_history_and_retry_events(
+    failing_kind: str,
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    engine, _, npc_id, _, second_id = _completed_shadow_work()
+    repository = SQLiteRepository(str(tmp_path / "retry.sqlite3"))
+    repository.save_world(engine.state)
+    control = SimulationEngine(repository)
+    original = engine.events.record
+    before = repository.load_world()
+    counter_before = engine.work._next_reservation_id
+    assert counter_before == 1
+    assert engine.work._candidate_reservation_id() == "work_reservation_000002"
+    assert engine.work._candidate_reservation_id() == "work_reservation_000002"
+    assert engine.state == before
+    assert engine.work._next_reservation_id == counter_before
+
+    def fail_assignment(
+        *,
+        kind: str,
+        subject_id: str | None = None,
+        attributes: dict[str, object] | None = None,
+    ) -> Event:
+        assert "work_reservation_000002" in engine.state.work_reservations
+        assert engine.work._next_reservation_id == counter_before
+        if kind == failing_kind:
+            raise RuntimeError("assignment event failure")
+        return original(kind=kind, subject_id=subject_id, attributes=attributes)
+
+    monkeypatch.setattr(engine.events, "record", fail_assignment)
+    with pytest.raises(RuntimeError, match="assignment event failure"):
+        engine.work.assign_and_reserve(second_id, (npc_id,))
+    assert engine.state == before
+    assert engine.work._next_reservation_id == counter_before
+    monkeypatch.setattr(engine.events, "record", original)
+    retried = engine.work.assign_and_reserve(second_id, (npc_id,))
+    control.work.assign_and_reserve(second_id, (npc_id,))
+    assert retried.reservation_id == "work_reservation_000002"
+    assert replace(engine.state, events={}) == replace(control.state, events={})
+    retry_events = tuple(engine.state.events.values())[len(before.events) :]
+    control_events = tuple(control.state.events.values())[len(before.events) :]
+    assert len(retry_events) == 2
+    assert not {event.id for event in retry_events}.intersection(before.events)
+    assert [
+        (event.kind, event.tick, event.subject_id, event.attributes)
+        for event in retry_events
+    ] == [
+        (event.kind, event.tick, event.subject_id, event.attributes)
+        for event in control_events
+    ]
+    engine.work.validate_loaded_state()

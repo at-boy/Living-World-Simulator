@@ -1,5 +1,17 @@
 # Living World Simulator – Project Journal
 
+## Task 24a audit corrections — October 17, 2026
+
+Reproduced four audit findings before changing their runtime paths: non-stage
+goal secrets crossing the final NPC boundary, stale live reservation allocation
+after shadow execution, maintenance-retained destroyed placements failing reload,
+and corrupt ancestor cycles hanging reload. Added bounded corrections and public
+API regressions, including live/resume equivalence, assignment rollback and
+historical spatial integrity. Existing schemas, public signatures, mutation
+ownership, qualitative projections and canonical rules remain unchanged.
+Independent review and authoritative root validation remain pending; see the
+Task 24a report for commands, counts and precise failure-injection limits.
+
 ## Task 23 implementation — October 15, 2026
 
 Implemented canonical setup staging, delayed capability composition, replay offers,
@@ -973,3 +985,20 @@ auditfound2P1 (publicNPCgoaldata leak reproduced; reservationhistorycollision
 code-confirmed, runtimeprobe pending) and incompletecoverage. Root stoppedall
 agents at21%remaining; releaseblocked, correctioncontract/gatespending. Main and
 userconfig preserved. No automaticresume/reset.
+
+
+## 2026-10-17 — Task24a correction contract
+
+Independent partialwholeaudit identified reproducedNPCgoaldata leak and code-
+traced reservationhistorycollision. Approved closeout requires isolated fixes;
+24metadata remains paused/uncommitted. Exact24aplan/prompt specify public RED
+reproduction, finalboundary/highwaterallocation only, independentreview/rootgates.
+Usage refreshed during same owner-authorized turn; no manualreset invoked.
+
+
+## 2026-10-17 — Task24a reviewed integration
+
+Deliverycfa50b6 repairedall4wholeauditfindings; independentspec/qualityPASS. Task
+andmerged1416/10,76Chrome/examples001–039, separateexamples/whitespace and exact
+canonicalfresh/resume hashes passed. Wholeauditremainingcoveragecompleted.
+Restorepreserved24metadata forfinalreview/gates; main/userconfig preserved.

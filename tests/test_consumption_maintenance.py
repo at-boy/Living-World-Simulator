@@ -536,3 +536,55 @@ def test_consumption_may_undercollateralize_work_lock_without_mutating_ledger(
     repository = SQLiteRepository(str(tmp_path / "under-work.sqlite3"))
     repository.save_world(engine.state)
     assert repository.load_world().work_reservations == engine.state.work_reservations
+
+
+@pytest.mark.parametrize("with_live_child", (False, True))
+def test_maintenance_destroyed_placement_round_trips_with_history(
+    tmp_path: Path,
+    with_live_child: bool,
+) -> None:
+    from living_world.spatial import Bounds, BoundsKind, Point
+
+    engine, owner_id, capability_id = _world()
+    engine.spatial.place(
+        entity_id=owner_id,
+        geometry=Bounds(0, 0, 10, 10),
+        bounds_kind=BoundsKind.AREA,
+    )
+    engine.spatial.place(
+        entity_id=capability_id,
+        geometry=Bounds(1, 1, 3, 3),
+        bounds_kind=BoundsKind.STRUCTURE,
+        containing_entity_id=owner_id,
+    )
+    if with_live_child:
+        child = engine.entities.create(definition_key="thing", name="Well keeper")
+        engine.spatial.place(
+            entity_id=child.id,
+            geometry=Point(2, 2),
+            containing_entity_id=capability_id,
+        )
+    placements = dict(engine.state.placements)
+    engine.consequences.create_maintenance(
+        MaintenancePolicy(
+            "maintenance_well",
+            owner_id,
+            capability_id,
+            "Village well",
+            (MaintenanceRequirement("stone", 1),),
+            1,
+            2,
+            1,
+            1,
+        )
+    )
+    engine.step()
+    assert engine.state.entities[capability_id].destroyed_tick == 0
+    assert engine.state.placements == placements
+    if with_live_child:
+        assert engine.state.entities[child.id].destroyed_tick is None
+    repository = SQLiteRepository(str(tmp_path / "destroyed-placement.sqlite3"))
+    repository.save_world(engine.state)
+    resumed = SimulationEngine(repository)
+    assert resumed.state == engine.state
+    resumed.spatial.validate_loaded_state()

@@ -47,7 +47,11 @@ sharing any cell does.
 ### Containment
 
 `containing_entity_id` is optional. When present, it must name a different,
-live, placed entity with bounds. Containment cycles are invalid. A parent area
+live, placed entity with bounds when creating or replacing a placement.
+Historical snapshot validation also accepts an existing destroyed subject or
+container, preserving the placement history retained by Task 19a maintenance.
+Missing entities remain invalid. Containment cycles are invalid, including
+pre-existing ancestor loops reached while validating a descendant. A parent area
 may contain points, areas, or structures. A parent structure may contain points
 or structures, but not areas. Points and unplaced entities cannot contain
 anything. A child's geometry must be fully inside its parent's bounds.
@@ -68,6 +72,11 @@ is no silent cascade or stale-placement state. Placement creation/replacement
 also rejects missing entities and entities whose persisted `destroyed_tick` is
 not `None`. This preserves the live-entity invariant across both lifecycle
 owners without giving the entity manager authority to mutate placements.
+Destruction may retain a placement and live descendants as historical state;
+loading that state preserves geometry, containment, kind, overlap and child
+validation without recording events. This load-only allowance never permits
+creation or replacement on a destroyed subject or inside a destroyed container.
+Explicit leaf-first unplace/remove remains available and never cascades.
 
 ### Sibling overlap
 
