@@ -189,3 +189,9 @@ The v0.5 council coordination layer is bounded and non-authoritative. Rules for
 institutional quorums, legitimacy, factions, and secession remain future work.
 The temporary unanimous explicit-decline caller fallback must be replaced by
 engine-owned, organization-specific governance rules and auditable records.
+
+Release audit checkpoint October17: Task23 is integrated58b6ba7. Task24 final
+readiness is blocked by two P1 auditfindings, recorded in committed orchestrator
+handoff auditreport. Correctexisting NPCgoalboundary/reservationID defects in
+bounded isolatedtask before resuming uncommitted24metadata. These are release
+blockers, not deferredfuturefeatures; full audit coverage/gates remainpending.

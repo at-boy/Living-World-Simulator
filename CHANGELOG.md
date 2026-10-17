@@ -502,3 +502,7 @@
 
 ### Changed
 - Architecture documentation aligned with property graph model.
+
+Release closeout checkpoint: whole-milestone audit found two blocking validation/
+NPC-boundary issues. Task24 candidate metadata/docs remain uncommitted; no release
+readiness approval. See October17 audit and usage handoff.

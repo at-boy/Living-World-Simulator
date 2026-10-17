@@ -962,3 +962,14 @@ read-only browser and isolated installed-wheel/entrypoint/loopback inspect passe
 Journal-only merge conflict preserves earlier checkpoint and contract history.
 Merged validation passed1376/10,76Chrome,examples001–039, separateexamples,
 whitespace and exact public CLI fresh/resume matrix. Task24 next; main/userconfig preserved.
+
+
+## 2026-10-17 — Release audit and usage pause
+
+Task23 complete at58b6ba7 after reviewed task/merged1376tests/10existing skips,
+76Chrome/examples001–039 and CLI/replay/install/readonlyinspection gates. Task24
+contract6f033c2 pushed,25-file metadata/docs checkpoint remains uncommitted. Whole
+auditfound2P1 (publicNPCgoaldata leak reproduced; reservationhistorycollision
+code-confirmed, runtimeprobe pending) and incompletecoverage. Root stoppedall
+agents at21%remaining; releaseblocked, correctioncontract/gatespending. Main and
+userconfig preserved. No automaticresume/reset.

@@ -186,28 +186,28 @@ packaged browser client without mutation requests or NPC integration.
 
 ## Phase 4 — Task 23: canonical founders acceptance
 
-- [ ] Finalize the exact public scenario/setup format, three tape selections,
+- [x] Finalize the exact public scenario/setup format, three tape selections,
   CLI commands, seed, tick bounds, success/failure criteria, and stop precedence.
   The task contract must explicitly include the integration ownership above.
-- [ ] Ship one canonical founding scenario with success, stall, and failure
+- [x] Ship one canonical founding scenario with success, stall, and failure
   tapes using public labels and the reviewed managers/runtime interfaces.
-- [ ] Success must sustain water, food, shelter, storage, and a homeland
+- [x] Success must sustain water, food, shelter, storage, and a homeland
   connection and reach `settlement`. Task 21 tests separately prove town
   promotion; canonical success need not grow to town.
-- [ ] Stall must remain valid and runnable at its bound with explanatory
+- [x] Stall must remain valid and runnable at its bound with explanatory
   blocked work/objective evidence and no false terminal result.
-- [ ] Failure must follow configured engine-owned shortage, deadline, or
+- [x] Failure must follow configured engine-owned shortage, deadline, or
   viability criteria with events explaining its authoritative outcome.
-- [ ] Run each documented command without a live model or manual per-tick
+- [x] Run each documented command without a live model or manual per-tick
   intervention. Compare two fresh runs and checkpoint/resume at multiple ticks
   using byte-equivalent normalized final state, event history, and tape cursor.
-- [ ] Exercise inspection for each outcome, including the causative event
+- [x] Exercise inspection for each outcome, including the causative event
   chain, not merely endpoint availability.
-- [ ] Audit every proposal's filtered-context/offered-action/gateway route;
+- [x] Audit every proposal's filtered-context/offered-action/gateway route;
   exclude hidden criteria and internal IDs from tape-visible content.
-- [ ] Isolate prerequisite defects in documented correction work rather than
+- [x] Isolate prerequisite defects in documented correction work rather than
   hiding them in scenario assets or widening the task silently.
-- [ ] Independently review, run required validation plus all three scenarios,
+- [x] Independently review, run required validation plus all three scenarios,
   report commands/results/comparisons, and integrate.
 
 Exit: the milestone's one-command acceptance target is demonstrated end to end.
@@ -332,3 +332,9 @@ Usage checkpoint October15: Task23 contract070ea59 plus reviewed amendments
 fresh/resume1/3/4 payload candidates. No implementation review/full gates or
 integration yet. Root stopped with headroom before owner10% floor; see current
 continuation brief and v0_6_usage_pause_2026_10_15.md. No automatic resume/reset.
+
+
+October17 usagecheckpoint: Task23 delivery87af71a/merge58b6ba7 complete; Task24
+contract6f033c2 pushed, metadata/docs uncommitted. Partialwholeaudit2P1blocks
+readiness; boundedcorrection and completedauditcoverage requiredbeforecloseout.
+See currentcontinuation/October17audit+pause; allagentsstoppedbefore10%floor.
