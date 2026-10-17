@@ -8,14 +8,16 @@ Start the new session by providing
 It directs the session to read
 [`continuation_brief.md`](continuation_brief.md) before it acts.
 
-The current checkpoint is reviewed Task24a delivery `cfa50b6`, integrated as
-`c1d93cd`, resolving all four whole-milestone audit findings. Remaining targeted
-code-audit coverage completed without further findings. Task24 prepares
-`0.6.0rc1` on prerequisite merge `e60262d`; candidate metadata/docs are uncommitted
-pending independent final review and current root release/installed/minimum-Python
-and merged gates. See the continuation brief and
+Task 24 delivery `a5c275f`, integrated as `badd5f9`, completes the reviewed `0.6.0rc1`
+candidate on `milestone/v0.6`. Root task and merged gates each passed 1,416 tests / 10
+existing deliberate skips, 76 Chrome cases and examples 001–039. Separate examples and
+whitespace checks passed. Source and installed Python 3.13.5 / 3.11.2 canonical runs
+preserve identical complete schema-12 payloads across fresh runs and resume ticks 1, 3
+and 4. Wheel, exports, eight assets, health, read-only APIs, actual console/loopback
+inspection and all-outcome browser checks passed.
+See the continuation brief and
 [Task24 report](../subagent_execution_plan/v0_6/24_v06_release_closeout-report.md).
-No main integration, tag or publication is claimed.
+Main integration, tagging and publication remain separate owner actions.
 
 The cross-milestone task index is
 [`docs/subagent_execution_plan/README.md`](../subagent_execution_plan/README.md).

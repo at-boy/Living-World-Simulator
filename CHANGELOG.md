@@ -4,8 +4,9 @@
 
 ## 0.6.0rc1 — Release candidate preparation
 
-Release metadata and documentation prepared for owner integration; final current
-review/validation is tracked in the [Task 24 report](docs/subagent_execution_plan/v0_6/24_v06_release_closeout-report.md).
+Reviewed release candidate integrated as `badd5f9` on `milestone/v0.6`: 1,416 tests,
+10 deliberate skips, 39 examples and source/installed replay checks passed.
+Release metadata and owner handoff evidence are recorded in the [Task 24 report](docs/subagent_execution_plan/v0_6/24_v06_release_closeout-report.md).
 No main integration, tag or publication is claimed.
 
 ### Fixed

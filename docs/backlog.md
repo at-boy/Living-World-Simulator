@@ -1,15 +1,15 @@
 
 # Living World Simulator Backlog
 
-Twenty v0.6 tasks through Task24a are reviewed and integrated. Task24a delivery
-`cfa50b6`, merged `c1d93cd`, resolved all four release-audit findings; remaining
-targeted whole-milestone audit coverage completed without additional findings.
-Task and merged gates each passed1416tests/10existing skips,76Chrome cases and
-examples001–039, separate examples/whitespace and full canonical matrices with
-unchanged hashes. Task24 prepares0.6.0rc1 on corrected prerequisite mergee60262d;
-final candidate review, current root release gates and integration remain pending.
-See the [Task24a report](subagent_execution_plan/v0_6/24a_v06_audit_corrections-report.md)
-and [current closeout report](subagent_execution_plan/v0_6/24_v06_release_closeout-report.md).
+Task 24 delivery `a5c275f`, integrated as `badd5f9`, completes the reviewed `0.6.0rc1`
+candidate on `milestone/v0.6`. Root task and merged gates each passed 1,416 tests / 10
+existing deliberate skips, 76 Chrome cases and examples 001–039. Separate examples and
+whitespace checks passed. Source and installed Python 3.13.5 / 3.11.2 canonical runs
+preserve identical complete schema-12 payloads across fresh runs and resume ticks 1, 3
+and 4. Wheel, exports, eight assets, health, read-only APIs, actual console/loopback
+inspection and all-outcome browser checks passed.
+All 21 authorized tasks are complete; see the
+[current closeout report](subagent_execution_plan/v0_6/24_v06_release_closeout-report.md).
 These corrections add no deferred domain capability.
 
 Task 20 work orders and reservations, Task 20a's actor-bound proposal gateway,
@@ -22,8 +22,8 @@ runtime/cursor contract and ADR-0025 remain authoritative. Task15
 operator inspector is independently reviewed and integrated. Task15c spatial
 view is independently reviewed, validated and integrated. Task23 canonical
 composition is independently reviewed, fully validated and integrated as58b6ba7,
-with deterministic success10, stall5 and failure13. Task24 prepares0.6.0rc1; final
-review/root gates and integration status are in its
+with deterministic success10, stall5 and failure13. Task24 completes0.6.0rc1; reviewed final
+root gates and integration evidence are in its
 [report](subagent_execution_plan/v0_6/24_v06_release_closeout-report.md).
 Live-model strategy validation remains future work. Legacy replay enablement on
 populated saves without label bindings remains unsupported. Reusable
@@ -209,7 +209,7 @@ engine-owned, organization-specific governance rules and auditable records.
 The paragraphs below retain the pre-correction checkpoint. Their pending findings,
 audit-coverage and correction-integration instructions are superseded by reviewed
 Task24a mergec1d93cd and the current status at the top of this document. All four
-code findings are now resolved; final Task24 candidate release gates remain pending.
+code findings and final Task24 release gates are now resolved.
 
 Task24 release closeout in progress from reviewed Task23 merge58b6ba7; no main
 integration or tag authorized. Final release-readiness report/gates pending.

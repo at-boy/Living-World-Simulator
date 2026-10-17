@@ -75,7 +75,7 @@ The historical execution order and all associated artifacts are indexed below.
 - **21 — Settlement development stages** (reviewed and integrated): [plan](v0_6/21_settlement_development_stages.md), [prompt](v0_6/21_settlement_development_stages-prombt.md), [report](v0_6/21_settlement_development_stages-report.md)
 - **22 — Deterministic recorded proposal tapes** (reviewed and integrated): [plan](v0_6/22_recorded_proposal_tapes.md), [prompt](v0_6/22_recorded_proposal_tapes-prombt.md), [report](v0_6/22_recorded_proposal_tapes-report.md)
 - **23 — Canonical founders acceptance and runtime composition** (reviewed and integrated): [plan](v0_6/23_canonical_founders_acceptance.md), [prompt](v0_6/23_canonical_founders_acceptance-prombt.md), [report](v0_6/23_canonical_founders_acceptance-report.md)
-- **24 — v0.6.0rc1 release-readiness closeout** (closeout in progress; corrected base reviewed, final root gates pending): [plan](v0_6/24_v06_release_closeout.md), [prompt](v0_6/24_v06_release_closeout-prombt.md), [report](v0_6/24_v06_release_closeout-report.md)
+- **24 — v0.6.0rc1 release-readiness closeout** (complete; independently reviewed, validated and integrated as `badd5f9`): [plan](v0_6/24_v06_release_closeout.md), [prompt](v0_6/24_v06_release_closeout-prombt.md), [report](v0_6/24_v06_release_closeout-report.md)
 
 - **24a v0.6 audit corrections** (reviewed and integrated c1d93cd): [plan](v0_6/24a_v06_audit_corrections.md), [prompt](v0_6/24a_v06_audit_corrections-prombt.md), [report](v0_6/24a_v06_audit_corrections-report.md)
 

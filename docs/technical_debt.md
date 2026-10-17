@@ -4,7 +4,7 @@
 
 Task23 is reviewed and integrated as58b6ba7. Task24 metadata/docs preparation
 introduces no runtime change or newly established architecture debt. Whole-milestone targeted code review and all four scoped corrections passed;
-final candidate review and current release gates remain in the
+final candidate review and current task/merged release gates passed; see the
 [closeout report](subagent_execution_plan/v0_6/24_v06_release_closeout-report.md).
 This is not a claim that future capabilities or all possible defects are resolved.
 Generic scenario authoring, live-model strategy validation, legacy replay without

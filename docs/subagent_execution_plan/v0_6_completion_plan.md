@@ -1,13 +1,15 @@
 # v0.6 milestone completion plan
 
 Date: 2026-10-07
-Status: owner-approved execution on 2026-10-13; Phase0 and twenty tasks through
-Task24a completed. Task24a deliverycfa50b6/mergec1d93cd resolved all four audit
-findings; remaining targeted audit coverage completed. Corrected task/merged gates
-passed1416tests/10existing skips,76Chrome and examples001–039 with unchanged
-canonical hashes. Task24 candidate metadata/docs on prerequisite mergee60262d
-remain pending final review, current root release gates and integration.
-Release version confirmed by owner: `0.6.0rc1`; no main/tag/publication authorized.
+Status: all 21 authorized tasks and Phases 0–5 complete. Task 24 delivery `a5c275f`,
+integrated as `badd5f9`, completes the reviewed `0.6.0rc1` candidate on
+`milestone/v0.6`. Root task and merged gates each passed 1,416 tests / 10 existing
+deliberate skips, 76 Chrome cases and examples 001–039. Separate examples and whitespace
+checks passed. Source and installed Python 3.13.5 / 3.11.2 canonical runs preserve
+identical complete schema-12 payloads across fresh runs and resume ticks 1, 3 and 4.
+Wheel, exports, eight assets, health, read-only APIs, actual console/loopback inspection
+and all-outcome browser checks passed.
+No main integration, tag or publication authorized.
 
 **Goal:** Complete the autonomous founding-settlement vertical slice on
 `milestone/v0.6`, with reproducible success, stall, and failure runs,
@@ -219,21 +221,21 @@ Exit: the milestone's one-command acceptance target is demonstrated end to end.
 
 ## Phase 5 — Task 24: release-readiness closeout
 
-- [ ] Perform one independent whole-milestone review against the acceptance
+- [x] Perform one independent whole-milestone review against the acceptance
   target, including all task reports, merges, authority/information boundaries,
   schemas/migrations, APIs, UI, public exports, and installed assets.
-- [ ] Resolve implementation defects in bounded correction tasks with fresh
+- [x] Resolve implementation defects in bounded correction tasks with fresh
   review and validation before resuming closeout.
-- [ ] Use the owner-confirmed `0.6.0rc1` consistently across every release
+- [x] Use the owner-confirmed `0.6.0rc1` consistently across every release
   version surface. No tag is authorized.
-- [ ] Update README/operator/API docs, release notes, changelog, journal,
+- [x] Update README/operator/API docs, release notes, changelog, journal,
   backlog, roadmap, milestone index, and continuation brief consistently.
-- [ ] Re-run repository gates, all canonical outcomes, replay/resume comparisons,
+- [x] Re-run repository gates, all canonical outcomes, replay/resume comparisons,
   and wheel/install/import/CLI/static-asset smoke checks.
-- [ ] Produce a requirement-to-evidence closeout report and list any remaining
+- [x] Produce a requirement-to-evidence closeout report and list any remaining
   limitations. Unavailable tooling or failed remote access blocks the affected
   completion claim.
-- [ ] Leave milestone implementation committed, reviewed, and pushed; verify
+- [x] Leave milestone implementation committed, reviewed, and pushed; verify
   live remote tips and confirm `main` was unchanged. Keep the user configuration
   edit separate; distinguish a clean release checkout from that known local edit.
 
@@ -350,16 +352,14 @@ Task23 delivery87af71a/merge58b6ba7 passed independent review after five bounded
 corrections. Task and merged root gates each passed1376tests/10existing skips,
 76Chrome cases and examples001–039. Exact complete fresh/resume1/3/4 schema12
 payload equality and source/installed CLI/browser/loopback inspection passed.
-Task24 metadata/docs preparation is in progress at0.6.0rc1 on prerequisite
-e60262d. Task24a deliverycfa50b6/mergec1d93cd resolved all four audit findings;
-independent scoped review passed and remaining targeted code coverage completed
-without additional findings. Task and merged1416tests/10existing skips,76Chrome,
-examples001–039 and canonical full matrices passed with unchanged payload hashes.
-Final metadata/docs review, current root release gates and integration remain
-pending. Phase5 boxes remain open until root verifies each claim. See the
-[Task24a report](v0_6/24a_v06_audit_corrections-report.md),
-[committed audit](../orchestrator_handoff/v0_6_release_audit_2026_10_17.md) and
-[Task24 report](v0_6/24_v06_release_closeout-report.md).
+Task 24 delivery `a5c275f`, integrated as `badd5f9`, completes the reviewed `0.6.0rc1`
+candidate on `milestone/v0.6`. Root task and merged gates each passed 1,416 tests / 10
+existing deliberate skips, 76 Chrome cases and examples 001–039. Separate examples and
+whitespace checks passed. Source and installed Python 3.13.5 / 3.11.2 canonical runs
+preserve identical complete schema-12 payloads across fresh runs and resume ticks 1, 3
+and 4. Wheel, exports, eight assets, health, read-only APIs, actual console/loopback
+inspection and all-outcome browser checks passed.
+See the [Task24 report](v0_6/24_v06_release_closeout-report.md).
 No main/tag or publication claim.
 
 Earlier starting-state and usage checkpoints above are historical evidence;

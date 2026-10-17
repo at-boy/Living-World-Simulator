@@ -4,7 +4,7 @@ Status: independent final spec/quality PASS after both P2 documentation findings
 were corrected and re-reviewed. Root current Task24 candidate gates PASS as below.
 Task24a cfa50b6/c1d93cd resolves all4code findings; remaining targeted whole-audit
 coverage completed. Candidate0.6.0rc1 integration/repeated merged gates and verified
-push are recorded in the final handoff section after they occur. Main/tag/package
+push are complete and recorded in the final handoff section. Main/tag/package
 publication remain separate owner actions. Earlier worker checkpoints are history.
 
 ## Requirement-to-evidence mapping
@@ -14,14 +14,14 @@ publication remain separate owner actions. Earlier worker checkpoints are histor
 | Exact release identity | VERSION, pyproject.toml project.version, src/living_world/__init__.py __version__ set0.6.0rc1. Only test_inspection_api expected release literal changes; all health/consistency assertions retained. |
 | Generated metadata | setuptools.build_meta.prepare_metadata_for_build_wheel into isolated /tmp metadata directory; copied only permitted PKG-INFO,SOURCES.txt,requires.txt into tracked egg-info. Approved dependencies/package data unchanged; server extra/manifest aligned. |
 | Release/operator guidance | README, docs/releases/v0_6_0rc1.md and canonical_founders/API/inspector/boundary guides link candidate and current evidence. Three run commands and inspect startup/optional server documented. |
-| Task artifact coverage | Milestone index links21 task plans/prompts/reports, including pending Task24 and reviewed24a. All20 completed tasks have existing reports; ordered merge history covers16 through23 without unexplained implementation merge. |
+| Task artifact coverage | Milestone index links21 task plans/prompts/reports, including completed Task24 and reviewed24a. All21 completed tasks have existing reports; ordered merge history covers16 through23 without unexplained implementation merge. |
 | Historical accepted evidence | Task23 delivery87af71a, merge58b6ba7; reviewed report records task and merged1376passed/10existing skips,76Chrome,examples001–039, source/installed exact hashes, real inspect/browser GET-only/full state and database preservation. Historical counts were not rerun or claimed current by worker. |
 | Whole-milestone review | All4findings corrected by reviewed Task24a deliverycfa50b6/mergec1d93cd; task+merged1416passed/10existing skips,76Chrome/examples001–039; full canonical matrices unchanged. Remaining targeted audit coverage completed without additional findings. See committed audit and24a report linked below. |
 | Current status and remaining work | Candidate docs reviewed; root task gates PASS. Integration/merged final status is recorded below. Historical reports/release sections/usage checkpoints preserved. |
 | Scope/architecture | Runtime delta only three version literals; one existing test literal; no behavior/architecture/schema/dependency changes. Only exact Task24 allowed files edited. |
 | Future work/limits | Deterministic tapes are not live-LLM strategy validation; fixed recipe/two founders, legacy replay without labels, generic authoring, reusable stage templates/demotion, automatic stage perception remain deferred. Inspector is privileged fixed GET-only snapshot; dense labels use accessible list fallback. |
-| Final candidate acceptance | Independent final review PASS; root candidate make/examples/whitespace, source+installed3.13+installed3.11 exact CLI matrices, wheel/assets/import/API/health/entrypoint/actualinspect and all-outcome Chrome PASS. Repeated merged gates/live remote verification follow integration. |
-| Owner handoff | PENDING root final refs/merged counts/verified push and clean release checkout. Owner-only main integration/tag/publication remain outside authorization. |
+| Final candidate acceptance | Independent final review PASS; root candidate make/examples/whitespace, source+installed3.13+installed3.11 exact CLI matrices, wheel/assets/import/API/health/entrypoint/actualinspect and all-outcome Chrome PASS. Repeated merged gates/live remote verification passed; see final handoff. |
+| Owner handoff | PASS final task/merged gates and delivery integration; live refs verified in final handoff below. Primary retains only the user configuration edit. Owner-only main integration/tag/publication remain outside authorization. |
 
 ## Historical first-checkpoint focused worker validation
 
@@ -134,7 +134,7 @@ base results, not worker-run or final0.6.0rc1 installed/minimum-Python gates.
   EventManager's private allocator. Successful live/resume full equality is required;
   exceptional retry checks use unique IDs and semantic events with accepted gaps.
 
-## Worker synchronization focused checks before root validation
+## Historical worker synchronization checks before root validation
 
 - Exact version/health focused test: PASS1,11deselected on corrected candidate.
 - Source public exports: PASS55root/10founders; runtime0.6.0rc1.
@@ -145,7 +145,7 @@ base results, not worker-run or final0.6.0rc1 installed/minimum-Python gates.
 All final root release/installed/Python3.11/browser and repeated merged gates
 remain pending. Candidate is not release-complete.
 
-## Independent final review correction round1 — October17
+## Historical independent final review correction round1 — October17
 
 Root accepted both P2 documentation findings. Corrected only README, candidate
 release notes, backlog, completion plan and this report; no runtime/metadata/VCS
@@ -209,3 +209,36 @@ Fullpayload SHA256 (schema12; identical source/installed3.13/installed3.11):
 Fullsuite runs Python3.13.5; Python3.11.2 evidence is installedCLI/import/API/
 asset/health compatibility, not a second fullsuite claim. No finaltooling gate
 unavailable; no new productwarnings. Final integration/mergedgates/refs follow.
+
+
+## Final root integration and owner handoff — October 17, 2026
+
+Task 24 delivery `a5c275f`, integrated as `badd5f9`, completes the reviewed `0.6.0rc1`
+candidate on `milestone/v0.6`. Root task and merged gates each passed 1,416 tests / 10
+existing deliberate skips, 76 Chrome cases and examples 001–039. Separate examples and
+whitespace checks passed. Source and installed Python 3.13.5 / 3.11.2 canonical runs
+preserve identical complete schema-12 payloads across fresh runs and resume ticks 1, 3
+and 4. Wheel, exports, eight assets, health, read-only APIs, actual console/loopback
+inspection and all-outcome browser checks passed.
+
+Delivery `a5c275ff51d0d21c4e53341c112a4c9d371bc945` was pushed, merged into
+`milestone/v0.6` as `badd5f9`, and validated before integration commit/push.
+Merged `make VENV=.worktrees/task24/.venv`: PASS1,416tests/10existing skips,
+76Chrome cases and examples001–039; separate `make examples` and staged/unstaged
+`git diff --check`: PASS. Merged CLI matrix and both installed artifact smokes:
+PASS, identical hashes to source/installed3.13/installed3.11 recorded above.
+An initial merged helper invocation named a console script absent from the
+dependency-only environment; reran with its Python executable successfully.
+The default SSH invocation hit the known system include permissions error;
+scoped SSH succeeded without modifying configuration. Neither was a product defect.
+
+Root final documentation checkpoint updates current statuses, completed Phase5
+checkboxes and requirement evidence only; no runtime or metadata delta.
+Local link checks PASS74files/230localfilelinks (heading anchors not checked);
+whitespace checks PASS. Live delivery and milestone integration refs verified
+after push at a5c275f/badd5f9; main remains
+`12f2f173796500f73f003c520c0ac848b9e1e9c8`. Task24 release checkout is clean;
+primary has only user-owned `.codex/config.toml` unstaged. Durable worktrees,
+review evidence and already-incorporated owned stash/backup are retained.
+No remaining authorized implementation work. Candidate is ready for separately
+authorized owner integration; no main merge, tag, publication or v0.7 work.
