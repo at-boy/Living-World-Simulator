@@ -3,12 +3,12 @@
 
 [agents.explorer]
 description = "Read-only, narrowly scoped repository investigator."
-config_file = ".codex/agents/explorer.toml"
+config_file = "agents/explorer.toml"
 
 [agents.worker]
 description = "Implements one decision-complete, explicitly authorized bounded task."
-config_file = ".codex/agents/worker.toml"
+config_file = "agents/worker.toml"
 
 [agents.reviewer]
 description = "Independent read-only reviewer of task-contract compliance and repository invariants."
-config_file = ".codex/agents/reviewer.toml"
+config_file = "agents/reviewer.toml"

@@ -1,6 +1,12 @@
 
 # Living World Simulator Backlog
 
+October19 owner integration: milestone6bf4c63 merged to main092715c and tagged
+v0.6.0rc1; both pushed, milestone branch preserved. Followup agent-path cleanup
+keeps the same role files and introduces no domain capability or deferred work.
+See the [maintenance report](subagent_execution_plan/maintenance/agent_config_paths-report.md).
+The Task24 evidence below remains the pre-integration candidate record.
+
 Task 24 delivery `a5c275f`, integrated as `badd5f9`, completes the reviewed `0.6.0rc1`
 candidate on `milestone/v0.6`. Root task and merged gates each passed 1,416 tests / 10
 existing deliberate skips, 76 Chrome cases and examples 001–039. Separate examples and

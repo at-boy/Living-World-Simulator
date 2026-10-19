@@ -1,5 +1,19 @@
 # Living World Simulator – Project Journal
 
+## Owner integration and agent configuration cleanup — October 19, 2026
+
+Owner authorized main integration/tagging, retaining milestone/v0.6, and then
+explicitly authorized pushing main/tag to origin. Reviewed milestone6bf4c63 merged
+as092715c, annotated tag v0.6.0rc1 points to that merge; both pushed atomically.
+Fresh merged gates passed1416tests/10deliberate skips and examples001–039;
+canonical complete fresh/resume matrices preserve all three reviewed hashes.
+Owner then authorized cleanup of the retained local configuration edit. Three
+committed role paths resolved to missing files; use agents/name.toml relative to
+.codex/config.toml, equivalent to the owner's workaround without redundant parent
+traversal. Role contents/descriptions unchanged, release tag and milestone retained.
+The [maintenance report](subagent_execution_plan/maintenance/agent_config_paths-report.md)
+records focused checks, required validation and the primary-checkout cleanup.
+
 ## Task 24 final closeout — October 17, 2026
 
 Task 24 delivery `a5c275f`, integrated as `badd5f9`, completes the reviewed `0.6.0rc1` candidate on `milestone/v0.6`. Root task and merged gates each passed 1,416 tests / 10 existing deliberate skips, 76 Chrome cases and examples 001–039. Separate examples and whitespace checks passed. Source and installed Python 3.13.5 / 3.11.2 canonical runs preserve identical complete schema-12 payloads across fresh runs and resume ticks 1, 3 and 4. Wheel, exports, eight assets, health, read-only APIs, actual console/loopback inspection and all-outcome browser checks passed.

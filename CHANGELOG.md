@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Fix project Codex role paths to resolve from `.codex/config.toml`; preserve
+  the existing explorer, worker and reviewer definitions.
+
 ## 0.6.0rc1 — Release candidate preparation
 
 Reviewed release candidate integrated as `badd5f9` on `milestone/v0.6`: 1,416 tests,

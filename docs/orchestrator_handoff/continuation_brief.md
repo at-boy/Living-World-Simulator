@@ -1,4 +1,4 @@
-# Continuation brief — v0.6.0rc1 ready, October 17, 2026
+# Continuation brief — v0.6.0rc1 integrated, October 19, 2026
 
 ## Current completion and authority
 
@@ -12,12 +12,23 @@ inspection and all-outcome browser checks passed.
 
 All 21 authorized tasks, including correction Task 24a and closeout Task 24,
 are reviewed, validated and integrated. The milestone and delivery branches are
-pushed; root verifies live refs after the final documentation checkpoint.
-Main remains `12f2f173796500f73f003c520c0ac848b9e1e9c8`.
-No merge to main, tag, publication, v0.7 or live infrastructure is authorized.
-The only primary local edit is the user-owned `.codex/config.toml`; preserve it.
-Owner's next action is separate review/integration/release authorization.
-There is no remaining authorized implementation task to redispatch.
+pushed; October17 closeout refs were verified, and October19 release refs are
+recorded below.
+Owner separately authorized main integration/tagging on October19 and explicitly
+approved pushing main/tag to origin. Merge092715c contains the exact reviewed
+milestone tree; annotated v0.6.0rc1 points to it and both were pushed atomically.
+Milestone/v0.6 remains6bf4c63637584584a8dfce009d2d1d79987be570 locally/remotely.
+Fresh merged gates passed1416tests/10existing skips,76Chrome/examples001–039;
+separate examples/whitespace and all three exact fresh/resume matrices passed.
+No package publication, hosted release or v0.7 implementation was requested.
+
+Owner also authorized cleanup of the local agent configuration edit. Main's
+focused followup uses agents/name.toml relative to .codex/config.toml; this keeps
+the exact role files selected by the owner's previous ../.codex workaround.
+The exact original edit is backed up in ignored SDD evidence before primary
+checkout transition to corrected main. Preserve milestone/task branches and
+worktrees. See the [maintenance report](../subagent_execution_plan/maintenance/agent_config_paths-report.md)
+for final validation and cleanup evidence. No remaining authorized implementation.
 
 ## Canonical evidence
 
