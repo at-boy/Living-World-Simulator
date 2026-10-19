@@ -1,4 +1,4 @@
-# Continuation brief — live runtime plan pending review, October 19, 2026
+# Continuation brief — live runtime execution authorized, October 19, 2026
 
 ## Current design scope and authority
 
@@ -9,7 +9,9 @@ based on main d8ea517. Read the
 [approved design](../superpowers/specs/2026-10-19-live-npc-runtime-design.md) and
 [implementation plan](../superpowers/plans/2026-10-19-live-npc-runtime.md).
 
-Plan owner review and execution confirmation are pending. Do not implement yet.
+Owner approved the plan and execution. LN01 contract is prepared; implementation
+starts only in its isolated task checkout after root dispatch. LN02–LN09 follow
+reviewed integration in order.
 Recommended method: bounded sequential workers, independent per-task reviews,
 root-owned integration and final whole-branch review. LN01–LN09 specify exact
 interfaces/files/tests; materialize task plan/saved-prompt/report before dispatch.

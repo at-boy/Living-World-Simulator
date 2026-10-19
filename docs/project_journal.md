@@ -1,5 +1,14 @@
 # Living World Simulator – Project Journal
 
+## Live runtime execution authorization — October19,2026
+
+Owner approved the implementation plan and recommended bounded worker/review workflow.
+Root preserved an owner-local master-plan text edit, recorded a nine-task/pairwise
+preflight ledger and materialized LN01 plan/prompt/report before dispatch. Source and
+runtime behavior unchanged at this contract checkpoint. Root alone owns commits,
+required make/examples validation and task-to-feature integration. No main/tag or
+milestone changes authorized; usage stop-before10% continues to apply.
+
 ## Approved live-runtime design and implementation plan — October 19, 2026
 
 Owner explicitly approved the written design and requested committing/pushing it,

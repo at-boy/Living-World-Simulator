@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Begin owner-approved live runtime execution with the isolated LN01 snapshot codec
+  contract; no new runtime capability is claimed by this contract checkpoint.
+
 - Record owner approval and publication of the live-runtime design, and add the
   nine-task implementation plan with durable pause/shutdown/restart acceptance.
   Planning only; no live-runtime capability is implemented by this commit.
