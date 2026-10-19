@@ -4,8 +4,9 @@
 The next approved design scope is live NPC decisions and an observable run lifecycle,
 not demographic v0.7 work. Existing recorded scenarios remain supported. The
 [live runtime design](superpowers/specs/2026-10-19-live-npc-runtime-design.md) covers
-Ollama, qualitative feedback, controls and automatic run archives; written-design
-review and implementation planning remain pending. These capabilities are not yet
+Ollama, qualitative feedback, controls and automatic run archives. Written design
+is owner-approved and pushed; the [implementation plan](superpowers/plans/2026-10-19-live-npc-runtime.md)
+is prepared for owner review and execution confirmation. These capabilities are not yet
 implemented. Future player commands remain separate from current operator controls.
 
 

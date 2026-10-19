@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Record owner approval and publication of the live-runtime design, and add the
+  nine-task implementation plan with durable pause/shutdown/restart acceptance.
+  Planning only; no live-runtime capability is implemented by this commit.
+
 - Document the proposed live NPC runtime: Ollama decisions, preserved recorded
   scenarios, browser controls and durable per-attempt archives. Design only;
   implementation awaits written-design review and an approved task plan.

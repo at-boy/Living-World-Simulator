@@ -1,5 +1,19 @@
 # Living World Simulator – Project Journal
 
+## Approved live-runtime design and implementation plan — October 19, 2026
+
+Owner explicitly approved the written design and requested committing/pushing it,
+then writing the implementation plan. Design96262fa was pushed to the existing
+origin codex/live-npc-runtime. Clarified the already-agreed durable pause/shutdown/
+restart requirement in its approval status. The
+[implementation plan](superpowers/plans/2026-10-19-live-npc-runtime.md) defines nine
+sequential reviewable tasks, exact file boundaries/interfaces, RED/GREEN cycles,
+archive transactions, control lifecycle/security, feedback/journal replay and actual
+Ollama/browser/restart acceptance. Scope includes retained recorded behavior and
+historical inspection; excludes demographic v0.7, player APIs and main/tag changes.
+Root self-review and focused documentation checks precede commit. Plan owner review
+and execution confirmation remain pending; no product implementation/tests started.
+
 ## Live NPC runtime design — October 19, 2026
 
 Owner approved the scope for codex/live-npc-runtime: real Ollama NPC decisions,

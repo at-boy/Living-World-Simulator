@@ -1,18 +1,28 @@
-# Continuation brief — live runtime design pending review, October 19, 2026
+# Continuation brief — live runtime plan pending review, October 19, 2026
 
 ## Current design scope and authority
 
-Owner approved the in-chat live NPC runtime scope. Active design branch is
-codex/live-npc-runtime in .worktrees/live-npc-runtime from main d8ea517.
-Read the [written design](../superpowers/specs/2026-10-19-live-npc-runtime-design.md).
-Written-spec owner review is pending; no implementation plan or code is authorized
-by the design-authoring checkpoint. Next: obtain written-design feedback, then write
-the implementation plan and agree execution method. Preserve recorded runs, local
-Ollama scope, player-disruption readiness, browser controls and all-run archives.
-No demographics/governance, main integration, push, tag changes or remote deployment
-are part of this design-authoring work. Main/milestone/v0.6 and v0.6.0rc1 remain
-unchanged. The prior release handoff below is historical context, not a statement
-that the newly discussed live functionality already exists.
+Owner approved the written live NPC runtime design and explicitly requested its
+commit/push followed by the implementation plan. Design96262fa is pushed to origin.
+Active branch codex/live-npc-runtime is isolated in .worktrees/live-npc-runtime,
+based on main d8ea517. Read the
+[approved design](../superpowers/specs/2026-10-19-live-npc-runtime-design.md) and
+[implementation plan](../superpowers/plans/2026-10-19-live-npc-runtime.md).
+
+Plan owner review and execution confirmation are pending. Do not implement yet.
+Recommended method: bounded sequential workers, independent per-task reviews,
+root-owned integration and final whole-branch review. LN01–LN09 specify exact
+interfaces/files/tests; materialize task plan/saved-prompt/report before dispatch.
+Explicit owner clarification: pause durably, shut down, restart later and continue
+the same world including NPC memories/work/driver progress. New process invocation
+gets a linked archive attempt; it must not restart simulation state or advance time
+while off. Recorded modes remain supported and archives retain unsuccessful runs.
+
+Current scope: local Ollama decisions, player-disruption readiness, browser controls
+and all normal-run archives. No demographic/governance milestone, player interface,
+main integration/tag movement or remote admin deployment. Main d8ea517,
+milestone/v0.6 6bf4c63 and v0.6.0rc1 092715c remain unchanged. The prior release
+handoff below is historical context; live functionality is not already implemented.
 
 ## Completed release context
 

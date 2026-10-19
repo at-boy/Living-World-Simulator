@@ -2,7 +2,8 @@
 
 Date: October 19, 2026
 Branch: `codex/live-npc-runtime`, from `main` at `d8ea517`.
-Status: owner-approved scope; written design awaiting owner review.
+Status: written design approved by the owner October 19, 2026; implementation plan
+preparation authorized. Product implementation has not started.
 This document is a proposed design, not implemented behavior or an execution plan.
 
 ## Purpose and success
@@ -194,6 +195,11 @@ software version/revision, schema/format versions, seed, driver mode, model iden
 and available model digest, start/end times and launch source. If archive reservation
 or required initial persistence fails, report failure before simulation mutation.
 
+A confirmed pause durably saves the complete world, NPC cognition and driver
+progress. The operator may then stop the program and later restore that checkpoint;
+the next completed tick continues from there, with no simulation time passing while
+the program is off. Restart creates an analysis attempt, not a reset world.
+
 A run lineage groups related worlds; each process invocation/restart is a distinct
 attempt. Browser pause/resume stays inside the running attempt. Restarting or branching
 from an archived checkpoint creates a new attempt with an explicit parent/checkpoint
@@ -330,11 +336,12 @@ Prefer native installed Ollama for initial acceptance; CPU operation is acceptab
 if bounded timings are practical. GPU support is a measured deployment capability,
 not a prerequisite for the engine design. Environment changes require scoped work.
 
-Owner approval of this written design is the next gate. After it, create the exact
-implementation plan and agree execution method. No product implementation, dependency
+Owner approved this written design and requested its branch commit/push, followed
+by the implementation plan. The plan is now [written](../plans/2026-10-19-live-npc-runtime.md);
+owner plan review and execution confirmation are the next gate. No product implementation, dependency
 installation, container workload, main integration, tag change or v0.7 work is
-performed by this design-authoring step. Current authoring scope is this spec plus
-CHANGELOG, journal, backlog and continuation status on the isolated branch only.
+performed by this design-authoring step. Current authoring scope is this spec, its linked implementation plan, CHANGELOG,
+journal, backlog and continuation status on the isolated branch only.
 
 ## Design-authoring verification
 
