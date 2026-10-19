@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Prepare LN02 atomic archive storage contract with closed metadata/journal schemas;
+  implementation and runtime archive entrypoints remain pending.
+
 - Expose an immutable shared world snapshot codec while preserving schema12 bytes,
   schemas1–12 reads, recorded outcomes and repository diagnostics (LN01).
 

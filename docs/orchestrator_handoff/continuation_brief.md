@@ -13,7 +13,8 @@ Owner approved the plan and execution. LN01 shared world codec has independent
 SPEC/QUALITY PASS and root task gates1452passed/10existing skips,39examples.
 Delivery5f64056 is pushed; merged gates repeat the same results and exact
 recorded CLI hashes. The integration commit containing the LN01 report completes it.
-LN02 archive storage is next, then LN03–LN09 in reviewed integration order.
+LN01 integration is b105d57. LN02 archive storage contract is prepared; its
+implementation/review/gates remain pending, then LN03–LN09 follow in order.
 Recommended method: bounded sequential workers, independent per-task reviews,
 root-owned integration and final whole-branch review. LN01–LN09 specify exact
 interfaces/files/tests; materialize task plan/saved-prompt/report before dispatch.

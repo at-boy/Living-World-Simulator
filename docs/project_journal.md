@@ -1099,3 +1099,12 @@ LN01 report. Archive storage follows; no live inference or controls claimed.
 LN01 delivery5f64056 pushed; merged make repeats1452/10 and39examples. Separate
 merged examples, whitespace and all3canonicalfresh/resumehashes passed. Owner-local
 master-plan edit preserved; no main/tag/milestone change.
+
+
+## 2026-10-19 — LN02 archive storage contract
+
+LN01 reviewed delivery5f64056 integrated asb105d57 with complete task/merged gates.
+Materialized LN02 from the approved plan: atomic snapshot/cursor/journal/command
+transactions, strict format1 records, read-only validation and crash tests. Root
+resolved initialization, commit idempotence and closed schema details before worker
+dispatch. No archive implementation or new test results claimed.
