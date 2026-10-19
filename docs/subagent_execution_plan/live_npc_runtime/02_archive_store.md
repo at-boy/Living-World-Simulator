@@ -1,6 +1,6 @@
 # Task 2 / LN02 — Atomic archive store
 
-Status: authorized; contract prepared from reviewed integration b105d57.
+Status: complete, reviewed delivery099da9a; task/merged validation passed.
 Owner approved the nine-task plan and execution October19,2026. Root owns
 architecture, independent review, full gates, VCS and integration.
 
@@ -46,7 +46,7 @@ RED must identify the absent required behavior; GREEN means all selected tests p
 with no unexplained new skips. For later regressions, use the smallest named failing
 case until the complete focused set is ready.
 
-- [ ] **Step 1 — Add failing tests** `test_checkpoint_cursor_and_outcomes_commit_together`,
+- [x] **Step 1 — Add failing tests** `test_checkpoint_cursor_and_outcomes_commit_together`,
   `test_failed_commit_keeps_previous_world_and_revision`, `test_duplicate_commit_is_idempotent`,
   `test_archive_metadata_does_not_change_recorded_payload`, `test_readonly_never_writes`.
   ```python
@@ -59,10 +59,10 @@ case until the complete focused set is ready.
   assert read_world_row(archive.database_path) == (snapshot0.schema_version, snapshot0.payload)
   ```
   Each helper/fixture is defined in this test module, not production test switches.
-- [ ] **Step 2 — Observe RED** run `tests/test_run_archive_store.py`; confirm missing
+- [x] **Step 2 — Observe RED** run `tests/test_run_archive_store.py`; confirm missing
   archive interface. Include actual transaction rollback tests with injected SQLite
   constraint failure and read-only permissions, not only a mocked success method.
-- [ ] **Step 3 — Implement** archive format1 tables: `archive_meta` (version/config),
+- [x] **Step 3 — Implement** archive format1 tables: `archive_meta` (version/config),
   `world_snapshots` (compatible current row), `checkpoints` (revision PK, snapshot,
   digest/cursors), `journal` (monotonic sequence PK, kind, canonical payload), `commands`
   (command_id PK, envelope hash, result), `lifecycle` (append-only state transitions).
@@ -75,10 +75,10 @@ case until the complete focused set is ready.
   stepping checkpoint. Crash recovery must never run an applied command again.
   Expose engine-only `ArchiveError`, `ArchiveRevisionConflict` and
   `ArchiveFormatError`; reject unknown/newer formats on read without migration writes.
-- [ ] **Step 4 — Observe GREEN** focused archive and codec tests; subprocess kill at
+- [x] **Step 4 — Observe GREEN** focused archive and codec tests; subprocess kill at
   transaction boundaries proves old-or-new complete state, never world/cursor mismatch.
   Validate malformed row types (including bool-as-int), hashes and journal schemas.
-- [ ] **Step 5 — Review, root gates and commit** `feat: persist atomic run archive checkpoints`.
+- [x] **Step 5 — Review, root gates and commit** `feat: persist atomic run archive checkpoints`.
 
 
 ## Exact shared archive records
@@ -142,8 +142,17 @@ lifecycle: str | None = None, reason: str | None = None) -> tuple[int, ...]`.
 This atomic operation supports non-stepping command settlement/lifecycle, required
 by LN04. commit inserts checkpoint, world row, journal and command/lifecycle effects
 in one transaction. Lifecycle values are the global RuntimeState vocabulary;
-LN02 validates/stores values, LN04 owns legal transitions. Record UTC timestamps
-outside world payload. attempt_finished also appends its terminal lifecycle state.
+LN02 validates/stores values, LN04 owns legal transitions. Exact stored state strings:
+initializing, paused, running, awaiting_model, pause_requested, provider_error_paused,
+stepping, completed, stopped, failed, interrupted. Terminal subset:
+completed/stopped/failed/interrupted. The RuntimeState enum itself belongs to LN04;
+LN02 accepts these strings without importing a future runtime module. Record UTC timestamps
+outside world payload. attempt_finished also appends its terminal lifecycle state. Persist an internal
+nullable lifecycle.journal_sequence foreign key for that mandatory effect; exactly
+one corresponding row per terminal journal entry, matching terminal state and
+reason/outcome. Ordinary lifecycle transitions may have null journal_sequence.
+Validate correspondence on every load; public lifecycle records retain only the
+four sequence/state/reason/timestamp fields.
 No archive metadata generates domain events. Public errors wrap SQLite/validation
 failures as ArchiveError/ArchiveFormatError; revision conflicts remain distinct.
 
@@ -213,8 +222,12 @@ rewrite of settled applied/rejected results. Return prior result for exact repea
 Step applied receipt must be committed alongside its corresponding checkpoint,
 with receipt.revision equal the newly committed revision; append/record cannot settle
 an applied step alone. Other controls settle via record. Controller, not storage,
-owns stale-state and lifecycle admission. An initial queued receipt uses revision0
-before an initial checkpoint; this does not claim that world data exists.
+owns stale-state and lifecycle admission. A queued receipt uses the latest complete revision at admission (revision0
+before an initial checkpoint); this does not claim that world data exists.
+Persist an engine-only nullable journal revision_context column: current revision
+for append/record, new revision for entries within commit, null before initial.
+Read validation reconstructs queued receipts from this context and verifies exact
+context types/checkpoint references; do not add context keys to closed payloads.
 
 ### Verification emphasis
 

@@ -1,4 +1,4 @@
-# Continuation brief — live runtime execution authorized, October 19, 2026
+# Continuation brief — live runtime LN01–LN02 complete; usage checkpoint, October 19, 2026
 
 ## Current design scope and authority
 
@@ -13,8 +13,21 @@ Owner approved the plan and execution. LN01 shared world codec has independent
 SPEC/QUALITY PASS and root task gates1452passed/10existing skips,39examples.
 Delivery5f64056 is pushed; merged gates repeat the same results and exact
 recorded CLI hashes. The integration commit containing the LN01 report completes it.
-LN01 integration is b105d57. LN02 archive storage contract is prepared; its
-implementation/review/gates remain pending, then LN03–LN09 follow in order.
+LN01 integration is b105d57. LN02 delivery099da9a is pushed and integrated by the
+merge containing this checkpoint. Independent SPEC/QUALITY PASS after two corrected
+findings; task and merged make each1503/10,39examples, separate examples/whitespace
+and exact recorded CLI matrices passed. See
+[LN02 report](../subagent_execution_plan/live_npc_runtime/02_archive_store-report.md).
+
+Stopped at owner usage guard with16%remaining before final recording. No active
+implementation/reviewer; LN03–LN09 remain authorized and unstarted. Next: refresh
+Git/usage, read the approved design/plan and materialize LN03 attempt lifecycle
+contract/prompt/report; create .worktrees/live-npc-ln03 from current integration.
+Do not repeat LN01/LN02. Preserve all branches/worktrees and ignored current-plan
+SDD ledger/evidence under .worktrees/live-npc-runtime/.superpowers/sdd/
+2026-10-19-live-npc-runtime. Owner-local master-plan text edit remains uncommitted,
+byte-verified against owner-plan-local-edit.patch; preserve it exactly.
+
 Recommended method: bounded sequential workers, independent per-task reviews,
 root-owned integration and final whole-branch review. LN01–LN09 specify exact
 interfaces/files/tests; materialize task plan/saved-prompt/report before dispatch.
@@ -57,7 +70,7 @@ the exact role files selected by the owner's previous ../.codex workaround.
 The exact original edit is backed up in ignored SDD evidence before primary
 checkout transition to corrected main. Preserve milestone/task branches and
 worktrees. See the [maintenance report](../subagent_execution_plan/maintenance/agent_config_paths-report.md)
-for final validation and cleanup evidence. No remaining authorized implementation.
+for final validation and cleanup evidence. No remaining authorized release-cleanup work.
 
 ## Canonical evidence
 

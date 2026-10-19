@@ -7,8 +7,9 @@ not demographic v0.7 work. Existing recorded scenarios remain supported. The
 Ollama, qualitative feedback, controls and automatic run archives. Written design
 is owner-approved and pushed; the [implementation plan](superpowers/plans/2026-10-19-live-npc-runtime.md)
 is owner-approved for execution. LN01 shared snapshot codec has passed independent review and task/merged validation;
-delivery5f64056 and integration evidence are recorded in its report. LN02 archive storage contract is prepared; implementation/review/gates remain pending.
-Live decisions, controls and archives are not yet implemented. Future player commands remain separate from current operator controls.
+delivery5f64056 and integration evidence are recorded in its report. LN02 atomic archive storage delivery099da9a passed independent review and task/merged
+gates1503/10 with39examples; integration evidence is recorded in its report. LN03 attempt catalog/input ownership is next.
+Live decisions, controls and automatically archived entrypoints are not yet implemented. Future player commands remain separate from current operator controls.
 
 
 October19 owner integration: milestone6bf4c63 merged to main092715c and tagged

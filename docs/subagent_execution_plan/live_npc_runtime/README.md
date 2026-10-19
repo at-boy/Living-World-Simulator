@@ -7,10 +7,13 @@ Integration: codex/live-npc-runtime; no main/tag/milestone changes.
 | Task | Current status | Material |
 | --- | --- | --- |
 | LN01 | Complete; delivery5f64056; task/merged gates passed | [plan](01_world_snapshot_codec.md), [saved prompt](01_world_snapshot_codec-prombt.md), [report](01_world_snapshot_codec-report.md) |
-| LN02 | Contract prepared; implementation pending | [plan](02_archive_store.md), [saved prompt](02_archive_store-prombt.md), [report](02_archive_store-report.md) |
+| LN02 | Complete; delivery099da9a; task/merged gates passed | [plan](02_archive_store.md), [saved prompt](02_archive_store-prombt.md), [report](02_archive_store-report.md) |
 | LN03–LN09 | Authorized sequence, not yet dispatched | See the master plan; materialize each exact contract just before execution. |
 
 Execution uses one bounded worker and an independent reviewer per nontrivial task,
 root-owned architecture/gates/integration, durable checkouts and truthful reports.
 Stop before five-hour remaining usage drops below10%, with checkpoint and workers
 stopped. Preserve the owner-local master-plan text edit separately from task work.
+
+Usage checkpoint after LN02. No active worker; next LN03 attempt lifecycle.
+Retain current-plan SDD evidence and all checkouts. Last pre-checkpoint usage16%remaining.
