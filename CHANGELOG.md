@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Expose an immutable shared world snapshot codec while preserving schema12 bytes,
+  schemas1–12 reads, recorded outcomes and repository diagnostics (LN01).
+
 - Begin owner-approved live runtime execution with the isolated LN01 snapshot codec
   contract; no new runtime capability is claimed by this contract checkpoint.
 

@@ -6,7 +6,7 @@ Integration: codex/live-npc-runtime; no main/tag/milestone changes.
 
 | Task | Current status | Material |
 | --- | --- | --- |
-| LN01 | Contract prepared; implementation pending | [plan](01_world_snapshot_codec.md), [saved prompt](01_world_snapshot_codec-prombt.md), [report](01_world_snapshot_codec-report.md) |
+| LN01 | Reviewed; task gates passed; integration pending | [plan](01_world_snapshot_codec.md), [saved prompt](01_world_snapshot_codec-prombt.md), [report](01_world_snapshot_codec-report.md) |
 | LN02–LN09 | Authorized sequence, not yet dispatched | See the master plan; materialize each exact contract just before execution. |
 
 Execution uses one bounded worker and an independent reviewer per nontrivial task,
