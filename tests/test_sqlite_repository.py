@@ -940,3 +940,68 @@ def test_read_only_repository_requires_snapshot_and_never_writes(
     with pytest.raises(RepositorySaveError):
         repository.save_world(state)
     assert path.read_bytes() == before
+
+
+@pytest.mark.parametrize(
+    "version,payload,message,cause_type",
+    [
+        (12, "{", "Persisted world data is malformed.", json.JSONDecodeError),
+        (12, "{}", "Persisted world data is malformed.", KeyError),
+        (13, "{}", "Unsupported world schema version 13.", None),
+    ],
+)
+def test_codec_error_translation_preserves_diagnostics_and_stored_row(
+    tmp_path: Path,
+    version: int,
+    payload: str,
+    message: str,
+    cause_type: type[Exception] | None,
+) -> None:
+    database = tmp_path / "codec-errors.sqlite3"
+    repository = SQLiteRepository(str(database))
+    repository.save_world(_world_state())
+    with sqlite3.connect(database) as connection:
+        connection.execute(
+            "UPDATE world_snapshots SET schema_version = ?, payload = ? WHERE id = 1",
+            (version, payload),
+        )
+    before = database.read_bytes()
+
+    with pytest.raises(RepositoryLoadError) as caught:
+        repository.load_world()
+
+    assert str(caught.value) == message
+    if cause_type is None:
+        assert caught.value.__cause__ is None
+    else:
+        assert isinstance(caught.value.__cause__, cause_type)
+    assert database.read_bytes() == before
+
+
+@pytest.mark.parametrize(
+    "stored_version,message",
+    [
+        ("invalid", "Unsupported world schema version 'invalid'."),
+        (12.5, "Unsupported world schema version 12.5."),
+        (b"12", "Unsupported world schema version b'12'."),
+    ],
+)
+def test_unsupported_raw_sqlite_schema_types_preserve_diagnostics(
+    tmp_path: Path, stored_version: object, message: str
+) -> None:
+    database = tmp_path / "unsupported-schema-type.sqlite3"
+    repository = SQLiteRepository(str(database))
+    repository.save_world(_world_state())
+    with sqlite3.connect(database) as connection:
+        connection.execute(
+            "UPDATE world_snapshots SET schema_version = ? WHERE id = 1",
+            (stored_version,),
+        )
+    before = database.read_bytes()
+
+    with pytest.raises(RepositoryLoadError) as caught:
+        repository.load_world()
+
+    assert str(caught.value) == message
+    assert caught.value.__cause__ is None
+    assert database.read_bytes() == before

@@ -9,9 +9,11 @@ based on main d8ea517. Read the
 [approved design](../superpowers/specs/2026-10-19-live-npc-runtime-design.md) and
 [implementation plan](../superpowers/plans/2026-10-19-live-npc-runtime.md).
 
-Owner approved the plan and execution. LN01 contract is prepared; implementation
-starts only in its isolated task checkout after root dispatch. LN02–LN09 follow
-reviewed integration in order.
+Owner approved the plan and execution. LN01 shared world codec has independent
+SPEC/QUALITY PASS and root task gates1452passed/10existing skips,39examples.
+Delivery5f64056 is pushed; merged gates repeat the same results and exact
+recorded CLI hashes. The integration commit containing the LN01 report completes it.
+LN02 archive storage is next, then LN03–LN09 in reviewed integration order.
 Recommended method: bounded sequential workers, independent per-task reviews,
 root-owned integration and final whole-branch review. LN01–LN09 specify exact
 interfaces/files/tests; materialize task plan/saved-prompt/report before dispatch.

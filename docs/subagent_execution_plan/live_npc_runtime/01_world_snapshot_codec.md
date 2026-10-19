@@ -1,6 +1,6 @@
 # Task 1 / LN01 — World snapshot codec
 
-Status: authorized for implementation by owner plan approval October19,2026.
+Status: reviewed and validated delivery5f64056; integrated by the merge containing this report.
 Integration base8cf5855; isolated task branch codex/live-npc-ln01-world-snapshot-codec.
 Root owns review, validation, VCS and integration; worker does not commit or spawn agents.
 
@@ -33,7 +33,7 @@ RED must identify the absent required behavior; GREEN means all selected tests p
 with no unexplained new skips. For later regressions, use the smallest named failing
 case until the complete focused set is ready.
 
-- [ ] **Step 1 — Add failing tests** `test_codec_preserves_exact_existing_row`,
+- [x] **Step 1 — Add failing tests** `test_codec_preserves_exact_existing_row`,
   `test_codec_roundtrip_and_detachment`, `test_codec_rejects_corrupt_and_future_schema`.
   Pin the tuple and complete payload, not selected fields:
   ```python
@@ -44,16 +44,16 @@ case until the complete focused set is ready.
   assert decode_world(encoded) is not populated_world
   ```
   `read_world_row` is a test-only helper; use current schema12 and legacy fixture tests.
-- [ ] **Step 2 — Observe RED** run `tests/test_world_snapshot.py`; expected import/name
+- [x] **Step 2 — Observe RED** run `tests/test_world_snapshot.py`; expected import/name
   failure for absent codec. Existing serialization fixtures establish the reference.
-- [ ] **Step 3 — Implement** exact functions above by extracting/reusing existing
+- [x] **Step 3 — Implement** exact functions above by extracting/reusing existing
   validators and canonical JSON; no second serializer or world field changes. Preserve compatibility aliases for
   existing private _serialize_world imports used by canonical tests; do not rewrite
   those assertions to accommodate codec drift. Keep
   current error types/diagnostics by translating codec errors at repository boundary.
-- [ ] **Step 4 — Observe GREEN** focused codec/repository/replay tests plus canonical
+- [x] **Step 4 — Observe GREEN** focused codec/repository/replay tests plus canonical
   exact fresh/resume checks. Mutation of decoded state cannot mutate source snapshot.
-- [ ] **Step 5 — Review, root gates and commit** `refactor: expose compatible world snapshot codec`.
+- [x] **Step 5 — Review, root gates and commit** `refactor: expose compatible world snapshot codec`.
   Root verifies no schema/version/dependency delta and records exact reviewed commit.
 
 ## Ownership and exact allowed-file boundary
