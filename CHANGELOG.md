@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add the reviewed atomic archive store: complete checkpoints, progress cursors,
+  validated decision/control journals and read-only historical loading (LN02).
+  Runtime entrypoints and browser controls follow in later tasks.
+
 - Prepare LN02 atomic archive storage contract with closed metadata/journal schemas;
   implementation and runtime archive entrypoints remain pending.
 

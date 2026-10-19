@@ -142,8 +142,17 @@ lifecycle: str | None = None, reason: str | None = None) -> tuple[int, ...]`.
 This atomic operation supports non-stepping command settlement/lifecycle, required
 by LN04. commit inserts checkpoint, world row, journal and command/lifecycle effects
 in one transaction. Lifecycle values are the global RuntimeState vocabulary;
-LN02 validates/stores values, LN04 owns legal transitions. Record UTC timestamps
-outside world payload. attempt_finished also appends its terminal lifecycle state.
+LN02 validates/stores values, LN04 owns legal transitions. Exact stored state strings:
+initializing, paused, running, awaiting_model, pause_requested, provider_error_paused,
+stepping, completed, stopped, failed, interrupted. Terminal subset:
+completed/stopped/failed/interrupted. The RuntimeState enum itself belongs to LN04;
+LN02 accepts these strings without importing a future runtime module. Record UTC timestamps
+outside world payload. attempt_finished also appends its terminal lifecycle state. Persist an internal
+nullable lifecycle.journal_sequence foreign key for that mandatory effect; exactly
+one corresponding row per terminal journal entry, matching terminal state and
+reason/outcome. Ordinary lifecycle transitions may have null journal_sequence.
+Validate correspondence on every load; public lifecycle records retain only the
+four sequence/state/reason/timestamp fields.
 No archive metadata generates domain events. Public errors wrap SQLite/validation
 failures as ArchiveError/ArchiveFormatError; revision conflicts remain distinct.
 
@@ -213,8 +222,12 @@ rewrite of settled applied/rejected results. Return prior result for exact repea
 Step applied receipt must be committed alongside its corresponding checkpoint,
 with receipt.revision equal the newly committed revision; append/record cannot settle
 an applied step alone. Other controls settle via record. Controller, not storage,
-owns stale-state and lifecycle admission. An initial queued receipt uses revision0
-before an initial checkpoint; this does not claim that world data exists.
+owns stale-state and lifecycle admission. A queued receipt uses the latest complete revision at admission (revision0
+before an initial checkpoint); this does not claim that world data exists.
+Persist an engine-only nullable journal revision_context column: current revision
+for append/record, new revision for entries within commit, null before initial.
+Read validation reconstructs queued receipts from this context and verifies exact
+context types/checkpoint references; do not add context keys to closed payloads.
 
 ### Verification emphasis
 

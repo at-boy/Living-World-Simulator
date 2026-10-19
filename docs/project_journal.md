@@ -1108,3 +1108,11 @@ Materialized LN02 from the approved plan: atomic snapshot/cursor/journal/command
 transactions, strict format1 records, read-only validation and crash tests. Root
 resolved initialization, commit idempotence and closed schema details before worker
 dispatch. No archive implementation or new test results claimed.
+
+
+## 2026-10-19 — LN02 reviewed archive storage
+
+Atomic format1 library completed; independent review caught and verified fixes for
+Step receipt reuse and missing terminal lifecycle effects. Root task make1503/10,
+39examples and canonical public CLI matrix passed. Separate/merged evidence follows
+in LN02 report. No runtime/archive CLI or model capabilities claimed.

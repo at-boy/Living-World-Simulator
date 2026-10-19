@@ -13,8 +13,10 @@ Owner approved the plan and execution. LN01 shared world codec has independent
 SPEC/QUALITY PASS and root task gates1452passed/10existing skips,39examples.
 Delivery5f64056 is pushed; merged gates repeat the same results and exact
 recorded CLI hashes. The integration commit containing the LN01 report completes it.
-LN01 integration is b105d57. LN02 archive storage contract is prepared; its
-implementation/review/gates remain pending, then LN03–LN09 follow in order.
+LN01 integration is b105d57. LN02 atomic archive storage passed independent review
+and task gates1503/10,39examples and exact recorded CLI checks. Delivery/integration
+pending; consult its report for final evidence. LN03–LN09 remain authorized and
+unstarted. Root will checkpoint at LN02 boundary for the owner usage guard.
 Recommended method: bounded sequential workers, independent per-task reviews,
 root-owned integration and final whole-branch review. LN01–LN09 specify exact
 interfaces/files/tests; materialize task plan/saved-prompt/report before dispatch.
@@ -57,7 +59,7 @@ the exact role files selected by the owner's previous ../.codex workaround.
 The exact original edit is backed up in ignored SDD evidence before primary
 checkout transition to corrected main. Preserve milestone/task branches and
 worktrees. See the [maintenance report](../subagent_execution_plan/maintenance/agent_config_paths-report.md)
-for final validation and cleanup evidence. No remaining authorized implementation.
+for final validation and cleanup evidence. No remaining authorized release-cleanup work.
 
 ## Canonical evidence
 
