@@ -1,8 +1,18 @@
 from copy import deepcopy
+from typing import Protocol
 
 from living_world.core.entity import Entity
 from living_world.managers.definition_manager import DefinitionManager
 from living_world.state.world_state import WorldState
+
+
+class EntityRemovalGuard(Protocol):
+    def validate_entity_removal(self, entity_id: str) -> None: ...
+
+
+class WorkEntityGuard(Protocol):
+    def validate_entity_removal(self, entity_id: str) -> None: ...
+    def validate_entity_destruction(self, entity_id: str) -> None: ...
 
 
 class EntityManager:
@@ -12,9 +22,15 @@ class EntityManager:
         self,
         state: WorldState,
         definition_manager: DefinitionManager,
+        removal_guard: EntityRemovalGuard | None = None,
+        work_guard: WorkEntityGuard | None = None,
+        lifecycle_guards: tuple[WorkEntityGuard, ...] = (),
     ) -> None:
         self._state = state
         self._definitions = definition_manager
+        self._removal_guard = removal_guard
+        self._work_guard = work_guard
+        self._lifecycle_guards = lifecycle_guards
         self._next_entity_id = 1
 
     def create(
@@ -62,7 +78,101 @@ class EntityManager:
         return entity_id in self._state.entities
 
     def remove(self, entity_id: str) -> None:
+        self._validate_stage_owner(entity_id)
+        if any(
+            policy.owner_id == entity_id
+            for policies in (
+                self._state.consumption_policies,
+                self._state.storage_policies,
+                self._state.maintenance_policies,
+            )
+            for policy in policies.values()
+        ) or any(
+            policy.capability_id == entity_id
+            for policy in self._state.maintenance_policies.values()
+        ):
+            raise ValueError(
+                f"Entity '{entity_id}' cannot be removed while a consequence policy refers to it."
+            )
+        if any(
+            need.owner_id == entity_id for need in self._state.need_definitions.values()
+        ):
+            raise ValueError(
+                f"Entity '{entity_id}' cannot be removed while a need refers to it."
+            )
+        if any(
+            goal.owner_id == entity_id for goal in self._state.goal_definitions.values()
+        ):
+            raise ValueError(
+                f"Entity '{entity_id}' cannot be removed while a goal refers to it."
+            )
+        if any(
+            dispatch.source_entity_id == entity_id
+            for dispatch in self._state.external_dispatches.values()
+        ):
+            raise ValueError(
+                f"Entity '{entity_id}' cannot be removed while dispatch history "
+                "refers to it."
+            )
+        if entity_id in self._state.placements or any(
+            placement.containing_entity_id == entity_id
+            for placement in self._state.placements.values()
+        ):
+            raise ValueError(
+                f"Entity '{entity_id}' cannot be removed while spatial state refers to it."
+            )
+        if self._removal_guard is not None:
+            self._removal_guard.validate_entity_removal(entity_id)
+        if self._work_guard is not None:
+            self._work_guard.validate_entity_removal(entity_id)
+        for guard in self._lifecycle_guards:
+            guard.validate_entity_removal(entity_id)
         self._state.entities.pop(entity_id, None)
+
+    def mark_destroyed(self, entity_id: str, tick: int) -> None:
+        entity = self.get(entity_id)
+        if entity is None:
+            raise ValueError(f"Unknown entity '{entity_id}'.")
+        if not isinstance(tick, int) or isinstance(tick, bool):
+            raise TypeError("tick must be an integer.")
+        if tick < 0 or tick != self._state.tick:
+            raise ValueError("Destruction tick must be the current nonnegative tick.")
+        if entity.destroyed_tick is not None:
+            if entity.destroyed_tick == tick:
+                return
+            raise ValueError("Entity was destroyed at a different tick.")
+        self._validate_stage_owner(entity_id)
+        for guard in self._lifecycle_guards:
+            guard.validate_entity_destruction(entity_id)
+        if self._work_guard is not None:
+            self._work_guard.validate_entity_destruction(entity_id)
+        if (
+            any(n.owner_id == entity_id for n in self._state.need_definitions.values())
+            or any(
+                g.owner_id == entity_id for g in self._state.goal_definitions.values()
+            )
+            or any(
+                d.source_entity_id == entity_id
+                for d in self._state.external_dispatches.values()
+            )
+            or any(
+                p.owner_id == entity_id
+                for p in (
+                    *self._state.consumption_policies.values(),
+                    *self._state.storage_policies.values(),
+                    *self._state.maintenance_policies.values(),
+                )
+            )
+        ):
+            raise ValueError("Entity occupies a role that requires it to remain live.")
+        entity.destroyed_tick = tick
+
+    def _validate_stage_owner(self, entity_id: str) -> None:
+        if (
+            entity_id in self._state.settlement_stage_programs
+            or entity_id in self._state.settlement_stage_states
+        ):
+            raise ValueError("Entity owns a settlement stage program or state.")
 
     def set_attribute(
         self,

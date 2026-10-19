@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
 
 from living_world.core.belief import Belief
 from living_world.core.entity import Entity
@@ -9,6 +12,31 @@ from living_world.core.memory import Memory
 from living_world.core.npc_relationship import NPCRelationship
 from living_world.core.observation import Observation
 from living_world.core.relationship import Relationship
+from living_world.core.run_metadata import RunMetadata
+from living_world.external_world.dispatch import ExternalDispatch
+from living_world.external_world.model import ExternalWorldReference
+from living_world.goals.model import (
+    GoalDefinition,
+    GoalState,
+    ObjectiveDefinition,
+    ObjectiveState,
+)
+from living_world.needs.model import (
+    ConsumptionPolicy,
+    ConsumptionState,
+    MaintenancePolicy,
+    MaintenanceState,
+    NeedDefinition,
+    NeedState,
+    StoragePolicy,
+    StorageState,
+)
+
+if TYPE_CHECKING:
+    from living_world.replay.model import ReplayBinding, ReplayState
+from living_world.spatial.model import Placement
+from living_world.stages.model import SettlementStageProgram, SettlementStageState
+from living_world.work.model import WorkDefinition, WorkReservation, WorkState
 
 
 @dataclass(slots=True)
@@ -17,9 +45,49 @@ class WorldState:
 
     tick: int = 0
 
+    run_metadata: RunMetadata | None = None
+
+    scenario_entity_bindings: dict[str, str] = field(default_factory=dict)
+    replay_binding: ReplayBinding | None = None
+    replay_state: ReplayState | None = None
+
     entities: dict[str, Entity] = field(default_factory=dict)
 
     relationships: dict[str, Relationship] = field(default_factory=dict)
+
+    placements: dict[str, Placement] = field(default_factory=dict)
+
+    external_world_references: dict[str, ExternalWorldReference] = field(
+        default_factory=dict
+    )
+
+    external_dispatches: dict[str, ExternalDispatch] = field(default_factory=dict)
+
+    goal_definitions: dict[str, GoalDefinition] = field(default_factory=dict)
+    goal_states: dict[str, GoalState] = field(default_factory=dict)
+    objective_definitions: dict[str, ObjectiveDefinition] = field(default_factory=dict)
+    objective_states: dict[str, ObjectiveState] = field(default_factory=dict)
+
+    settlement_stage_programs: dict[str, SettlementStageProgram] = field(
+        default_factory=dict
+    )
+    settlement_stage_states: dict[str, SettlementStageState] = field(
+        default_factory=dict
+    )
+
+    need_definitions: dict[str, NeedDefinition] = field(default_factory=dict)
+    need_states: dict[str, NeedState] = field(default_factory=dict)
+
+    consumption_policies: dict[str, ConsumptionPolicy] = field(default_factory=dict)
+    consumption_states: dict[str, ConsumptionState] = field(default_factory=dict)
+    storage_policies: dict[str, StoragePolicy] = field(default_factory=dict)
+    storage_states: dict[str, StorageState] = field(default_factory=dict)
+    maintenance_policies: dict[str, MaintenancePolicy] = field(default_factory=dict)
+    maintenance_states: dict[str, MaintenanceState] = field(default_factory=dict)
+
+    work_definitions: dict[str, WorkDefinition] = field(default_factory=dict)
+    work_states: dict[str, WorkState] = field(default_factory=dict)
+    work_reservations: dict[str, WorkReservation] = field(default_factory=dict)
 
     events: dict[str, Event] = field(default_factory=dict)
 

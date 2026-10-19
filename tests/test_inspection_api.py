@@ -2,9 +2,9 @@ import asyncio
 import json
 import tomllib
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from fastapi import FastAPI
 
@@ -23,13 +23,25 @@ from living_world.core.npc_relationship import NPCRelationship
 from living_world.core.observation import Observation
 from living_world.core.relationship import Relationship
 from living_world.core.resource_definition import ResourceDefinition
+from living_world.core.run_metadata import RunMetadata
+from living_world.goals import (
+    GoalDefinition,
+    GoalOwnerKind,
+    GoalStatus,
+    ObjectiveDefinition,
+    ProgressEvidence,
+    ResourceMinimumCriterion,
+)
+from living_world.needs import NeedDefinition, NeedKind
 from living_world.simulation.simulation_engine import SimulationEngine
+from living_world.spatial import Point
 
 
 @dataclass(frozen=True, slots=True)
 class HTTPResponse:
     status_code: int
     body: bytes
+    headers: Mapping[str, str] = field(default_factory=dict)
 
     def json(self) -> Any:
         return json.loads(self.body)
@@ -96,7 +108,12 @@ class ASGIClient:
             for message in messages
             if message["type"] == "http.response.body"
         )
-        return HTTPResponse(status_code=int(status_message["status"]), body=body)
+        headers = cast(list[tuple[bytes, bytes]], status_message.get("headers", []))
+        return HTTPResponse(
+            status_code=int(status_message["status"]),
+            body=body,
+            headers={key.decode(): value.decode() for key, value in headers},
+        )
 
 
 def make_client() -> tuple[SimulationEngine, ASGIClient]:
@@ -272,8 +289,22 @@ def test_inspection_endpoints_return_authoritative_snapshots_in_id_order() -> No
     assert client.get("/world/tick").json() == {"tick": 0}
     assert client.get("/world").json() == {
         "tick": 0,
+        "run": None,
+        "replay_configured": False,
         "entity_count": 2,
         "relationship_count": 2,
+        "placement_count": 0,
+        "external_world_reference_count": 0,
+        "external_dispatch_count": 0,
+        "settlement_stage_program_count": 0,
+        "goal_count": 0,
+        "objective_count": 0,
+        "need_count": 0,
+        "consumption_policy_count": 0,
+        "storage_policy_count": 0,
+        "maintenance_policy_count": 0,
+        "work_order_count": 0,
+        "work_reservation_count": 0,
         "event_count": 2,
         "observation_count": 2,
         "memory_count": 2,
@@ -284,6 +315,8 @@ def test_inspection_endpoints_return_authoritative_snapshots_in_id_order() -> No
         "definition_count": 2,
         "resource_definition_count": 2,
     }
+    assert client.get("/world/run").status_code == 404
+    assert client.get("/world/placements").json() == []
     assert [record["id"] for record in client.get("/world/entities").json()] == [
         "entity_000001",
         "entity_000002",
@@ -362,7 +395,7 @@ def test_release_version_surfaces_are_consistent() -> None:
         project_version = tomllib.load(metadata_file)["project"]["version"]
     _, client = make_client()
 
-    assert version_file == "0.5.0"
+    assert version_file == "0.6.0rc1"
     assert project_version == version_file
     assert __version__ == version_file
     assert client.get("/health").json() == {
@@ -441,10 +474,180 @@ def test_empty_inspection_collections_return_arrays() -> None:
         "/world/knowledge",
         "/world/beliefs",
         "/world/experiences",
+        "/world/placements",
+        "/world/external-references",
+        "/world/external-dispatches",
     ):
         response = client.get(endpoint)
         assert response.status_code == 200
         assert response.json() == []
+
+
+def test_run_metadata_is_detached_privileged_inspection() -> None:
+    engine = SimulationEngine()
+    engine.state.run_metadata = RunMetadata("oakford", 1, 42, "abc123")
+    client = ASGIClient(create_app(engine))
+
+    payload = client.get("/world/run").json()
+    assert payload == {
+        "scenario_key": "oakford",
+        "schema_version": 1,
+        "seed": 42,
+        "configuration_fingerprint": "abc123",
+    }
+    payload["seed"] = 99
+    assert engine.state.run_metadata == RunMetadata("oakford", 1, 42, "abc123")
+
+
+def test_spatial_inspection_endpoint_returns_detached_geometry() -> None:
+    engine = SimulationEngine()
+    engine.definitions.register(Definition("thing"))
+    entity = engine.entities.create(definition_key="thing", name="Thing")
+    engine.spatial.place(entity_id=entity.id, geometry=Point(2, 3))
+    client = ASGIClient(create_app(engine))
+
+    payload = client.get("/world/placements").json()
+    assert payload == [
+        {
+            "entity_id": entity.id,
+            "geometry": {"kind": "point", "x": 2, "y": 3},
+            "containing_entity_id": None,
+            "bounds_kind": None,
+            "overlap_policy": "reject",
+        }
+    ]
+    payload[0]["geometry"]["x"] = 99
+    assert engine.spatial.get(entity.id).geometry == Point(2, 3)
+
+
+def test_goals_http_inspection_is_full_ordered_detached_and_npc_safe() -> None:
+    engine, client = make_client()
+    owner_id = "entity_000001"
+    for goal_id, objective_id, label in (
+        ("goal_b", "objective_b", "Second goal"),
+        ("goal_a", "objective_a", "First goal"),
+    ):
+        objective = ObjectiveDefinition(
+            objective_id,
+            f"{label} objective",
+            "Privileged objective purpose",
+            "Gather what the community needs.",
+            (ResourceMinimumCriterion("water", 2),),
+            deadline_tick=12,
+            priority=3,
+            authorized_action_categories=("gather",),
+        )
+        goal = GoalDefinition(
+            goal_id,
+            GoalOwnerKind.NPC,
+            owner_id,
+            label,
+            f"Operator tracks {objective_id}.",
+            "Help the community prepare.",
+            (objective_id,),
+            deadline_tick=20,
+            priority=4,
+            authorized_action_categories=("organize",),
+        )
+        engine.goals.create(goal, (objective,))
+    source_event_id = min(engine.state.events)
+    engine.goals.transition_goal(
+        "goal_a",
+        GoalStatus.ACTIVE,
+        ProgressEvidence(0, "Work began.", (source_event_id,)),
+    )
+
+    response = client.get("/world/goals")
+    assert response.status_code == 200
+    payload = response.json()
+    assert [record["definition"]["id"] for record in payload] == [
+        "goal_a",
+        "goal_b",
+    ]
+    first = payload[0]
+    assert first["definition"] == {
+        "id": "goal_a",
+        "owner_kind": "npc",
+        "owner_id": owner_id,
+        "label": "First goal",
+        "purpose": "Operator tracks objective_a.",
+        "npc_interpretation": "Help the community prepare.",
+        "objective_ids": ["objective_a"],
+        "deadline_tick": 20,
+        "priority": 4,
+        "authorized_action_categories": ["organize"],
+        "completion_criteria": [],
+        "failure_criteria": [],
+    }
+    assert first["state"] == {
+        "goal_id": "goal_a",
+        "status": "active",
+        "evidence": [
+            {
+                "tick": 0,
+                "description": "Work began.",
+                "source_event_ids": [source_event_id],
+            }
+        ],
+    }
+    assert first["objectives"] == [
+        {
+            "definition": {
+                "id": "objective_a",
+                "label": "First goal objective",
+                "purpose": "Privileged objective purpose",
+                "npc_interpretation": "Gather what the community needs.",
+                "completion_criteria": [{"resource": "water", "minimum": 2}],
+                "failure_criteria": [],
+                "dependencies": [],
+                "alternatives": [],
+                "deadline_tick": 12,
+                "priority": 3,
+                "authorized_action_categories": ["gather"],
+            },
+            "state": {
+                "objective_id": "objective_a",
+                "status": "inactive",
+                "evidence": [],
+            },
+        }
+    ]
+    payload[0]["definition"]["label"] = "Changed"
+    payload[0]["state"]["evidence"][0]["description"] = "Changed"
+    assert engine.state.goal_definitions["goal_a"].label == "First goal"
+    assert engine.state.goal_states["goal_a"].evidence[0].description == "Work began."
+
+    safe = engine.goals.npc_interpretation("goal_a")
+    assert (safe.label, safe.description) == (
+        "First goal",
+        "Help the community prepare.",
+    )
+    assert not any(
+        hasattr(safe, hidden)
+        for hidden in (
+            "id",
+            "owner_id",
+            "status",
+            "evidence",
+            "deadline_tick",
+            "completion_criteria",
+        )
+    )
+    context = NPCContextAssembler(engine.state).assemble(holder_id=owner_id)
+    npc_text = " ".join(
+        (
+            context.identity,
+            *context.self_knowledge,
+            *context.current_perceptions,
+            *(item.text for item in context.core_cognition),
+            *(item.text for item in context.retrieved_information),
+            *context.conversation_history,
+        )
+    )
+    assert "goal_a" not in npc_text
+    assert "objective_a" not in npc_text
+    assert "Operator tracks" not in npc_text
+    assert "Work began" not in npc_text
 
 
 def test_world_inspector_protocol_declares_the_complete_surface() -> None:
@@ -453,6 +656,9 @@ def test_world_inspector_protocol_declares_the_complete_surface() -> None:
     assert inspector.npcs() == ()
     assert inspector.memories() == ()
     assert inspector.knowledge() == ()
+    assert inspector.placements() == ()
+    assert inspector.external_world_references() == ()
+    assert inspector.external_dispatches() == ()
     assert inspector.cognitive_history("missing") is None
 
 
@@ -527,3 +733,63 @@ def test_inspection_is_get_only_and_does_not_expand_npc_context() -> None:
     npc_information = "\n".join(context.retrieved_information)
     assert "120" not in npc_information
     assert "92" not in npc_information
+
+
+def test_need_inspection_is_privileged_exact_and_detached() -> None:
+    engine, client = make_client()
+    definition = engine.needs.create(
+        NeedDefinition("need_food", "entity_000001", NeedKind.FOOD, 2, 0.2, 0.5, 3)
+    )
+    records = client.get("/world/needs").json()
+    assert records == [
+        {
+            "definition": {
+                "id": "need_food",
+                "owner_id": "entity_000001",
+                "kind": "food",
+                "requirement_per_person": 2,
+                "secure_maximum": 0.2,
+                "strained_maximum": 0.5,
+                "assessment_window_ticks": 3,
+            },
+            "state": {"need_id": "need_food", "current": None, "history": []},
+        }
+    ]
+    records[0]["definition"]["kind"] = "changed"
+    assert engine.state.need_definitions[definition.id].kind is NeedKind.FOOD
+
+
+def test_work_inspection_is_privileged_id_ordered_and_detached() -> None:
+    from living_world.work import (
+        ResourceWorkTarget,
+        WorkCategory,
+        WorkDefinition,
+        WorkState,
+    )
+
+    engine, client = make_client()
+    definition = WorkDefinition(
+        "work_000002",
+        WorkCategory.GATHER_WATER,
+        ResourceWorkTarget("water", 2),
+        "Fetch water",
+        "entity_000001",
+        "objective_demo",
+        "entity_000001",
+        (),
+        0,
+        (),
+        (),
+        3,
+        1,
+        None,
+        0,
+    )
+    engine.state.work_definitions[definition.id] = definition
+    engine.state.work_states[definition.id] = WorkState(definition.id)
+    records = client.get("/world/work-orders").json()
+    assert records[0]["definition"]["id"] == definition.id
+    assert records[0]["reservations"] == []
+    records[0]["definition"]["public_label"] = "changed"
+    assert engine.state.work_definitions[definition.id].public_label == "Fetch water"
+    assert client.post("/world/work-orders").status_code == 405

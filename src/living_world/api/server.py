@@ -1,6 +1,8 @@
 from collections.abc import Mapping
+from importlib.resources import files
 
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import Response
 
 from living_world import __version__
 from living_world.api.inspection import EngineWorldInspector
@@ -13,6 +15,23 @@ def create_app(engine: SimulationEngine) -> FastAPI:
     inspector = EngineWorldInspector(engine)
     application = FastAPI(title="Living World Simulator")
 
+    @application.get("/inspector")
+    async def inspector_page() -> Response:
+        return Response(
+            files("living_world.api").joinpath("static/inspector.html").read_bytes(),
+            media_type="text/html",
+        )
+
+    @application.get("/inspector/assets/{asset_name}")
+    async def inspector_asset(asset_name: str) -> Response:
+        media_types = {"inspector.css": "text/css", "inspector.js": "text/javascript"}
+        if asset_name not in media_types:
+            raise HTTPException(status_code=404, detail="Asset not found.")
+        return Response(
+            files("living_world.api").joinpath(f"static/{asset_name}").read_bytes(),
+            media_type=media_types[asset_name],
+        )
+
     @application.get("/health")
     async def health() -> dict[str, str]:
         return {"status": "ok", "version": __version__}
@@ -20,6 +39,17 @@ def create_app(engine: SimulationEngine) -> FastAPI:
     @application.get("/world/tick")
     async def world_tick() -> dict[str, int]:
         return {"tick": inspector.tick()}
+
+    @application.get("/world/replay")
+    async def world_replay() -> Mapping[str, object]:
+        return inspector.replay()
+
+    @application.get("/world/run")
+    async def world_run() -> Mapping[str, object]:
+        snapshot = inspector.run_metadata()
+        if snapshot is None:
+            raise HTTPException(status_code=404, detail="Run metadata not found.")
+        return snapshot
 
     @application.get("/world")
     async def world_summary() -> Mapping[str, object]:
@@ -47,6 +77,38 @@ def create_app(engine: SimulationEngine) -> FastAPI:
     @application.get("/world/relationships")
     async def relationships() -> tuple[Mapping[str, object], ...]:
         return inspector.relationships()
+
+    @application.get("/world/placements")
+    async def world_placements() -> tuple[Mapping[str, object], ...]:
+        return inspector.placements()
+
+    @application.get("/world/external-references")
+    async def external_world_references() -> tuple[Mapping[str, object], ...]:
+        return inspector.external_world_references()
+
+    @application.get("/world/external-dispatches")
+    async def external_dispatches() -> tuple[Mapping[str, object], ...]:
+        return inspector.external_dispatches()
+
+    @application.get("/world/goals")
+    async def goals() -> tuple[Mapping[str, object], ...]:
+        return inspector.goals()
+
+    @application.get("/world/settlement-stages")
+    def settlement_stages() -> tuple[Mapping[str, object], ...]:
+        return inspector.settlement_stages()
+
+    @application.get("/world/needs")
+    async def needs() -> tuple[Mapping[str, object], ...]:
+        return inspector.needs()
+
+    @application.get("/world/consequences")
+    async def consequences() -> Mapping[str, object]:
+        return inspector.consequences()
+
+    @application.get("/world/work-orders")
+    async def work_orders() -> tuple[Mapping[str, object], ...]:
+        return inspector.work_orders()
 
     @application.get("/world/events")
     async def events() -> tuple[Mapping[str, object], ...]:

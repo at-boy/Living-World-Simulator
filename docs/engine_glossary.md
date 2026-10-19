@@ -1,5 +1,33 @@
 # Engine Glossary
 
+## Work order and reservation
+
+A work order is engine-owned typed intent associated with one settlement
+objective and canonical location. Its durable aggregate reservation locks labor
+and settlement-held tool/consumable quantities without deducting stock.
+
+## Work offer
+
+An ephemeral engine-owned record that binds a safe public label to complete
+hidden work policy for one actor. The NPC may select the offered label but may
+not supply IDs, quantities, priority, targets, laborers, or execution effects.
+
+## Consequence phase
+
+Atomic deterministic application of consumption, maintenance, and storage after
+ordinary systems and before needs assessment.
+
+## Maintenance condition
+
+A bounded authoritative measure that causes terminal destruction at zero; it
+does not proportionally scale capability output.
+
+## Need
+
+Typed food, water, shelter, or storage requirement owned by a live entity and
+assessed into a bounded authoritative pressure history. A need interpretation is
+the filtered qualitative label and prose safe for deliberate NPC-facing use.
+
 ## Definition
 
 **Purpose**
@@ -17,6 +45,35 @@ Template describing what may exist.
 - runtime state
 - relationships
 - history
+
+---
+
+## Scenario
+
+**Purpose**
+
+Versioned configuration that reproducibly seeds definition vocabulary and an
+initial entity/relationship graph.
+
+**Owns**
+
+- public scenario-local labels
+- deterministic seed
+- definition-document reference
+- initial graph and run defaults
+
+**Does Not Own**
+
+- runtime entity identifiers
+- simulation outcomes
+- NPC knowledge or action authority
+
+## RunMetadata
+
+**Purpose**
+
+Persist the scenario identity and configuration fingerprint required to verify
+a resumed world before simulation continues.
 
 ---
 
@@ -642,3 +699,142 @@ source of authority. A strict attendee majority, or only unanimous explicit
 invitee declines, may supply one proposal to the ordinary action gateway;
 unavailable and no-selection replies never delegate. Its invitation feedback is
 transient filtered diagnostic output, not a governance or cognitive record.
+
+# Point
+
+An immutable integer `(x, y)` location for a mobile or spatially small entity
+on the engine's abstract local plane.
+
+# Bounds
+
+Immutable positive-width and positive-height axis-aligned cells using half-open
+containment. Bounds place areas, settlements, and structures.
+
+# Placement
+
+The authoritative spatial record for one entity: point, bounds, or explicit
+unplaced state; optional containing entity; bounds kind; and typed sibling-
+overlap policy. It is manager-owned and never inferred from attributes.
+
+# SpatialManager
+
+The sole lifecycle owner for placement creation, atomic replacement,
+unplacement, removal, containment/overlap validation, deterministic queries,
+and immutable spatial events.
+
+It also implements the typed entity-removal guard used by `EntityManager`, so
+entities cannot be removed while placement state or contained children remain.
+
+# SpatialPerceptionEngine
+
+An engine-side implementation of `PerceptionEngine` that converts only a
+caller-selected observer, subject, authoritative placements, and optional
+caller-filtered direct road into deterministic containment and compass prose.
+It returns an unpersisted `Observation`; it does not enumerate visibility,
+expose geometry, find paths, or mutate world state.
+
+# SpatialPerceptionError
+
+A typed fail-closed error raised when the selected observer, subject,
+container, or placement cannot be matched to live authoritative spatial state.
+
+# Spatial inspection
+
+A privileged detached projection of exact placement geometry. It may expose
+internal entity IDs to operators but is never an NPC context or perception
+payload.
+
+# ExternalWorldReference
+
+A frozen, deliberately partial engine record for one off-map contact. It stores
+identity and exact deterministic trade/contact policy without simulating a
+remote place.
+
+# ExternalWorldReferenceManager
+
+The sole lifecycle owner for reference creation, contact transitions,
+immutable events, deterministic queries, and filtered qualitative NPC
+interpretations.
+
+# ExternalDispatch
+
+A frozen durable record of one validated exchange with a partial off-map
+reference, including engine-only reservation and lifecycle state.
+
+# ExternalDispatchManager
+
+The sole owner of dispatch validation, local resource reservation/restoration,
+lifecycle transitions, immutable events, deterministic queries, and safe result
+perceptions.
+
+# ExternalDispatchSystem
+
+The scheduler system that departs pending dispatches and resolves elapsed
+transit deterministically from persisted seed and anchor policy.
+# Goal and objective
+
+A **goal** is a durable engine-owned mandate for one NPC, organization,
+expedition, or settlement. An **objective** is a typed node in that goal's
+dependency/alternative graph. Definitions are immutable and separate from
+manager-owned lifecycle state. An NPC goal interpretation is prose only and is
+not authoritative state.
+
+A **criterion evaluator** is a typed engine component that reads authoritative
+state and returns a frozen satisfied, unsatisfied, or unavailable result. The
+goal evaluation system applies these results in stable graph order through the
+goal manager. A registered-but-unavailable evaluator marks a future domain
+boundary explicitly instead of treating hidden or arbitrary attributes as
+truth.
+
+**Progress evidence** is a detached engine-only snapshot attached through the
+goal manager. A lifecycle transition carries evidence and emits exactly one
+event. Material progress while status is unchanged may append evidence without
+an event; identical normalized description and source provenance do not append
+again on later ticks.
+
+
+**Settlement stage program** is immutable configuration bound directly to one
+settlement, containing the canonical founding-camp, settlement, and town
+sequence and typed objective-backed requirements. It is neither a reusable
+template nor a scenario-YAML binding.
+
+**Settlement stage state** is a manager-owned immutable record of the current
+canonical stage and transition ticks. Stage promotion consumes completed
+settlement-owned objectives after goals evaluate; it advances one adjacent
+stage per tick and records privileged provenance in an immutable event.
+
+**Stage requirement evidence** normalizes each requirement kind, objective ID,
+and sorted unique progress/lifecycle source event IDs for one transition event.
+It is not duplicated in durable stage state.
+
+**Population minimum criterion** evaluates authoritative live owner population;
+missing population is unavailable and malformed population fails loudly.
+
+**Maintained capability criterion** evaluates directly owned live constructed
+capabilities by exact definition key and owner-matching maintenance condition.
+Missing matching state is unsatisfied; authoritative contradictions fail loudly.
+
+**NPC settlement-stage interpretation** contains only fixed qualitative label
+and description selected explicitly by the caller; exact stage state and
+thresholds never enter NPC cognition automatically.
+
+**Proposal tape** is an immutable, canonical-content-hashed sequence of
+untrusted speech/action decisions bound to one scenario fingerprint. Actor
+labels are public scenario labels, not entity IDs or NPC identity names.
+
+**Recorded proposal client** is a stateless per-entry cognition adapter receiving
+only filtered NPC context and ordinary offered action vocabulary.
+
+**Replay binding and cursor** are manager-owned durable driver identity and
+progress. They grant no domain authority and persist atomically with world
+effects. Accepted, rejected and speech-only attempts each consume one entry.
+
+**Proposal slot** is one replaceable ephemeral scheduler phase after ordinary
+systems and before work. Exhausted tapes idle; no second actor scheduler exists.
+
+**Failed tick** is a process-local error marker refusing further engine advance
+or persistence until a complete checkpoint is reloaded. It retains the original
+exception and does not disable inspection or direct manager access.
+
+**Proposal finalization** verifies all tape entries were consumed before a final
+stopping checkpoint. Operator stops and checkpoint-only runs preserve leftovers.

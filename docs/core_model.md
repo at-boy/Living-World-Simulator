@@ -1,5 +1,21 @@
 # Core Runtime Model
 
+Work orders are immutable definitions paired with immutable lifecycle state and
+durable aggregate reservation history. `WorkManager` alone mutates these
+collections; reservations lock but do not deduct settlement resources.
+`WorkActionHandler` exposes only engine-authored qualitative labels to one
+eligible actor, then revalidates hidden offer policy and delegates exactly one
+creation, priority, or self-assignment mutation to `WorkManager`.
+
+Consumption, storage, and maintenance policies configure an authoritative
+per-tick consequence phase. `ConsequenceManager` owns policy/state, resource,
+condition, lifecycle, and event mutation. Consequences run after ordinary
+systems and before needs and goals.
+
+Settlement needs are authoritative `NeedDefinition` and `NeedState` records.
+Their bounded assessment history describes availability, requirement, balance,
+pressure, and qualitative level without choosing action.
+
 The Living World Simulator is a property graph simulation engine.
 
 Everything that exists is an Entity.
@@ -36,6 +52,13 @@ Current registries include:
 
 - DefinitionManager
 - ResourceDefinitionManager
+
+`RunMetadata` binds a persisted world to a versioned scenario key, seed, and
+configuration fingerprint. `SimulationEngine.load_scenario(path)` reloads the
+scenario's definition vocabulary, verifies compatibility on resume, and uses
+entity and relationship managers to instantiate a fresh initial graph exactly
+once. Scenario-local labels are configuration conveniences, not runtime IDs or
+NPC-visible knowledge.
 
 World-definition YAML is an input format for Definition vocabulary, not a
 serialized `WorldState`. `SimulationEngine.load_definitions(path)` validates a
@@ -84,6 +107,10 @@ are never exposed to runtime callers.
 `SimulationEngine(repository)` loads through the repository during composition.
 Call `save_world()` to persist the current snapshot. Omitting a repository
 retains the existing in-memory engine behavior.
+
+SQLite schema version 2 adds optional run metadata. Schema-version-1 v0.5
+snapshots remain loadable as unbound legacy worlds and are written as the
+current schema on their next save.
 
 ## Privileged inspection
 
@@ -174,6 +201,9 @@ and provenance without exposing that data as the NPC-facing perception.
 `NPCPerceptionBoundary` validates the description before an observation leaves
 the perception engine and again when it is projected into `NPCContext`; the
 latter path has no access to the observation's evidence or metadata.
+`NPCInformationBoundary` additionally compares every context prose field with
+authoritative placement numbers and spatial vocabulary, so an unsafe stored
+observation or cognitive record cannot bypass perception-time validation.
 
 `ConversationService` records a validated NPC utterance as an observation for
 each other conversation participant, with empty evidence and metadata. It does
@@ -406,6 +436,43 @@ failure.
 
 Locations are represented by ordinary `Entity` instances whose definitions
 describe a location; there is no location-specific runtime type or registry.
+
+## Spatial placement contract
+
+Spatial state is a dedicated authoritative collection keyed by entity ID, not
+an entity-attribute convention. A frozen placement contains an immutable
+integer `Point`, an immutable positive axis-aligned `Bounds`, or the explicit
+unplaced state. Bounded placements distinguish areas from structures and carry
+a typed sibling-overlap policy. An optional container must be a live entity
+with bounds, and child geometry must lie fully inside it.
+
+The implemented spatial manager alone creates, atomically replaces, unplaces,
+and removes placements. It validates entities, containment, cycles, and mutual
+overlap permission before recording one immutable event. Queries use canonical
+container/geometry/entity ordering. SQLite migration treats legacy entities as
+spatially unknown, and privileged inspection returns detached exact geometry.
+`SpatialPerceptionEngine` resolves only one caller-selected live observer and
+subject. It translates containment, doubled point/bounds centers, and an
+explicitly supplied active direct road into deterministic qualitative prose.
+Positive x is east and positive y is north. The returned observation is not
+recorded automatically; callers use `ObservationManager`, after which normal
+holder-scoped context assembly applies. Exact geometry, magnitude, IDs, and
+privileged spatial vocabulary remain outside NPC context. See ADR-0016.
+
+## External-world references
+
+Off-map anchors are dedicated frozen records owned by their lifecycle manager,
+not generic entities or secretly simulated places. They hold exact engine
+trade/contact policy and persist in SQLite schema 4. Operator inspection may
+show the full detached record; NPC-facing use is a separate qualitative DTO
+and is not automatically added to context. See ADR-0017.
+
+External dispatches are frozen durable records owned by a dedicated manager.
+They reserve local resources atomically and advance through a deterministic
+seeded scheduler system. Exact policy remains privileged; the separate safe
+perception is qualitative and holder-neutral until a later perception path
+establishes NPC knowledge. See ADR-0018.
+
 # Councils
 
 A council is an ephemeral agenda-driven composition of meeting coordination.
@@ -431,3 +498,124 @@ engine calls. The cognition-shaped demonstration records holder-scoped
 observations, memories, experiences, beliefs, and social interpretations
 through their managers. Every NPC still receives only its filtered
 `NPCContext`; beliefs do not mutate world truth or select a proposal.
+# Engine-owned goals
+
+`WorldState` stores immutable goal and objective definitions separately from
+their immutable lifecycle state and progress evidence. `GoalManager` alone
+creates graphs and replaces state records. Criteria use six closed typed
+variants. A final deterministic simulation system evaluates them after the
+other systems at each tick. Typed evaluators return satisfied, unsatisfied, or
+unavailable results with detached evidence. Unavailable authoritative domains
+block progress; they are never inferred from arbitrary entity attributes.
+
+Dependencies are prerequisites and alternative objectives may satisfy their
+parent. Completion requires every completion criterion, while any satisfied
+failure criterion fails the record. The goal manager remains the sole mutation
+boundary and records exactly one immutable event for each actual lifecycle
+transition. Re-evaluation without a status change adds no lifecycle event.
+Materially changed evaluation snapshots may add manager-owned progress evidence
+without changing status or emitting an event. The manager compares normalized
+description and source-event provenance, so an unchanged snapshot on later
+ticks is idempotent.
+
+An NPC receives only `NPCGoalInterpretation(label, description)`. Definition
+IDs, owner IDs, criteria, evidence, deadlines, action policy, and authoritative
+status remain engine/inspection data. Both visible fields reject internal ID
+forms; operator-only purpose text remains unrestricted and privileged.
+
+
+## Settlement development stages
+
+`WorldState.settlement_stage_programs` and `settlement_stage_states` are keyed
+by settlement entity ID. Immutable `SettlementStageProgram` records bind
+exactly `founding_camp`, `settlement`, and `town` in order. Founding camp has no
+requirements; both promotion stages contain typed objective requirements and
+cannot be population-only. `SettlementStageManager.configure` validates live
+ownership, unique settlement-goal ownership, matching completion criteria, and
+unique matching need definitions with sufficient assessment windows. It
+normalizes requirement order and atomically creates founding-camp state and a
+configuration event. Configured owners cannot be removed or destroyed.
+
+`PopulationMinimumCriterion` evaluates a live owner's non-negative integer
+population (missing is unavailable). `MaintainedCapabilityCriterion` counts
+live directly owned constructed entities with exactly matching definition keys,
+owner-matching maintenance policy and sufficiently high condition. Missing
+policy/state is unsatisfied; invalid or contradictory authoritative records
+raise. Both use normalized descriptions and sorted source event IDs.
+
+After ordinary systems, work execution, consequences, need assessment, and
+goal evaluation, `SettlementStageEvaluationSystem` consumes only completed
+objective statuses and evidence. It never reevaluates raw domains. It visits
+settlement IDs lexically, promotes only to the next stage and at most once per
+tick, and treats town as terminal. State records contain entered and last
+transition ticks; provenance is kept in one immutable transition event containing
+previous/current stage and ordered kind/objective/source evidence. Individual
+manager failure restores its prior state/events; whole-phase failure restores
+all stage states and removes all new phase events while retaining earlier
+phases. `SettlementStageCriterion` sees this state on the following tick.
+
+Schema 11 stores programs/states and the new goal criteria. Schemas 1–10 load
+empty stage collections and write forward without inventing objective mappings.
+Loaded stages are validated after prerequisite records and events. Strict
+records, stable ordering and atomic snapshot replacement preserve resume
+behavior. Privileged inspection exposes exact detached program/state at
+`GET /world/settlement-stages` and the program count in the world summary.
+
+NPCs may receive only explicitly selected `NPCSettlementStageInterpretation`
+fixed qualitative prose. IDs, enum state, criteria, population/condition
+thresholds, ticks, objective statuses, evidence, and events remain engine-only.
+No LLM action configures or promotes stages, and prose is never automatically
+injected into perception or cognition.
+
+## Recorded proposal replay
+
+A version-1 `ProposalTape` contains a strict ordered nonempty sequence of frozen
+`ProposalTapeEntry` records. Each entry names a public scenario actor label and
+contains an ordinary untrusted `NPCDecision` plus rationale. Content identity
+is SHA256 of canonical UTF-8 JSON; Unicode codepoints and explicit null fields
+are preserved. YAML loading rejects duplicate keys, unknown fields, malformed
+proposals and internal ID forms with fixed payload-free error codes.
+
+`ScenarioRuntimeManager` alone stages and retains the initial public-label to
+entity-ID map. Resume checks labels and initial definition keys, allowing later
+name changes. Mapped records cannot be removed; they remain historical records
+after destruction. `ReplayManager` prevents destruction while any remaining
+entry names the actor. Existing domain lifecycle guards continue to apply.
+Legacy populated snapshots without labels can run normally but cannot enable
+replay by guessing identities.
+
+`ReplayBinding` stores scenario/tape fingerprints, actor sequence and configured
+tick. `ReplayState` stores the next index and last attempt tick. The replay
+manager validates the pair, exact tick/index relation and live pending actors,
+then consumes exactly one immutable proposal-resolution event per attempt.
+Accepted and rejected gateway results and validated speech-only proposals all
+advance the cursor; errors do not. The event carries only sequence, actor label
+and accepted/rejected/no_action outcome. Manager event failure restores only
+its cursor and new transaction events.
+
+The scheduler order is ordinary systems, optional proposal slot, work,
+consequences, needs, goals, settlement stages, then tick increment. The stateless
+`RecordedProposalClient` receives only filtered context and offered vocabulary;
+identity is the bound entity's current name. The engine assembles context for
+the stored actor ID even when names duplicate. Read-only offer composition
+must provide canonical vocabulary and exactly one handler per offered key.
+`DecisionEngine` validates proposals and `NPCActionResolver` retains action
+authority. Exhausted tapes idle without further events.
+
+Any exception escaping a scheduler tick prevents further engine advance or save
+and retains the original cause. Inspection and direct managers remain available;
+no whole-world rollback is claimed. Recover by recreating the engine from a
+complete checkpoint. Preparation/configuration and repository-save errors alone
+do not poison the engine. A replay-bound engine must reinstall matching replay
+preparation before advance, save or runner finalization, including exhausted and
+zero-tick runs.
+
+Schema 12 persists label bindings and replay records in the atomic world
+snapshot. Schemas 1–11 default to empty labels and absent replay records.
+Runner preparation is atomic for binding/cursor and the prior proposal slot.
+Finalization precedes stopping checkpoints; unused entries reject final tick
+limits or terminal stops. Operator stops and explicit checkpoint-only bounds
+retain resumable leftovers. The CLI accepts `--proposal-tape PATH` and
+`--checkpoint-only`; default offers are empty and support speech-only tapes.
+Detached `GET /world/replay` is privileged operator data. Runtime objects,
+tape decisions and source paths are never persisted in replay state.

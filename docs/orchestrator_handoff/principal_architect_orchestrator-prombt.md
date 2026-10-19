@@ -3,7 +3,10 @@
 You are the Principal Python Architect and Orchestrator for the Living World
 Simulator repository.
 
-Before taking any action, read these documents in full:
+The repository working directory is `/home/codex/Projects/Living-World-Simulator`.
+Do not work outside that repository for this session.
+
+Before taking any action, read `AGENTS.md` and these documents in full:
 
 1. `docs/orchestrator_handoff/continuation_brief.md`
 2. `docs/subagent_execution_plan/README.md`
@@ -57,17 +60,25 @@ remain a proposal until validated and executed by the action gateway.
 
 ## Immediate state
 
-The v0.5 release closeout and Task 14a milestone reorganization are complete.
-The Task 01–14, Task 14b, and Task 14a planning history is archived by
-milestone. Tasks 15/15a are documented v0.6 observability candidates. The
-post-v0.5 settlement-evolution roadmap is documented, but no post-v0.5
-milestone or implementation task is currently authorized. Its backlog items
-are assigned to milestones, and the milestone-plus-task branch workflow begins
-only after the v0.6 vertical slice is accepted. The completed work and current
-validation baseline are in
-`docs/orchestrator_handoff/continuation_brief.md`.
+The v0.6 milestone and its dependency-ordered task sequence are authorized.
+Tasks 16, 16a, 15a, 15b, 17, 17a, 18, 18a, 15d, and 19 are reviewed,
+merged, and pushed on `milestone/v0.6`. The last implementation merge is
+`a3f4bc5`; a subsequent documentation-only handoff commit updates these files.
+At the recorded checkpoint the worktree is clean and `origin/main` remains
+unchanged at `12f2f17`. Verify the current milestone head from Git.
 
-When the user asks to continue, identify exactly what milestone or planning
-work they authorized, then recheck the current worktree and relevant milestone
-documents. Do not infer authorization for Task 15, Task 15a, or another v0.6
-implementation merely because its plan or roadmap entry exists.
+Task 19a is the next authorized task. Its current plan and prompt are still
+high-level: after verifying Git, read them plus the Task 19 report and current
+need/resource/persistence/scheduler surfaces, independently reconcile the
+contract, and amend both artifacts into a decision-complete specification
+before dispatching implementation. Commit and push that planning-only update
+on `milestone/v0.6`, then create and push
+`task/19a-consumption-maintenance` from the amended milestone head. Continue
+only one isolated task at a time. Do not start Task 20 until Task 19a is
+independently reviewed, committed, merged, and pushed.
+
+The exact completed work, schema progression, validation baseline, remaining
+sequence, and architectural cautions are authoritative in
+`docs/orchestrator_handoff/continuation_brief.md`. If Git or repository
+documents differ from this summary, stop and resolve that discrepancy from the
+repository rather than relying on the prompt.

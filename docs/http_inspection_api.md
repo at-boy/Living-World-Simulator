@@ -1,5 +1,20 @@
 # HTTP inspection API
 
+Release candidate `0.6.0rc1`: see [release notes](releases/v0_6_0rc1.md)
+and [current closeout evidence](subagent_execution_plan/v0_6/24_v06_release_closeout-report.md).
+
+`GET /world/work-orders` returns detached ID-ordered work definition/state pairs
+with ID-ordered reservation history. `/world` includes work and reservation
+counts. This privileged data is not NPC context.
+
+`GET /world/consequences` returns detached privileged consumption, storage, and
+maintenance policy/state pairs ordered by policy ID. `GET /world` includes a
+count for each policy type. These operator surfaces are not NPC-visible.
+
+`GET /world/needs` returns privileged ID-ordered records shaped exactly as
+`{"definition": <NeedDefinition>, "state": <NeedState>}`. `GET /world` includes
+`need_count`; these operator views may expose exact thresholds and history.
+
 The HTTP inspection API is a privileged, read-only view of a running
 `SimulationEngine`. It returns detached JSON snapshots of authoritative world
 state for operator tools, debugging, and visualization.
@@ -55,12 +70,16 @@ composed world without opening a network port.
 | --- | --- |
 | `GET /health` | Service status and version |
 | `GET /world/tick` | Current simulation tick |
+| `GET /world/run` | Scenario run metadata, or `404` for an unbound world |
 | `GET /world` | Counts for the principal world-state collections |
 | `GET /world/entities` | All entities |
 | `GET /world/entities/{entity_id}` | One entity, or `404` if unknown |
 | `GET /world/definitions` | Entity definitions |
 | `GET /world/resources` | Resource definitions |
 | `GET /world/relationships` | World relationships |
+| `GET /world/placements` | Canonically ordered exact spatial placements |
+| `GET /world/external-references` | External anchors and exact engine policy |
+| `GET /world/external-dispatches` | Durable dispatch records and lifecycle |
 | `GET /world/events` | World events |
 | `GET /world/npcs` | NPC identity, occupation, schedule, and active activity presentation |
 | `GET /world/observations` | Persisted observations |
@@ -70,9 +89,14 @@ composed world without opening a network port.
 | `GET /world/experiences` | Persisted experiences, history, and provenance |
 | `GET /world/cognitive-history/{holder_id}` | Holder-scoped cognitive records, or `404` if the holder is unknown |
 
-Collection routes return `[]` when no records exist. Collections are ordered
-deterministically by record identifier. A known holder with no cognitive
-records receives a response whose category collections are empty.
+Collection routes return `[]` when no records exist. Existing record
+collections are ordered deterministically by record identifier; placements use
+ADR-0016's canonical container/geometry/entity order. A known holder with no
+cognitive records receives a response whose category collections are empty.
+
+`/world` includes a `run` object for scenario-bound worlds and `null` for
+legacy or manually composed worlds. The fingerprint and seed are privileged
+operator diagnostics and must never be copied into NPC-facing context.
 
 For example, after obtaining an NPC identifier from `/world/npcs`:
 
@@ -93,3 +117,56 @@ prompts, `NPCContext`, cognitive retrieval, perception, or cognition clients.
 The API is GET-only and does not step or mutate the simulation. Conversations,
 meetings, councils, invitation feedback, and action-resolution return values
 are ephemeral and therefore have no inspection routes.
+
+# Spatial placements
+
+`GET /world/placements` returns the dedicated spatial placement collection in
+canonical container/geometry/entity order. Each detached record contains the
+entity ID, optional containing entity ID, geometry (`null`, point, or bounds),
+optional bounds kind, and overlap policy. `/world` includes `placement_count`.
+
+This is privileged exact engine geometry. It is not an NPC perception or
+context payload and must not be passed to cognition.
+
+# External-world references
+
+`GET /world/external-references` returns detached records in lexical ID order;
+`/world` includes `external_world_reference_count`. Internal IDs and exact
+goods, capacity, delay, cost, reliability, and contact state are privileged
+operator data and must never be copied into an NPC prompt or context.
+
+`GET /world/external-dispatches` returns detached records in lexical ID order;
+`/world` includes `external_dispatch_count`. Source/reference IDs, reservations,
+ticks, and exact state are privileged and must not be used as NPC context.
+# Goal inspection
+
+`GET /world/goals` returns a deterministic, detached privileged snapshot of
+goal definitions, lifecycle state, objectives, typed criteria, and evidence.
+This operator endpoint is not an NPC-context or mutation interface.
+
+## Packaged browser inspector
+
+`GET /inspector` serves the packaged read-only World Inspector. Its fixed CSS
+and JavaScript assets are served under `/inspector/assets/`; unknown assets
+return 404 and mutating methods return 405. See [World Inspector](world_inspector_ui.md)
+for view sources, independent snapshot semantics, browser verification and the
+extension entry points. The module-level server owns an empty engine; an app
+created with `create_app(engine)` reads that supplied engine. A separately loaded
+database remains a snapshot rather than synchronizing another process.
+
+## Packaged Spatial inspector
+
+The packaged `/inspector` Spatial view consumes the existing detached
+`GET /world/placements` and entity snapshots. Placement ordering and geometry
+remain engine-owned. The browser adds no endpoints or mutating operations and
+makes no atomic consistency claim across requests. See [World Inspector](world_inspector_ui.md)
+for projection, accessibility, unplaced states and numeric-range handling.
+
+## Saved-world serving
+
+The public `load_inspection_engine(scenario_path, database_path)` factory requires
+saved metadata, validates exact scenario identity and opens SQLite in read-only
+mode. Canonical setup must already exist. `create_app(engine)` then exposes the
+same GET-only API against that fixed snapshot. CLI serving binds only loopback;
+install the optional `server` extra. Ordinary same-engine live reads remain
+available by supplying the running engine directly to `create_app`.

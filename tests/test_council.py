@@ -21,10 +21,26 @@ from living_world.cognition.npc_cognition_client import (
     NPCDecision,
 )
 from living_world.cognition.npc_context import NPCContext, NPCContextAssembler
+from living_world.core.definition import Definition
 from living_world.core.entity import Entity
 from living_world.core.relationship import Relationship
+from living_world.goals import (
+    GoalDefinition,
+    GoalOwnerKind,
+    GoalStatus,
+    ObjectiveDefinition,
+    ResourceMinimumCriterion,
+)
 from living_world.managers.observation_manager import ObservationManager
+from living_world.simulation.simulation_engine import SimulationEngine
+from living_world.spatial import Bounds, BoundsKind, Point
 from living_world.state.world_state import WorldState
+from living_world.work import (
+    ResourceWorkTarget,
+    WorkActionHandler,
+    WorkCategory,
+    WorkCreationOffer,
+)
 
 
 @dataclass
@@ -267,3 +283,139 @@ def test_unsafe_engine_perspective_fails_before_any_invitation_model_call() -> N
     assert state.observations == {}
     assert state.events == {}
     assert len(service._decisions._client.decisions) == 1  # type: ignore[attr-defined]
+
+
+def test_work_majority_uses_caller_bound_handler_and_cannot_be_replayed_by_member() -> (
+    None
+):
+    engine = SimulationEngine()
+    for key in ("settlement", "npc", "organization"):
+        engine.definitions.register(Definition(key))
+    settlement = engine.entities.create(definition_key="settlement", name="Oakford")
+    caller = engine.entities.create(
+        definition_key="npc",
+        name="Mara",
+        attributes={
+            "npc_identity": {
+                "name": "Mara",
+                "description": "A careful farmer.",
+                "capability_descriptions": [],
+            }
+        },
+    )
+    member = engine.entities.create(
+        definition_key="npc",
+        name="Tomas",
+        attributes={
+            "npc_identity": {
+                "name": "Tomas",
+                "description": "A practical worker.",
+                "capability_descriptions": [],
+            }
+        },
+    )
+    organization = engine.entities.create(
+        definition_key="organization", name="Founders Council"
+    )
+    engine.spatial.place(
+        entity_id=settlement.id,
+        geometry=Bounds(0, 0, 8, 8),
+        bounds_kind=BoundsKind.AREA,
+    )
+    for index, npc in enumerate((caller, member), 1):
+        engine.spatial.place(
+            entity_id=npc.id,
+            geometry=Point(index, 1),
+            containing_entity_id=settlement.id,
+        )
+        engine.relationships.create(
+            kind="member_of", source_id=npc.id, target_id=organization.id
+        )
+    objective = ObjectiveDefinition(
+        "objective_food",
+        "Produce food",
+        "Produce food",
+        "Secure a dependable food supply.",
+        (ResourceMinimumCriterion("food", 1),),
+        authorized_action_categories=(WorkCategory.PRODUCE_FOOD.value,),
+    )
+    goal = GoalDefinition(
+        "goal_home",
+        GoalOwnerKind.SETTLEMENT,
+        settlement.id,
+        "Found a home",
+        "Found a home",
+        "Help the settlement thrive.",
+        (objective.id,),
+        authorized_action_categories=("settlement_work",),
+    )
+    engine.goals.create(goal, (objective,))
+    engine.goals.transition_goal(goal.id, GoalStatus.ACTIVE)
+    engine.goals.transition_objective(objective.id, GoalStatus.ACTIVE)
+    handler = WorkActionHandler(
+        engine.state,
+        engine.definitions,
+        engine.work,
+        caller.id,
+        creation_offers=(
+            WorkCreationOffer(
+                "Plant a council crop",
+                WorkCategory.PRODUCE_FOOD,
+                ResourceWorkTarget("food", 1),
+                settlement.id,
+                objective.id,
+                settlement.id,
+            ),
+        ),
+    )
+    resolver = NPCActionResolver(handler.action_options, (handler,))
+    proposal = ActionRequest(
+        WorkCategory.PRODUCE_FOOD.value,
+        "Plant a council crop",
+        "This could help everyone.",
+    )
+    replay = resolver.resolve(actor_id=member.id, request=proposal)
+    assert replay.accepted is False
+    assert engine.state.work_definitions == {}
+
+    decisions = DecisionEngine(
+        ScriptedClient(
+            [
+                NPCDecision(
+                    None,
+                    ActionRequest("attend_council", None, "I will attend."),
+                ),
+                NPCDecision("I support planting.", proposal),
+                NPCDecision("I agree with planting.", proposal),
+            ]
+        )
+    )
+    assembler = NPCContextAssembler(engine.state)
+    conversation = ConversationService(
+        assembler,
+        decisions,
+        resolver,
+        engine.observations,
+        handler.action_options,
+    )
+    service = CouncilService(
+        MeetingService(conversation),
+        assembler,
+        decisions,
+        resolver,
+        engine.state,
+    )
+    result = service.convene(
+        call=CouncilCall(
+            caller.id,
+            organization.id,
+            (member.id,),
+            CouncilAgenda("whether to plant a shared crop", handler.action_options),
+            2,
+            called_speaker_ids=(caller.id, member.id),
+        )
+    )
+    assert result.majority_proposal == proposal
+    assert result.resolutions[0].accepted is True
+    assert len(engine.state.work_definitions) == 1
+    assert resolver.resolve(actor_id=member.id, request=proposal).accepted is False

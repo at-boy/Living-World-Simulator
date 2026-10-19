@@ -14,6 +14,11 @@ from living_world.cognition.meeting import MeetingRequest, MeetingService
 from living_world.cognition.npc_cognition_client import ActionRequest
 from living_world.core.definition import Definition
 from living_world.definitions.yaml_loader import YAMLWorldDefinitionLoader
+from living_world.external_world.dispatch_manager import ExternalDispatchManager
+from living_world.external_world.dispatch_system import ExternalDispatchSystem
+from living_world.external_world.manager import ExternalWorldReferenceManager
+from living_world.goals.evaluation import GoalEvaluationSystem
+from living_world.goals.manager import GoalManager
 from living_world.managers.belief_manager import BeliefManager
 from living_world.managers.definition_manager import DefinitionManager
 from living_world.managers.entity_manager import EntityManager
@@ -25,8 +30,20 @@ from living_world.managers.npc_relationship_manager import NPCRelationshipManage
 from living_world.managers.observation_manager import ObservationManager
 from living_world.managers.relationship_manager import RelationshipManager
 from living_world.managers.resource_definition_manager import ResourceDefinitionManager
+from living_world.needs.consequence import ConsequenceManager, ConsequenceSystem
+from living_world.needs.manager import NeedManager
+from living_world.needs.system import NeedAssessmentSystem
+from living_world.replay.manager import ReplayManager
+from living_world.replay.model import ProposalTapeError
 from living_world.repositories.graph_repository import GraphRepository
+from living_world.scenarios.runtime import ScenarioRuntimeManager
+from living_world.scenarios.scenario import (
+    LoadedScenario,
+    YAMLScenarioLoader,
+)
 from living_world.simulation.simulation_scheduler import SimulationScheduler
+from living_world.spatial.manager import SpatialManager
+from living_world.stages import SettlementStageEvaluationSystem, SettlementStageManager
 from living_world.state.world_state import WorldState
 from living_world.systems.construction_system import ConstructionSystem
 from living_world.systems.housing_system import HousingSystem
@@ -40,6 +57,12 @@ from living_world.systems.settlement_system import SettlementSystem
 from living_world.systems.simulation_system import SimulationSystem
 from living_world.systems.trade_system import TradeSystem
 from living_world.systems.weather_system import WeatherSystem
+from living_world.work.execution import WorkExecutionSystem
+from living_world.work.manager import WorkManager
+
+
+class FailedTickError(RuntimeError):
+    """A partially failed tick must recover from a complete checkpoint."""
 
 
 class SimulationEngine:
@@ -53,18 +76,39 @@ class SimulationEngine:
 
         self._resource_definitions = ResourceDefinitionManager()
 
+        self._scenarios = ScenarioRuntimeManager(self._state, self._definitions)
+
+        self._events = EventManager(
+            self._state,
+        )
+
+        self._replay = ReplayManager(self._state, self._events)
+        self._failed_tick: Exception | None = None
+
+        self._work = WorkManager(self._state, self._events)
+
+        self._goals = GoalManager(self._state, self._events)
+        self._settlement_stages = SettlementStageManager(self._state, self._events)
+
+        self._needs = NeedManager(self._state, self._events)
+
+        self._external_world_references = ExternalWorldReferenceManager(
+            self._state, self._events
+        )
+
+        self._spatial = SpatialManager(self._state, self._events, self._work)
+
         self._entities = EntityManager(
             self._state,
             self._definitions,
+            self._spatial,
+            self._work,
+            lifecycle_guards=(self._replay,),
         )
 
         self._relationships = RelationshipManager(
             self._state,
             self._entities,
-        )
-
-        self._events = EventManager(
-            self._state,
         )
 
         self._observations = ObservationManager(
@@ -94,8 +138,35 @@ class SimulationEngine:
         self._scheduler = SimulationScheduler(
             self._state,
         )
+        self._proposal_system: SimulationSystem | None = None
+        self._registered_systems: list[SimulationSystem] = []
+        self._need_assessment_system: NeedAssessmentSystem | None = None
+        self._goal_evaluation_system: GoalEvaluationSystem | None = None
+        self._consequence_system: ConsequenceSystem | None = None
+        self._settlement_stage_evaluation_system: (
+            SettlementStageEvaluationSystem | None
+        ) = None
+        self._work_execution_system = WorkExecutionSystem(self._definitions)
 
         self._resources = ResourceSystem()
+
+        self._consequences = ConsequenceManager(
+            self._state, self._resources, self._entities, self._events, self._work
+        )
+
+        self._external_dispatches = ExternalDispatchManager(
+            self._state,
+            self._entities,
+            self._external_world_references,
+            self._resources,
+            self._events,
+        )
+
+        self.register_system(
+            ExternalDispatchSystem(
+                self._external_dispatches, self._external_world_references
+            )
+        )
 
         self.register_system(
             WeatherSystem(
@@ -178,10 +249,23 @@ class SimulationEngine:
                 self._entities,
             )
         )
+        self._consequence_system = ConsequenceSystem(self._consequences)
+        self._need_assessment_system = NeedAssessmentSystem(self._needs)
+        self._goal_evaluation_system = GoalEvaluationSystem(self._goals)
+        self._settlement_stage_evaluation_system = SettlementStageEvaluationSystem(
+            self._settlement_stages
+        )
+        self._rebuild_scheduler()
 
     @property
     def state(self) -> WorldState:
         return self._state
+
+    @property
+    def persistence_enabled(self) -> bool:
+        """Return whether this engine can write durable world checkpoints."""
+
+        return self._repository is not None
 
     @property
     def definitions(self) -> DefinitionManager:
@@ -196,8 +280,40 @@ class SimulationEngine:
         return self._relationships
 
     @property
+    def spatial(self) -> SpatialManager:
+        return self._spatial
+
+    @property
     def events(self) -> EventManager:
         return self._events
+
+    @property
+    def external_world_references(self) -> ExternalWorldReferenceManager:
+        return self._external_world_references
+
+    @property
+    def external_dispatches(self) -> ExternalDispatchManager:
+        return self._external_dispatches
+
+    @property
+    def goals(self) -> GoalManager:
+        return self._goals
+
+    @property
+    def settlement_stages(self) -> SettlementStageManager:
+        return self._settlement_stages
+
+    @property
+    def needs(self) -> NeedManager:
+        return self._needs
+
+    @property
+    def consequences(self) -> ConsequenceManager:
+        return self._consequences
+
+    @property
+    def work(self) -> WorkManager:
+        return self._work
 
     @property
     def observations(
@@ -226,10 +342,65 @@ class SimulationEngine:
         return self._npc_relationships
 
     def register_system(
-        self,
-        system: SimulationSystem,
+        self, system: SimulationSystem, *, key: str | None = None
     ) -> None:
-        self._scheduler.register(system)
+        if not callable(getattr(system, "step", None)):
+            raise TypeError("System must provide step.")
+        if key is not None and (not isinstance(key, str) or not key.strip()):
+            raise ValueError("System key must be nonempty text.")
+        registry = getattr(self, "_system_keys", {})
+        previous, scheduler = list(self._registered_systems), self._scheduler
+        keys = dict(registry)
+        try:
+            if key is not None and key in keys:
+                self._registered_systems[keys[key]] = system
+            else:
+                if key is not None:
+                    keys[key] = len(self._registered_systems)
+                self._registered_systems.append(system)
+            self._system_keys = keys
+            self._rebuild_scheduler()
+        except Exception:
+            self._registered_systems = previous
+            self._system_keys = registry
+            self._scheduler = scheduler
+            raise
+
+    @property
+    def replay(self) -> ReplayManager:
+        return self._replay
+
+    @property
+    def scenarios(self) -> ScenarioRuntimeManager:
+        return self._scenarios
+
+    def configure_proposal_system(self, system: SimulationSystem | None) -> None:
+        if system is not None and not callable(getattr(system, "step", None)):
+            raise TypeError("Proposal system must provide step.")
+        previous = self._proposal_system
+        try:
+            self._proposal_system = system
+            self._rebuild_scheduler()
+        except Exception:
+            self._proposal_system = previous
+            self._rebuild_scheduler()
+            raise
+
+    def _rebuild_scheduler(self) -> None:
+        self._scheduler = SimulationScheduler(self._state)
+        for registered in self._registered_systems:
+            self._scheduler.register(registered)
+        if self._proposal_system is not None:
+            self._scheduler.register(self._proposal_system)
+        self._scheduler.register(self._work_execution_system)
+        if self._consequence_system is not None:
+            self._scheduler.register(self._consequence_system)
+        if self._need_assessment_system is not None:
+            self._scheduler.register(self._need_assessment_system)
+        if self._goal_evaluation_system is not None:
+            self._scheduler.register(self._goal_evaluation_system)
+        if self._settlement_stage_evaluation_system is not None:
+            self._scheduler.register(self._settlement_stage_evaluation_system)
 
     def load_definitions(self, path: Path) -> tuple[Definition, ...]:
         """Load and atomically register definition vocabulary from YAML."""
@@ -237,6 +408,14 @@ class SimulationEngine:
         definitions = YAMLWorldDefinitionLoader().load(path)
         self._definitions.register_many(definitions)
         return definitions
+
+    def load_scenario(self, path: Path) -> LoadedScenario:
+        """Load, validate, and idempotently bind one scenario to this world."""
+
+        scenario = YAMLScenarioLoader().load(path)
+        definitions = YAMLWorldDefinitionLoader().load(scenario.definition_path)
+        self._scenarios.bind(scenario, definitions)
+        return scenario
 
     def resolve_npc_action(
         self,
@@ -293,18 +472,47 @@ class SimulationEngine:
             raise TypeError("service must be a CouncilService.")
         return service.convene(call=call)
 
+    def _check_failed_tick(self) -> None:
+        if self._failed_tick is not None:
+            raise FailedTickError(
+                "Cannot advance or save a failed tick; reload the last checkpoint."
+            ) from self._failed_tick
+
+    def _check_replay_preparation(self) -> None:
+        if self._state.replay_binding is not None:
+            from living_world.replay.system import ReplayProposalSystem
+
+            if not isinstance(self._proposal_system, ReplayProposalSystem):
+                raise ProposalTapeError("missing_replay_preparation")
+            self._proposal_system.validate_preparation(self._state)
+
     def step(self) -> None:
-        self._scheduler.step()
+        self._check_failed_tick()
+        self._check_replay_preparation()
+        try:
+            self._scheduler.step()
+        except Exception as exc:
+            self._failed_tick = exc
+            raise
 
     def run(
         self,
         steps: int,
     ) -> None:
-        self._scheduler.run(steps)
+        if not isinstance(steps, int) or isinstance(steps, bool):
+            raise TypeError("steps must be an integer.")
+        if steps < 0:
+            raise ValueError("steps must be non-negative.")
+        self._check_failed_tick()
+        self._check_replay_preparation()
+        for _ in range(steps):
+            self.step()
 
     def save_world(self) -> None:
         """Persist the current state when this engine was composed with a repository."""
 
+        self._check_failed_tick()
+        self._check_replay_preparation()
         if self._repository is None:
             return
 

@@ -23,18 +23,17 @@ reviewable steps.
 
 ---
 
-## Branch Workflow After the v0.6 Vertical Slice
+## Milestone and Task Branch Workflow
 
-The repository currently uses focused reviewed commits on `main`. After the
-v0.6 autonomous-founding-settlement acceptance target is complete, development
-moves to a two-level branch workflow:
+Beginning with the authorized v0.6 autonomous-founding-settlement milestone,
+development uses a two-level branch workflow:
 
 ```text
 main
-  └── milestone/v0.7
-        ├── task/17-households
-        ├── task/18-aging
-        └── task/19-migration
+  └── milestone/v0.6
+        ├── task/16-scenario-run-contract
+        ├── task/16a-runner-checkpoint-resume
+        └── task/17-external-world-references
 ```
 
 - `main` is the stable reviewed release line. Normal feature work is not
@@ -58,6 +57,10 @@ main
   into any active milestone branch when applicable.
 - Planning documents may describe future branches but creating a branch does
   not authorize its task or broaden its allowed-file boundary.
+- For v0.6, the user authorizes the orchestrator to push the milestone and task
+  branches and to merge reviewed task branches into `milestone/v0.6`. The
+  orchestrator must not commit, merge, or push to `main`; final milestone
+  integration remains a separately authorized owner action.
 
 Only one milestone integration branch should normally be active. This avoids
 long-lived version branches drifting apart while still isolating individual

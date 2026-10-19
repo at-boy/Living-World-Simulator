@@ -1,5 +1,39 @@
 # NPC Information Boundary
 
+Goal and objective identifiers remain internal regardless of their spelling.
+The final boundary checks all definition and state keys, including non-stage
+goals, and recursively rejects their criterion, deadline and evidence numbers
+from selected interpretations, labels, cognitive text and visible conversation
+prose. Goal managers retain engine truth and arbitrary valid IDs; selection
+does not grant permission to expose hidden data. Safe qualitative descriptions
+remain explicit projections through the existing perception/retrieval/context
+flow. No goal evidence, raw state or other NPC's hidden records are added to
+context or memory. LLM context remains filtered and LLM actions remain proposals.
+
+Release candidate `0.6.0rc1`: see [release notes](releases/v0_6_0rc1.md)
+and [current closeout evidence](subagent_execution_plan/v0_6/24_v06_release_closeout-report.md).
+
+Work IDs, reservation IDs, targets, exact requirements, assignments, progress,
+priority, deadlines, ticks, and events remain engine-only. Explicitly selected
+`NPCWorkInterpretation` contains only a public label and fixed qualitative
+status prose; Task 20 never injects it automatically.
+
+Task 20a work offers are likewise ephemeral and actor-bound. Model-visible
+action options contain only closed action keys, fixed descriptions, and labels
+validated by both canonical-ID and state-aware information filters. Hidden
+offer fields, authoritative availability, validation causes, manager objects,
+and raw state never enter `NPCContext`; accepted labels are revalidated and
+applied only through `WorkManager`.
+
+Consequence IDs, rates, quantities, capacity, condition, ticks, and events are
+privileged. Only explicitly selected fixed qualitative consequence prose is
+safe; Task 19a does not automatically inject it into NPC context or LLM input.
+
+Need definitions and assessments are privileged. NPC-facing prose may use only a
+deliberately selected qualitative `NPCNeedInterpretation`. Need IDs, owners,
+thresholds, quantities, pressure, windows, history, and goal evidence remain out
+of NPC context and are rejected by the final information boundary.
+
 ## Purpose
 
 The Living World Simulator must maintain a strict boundary between **authoritative engine state** and the **information an NPC is allowed to perceive and reason about**.
@@ -473,6 +507,14 @@ visible description; it neither receives `PerceptionContext` nor reads an
 observation's evidence or metadata. Thus engine debugging evidence may remain
 on an observation without becoming NPC cognition.
 
+Spatial perception follows the same route. The engine may compare exact points
+and bounds, but the NPC receives only containment, co-location, compass, and an
+explicitly caller-authorized direct-road description. Coordinate and dimension
+values, placement and relationship IDs, inspection shapes, magnitude, and raw
+spatial vocabulary remain engine-only. Final `NPCContext` validation compares
+all visible prose with authoritative geometry, so even a manually stored unsafe
+observation such as an exact coordinate pair fails closed.
+
 ---
 
 # Deterministic and LLM Perception
@@ -634,3 +676,70 @@ This separation is essential for NPCs to have:
 * meaningful experiences
 
 and ultimately for the world to feel like a world that NPCs actually **live in**, rather than a database that they can inspect.
+
+
+## Task 21 settlement development boundary
+
+Engine truth consists of exact immutable stage programs, settlement/objective
+IDs, typed completion criteria and thresholds, manager-owned enum state,
+entered/transition ticks, progress evidence and lifecycle/transition events.
+Goal evaluation owns objective completion and stage evaluation consumes only
+that completion after the goal phase. LLM text has no stage configuration,
+mutation, or promotion gateway.
+
+The sole stage translation is an explicitly requested fixed
+`NPCSettlementStageInterpretation(label, description)` describing a newly
+established community, established settlement, or developed town. Internal ID
+forms and empty prose are rejected. Perception does not automatically discover
+this projection; no stage observation, memory, inference, retrieval record,
+`NPCContext` field, or LLM prompt is added by Task 21. A caller may deliberately
+select the qualitative prose through the existing validated prose pathway.
+
+Programs, state mappings, identifiers, exact criteria, statuses, thresholds,
+ticks, evidence, events, and arbitrary runtime objects remain engine-only.
+`NPCInformationBoundary` includes stage owners/objective references in its
+identifier inventory and stage ticks and referenced objective thresholds in numeric rejection, rejects raw stage
+collection/field vocabulary, and retains fail-closed validation of runtime
+objects and authoritative numeric values. Privileged detached inspection at
+`GET /world/settlement-stages` is for engine/operators and is not NPC context.
+
+## Task 22 recorded proposal boundary
+
+Engine truth includes scenario label-to-ID bindings, scenario/tape fingerprints,
+replay actor order, cursor/ticks, gateway outcomes and immutable resolution
+events. The simulation retains all world mutation, objective and stage authority.
+A tape entry is an untrusted proposal, including speech and rationale.
+
+The engine resolves a public actor label to its stored ID and asks
+`NPCContextAssembler` for that holder's ordinary filtered context. The context
+identity remains the actor's current entity name; duplicate names do not change
+the holder binding. Perception and retrieval retain their existing holder-scoped
+translation and hidden-record filtering. No replay data is automatically added
+to perception, self knowledge, memory, inference or conversation history.
+
+The stateless adapter receives only this context, ordinary safe `ActionOption`
+values and the expected public identity. It receives no world, holder/entity ID,
+manager, inspector, provider, handler, tape header or cursor. Its returned
+`NPCDecision` passes `DecisionEngine` and state-aware prose validation before
+any action reaches the ordinary `NPCActionResolver` and authoritative domain
+handler. Tape speech is not automatically recorded as history or cognition.
+
+Read-only offer providers are engine-side typed composition, with trusted
+handler factories supplied by application code; arbitrary Python is not
+sandboxed. Provider construction does not decide outcomes. Replay fingerprints,
+internal binding values, cursor/tick numbers and privileged replay field names
+are rejected at the prose boundary. Public label keys remain available as prose
+when they contain no other hidden data. Detached GET-only replay inspection is
+for operators and is never injected into NPC context.
+
+## Canonical founders composition
+
+The founders policy and inspector are engine-only. The preset retains existing
+holder-scoped context assembly without adding perception, memories or inference.
+A pure offer provider translates current engine authorization into qualitative
+labels. Resource/work quantities, labor, deadlines, criteria, internal IDs and
+raw attributes never enter those options. Recorded decisions remain untrusted
+proposals routed through the ordinary resolver and actor-bound work/dispatch
+handlers. Engine managers alone change work, resources, needs, goals, stages and
+terminal truth. The deterministic tapes are acceptance drivers, not evidence
+that a live LLM selects successful strategies.

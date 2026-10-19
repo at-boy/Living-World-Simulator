@@ -4,6 +4,7 @@ from living_world.cognition.information_boundary import NPCInformationBoundary
 from living_world.cognition.npc_context import NPCContext
 from living_world.cognition.retrieval import RetrievedCognition
 from living_world.core.entity import Entity
+from living_world.simulation.simulation_engine import SimulationEngine
 from living_world.state.world_state import WorldState
 
 
@@ -116,3 +117,177 @@ def test_boundary_rejects_raw_numeric_skill_value_in_npc_prose() -> None:
         NPCInformationBoundary(state).validate_context(
             _context("My woodcraft skill is 80.")
         )
+
+
+def test_boundary_rejects_consequence_ids_and_numbers_and_allows_fixed_prose() -> None:
+    from living_world.needs import ConsumptionPolicy, ConsumptionState
+
+    state = WorldState()
+    state.consumption_policies["consumption_town"] = ConsumptionPolicy(
+        "consumption_town", "town", 7, 1
+    )
+    state.consumption_states["consumption_town"] = ConsumptionState("consumption_town")
+    boundary = NPCInformationBoundary(state)
+    with pytest.raises(ValueError, match="internal IDs"):
+        boundary.validate_context(_context("The policy is consumption_town."))
+    with pytest.raises(ValueError, match="numeric values"):
+        boundary.validate_context(_context("The hidden rate is 7."))
+    boundary.validate_context(_context("Food and water use is currently supplied."))
+
+
+def test_boundary_rejects_work_ids_and_authoritative_numbers() -> None:
+    from living_world.work import (
+        ResourceWorkTarget,
+        WorkCategory,
+        WorkDefinition,
+        WorkState,
+    )
+
+    state = WorldState()
+    definition = WorkDefinition(
+        "work_000001",
+        WorkCategory.PRODUCE_FOOD,
+        ResourceWorkTarget("food", 17),
+        "Plant crops",
+        "settlement",
+        "objective",
+        "location",
+        (),
+        0,
+        (),
+        (),
+        23,
+        4,
+        None,
+        0,
+    )
+    state.work_definitions[definition.id] = definition
+    state.work_states[definition.id] = WorkState(definition.id)
+    boundary = NPCInformationBoundary(state)
+    with pytest.raises(ValueError, match="internal IDs"):
+        boundary.validate_context(_context("Review work_000001."))
+    with pytest.raises(ValueError, match="numeric values"):
+        boundary.validate_context(_context("Progress requires 23."))
+
+
+def _nonstage_goal_engine(
+    description: str,
+) -> tuple[SimulationEngine, str, str]:
+    from living_world.core.definition import Definition
+    from living_world.goals import (
+        GoalDefinition,
+        GoalOwnerKind,
+        ObjectiveDefinition,
+        ResourceMinimumCriterion,
+    )
+
+    engine = SimulationEngine()
+    engine.definitions.register(Definition("npc"))
+    owner = engine.entities.create(definition_key="npc", name="Mara")
+    objective = ObjectiveDefinition(
+        "secret_target",
+        "Find supplies",
+        "Find supplies",
+        "Seek dependable supplies.",
+        (ResourceMinimumCriterion("water", 987),),
+        failure_criteria=(ResourceMinimumCriterion("food", 988),),
+        deadline_tick=997,
+        authorized_action_categories=("gather",),
+    )
+    goal = GoalDefinition(
+        "private_mandate",
+        GoalOwnerKind.NPC,
+        owner.id,
+        "Prepare a home",
+        "Prepare a home",
+        description,
+        (objective.id,),
+        completion_criteria=(ResourceMinimumCriterion("wood", 989),),
+        failure_criteria=(ResourceMinimumCriterion("stone", 991),),
+        deadline_tick=998,
+        authorized_action_categories=("gather",),
+    )
+    engine.goals.create(goal, (objective,))
+    return engine, owner.id, goal.id
+
+
+@pytest.mark.parametrize(
+    ("token", "message"),
+    (
+        ("private_mandate", "internal IDs"),
+        ("secret_target", "internal IDs"),
+        ("987", "numeric values"),
+        ("988", "numeric values"),
+        ("989", "numeric values"),
+        ("991", "numeric values"),
+        ("997", "numeric values"),
+        ("998", "numeric values"),
+    ),
+)
+@pytest.mark.parametrize("path", ("context", "visible_prose"))
+def test_nonstage_goal_interpretation_and_visible_prose_reject_each_secret(
+    token: str, message: str, path: str
+) -> None:
+    from copy import deepcopy
+    from dataclasses import replace
+
+    from living_world.cognition.npc_context import NPCContextAssembler
+
+    prose = f"Seek {token} supplies."
+    engine, owner_id, goal_id = _nonstage_goal_engine(prose)
+    assert not engine.state.settlement_stage_programs
+    assert engine.state.entities[owner_id].attributes == {}
+    selected = engine.goals.npc_interpretation(goal_id)
+    assert selected.description == prose
+    before = replace(
+        deepcopy(replace(engine.state, events={})), events=dict(engine.state.events)
+    )
+    assembler = NPCContextAssembler(engine.state)
+    with pytest.raises(ValueError, match=message):
+        if path == "context":
+            assembler.assemble(
+                holder_id=owner_id, capability_descriptions=(selected.description,)
+            )
+        else:
+            assembler.validate_conversation_prose(prose)
+    assert engine.state == before
+
+
+def test_nonstage_goal_selected_qualitative_interpretation_stays_read_only() -> None:
+    from copy import deepcopy
+    from dataclasses import replace
+
+    from living_world.cognition.npc_context import NPCContextAssembler
+
+    prose = "Seek dependable supplies to prepare a home."
+    engine, owner_id, goal_id = _nonstage_goal_engine(prose)
+    selected = engine.goals.npc_interpretation(goal_id)
+    before = replace(
+        deepcopy(replace(engine.state, events={})), events=dict(engine.state.events)
+    )
+    assembler = NPCContextAssembler(engine.state)
+    context = assembler.assemble(
+        holder_id=owner_id, capability_descriptions=(selected.description,)
+    )
+    assert context.self_knowledge == (prose,)
+    assert assembler.validate_conversation_prose(prose) == prose
+    assert engine.state == before
+
+
+@pytest.mark.parametrize("record_kind", ("goal", "objective"))
+def test_goal_state_evidence_numbers_remain_engine_only(record_kind: str) -> None:
+    from living_world.goals import GoalState, ObjectiveState, ProgressEvidence
+
+    evidence = ProgressEvidence(431, "A private engine assessment.")
+    state = WorldState(tick=500)
+    if record_kind == "goal":
+        state.goal_states["private_mandate"] = GoalState(
+            "private_mandate", evidence=(evidence,)
+        )
+    else:
+        state.objective_states["secret_target"] = ObjectiveState(
+            "secret_target", evidence=(evidence,)
+        )
+    boundary = NPCInformationBoundary(state)
+    with pytest.raises(ValueError, match="numeric values"):
+        boundary.validate_conversation_prose("An assessment happened at 431.")

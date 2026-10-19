@@ -10,7 +10,8 @@ operator scripting every tick.
 This is not one feature. It requires a runnable scenario, durable collective
 objectives, needs and work execution, settlement development criteria,
 population continuity, governance, and observability. The milestones below
-are proposed post-v0.5 work; they do not expand Task 14.
+originated as proposed post-v0.5 work. The user has now authorized planning and
+execution of v0.6 only; later milestones remain unauthorized.
 
 ## Architectural model
 
@@ -93,8 +94,12 @@ probabilities, internal ID, or future result.
 
 ### v0.6 — Autonomous founding settlement vertical slice
 
-The first milestone should make one settlement scenario runnable and
-inspectable end to end.
+Task23 delivery87af71a/merge58b6ba7 delivers the fixed founding scenario with
+reviewed deterministic success10, stall5 and failure13, exact fresh/resume state
+and GET-only inspection. Task24 completes the reviewed and validated0.6.0rc1 candidate; final
+root gates and owner handoff are recorded in the [closeout report](subagent_execution_plan/v0_6/24_v06_release_closeout-report.md).
+Recorded tapes prove reproducibility, not live-model strategy; this is not generic
+scenario authoring or later-milestone population/governance delivery.
 
 1. **Scenario and run contract**
    Define reproducible scenario seeds, simulation configuration, bounded and
@@ -230,11 +235,11 @@ separate. A visualization must not become an undocumented mutation API.
 
 ## Branching transition
 
-After the v0.6 unattended founders scenario satisfies its acceptance target,
-use the milestone-plus-task branch workflow in `docs/development_workflow.md`.
-The first such integration branch is `milestone/v0.7`; its implementation
-tasks use short-lived branches created from it. This transition is a workflow
-decision, not permission to begin v0.7.
+Use the milestone-plus-task branch workflow in `docs/development_workflow.md`
+beginning with v0.6. `milestone/v0.6` is the first integration branch and its
+implementation tasks use short-lived pushed branches created from it. The
+orchestrator may merge reviewed task work to that milestone branch, never to
+`main`. This transition does not authorize v0.7.
 
 Task 14a reorganized the historical execution-plan artifacts after Task 14
 closed v0.5. Tasks 01–14b and Task 14a form the

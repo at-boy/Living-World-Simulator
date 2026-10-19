@@ -2,6 +2,144 @@
 
 ## Unreleased
 
+## 0.6.0rc1 — Release candidate preparation
+
+Reviewed release candidate integrated as `badd5f9` on `milestone/v0.6`: 1,416 tests,
+10 deliberate skips, 39 examples and source/installed replay checks passed.
+Release metadata and owner handoff evidence are recorded in the [Task 24 report](docs/subagent_execution_plan/v0_6/24_v06_release_closeout-report.md).
+No main integration, tag or publication is claimed.
+
+### Fixed
+
+- Close the non-stage goal/objective NPC information boundary, preserve reservation
+  history after automatic execution, reload maintenance-retained historical
+  placements, and reject corrupt ancestor cycles without hanging (Task 24a).
+
+### Added
+
+- Add fixed packaged founders composition, bounded outcome aliases, trusted terminal callbacks and read-only saved-world inspection. Task 23 was independently reviewed and integrated as `58b6ba7`; deterministic success10/stall5/failure13 and exact fresh/resume state are established. Live-model strategy validation remains future work.
+
+
+
+- Define the reviewed canonical founders setup, terminal, packaged CLI and
+  read-only snapshot acceptance contract.
+
+- Checkpoint reviewed Spatial integration and the resumed canonical acceptance
+  sequence, with current browser/package evidence.
+
+- Save the owner-requested usage pause with reviewed Tasks22/15 integrated and
+  Task15c initial TDD preserved under its pushed exact contract.
+
+- Add the packaged Spatial inspector with deterministic north-up projection,
+  backend placement order, accessible overlap/list navigation, explicit missing
+  and unplaced records, safe numeric-range errors and Spatial detail return.
+
+- Define the Task15c Spatial inspector contract with exact projection/order,
+  explicit unplaced states, safe ranges and browser verification.
+
+- Checkpoint independently reviewed Task15 integration and the precise Spatial
+  inspector contract for the next isolated task.
+
+- Add the packaged GET-only World Inspector with ten operator views, literal
+  snapshot details, entity/evidence navigation, accessible responsive controls,
+  malformed/unsupported-state handling and real Chrome browser verification.
+
+- Refine the Task15 packaged read-only inspector contract with exact routes,
+  API mappings, browser verification and installed-asset acceptance gates.
+
+- Checkpoint reviewed Task22 integration and the resumed v0.6 sequence; retain
+  the owner usage-stop boundary and preserved local configuration edit.
+
+- Implement strict deterministic recorded proposal tapes through filtered NPC
+  context and the ordinary action gateway, with one proposal per tick, durable
+  schema-12 cursor/label bindings, checkpoint-only CLI runs, detached inspection,
+  and failed-tick checkpoint recovery. Add executable example 038.
+
+- Define ADR-0025 and the Task 22 tape/cursor/runtime contract, including
+  schema-12 identity binding, ordinary proposal validation and failed-tick
+  checkpoint recovery.
+
+- Record the reviewed Task 21 milestone checkpoint and owner-approved remaining
+  completion workflow, with `0.6.0rc1` selected for release closeout.
+
+- Implement manager-owned settlement development from founding camp through
+  settlement to town using completed settlement objectives, deterministic
+  adjacent promotions, atomic stage-phase rollback, schema-11 snapshots,
+  detached inspection, and explicitly selected qualitative NPC prose.
+- Add deterministic population-minimum and maintained-capability goal criteria;
+  settlement-stage criteria now consume managed authoritative stage state.
+
+- Define ADR-0024 and the decision-complete Task 21 contract for objective-backed
+  engine-owned settlement stages, adjacent deterministic promotion, schema-11
+  persistence, privileged inspection, and qualitative NPC-safe projection.
+
+- Execute authorized work in stable order with persisted exact-once input
+  charging, bounded progress evidence, manager-owned domain effects, atomic
+  phase rollback, schema-10 save/resume behavior, and no new NPC-visible data.
+
+- Define ADR-0023 and the decision-complete Task 20b contract for deterministic
+  manager-owned work execution, schema-10 exact-once charging, atomic work-phase
+  rollback, and engine-only effects.
+
+- Add actor-bound, engine-authored work offers that translate safe qualitative
+  NPC proposals into validated manager-owned creation, priority, or
+  self-assignment operations without exposing work policy.
+
+- Engine-owned work orders, aggregate reservations, schema-9 persistence,
+  privileged inspection, and NPC-safe qualitative interpretations.
+
+- Deterministic consumption, storage loss, and maintenance consequences with schema-8 persistence, privileged inspection, and qualitative NPC-safe interpretations.
+
+- Add authoritative settlement food, water, shelter, and storage pressure with
+  bounded history, sustained goal evaluation, schema-7 persistence, privileged
+  inspection, and qualitative NPC-safe interpretations.
+
+- Add deterministic NPC-safe spatial perception for explicitly selected
+  entities, containment, compass direction, co-location, and caller-filtered
+  direct roads, with coordinate-leak rejection at perception and context
+  boundaries.
+
+- Add deterministic engine-owned goal/objective criterion evaluation with
+  typed evaluators, stable graph ordering, normalized evidence, and immutable
+  lifecycle events. Material progress changes append manager-owned evidence
+  without fabricating lifecycle events.
+
+- Add immutable engine-owned goal/objective graphs, manager-owned lifecycle
+  state, schema-v6 persistence, privileged inspection, and explicit prose-only
+  NPC interpretations. Automatic evaluation remains deferred to Task 18a.
+
+- Add durable deterministic external dispatches with resource reservation,
+  immutable lifecycle events, offered-label gateway handling, schema-v5
+  persistence, privileged inspection, and qualitative safe results.
+
+- Add deliberately partial external-world references with manager-owned contact
+  lifecycle, immutable events, schema-v4 persistence, privileged inspection,
+  and a separate qualitative NPC-safe interpretation.
+
+- Implement frozen spatial point/bounds placement records, manager-owned
+  lifecycle and events, guarded entity removal, schema-v3 persistence,
+  canonical queries, and detached privileged HTTP inspection.
+- Define ADR-0016's canonical local integer-coordinate point/bounds placement
+  contract, containment and overlap rules, deterministic ordering, persistence
+  migration, privileged inspection, and NPC information boundary.
+- Add the supported `living-world run` headless command and typed runner for
+  bounded or explicit continuous execution, atomic checkpointing, compatible
+  resume, graceful SIGINT, stable summaries, and classified failure exits.
+- Add a strict versioned YAML scenario contract with deterministic initial
+  graph creation, persisted run identity/fingerprint, compatible definition
+  reload on resume, and privileged read-only run inspection.
+- Add SQLite schema-version-2 snapshots while retaining schema-version-1 v0.5
+  loading as unbound legacy worlds.
+
+### Changed
+
+- Refresh the architect/orchestrator handoff at the reviewed Task 19 milestone
+  merge and identify Task 19a contract reconciliation as the next action.
+
+- Evaluate goals after existing systems and before the simulation tick
+  advances, including direct blocked-to-completed transitions when fresh
+  authoritative state proves completion.
+
 ## v0.5.0 - 2026-08-12
 
 ### Added
@@ -377,3 +515,12 @@
 
 ### Changed
 - Architecture documentation aligned with property graph model.
+
+Task24 release-readiness contract refined after reviewed Task23 integration;
+version0.6.0rc1 and owner-only integration/tag boundary explicit.
+Release closeout checkpoint: whole-milestone audit found two blocking validation/
+NPC-boundary issues. Task24 candidate metadata/docs remain uncommitted; no release
+readiness approval. See October17 audit and usage handoff.
+
+Task24a correction contract isolates two release-audit findings: NPC goal data
+boundary coverage and reservation-ID allocation after shadow execution.

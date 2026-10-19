@@ -1,9 +1,259 @@
 # Living World Simulator – Project Journal
 
+## Task 24 final closeout — October 17, 2026
+
+Task 24 delivery `a5c275f`, integrated as `badd5f9`, completes the reviewed `0.6.0rc1` candidate on `milestone/v0.6`. Root task and merged gates each passed 1,416 tests / 10 existing deliberate skips, 76 Chrome cases and examples 001–039. Separate examples and whitespace checks passed. Source and installed Python 3.13.5 / 3.11.2 canonical runs preserve identical complete schema-12 payloads across fresh runs and resume ticks 1, 3 and 4. Wheel, exports, eight assets, health, read-only APIs, actual console/loopback inspection and all-outcome browser checks passed.
+Independent metadata/docs review passed after two scoped documentation corrections.
+All four whole-audit code findings were resolved in separately reviewed Task24a.
+Live remote verification and preserved user configuration are recorded in the
+[closeout report](subagent_execution_plan/v0_6/24_v06_release_closeout-report.md).
+Main integration/tag/publication remain separate owner actions. Earlier entries
+below retain historical checkpoint statuses.
+
+## Task 24a audit corrections — October 17, 2026
+
+Reproduced four audit findings before changing their runtime paths: non-stage
+goal secrets crossing the final NPC boundary, stale live reservation allocation
+after shadow execution, maintenance-retained destroyed placements failing reload,
+and corrupt ancestor cycles hanging reload. Added bounded corrections and public
+API regressions, including live/resume equivalence, assignment rollback and
+historical spatial integrity. Existing schemas, public signatures, mutation
+ownership, qualitative projections and canonical rules remain unchanged.
+Task24a deliverycfa50b6/mergec1d93cd passed independent spec/quality review;
+task and merged root gates each passed1416tests/10existing skips,76Chrome and
+examples001–039, separate examples/whitespace and full canonical matrices with
+unchanged payload hashes. Remaining targeted code-audit coverage completed.
+See the [Task24a report](subagent_execution_plan/v0_6/24a_v06_audit_corrections-report.md)
+for commands, counts and precise failure-injection limits. Final Task24 release
+metadata/docs review and root release gates remain pending.
+
+## Task 24 release candidate preparation — October 17, 2026
+
+Prepared version `0.6.0rc1`, generated packaging metadata/assets manifest and
+consistent operator/release/handoff documentation. Task23 delivery87af71a merged
+58b6ba7 after independent review and corrections; task and merged gates each
+passed1376 tests/10existing skips,76Chrome cases and examples001–039. Its report
+is canonical historical evidence; earlier journal entries below retain their
+original checkpoint status. Task24 independent review, current root gates and
+integration remain pending in the [closeout report](subagent_execution_plan/v0_6/24_v06_release_closeout-report.md).
+No main integration, tag or publication is authorized. Future live-model strategy,
+generic authoring and deferred lifecycle capabilities remain outside this candidate.
+
+## Task 23 implementation — October 15, 2026
+
+Implemented canonical setup staging, delayed capability composition, replay offers,
+terminal hooks, packaged assets and read-only saved-world CLI serving. Real
+acceptance reaches success10, stall5 and failure13 with exact fresh/checkpoint
+payload comparisons. Root-resolved corrections distinguish provenance-anchored
+pending need history from unavailable data and accept the existing public dispatch
+key only as structured replay vocabulary. Initial capacities are explicitly zero;
+the NPC boundary and action gateways remain unchanged. All three Chrome saved
+outcomes pass GET-only inspection; example039 exercises public composition.
+Independent implementation review and authoritative root gates remain pending.
+
+## Task 15 implementation — October 14, 2026
+
+Added packaged same-origin GET-only inspector views without changing domain DTOs
+or NPC/cognition paths. Exact resource attributes, lifecycle records, goals, work,
+stages and evidence remain reported engine truth. Typed ASGI and real Chrome
+checks cover navigation, errors, literal text, stale requests and unchanged state.
+Independent review and root full/browser/installed-wheel gates remain pending;
+see the Task 15 report for focused evidence.
+
+## Task 22 implementation — October 14, 2026
+
+Implemented strict proposal-only tape loading, canonical identity, stateless
+filtered-context cognition and ordinary gateway resolution. Scenario labels and
+manager-owned replay cursor persist together with domain effects in schema 12.
+The proposal slot runs before work, while a failed scheduler tick now refuses
+advance/save until reload. Runner preparation reattaches ephemeral composition;
+finalization runs before a stopping save and preserves operator/checkpoint-only
+leftovers. Replay inspection and fingerprints remain engine-only. Example 038
+shows a manager-gateway greeting and durable resume. Independent review and root
+full validation remain pending; the Task 22 report records focused evidence.
+
+## Task 22 replay contract — October 13, 2026
+
+Resolved proposal scheduling, label binding, durable cursor/checkpoint semantics,
+read-only offer composition, failed-tick recovery and finalization before code.
+ADR-0025 and the exact task plan/prompt retain the ordinary NPC information and
+action authority boundaries. Canonical founders initialization and terminal
+outcomes remain Task 23 scope. Root owns final full validation after review.
+
+## October 13, 2026 — Task 21 milestone checkpoint
+
+Task 21 delivery `c821efe` passed independent review and root gates, then merged
+and pushed to milestone/v0.6 as `1ab288b`. The merged gate passed 1086 tests with
+10 existing skips and examples 001–037. Main remains `12f2f17`. The owner approved
+the remaining completion workflow and selected release candidate `0.6.0rc1`;
+Task 22 contract preparation is next. The user configuration edit is preserved.
+
+## Task 21 implementation
+
+Added immutable per-settlement programs and manager-owned stage state with
+objective-role validation, normalized provenance, adjacent promotion once per
+tick, and rollback of the complete stage phase. Goal evaluation precedes stages
+so a stage-dependent goal observes promotion on the next tick. Population and
+maintained-capability criteria use the existing closed goal registry. Schema 11
+persists these records; legacy snapshots retain empty stage collections.
+Privileged inspection is detached and GET-only. Fixed NPC prose is selected
+explicitly and never automatically enters cognition. The delivery passed independent review after a strict test-typing correction
+and was merged as `1ab288b`; current validation evidence is in the Task 21 report.
+
+## Task 21 settlement-stage contract
+
+ADR-0024 resolves settlement development before implementation: one immutable
+program is bound directly to each configured settlement; typed requirements
+consume only completed settlement-owned objectives and their evidence; and the
+manager-owned stage advances by at most one adjacent transition per tick after
+goal evaluation. Schema 11, privileged inspection, rollback, and qualitative
+NPC projection are explicit, while population-only or LLM-directed promotion,
+decline, templates, and scenario binding remain out of scope.
+
+## Task 20b implementation
+
+Deterministic work execution now runs in an atomic shadow phase before
+consequences, needs, and goals. Persisted charge evidence prevents duplicate
+consumption across blockage and reload, while all six effects remain owned by
+their domain managers and execution state remains engine-only.
+
+## Task 20b execution contract
+
+ADR-0023 resolves the execution boundary before code delegation: stable work
+selection runs in an atomic shadow-state phase before consequences, needs, and
+goals; schema 10 records exact-once input charging; and each of the six founding
+work categories reaches world truth only through its existing domain managers.
+Execution adds no NPC-visible state and cannot complete goals or stages.
+
+## Task 20a implementation
+
+Engine-authored work offers now give one eligible NPC a narrow qualitative
+choice while retaining all category, target, requirement, priority, and labor
+policy inside the simulation. Construction, validation, and application each
+recheck active settlement-goal authority and current manager preflights. The
+gateway creates no proposal event or durable offer state; Task 20b still owns
+automatic selection, charging, progress, and effects.
+
+## Task 20 implementation
+
+Work intent and non-deducting aggregate locks are now manager-owned durable
+truth. Proposal translation and deterministic effects remain Tasks 20a/20b.
+
+## Task 19a implementation
+
+Added the manager-owned atomic consequence phase, schema-8 persistence,
+privileged inspection, qualitative NPC projection, tests, and example 033.
+
+## Task 19 handoff checkpoint
+
+Recorded the clean, pushed Task 19 milestone merge, schema-v7 and 655-test
+baseline, and Task 19a as the next authorized dependency. The Task 19a draft is
+intentionally flagged for contract reconciliation before delegation so a fresh
+orchestrator does not infer arithmetic, persistence, event, or NPC-boundary
+semantics from a high-level outline.
+
+## Task 19 — settlement needs
+
+Introduced authoritative settlement need pressure after ordinary systems and
+before goals. NPC projection remains qualitative, while all action authority
+continues through the existing gateway.
+
 This document records the evolution of the project.
 
 Unlike the CHANGELOG, this journal focuses on architectural decisions,
 engineering milestones and lessons learned.
+
+---
+
+# 2026-08-19
+
+## NPC-safe spatial perception
+
+Task 15d completes the v0.6 local-space information path without weakening the
+engine boundary. `SpatialPerceptionEngine` reads only a caller-selected live
+observer, subject, placements, and optional direct road, then returns stable
+containment and compass prose as an unpersisted observation. Callers still own
+recording, and holder-scoped context assembly still controls which NPC can see
+the result.
+
+Exact coordinates remain privileged inspection data. Both perception-time and
+final context validation reject geometry values, IDs, coordinate notation, and
+privileged spatial vocabulary, including unsafe observations inserted through
+older or manual recording paths. Direct-road prose reports an already-known
+connection; it does not add visibility, distance, travel, or pathfinding.
+
+# 2026-08-18
+
+## Deterministic External Dispatch
+
+Task 17a builds a durable exchange lifecycle on partial external references.
+Manager-owned reservations and immutable events make failure atomic; a
+SHA-256-derived seed decision makes arrival/loss stable across replay and
+resume. NPC proposals choose only an offered qualitative label and cannot set
+IDs, quantities, timing, reliability, outcomes, or resources.
+
+## Partial External-World References
+
+Task 17 adds deliberately partial off-map references as frozen, manager-owned
+engine records. Exact capacity, delay, cost, reliability, goods policy, IDs,
+and privileged inspection remain outside NPC context; the only reusable
+NPC-facing form is fixed qualitative name/role/contact prose. Schema 4 preserves
+these anchors while legacy snapshots default them to empty. Dispatch, remote
+simulation, and trade transfer remain deferred to their documented tasks.
+
+## Spatial Domain, Persistence, and Inspection
+
+Task 15b implements ADR-0016 as dedicated spatial state rather than coordinate
+attributes. `SpatialManager` validates live entities, explicit containment,
+descendant-safe replacement, mutual overlap permission, and leaf-first removal
+before committing a frozen placement plus one immutable lifecycle event. A
+narrow entity-removal guard prevents stale placement references without giving
+`EntityManager` authority over spatial mutation.
+
+SQLite schema version 3 persists placed and explicitly unplaced records while
+loading older worlds as spatially unknown. Exact geometry is available only as
+detached, canonically ordered privileged inspection. NPC context remains
+unchanged and receives no coordinates or inspection payload.
+
+## Canonical Two-Dimensional Spatial Contract
+
+ADR-0016 establishes one deliberately abstract local integer plane before any
+spatial runtime or inspector is implemented. Points and positive half-open
+bounds are authoritative placement values; explicit containment and mutual
+typed overlap permission replace coordinate-like entity attributes or hidden
+automatic packing. Canonical ordering and legacy-unplaced migration make the
+future Task 15b implementation deterministic.
+
+Exact geometry remains operator-only engine truth. NPC-facing spatial meaning
+must later be perceived as qualitative, holder-scoped relative prose rather
+than copied from inspection DTOs or raw coordinates.
+
+## Bounded Runner, Checkpointing, and Resume
+
+The v0.6 operator path now runs a scenario through a typed service behind the
+`living-world run` command. Bounded execution remains the safe default;
+continuous execution is explicit and cooperatively stoppable. Successful ticks
+checkpoint complete snapshots at a configured cadence and at every clean exit,
+while a failed tick never replaces the last valid snapshot. Resume reuses the
+Task 16 identity and definition checks before advancing.
+
+The command prints only stable run identity/status/tick/stop fields and maps
+configuration, compatibility, persistence, and simulation failures to distinct
+exit codes. It does not expose raw state or connect operator configuration to
+NPC context.
+
+## Scenario and Deterministic Run Contract
+
+The first v0.6 capability separates reproducible scenario configuration from
+authoritative runtime state. A strict YAML document names definitions and an
+initial graph with public local labels; managers still generate every runtime
+identity. Persisted run metadata binds the world to the scenario key, seed, and
+full configuration fingerprint, so resume reloads the same definitions and
+fails before stepping if configuration changed. Legacy v0.5 snapshots remain
+loadable but are not silently assigned a scenario history they never had.
+
+Run metadata is exposed only through privileged inspection. It has no route to
+perception, retrieval, `NPCContext`, cognition, or action resolution.
 
 ---
 
@@ -640,3 +890,148 @@ private NPC-relationship interpretation. Safe request serialization contains
 only each holder's prose projection; IDs, lineage, evidence, metadata, raw
 state, and other holders' cognition remain engine-only. These histories do not
 prescribe attendance, speech, a proposal, a majority, or a gateway outcome.
+## Task 18 — engine-owned goals and objective graphs
+
+Added frozen personal/collective goal graphs and separate manager-owned state,
+with atomic validation and lifecycle events, schema-v6 persistence, detached
+inspection, and a deliberately narrow prose-only NPC interpretation. Criterion
+evaluation and work execution remain separate follow-up tasks.
+
+## Task 18a — deterministic objective evaluation
+
+Added a final engine system with a closed typed criterion-evaluator registry.
+It evaluates objective graphs in deterministic dependency/alternative order,
+uses manager-owned lifecycle transitions, and records normalized detached
+evidence when status changes or authoritative progress materially changes.
+Progress-only evidence emits no lifecycle event, and identical snapshots are
+deduplicated across ticks. Resource, construction, capacity, and
+external-contact criteria read their defined authoritative sources. Sustained
+need and settlement stage remain explicitly unavailable until their planned
+domains land. Exact evidence and authority remain engine-only; NPC goal
+interpretations are unchanged.
+
+
+## 2026-10-14 — Task22 reviewed integration checkpoint
+
+Delivery02b35fe merged7806f29 after two narrow reviewed corrections. Root task
+and merged gates1194passed/10existing skips, examples001–038. Task15 contract
+is ready for isolated implementation. Owner resumed with stop-before10%
+five-hour remaining rule; no reset/automation/main integration/tag authorized.
+
+
+## 2026-10-14 — Task15 decision-complete contract
+
+From reviewed milestone checkpoint e8c817e, refined plan/prompt specify packaged
+static inspector, strict GET-only source mappings, real browser tests, wheel
+asset gate and exact file boundary. Independent root contract review concluded
+CONTRACT READY. Root owns final gates; worker focused tests only. Task15c owns
+spatial view and Task23 owns canonical setup/terminal/inspection CLI.
+
+
+## 2026-10-14 — Task15 reviewed integration
+
+Deliverydea51cb merged91e33bf after four reviewed corrections. Root task/merged
+1229passed/10existing skips,31Chrome cases,examples001–038; installed assets and
+real wide/narrow layout passed. Task15c contract is ready. Owner usage rule
+remains stop before10% remaining, with durable checkpoint buffer.
+
+
+## 2026-10-14 — Second usage pause
+
+Owner hard boundary is stop before10% five-hour remains. Root interrupted Task15c
+at18% and requested report-only checkpoint; initial TDD is preserved, unfinished
+and unreviewed. Task15c contracte6e9870 is pushed from reviewed e06f79c; main and
+user configuration remain untouched. Resume from actual pending work, not old
+Task15/22 discussion. Exact handoff is v0_6_usage_pause_2026_10_14_second.md.
+
+## 2026-10-14 — Task15c reviewed implementation contract
+
+From Task15 checkpoint e06f79c, precise plan/prompt independently CONTRACT READY
+after geometric, numeric, order and delivered UI seam review. Dedicated renderer
+preserves canonical placement order; compatible entity return target and actual
+browser/visual/package gates are explicit. No domain or mutation changes. Root
+owns review/final gates and usage checkpoint; worker focused checks only.
+
+
+## 2026-10-15 — Task15c implementation for review
+
+Resumed the preserved test-first checkpoint and implemented Spatial in the
+existing packaged inspector assets. Dedicated rendering preserves placement
+order and exact north-up projection, validates core DTO/numeric combinations,
+and distinguishes explicit null placement from absent records. Accessible marks
+and the complete list retain overlap access; entity-detail navigation preserves
+Spatial through Refresh and missing records. Focused actual Chrome tests cover
+geometry, order, lifecycle, errors, race cancellation, literal labels and GET-only
+state preservation. Independent review and root full/visual/wheel gates remain
+pending; this entry is not integration approval.
+
+
+##2026-10-15 — Task15c reviewed integration checkpoint
+
+Delivery9d9dbf0 merged0a81a11 after one reviewed payload-safety correction. Root
+task/merged1271passed/10existing skips,73Chrome cases,examples001–038; installed
+assets/routes and actual wide/narrow visuals passed. Documentation conflicts
+preserved pause and task history. Task23 contract refinement next; main/user
+configuration preserved.
+
+
+### October 15 — canonical founders usage checkpoint
+
+Task23 independently reviewed contracts070ea59/8b8cbf5/e013ae4 are pushed.
+Preserved unfinished uncommitted implementation in .worktrees/task23; worker
+reports221focused passes and success10/stall5/failure13 with exact fresh/resume
+payload candidates. No implementation review/full gates/integration claim.
+Stopped active worker cleanly with usage headroom; current continuation and pause
+handoff record remaining work. Main and user configuration edit preserved.
+##2026-10-15 — Task23 exact contract
+
+Independent contract review resolved public API ownership, counttwo shelter
+cardinality, canonical IDs/extras, manifest digest and detached terminal-error
+semantics. Exact fixed-v1 assets/rules, atomic setup/attachments, existing gateways,
+read-only repository/inspect and fresh/resume payload matrix are decision-complete.
+From reviewed Spatial milestone d4dcdff; no implementation in this contract commit.
+
+
+## 2026-10-17 — Task23 reviewed integration
+
+Delivery87af71a passed independent spec/quality review after five corrected P2
+validation findings. Root task make1376passed/10existing skips,76Chrome cases,
+examples001–039, separate examples, exact public CLI fresh/resume matrices,
+read-only browser and isolated installed-wheel/entrypoint/loopback inspect passed.
+Journal-only merge conflict preserves earlier checkpoint and contract history.
+Merged validation passed1376/10,76Chrome,examples001–039, separateexamples,
+whitespace and exact public CLI fresh/resume matrix. Task24 next; main/userconfig preserved.
+
+
+## 2026-10-17 — Task24 release-readiness contract
+
+Task23 delivery87af71a/merge58b6ba7 fully reviewed and task/merged gates1376/10,
+76Chrome,examples001–039 plus CLI/replay/install/inspect passed. Task24 starts
+from that head, version0.6.0rc1, documentation/metadata only. Independent whole
+milestone implementation audit and final root gates remain pending.
+## 2026-10-17 — Release audit and usage pause
+
+Task23 complete at58b6ba7 after reviewed task/merged1376tests/10existing skips,
+76Chrome/examples001–039 and CLI/replay/install/readonlyinspection gates. Task24
+contract6f033c2 pushed,25-file metadata/docs checkpoint remains uncommitted. Whole
+auditfound2P1 (publicNPCgoaldata leak reproduced; reservationhistorycollision
+code-confirmed, runtimeprobe pending) and incompletecoverage. Root stoppedall
+agents at21%remaining; releaseblocked, correctioncontract/gatespending. Main and
+userconfig preserved. No automaticresume/reset.
+
+
+## 2026-10-17 — Task24a correction contract
+
+Independent partialwholeaudit identified reproducedNPCgoaldata leak and code-
+traced reservationhistorycollision. Approved closeout requires isolated fixes;
+24metadata remains paused/uncommitted. Exact24aplan/prompt specify public RED
+reproduction, finalboundary/highwaterallocation only, independentreview/rootgates.
+Usage refreshed during same owner-authorized turn; no manualreset invoked.
+
+
+## 2026-10-17 — Task24a reviewed integration
+
+Deliverycfa50b6 repairedall4wholeauditfindings; independentspec/qualityPASS. Task
+andmerged1416/10,76Chrome/examples001–039, separateexamples/whitespace and exact
+canonicalfresh/resume hashes passed. Wholeauditremainingcoveragecompleted.
+Restorepreserved24metadata forfinalreview/gates; main/userconfig preserved.

@@ -5,11 +5,18 @@ from __future__ import annotations
 from collections.abc import Mapping
 from dataclasses import fields, is_dataclass
 from enum import Enum
-from typing import Protocol
+from typing import Protocol, cast
 
 from fastapi.encoders import jsonable_encoder
 
 from living_world.simulation.simulation_engine import SimulationEngine
+from living_world.spatial.manager import placement_snapshot
+from living_world.work import (
+    CapabilityWorkTarget,
+    ExternalConnectionWorkTarget,
+    MaintenanceWorkTarget,
+    ResourceWorkTarget,
+)
 
 
 class WorldInspector(Protocol):
@@ -18,6 +25,10 @@ class WorldInspector(Protocol):
     def world_summary(self) -> Mapping[str, object]: ...
 
     def tick(self) -> int: ...
+
+    def replay(self) -> Mapping[str, object]: ...
+
+    def run_metadata(self) -> Mapping[str, object] | None: ...
 
     def entities(self) -> tuple[Mapping[str, object], ...]: ...
 
@@ -28,6 +39,22 @@ class WorldInspector(Protocol):
     def resources(self) -> tuple[Mapping[str, object], ...]: ...
 
     def relationships(self) -> tuple[Mapping[str, object], ...]: ...
+
+    def placements(self) -> tuple[Mapping[str, object], ...]: ...
+
+    def external_world_references(self) -> tuple[Mapping[str, object], ...]: ...
+
+    def external_dispatches(self) -> tuple[Mapping[str, object], ...]: ...
+
+    def goals(self) -> tuple[Mapping[str, object], ...]: ...
+
+    def settlement_stages(self) -> tuple[Mapping[str, object], ...]: ...
+
+    def needs(self) -> tuple[Mapping[str, object], ...]: ...
+
+    def consequences(self) -> Mapping[str, object]: ...
+
+    def work_orders(self) -> tuple[Mapping[str, object], ...]: ...
 
     def events(self) -> tuple[Mapping[str, object], ...]: ...
 
@@ -56,8 +83,22 @@ class EngineWorldInspector:
         state = self._engine.state
         return {
             "tick": state.tick,
+            "run": self.run_metadata(),
+            "replay_configured": state.replay_binding is not None,
             "entity_count": len(state.entities),
             "relationship_count": len(state.relationships),
+            "placement_count": len(state.placements),
+            "external_world_reference_count": len(state.external_world_references),
+            "external_dispatch_count": len(state.external_dispatches),
+            "settlement_stage_program_count": len(state.settlement_stage_programs),
+            "goal_count": len(state.goal_definitions),
+            "objective_count": len(state.objective_definitions),
+            "need_count": len(state.need_definitions),
+            "consumption_policy_count": len(state.consumption_policies),
+            "storage_policy_count": len(state.storage_policies),
+            "maintenance_policy_count": len(state.maintenance_policies),
+            "work_order_count": len(state.work_definitions),
+            "work_reservation_count": len(state.work_reservations),
             "event_count": len(state.events),
             "observation_count": len(state.observations),
             "memory_count": len(state.memories),
@@ -71,6 +112,24 @@ class EngineWorldInspector:
 
     def tick(self) -> int:
         return self._engine.state.tick
+
+    def run_metadata(self) -> Mapping[str, object] | None:
+        metadata = self._engine.state.run_metadata
+        return (
+            None
+            if metadata is None
+            else cast(Mapping[str, object], _snapshot_value(metadata))
+        )
+
+    def replay(self) -> Mapping[str, object]:
+        state = self._engine.state
+        if state.replay_binding is None:
+            return {}
+        return {
+            "binding": _snapshot_value(state.replay_binding),
+            "state": _snapshot_value(state.replay_state),
+            "entity_bindings": dict(state.scenario_entity_bindings),
+        }
 
     def entities(self) -> tuple[Mapping[str, object], ...]:
         return self._records(self._engine.state.entities)
@@ -98,8 +157,128 @@ class EngineWorldInspector:
     def relationships(self) -> tuple[Mapping[str, object], ...]:
         return self._records(self._engine.state.relationships)
 
+    def placements(self) -> tuple[Mapping[str, object], ...]:
+        return tuple(
+            {
+                "entity_id": placement.entity_id,
+                **cast(
+                    dict[str, object], _snapshot_value(placement_snapshot(placement))
+                ),
+            }
+            for placement in self._engine.spatial.all()
+        )
+
+    def external_world_references(self) -> tuple[Mapping[str, object], ...]:
+        return self._records(self._engine.state.external_world_references)
+
+    def external_dispatches(self) -> tuple[Mapping[str, object], ...]:
+        return self._records(self._engine.state.external_dispatches)
+
+    def goals(self) -> tuple[Mapping[str, object], ...]:
+        state = self._engine.state
+        return tuple(
+            cast(
+                Mapping[str, object],
+                _snapshot_value(
+                    {
+                        "definition": state.goal_definitions[goal_id],
+                        "state": state.goal_states[goal_id],
+                        "objectives": tuple(
+                            {
+                                "definition": state.objective_definitions[objective_id],
+                                "state": state.objective_states[objective_id],
+                            }
+                            for objective_id in state.goal_definitions[
+                                goal_id
+                            ].objective_ids
+                        ),
+                    }
+                ),
+            )
+            for goal_id in sorted(state.goal_definitions)
+        )
+
+    def settlement_stages(self) -> tuple[Mapping[str, object], ...]:
+        state = self._engine.state
+        return tuple(
+            cast(
+                Mapping[str, object],
+                _snapshot_value(
+                    {
+                        "program": state.settlement_stage_programs[key],
+                        "state": state.settlement_stage_states[key],
+                    }
+                ),
+            )
+            for key in sorted(state.settlement_stage_programs)
+        )
+
+    def needs(self) -> tuple[Mapping[str, object], ...]:
+        state = self._engine.state
+        return tuple(
+            cast(
+                Mapping[str, object],
+                _snapshot_value(
+                    {
+                        "definition": state.need_definitions[need_id],
+                        "state": state.need_states[need_id],
+                    }
+                ),
+            )
+            for need_id in sorted(state.need_definitions)
+        )
+
+    def consequences(self) -> Mapping[str, object]:
+        state = self._engine.state
+        return cast(
+            Mapping[str, object],
+            _snapshot_value(
+                {
+                    "consumption": [
+                        {
+                            "policy": state.consumption_policies[key],
+                            "state": state.consumption_states[key],
+                        }
+                        for key in sorted(state.consumption_policies)
+                    ],
+                    "storage": [
+                        {
+                            "policy": state.storage_policies[key],
+                            "state": state.storage_states[key],
+                        }
+                        for key in sorted(state.storage_policies)
+                    ],
+                    "maintenance": [
+                        {
+                            "policy": state.maintenance_policies[key],
+                            "state": state.maintenance_states[key],
+                        }
+                        for key in sorted(state.maintenance_policies)
+                    ],
+                }
+            ),
+        )
+
     def events(self) -> tuple[Mapping[str, object], ...]:
         return self._records(self._engine.state.events)
+
+    def work_orders(self) -> tuple[Mapping[str, object], ...]:
+        state = self._engine.state
+        return tuple(
+            cast(
+                Mapping[str, object],
+                _snapshot_value(
+                    {
+                        "definition": _work_definition_snapshot(
+                            state.work_definitions[key]
+                        ),
+                        "state": state.work_states[key],
+                        "reservations": self._engine.work.reservations_for(key),
+                    }
+                ),
+            )
+            for key in sorted(state.work_definitions)
+        )
 
     def npcs(self) -> tuple[Mapping[str, object], ...]:
         """Return the presentation attributes of entities declared as NPCs."""
@@ -179,6 +358,31 @@ class EngineWorldInspector:
         return tuple(
             _snapshot_value(records[record_id]) for record_id in sorted(records)
         )
+
+
+def _work_definition_snapshot(definition: object) -> Mapping[str, object]:
+    snapshot = cast(dict[str, object], _snapshot_value(definition))
+    target = definition.target
+    if isinstance(target, ResourceWorkTarget):
+        snapshot["target"] = {
+            "kind": "resource",
+            "resource": target.resource,
+            "quantity": target.quantity,
+        }
+    elif isinstance(target, CapabilityWorkTarget):
+        snapshot["target"] = {
+            "kind": "capability",
+            "definition_key": target.definition_key,
+            "count": target.count,
+        }
+    elif isinstance(target, MaintenanceWorkTarget):
+        snapshot["target"] = {"kind": "maintenance", "policy_id": target.policy_id}
+    elif isinstance(target, ExternalConnectionWorkTarget):
+        snapshot["target"] = {
+            "kind": "external_connection",
+            "reference_id": target.reference_id,
+        }
+    return snapshot
 
 
 def _snapshot_value(value: object) -> object:

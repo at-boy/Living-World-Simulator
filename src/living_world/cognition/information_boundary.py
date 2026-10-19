@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import re
 from collections.abc import Mapping
+from decimal import Decimal, InvalidOperation
 from typing import TYPE_CHECKING
 
 from living_world.cognition.retrieval import RetrievedCognition
@@ -15,6 +16,28 @@ if TYPE_CHECKING:
 
 class NPCInformationBoundary:
     """Reject authoritative state from an NPC-readable context projection."""
+
+    _COORDINATE_NOTATION_PATTERN = re.compile(r"(?<![\w.])-?\d+\s*,\s*-?\d+(?![\w.])")
+    _SPATIAL_LABEL_NOTATION_PATTERN = re.compile(
+        r"\b(?:x|y|width|height)\s*[-+]?"
+        r"(?:\d+(?:\.\d+)?|\.\d+)(?:[eE][-+]?\d+)?"
+        r"(?!\w|\.\d)",
+        re.IGNORECASE,
+    )
+    _PRIVILEGED_SPATIAL_PATTERN = re.compile(
+        r"\b(?:coordinates|coordinate (?:axis|notation|pair|value)|bounds?|"
+        r"placement records?|overlap polic(?:y|ies))\b"
+        r"|\b(?:placement_record|overlap_policy)\b",
+        re.IGNORECASE,
+    )
+    _NEED_NUMERIC_NOTATION_PATTERN = re.compile(
+        r"\b(?:need|pressure|available|required|balance|threshold|window)\s*"
+        r"[-+]?(?:\d+(?:\.\d+)?|\.\d+)(?:[eE][-+]?\d+)?(?!\w|\.\d)",
+        re.IGNORECASE,
+    )
+    _NUMERIC_LITERAL_PATTERN = re.compile(
+        r"(?<![\w.+-])[-+]?(?:\d+(?:\.\d+)?|\.\d+)(?:[eE][-+]?\d+)?" r"(?!\w|\.\d)"
+    )
 
     def __init__(self, state: WorldState) -> None:
         self._state = state
@@ -74,6 +97,62 @@ class NPCInformationBoundary:
             raise ValueError(f"NPC context {field_name} cannot contain empty prose.")
         if any(identifier in value for identifier in self._internal_identifiers()):
             raise ValueError(f"NPC context {field_name} cannot expose internal IDs.")
+        if self._COORDINATE_NOTATION_PATTERN.search(value) is not None:
+            raise ValueError(
+                f"NPC context {field_name} cannot expose raw coordinate notation."
+            )
+        if self._SPATIAL_LABEL_NOTATION_PATTERN.search(value) is not None:
+            raise ValueError(
+                f"NPC context {field_name} cannot expose raw coordinate notation."
+            )
+        if re.search(
+            r"\b(?:entity|relationship|event|observation|memory|belief|experience|knowledge|npc_relationship|placement|need|goal|objective|external_reference|external_dispatch|dispatch|consumption|storage|maintenance|work|work_reservation)_[A-Za-z0-9][A-Za-z0-9_-]*\b",
+            value,
+        ):
+            raise ValueError("NPC prose cannot expose internal engine identifiers.")
+        if self._PRIVILEGED_SPATIAL_PATTERN.search(value) is not None:
+            raise ValueError(
+                f"NPC context {field_name} cannot expose privileged spatial terms."
+            )
+        if re.search(
+            r"\b(?:settlement_stage_programs|settlement_stage_states|current_stage|entered_tick|last_transition_tick|founding_camp)\b",
+            value,
+        ):
+            raise ValueError(
+                "NPC prose cannot expose privileged settlement stage fields."
+            )
+        if re.search(
+            r"\b(?:scenario_entity_bindings|replay_binding|replay_state|scenario_fingerprint|tape_fingerprint|actor_sequence|configured_tick|next_index|last_attempt_tick|replay_configured)\b",
+            value,
+        ):
+            raise ValueError("NPC prose cannot expose privileged replay fields.")
+        fingerprints = tuple(
+            item
+            for item in (
+                (
+                    None
+                    if self._state.run_metadata is None
+                    else self._state.run_metadata.configuration_fingerprint
+                ),
+                (
+                    None
+                    if self._state.replay_binding is None
+                    else self._state.replay_binding.scenario_fingerprint
+                ),
+                (
+                    None
+                    if self._state.replay_binding is None
+                    else self._state.replay_binding.tape_fingerprint
+                ),
+            )
+            if item is not None
+        )
+        if any(item in value for item in fingerprints):
+            raise ValueError("NPC prose cannot expose replay fingerprints.")
+        if self._NEED_NUMERIC_NOTATION_PATTERN.search(value) is not None:
+            raise ValueError(
+                f"NPC context {field_name} cannot expose authoritative numeric values."
+            )
         if self._contains_authoritative_number(value):
             raise ValueError(
                 f"NPC context {field_name} cannot expose authoritative numeric values."
@@ -90,30 +169,164 @@ class NPCInformationBoundary:
             self._state.experiences,
             self._state.npc_relationships,
             self._state.knowledge,
+            self._state.placements,
+            self._state.goal_definitions,
+            self._state.goal_states,
+            self._state.objective_definitions,
+            self._state.objective_states,
+            self._state.settlement_stage_programs,
+            self._state.settlement_stage_states,
+            self._state.need_definitions,
+            self._state.need_states,
+            self._state.consumption_policies,
+            self._state.consumption_states,
+            self._state.storage_policies,
+            self._state.storage_states,
+            self._state.maintenance_policies,
+            self._state.maintenance_states,
+            self._state.work_definitions,
+            self._state.work_states,
+            self._state.work_reservations,
         )
-        return tuple(
-            identifier for collection in collections for identifier in collection
+        stage_identifiers = tuple(
+            item.objective_id
+            for program in self._state.settlement_stage_programs.values()
+            for definition in program.stages
+            for item in definition.requirements
+        )
+        return (
+            tuple(identifier for collection in collections for identifier in collection)
+            + stage_identifiers
+            + tuple(self._state.scenario_entity_bindings.values())
         )
 
     def _contains_authoritative_number(self, value: str) -> bool:
-        return any(
-            self._number_pattern(number).search(value) is not None
-            for number in self._authoritative_numbers()
-        )
+        authoritative = {
+            Decimal(str(number)) for number in self._authoritative_numbers()
+        }
+        for match in self._NUMERIC_LITERAL_PATTERN.finditer(value):
+            try:
+                if Decimal(match.group()) in authoritative:
+                    return True
+            except InvalidOperation:
+                continue
+        return False
 
     def _authoritative_numbers(self) -> tuple[int | float, ...]:
-        return tuple(
+        entity_numbers = tuple(
             value
             for entity in self._state.entities.values()
             for value in self._numeric_values(entity.attributes)
         )
+        spatial_numbers = tuple(
+            value
+            for placement in self._state.placements.values()
+            for value in self._numeric_values(placement.geometry)
+        )
+        need_numbers = tuple(
+            number
+            for definition in self._state.need_definitions.values()
+            for number in (
+                definition.requirement_per_person,
+                definition.secure_maximum,
+                definition.strained_maximum,
+                definition.assessment_window_ticks,
+            )
+        ) + tuple(
+            number
+            for need_state in self._state.need_states.values()
+            for assessment in need_state.history
+            for number in (
+                assessment.available,
+                assessment.required,
+                assessment.balance,
+                assessment.pressure,
+            )
+            if number is not None
+        )
+        consequence_numbers = tuple(
+            number
+            for collections in (
+                self._state.consumption_policies.values(),
+                self._state.consumption_states.values(),
+                self._state.storage_policies.values(),
+                self._state.storage_states.values(),
+                self._state.maintenance_policies.values(),
+                self._state.maintenance_states.values(),
+            )
+            for record in collections
+            for number in self._numeric_values(record)
+        )
+        work_numbers = tuple(
+            number
+            for collections in (
+                self._state.work_definitions.values(),
+                self._state.work_states.values(),
+                self._state.work_reservations.values(),
+            )
+            for record in collections
+            for number in self._numeric_values(record)
+        )
+        goal_numbers = tuple(
+            number
+            for collections in (
+                self._state.goal_definitions.values(),
+                self._state.goal_states.values(),
+                self._state.objective_definitions.values(),
+                self._state.objective_states.values(),
+            )
+            for record in collections
+            for number in self._numeric_values(record)
+        )
+        return (
+            entity_numbers
+            + tuple(
+                number
+                for record in (self._state.replay_binding, self._state.replay_state)
+                for number in self._numeric_values(record)
+            )
+            + spatial_numbers
+            + need_numbers
+            + consequence_numbers
+            + work_numbers
+            + goal_numbers
+            + tuple(
+                number
+                for program in self._state.settlement_stage_programs.values()
+                for definition in program.stages
+                for requirement in definition.requirements
+                for criterion in self._state.objective_definitions[
+                    requirement.objective_id
+                ].completion_criteria
+                for number in self._numeric_values(criterion)
+            )
+            + tuple(
+                number
+                for record in self._state.settlement_stage_states.values()
+                for number in self._numeric_values(record)
+            )
+        )
 
     def _numeric_values(self, value: object) -> tuple[int | float, ...]:
+        from dataclasses import fields, is_dataclass
+
+        from living_world.spatial.model import Bounds, Point
+
+        if isinstance(value, Point):
+            return value.x, value.y
+        if isinstance(value, Bounds):
+            return value.x, value.y, value.width, value.height
         if isinstance(value, Mapping):
             return tuple(
                 number
                 for item in value.values()
                 for number in self._numeric_values(item)
+            )
+        if is_dataclass(value):
+            return tuple(
+                number
+                for field in fields(value)
+                for number in self._numeric_values(getattr(value, field.name))
             )
         if isinstance(value, (tuple, list, set, frozenset)):
             return tuple(
@@ -122,7 +335,3 @@ class NPCInformationBoundary:
         if isinstance(value, (int, float)) and not isinstance(value, bool):
             return (value,)
         return ()
-
-    @staticmethod
-    def _number_pattern(number: float) -> re.Pattern[str]:
-        return re.compile(rf"(?<![\w.]){re.escape(str(number))}(?!\w|\.\d)")

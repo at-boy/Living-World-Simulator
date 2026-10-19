@@ -1,6 +1,39 @@
 
 # Living World Simulator Backlog
 
+Task 24 delivery `a5c275f`, integrated as `badd5f9`, completes the reviewed `0.6.0rc1`
+candidate on `milestone/v0.6`. Root task and merged gates each passed 1,416 tests / 10
+existing deliberate skips, 76 Chrome cases and examples 001–039. Separate examples and
+whitespace checks passed. Source and installed Python 3.13.5 / 3.11.2 canonical runs
+preserve identical complete schema-12 payloads across fresh runs and resume ticks 1, 3
+and 4. Wheel, exports, eight assets, health, read-only APIs, actual console/loopback
+inspection and all-outcome browser checks passed.
+All 21 authorized tasks are complete; see the
+[current closeout report](subagent_execution_plan/v0_6/24_v06_release_closeout-report.md).
+These corrections add no deferred domain capability.
+
+Task 20 work orders and reservations, Task 20a's actor-bound proposal gateway,
+and Task 20b deterministic execution are implemented.
+
+Task 21's objective-backed settlement stages are independently reviewed,
+validated, merged, and pushed to milestone/v0.6. Task 22 recorded proposal
+replay is independently reviewed, validated and integrated; its strict
+runtime/cursor contract and ADR-0025 remain authoritative. Task15
+operator inspector is independently reviewed and integrated. Task15c spatial
+view is independently reviewed, validated and integrated. Task23 canonical
+composition is independently reviewed, fully validated and integrated as58b6ba7,
+with deterministic success10, stall5 and failure13. Task24 completes0.6.0rc1; reviewed final
+root gates and integration evidence are in its
+[report](subagent_execution_plan/v0_6/24_v06_release_closeout-report.md).
+Live-model strategy validation remains future work. Legacy replay enablement on
+populated saves without label bindings remains unsupported. Reusable
+stage templates, decline/demotion, general scenario-YAML binding beyond the fixed
+Task23 preset, and automatic NPC perception of stages remain deliberately deferred.
+
+Task 19 settlement needs and pressure is complete for v0.6. Task 19a
+consumption, storage, and maintenance consequences are reviewed and integrated
+into milestone/v0.6.
+
 This document is intentionally **not** a specification.
 
 It is a parking lot for ideas that have been agreed upon but are
@@ -51,7 +84,9 @@ future domain actions still require explicit simulation-owned handlers.
 
 ## Future Ideas
 
-These are intentionally out of scope for the current milestone.
+Items assigned to v0.6 move into active development only through the approved
+isolated v0.6 task sequence. Items assigned to later milestones remain out of
+scope.
 
 Every item below is placed in the milestone/track matrix in
 `docs/post_v05_settlement_evolution_roadmap.md`. That placement preserves the
@@ -64,7 +99,8 @@ an approved task plan and saved prompt.
   population continuity, governance, and regional growth. The agreed direction
   and sequencing are recorded in
   `docs/post_v05_settlement_evolution_roadmap.md`; individual implementation
-  tasks remain inactive until explicitly authorized.
+  v0.6 tasks are now authorized only through their isolated, dependency-ordered
+  plans; later-milestone portions remain inactive.
 - **Founding mandates and objective graphs:** initial settlers may arrive with
   personal and collective goals such as securing water, building shelter,
   establishing food production, or opening a trade route. Completion,
@@ -73,6 +109,32 @@ an approved task plan and saved prompt.
   only through a deliberately limited trade, travel, or communication
   interface. It must not imply a secretly complete simulated place and must be
   promotable through an explicit future on-map migration contract.
+
+The versioned scenario/run identity foundation is implemented in Task 16, and
+Task 16a adds checkpoint execution plus continuous/bounded operator control.
+ADR-0016's canonical local spatial contract and Task 15b's domain, persistence,
+and privileged inspection are implemented; pathfinding, terrain, motion, and
+regional-scale geography remain deferred.
+Task 15d implements an engine-owned qualitative spatial and direct-road
+perception translation layer and closes the stored-observation coordinate-leak
+gap without adding navigation or visibility simulation.
+ADR-0017 and Task 17 implement partial off-map references, deterministic contact
+state, schema-v4 persistence, privileged inspection, and a filtered qualitative
+interpretation. Dispatch and trade transfer remain assigned to Task 17a.
+Task 17a now implements deterministic durable dispatches and safe offered-label
+proposals; generic work, objectives, and remote-place simulation remain deferred.
+Task 18 now implements durable goal/objective definitions, managed lifecycle
+state, persistence, privileged inspection, and filtered NPC interpretations.
+Task 18a implements deterministic criterion evaluation and evidence production
+for resources, constructed capabilities, capacity, external connections, and,
+after Task 19, sustained need pressure. Settlement-stage evaluation remains
+Task 21 implementation is active under its decision-complete isolated plan.
+
+Task 19 now implements authoritative food, water, shelter, and storage needs,
+bounded assessment history, sustained-need objective evidence, schema-v7
+persistence, privileged inspection, and qualitative NPC-safe interpretation.
+Consumption, storage/spoilage, upkeep, and deterioration consequences remain
+separately scoped to Task 19a; work selection remains Task 20 and later.
 
 - Births
 - Childhood and apprenticeships
@@ -90,15 +152,16 @@ an approved task plan and saved prompt.
 - Emergent quests
 - Dynamic rumours
 - Player influence on history
-- **Read-only World Inspector UI** backed exclusively by the HTTP inspection
-  API, with world/entity detail views, deterministic time-series/statistical
-  graphs, event/history views, and relationship graphs. It must remain an
-  operator observability client, never a simulation, NPC, or LLM API.
-- **Spatial World Inspector visualization** showing areas, settlements,
-  buildings, and other placed world elements with click-through inspection.
-  This requires a canonical engine-owned spatial layout/placement contract
-  before a map renderer is implemented; no UI should infer coordinates from
-  arbitrary attributes.
+- **Inspector visualization follow-up:** Task 15 supplies packaged read-only
+  world/entity/lifecycle details and event history. Statistical/time-series and
+  relationship graphs remain future explicitly authorized operator work; they
+  must never become a simulation, NPC, or LLM API.
+- **Spatial inspector follow-up:** Task15c implements the canonical placement
+  map and entity inspection; independent review and root acceptance passed in
+  reviewed merge0a81a11.
+  Editing, inferred roads, and statistical overlays remain separately authorized
+  work. Spatial views must consume engine-owned placements without inferring
+  coordinates from arbitrary attributes.
 - Web administration interface, separately authorized from the read-only
   inspector and subject to explicit command/action authorization design.
 - **Council opposition and political realignment:** NPCs may later organize
@@ -140,3 +203,22 @@ The v0.5 council coordination layer is bounded and non-authoritative. Rules for
 institutional quorums, legitimacy, factions, and secession remain future work.
 The temporary unanimous explicit-decline caller fallback must be replaced by
 engine-owned, organization-specific governance rules and auditable records.
+
+## Historical October17 audit checkpoint — superseded
+
+The paragraphs below retain the pre-correction checkpoint. Their pending findings,
+audit-coverage and correction-integration instructions are superseded by reviewed
+Task24a mergec1d93cd and the current status at the top of this document. All four
+code findings and final Task24 release gates are now resolved.
+
+Task24 release closeout in progress from reviewed Task23 merge58b6ba7; no main
+integration or tag authorized. Final release-readiness report/gates pending.
+Release audit checkpoint October17: Task23 is integrated58b6ba7. Task24 final
+readiness is blocked by two P1 auditfindings, recorded in committed orchestrator
+handoff auditreport. Correctexisting NPCgoalboundary/reservationID defects in
+bounded isolatedtask before resuming uncommitted24metadata. These are release
+blockers, not deferredfuturefeatures; full audit coverage/gates remainpending.
+
+Task24a isolated existing-defect correction begins from7d75b20; Task24metadata
+checkpoint preserved. Both audit findings and remaining wholeauditcoverage still
+block release readiness until reviewed current validation.
