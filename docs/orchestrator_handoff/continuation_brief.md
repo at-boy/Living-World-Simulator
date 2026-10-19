@@ -1,6 +1,20 @@
-# Continuation brief — v0.6.0rc1 integrated, October 19, 2026
+# Continuation brief — live runtime design pending review, October 19, 2026
 
-## Current completion and authority
+## Current design scope and authority
+
+Owner approved the in-chat live NPC runtime scope. Active design branch is
+codex/live-npc-runtime in .worktrees/live-npc-runtime from main d8ea517.
+Read the [written design](../superpowers/specs/2026-10-19-live-npc-runtime-design.md).
+Written-spec owner review is pending; no implementation plan or code is authorized
+by the design-authoring checkpoint. Next: obtain written-design feedback, then write
+the implementation plan and agree execution method. Preserve recorded runs, local
+Ollama scope, player-disruption readiness, browser controls and all-run archives.
+No demographics/governance, main integration, push, tag changes or remote deployment
+are part of this design-authoring work. Main/milestone/v0.6 and v0.6.0rc1 remain
+unchanged. The prior release handoff below is historical context, not a statement
+that the newly discussed live functionality already exists.
+
+## Completed release context
 
 Task 24 delivery `a5c275f`, integrated as `badd5f9`, completes the reviewed `0.6.0rc1`
 candidate on `milestone/v0.6`. Root task and merged gates each passed 1,416 tests / 10

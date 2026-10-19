@@ -1,6 +1,14 @@
 
 # Living World Simulator Backlog
 
+The next approved design scope is live NPC decisions and an observable run lifecycle,
+not demographic v0.7 work. Existing recorded scenarios remain supported. The
+[live runtime design](superpowers/specs/2026-10-19-live-npc-runtime-design.md) covers
+Ollama, qualitative feedback, controls and automatic run archives; written-design
+review and implementation planning remain pending. These capabilities are not yet
+implemented. Future player commands remain separate from current operator controls.
+
+
 October19 owner integration: milestone6bf4c63 merged to main092715c and tagged
 v0.6.0rc1; both pushed, milestone branch preserved. Followup agent-path cleanup
 keeps the same role files and introduces no domain capability or deferred work.

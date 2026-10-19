@@ -1,5 +1,19 @@
 # Living World Simulator – Project Journal
 
+## Live NPC runtime design — October 19, 2026
+
+Owner approved the scope for codex/live-npc-runtime: real Ollama NPC decisions,
+retained recorded modes, response to player-like disruptions, browser pause/resume/
+single-tick controls and automatic archives of normal CLI/browser/acceptance runs.
+Created an isolated branch from main d8ea517, preserving main/milestone/tag and all
+prior worktrees. Two narrow read-only investigations established proposal-phase,
+failed-tick, persistence and inspection constraints. The written
+[design](superpowers/specs/2026-10-19-live-npc-runtime-design.md) proposes boundary
+preparation, model calls outside mutation, one owner, durable world/cursor commits,
+coherent browser revisions and immutable historical inspection. It is a proposal,
+not an implementation or newly proven live-model result. Owner review of the written
+design precedes implementation planning. No source/tests/dependencies changed.
+
 ## Owner integration and agent configuration cleanup — October 19, 2026
 
 Owner authorized main integration/tagging, retaining milestone/v0.6, and then

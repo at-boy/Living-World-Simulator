@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Document the proposed live NPC runtime: Ollama decisions, preserved recorded
+  scenarios, browser controls and durable per-attempt archives. Design only;
+  implementation awaits written-design review and an approved task plan.
+
 - Fix project Codex role paths to resolve from `.codex/config.toml`; preserve
   the existing explorer, worker and reviewer definitions.
 
