@@ -320,7 +320,7 @@ class AttemptArchive:
                     CommandReceipt(
                         command.command_id,
                         "queued",
-                        command.expected_state_version,
+                        p.get("admitted_state_version", command.expected_state_version),
                         revision_context or 0,
                         None,
                     ),

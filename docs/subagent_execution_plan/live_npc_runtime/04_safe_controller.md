@@ -1,6 +1,7 @@
 # Task 4 / LN04 — Single-owner safe controller
 
-Status: owner-authorized; decision-complete contract from reviewed integration5544fdb.
+Status: complete; independently reviewed, task/merged gates passed; evidence in report.
+Decision-complete contract based on reviewed integration5544fdb.
 [Design](../../superpowers/specs/2026-10-19-live-npc-runtime-design.md) and
 [master plan](../../superpowers/plans/2026-10-19-live-npc-runtime.md) bind this task.
 
@@ -50,7 +51,7 @@ RED must identify the absent required behavior; GREEN means all selected tests p
 with no unexplained new skips. For later regressions, use the smallest named failing
 case until the complete focused set is ready.
 
-- [ ] **Step 1 — Add failing tests** pause before first tick; one step then paused;
+- [x] **Step 1 — Add failing tests** pause before first tick; one step then paused;
   duplicate command IDs; ID reuse with different body; stale state_version queued
   behind another step; pause during waiting; terminal zero-step; late tick failure;
   save failure; old publication unchanged while preparing; stop/pause durability.
@@ -64,9 +65,9 @@ case until the complete focused set is ready.
   assert controller.status().tick == start_tick + 1
   ```
   Define deterministic fake TickPreparation and owner-driving helper in tests only.
-- [ ] **Step 2 — Observe RED** new controller tests. Add recorded fixtures before
+- [x] **Step 2 — Observe RED** new controller tests. Add recorded fixtures before
   adapter changes, pin old complete success/stall/failure hashes from LN09 below.
-- [ ] **Step 3 — Implement state machine** use an owner-thread queue with immutable
+- [x] **Step 3 — Implement state machine** use an owner-thread queue with immutable
   status publications, separate monotonically increasing `state_version` and durable
   checkpoint `revision`. All transitions, command admission/results and audit writes
   are owner-thread operations. HTTP uses queue Future/receipt, never owns SQLite.
@@ -88,7 +89,7 @@ case until the complete focused set is ready.
   Valid duplicate command_id returns its prior receipt/result before stale-version
   validation; same ID with different canonical envelope rejects. New ID with old
   expected_state_version rejects. No automatic model retries or queued step credits.
-- [ ] **Step 4 — Implement candidate/publication protocol** restore last checkpoint,
+- [x] **Step 4 — Implement candidate/publication protocol** restore last checkpoint,
   prepare outside mutation, install driver, call one existing engine.step, evaluate
   existing terminal rules once at each boundary, finalize when appropriate, encode,
   atomically commit then publish. On any exception retain previous publication and
@@ -98,11 +99,11 @@ case until the complete focused set is ready.
   before publishing; settle non-stepping controls with journal/lifecycle in one
   transaction. Recorded adapter uses exact
   ReplayPreparation/FoundersPreparation, no additional observations or changed tape.
-- [ ] **Step 5 — Observe GREEN** controller/recorded/runner/replay suites and exact
+- [x] **Step 5 — Observe GREEN** controller/recorded/runner/replay suites and exact
   recorded matrices. Use subprocess paused checkpoint -> exit -> reopen/fork to
   assert tick, complete world, cursor and history survive. This gate already works
   without Ollama; later tasks add live-provider-specific restart coverage.
-- [ ] **Step 6 — Review, root gates and commit** `feat: control runs at durable tick boundaries`.
+- [x] **Step 6 — Review, root gates and commit** `feat: control runs at durable tick boundaries`.
 
 
 ## Root-resolved controller and producer contract
@@ -289,7 +290,12 @@ stale Step, successful Step receipt/checkpoint atomicity, pause before tick vs c
 tick, provider error/retry preserving Step/paused intent, bounded fake waiting responsiveness,
 owner/read thread safety, failed/partial tick quarantine, precommit rollback, postcommit
 audit failure, terminal zero-step, finalization modes and cached eviction.
-Compare old complete schema12 hashes, actual events/charges, fresh versus child-resumed
+Canonical matrix uses success terminal tick10, stall explicit max_ticks5, failure
+terminal tick13. Pin payload-only SHA256, distinct from WorldSnapshot.digest:
+success ec4a908de25253fa56872c5b5db9cd3c7a65d640c5be5c9b0b398b3a9f78fad0;
+stall 6fcb0e0003c59faa1eb661329ea55fbbb4ed21e297ff6cef180733e302e6ec3d;
+failure fd80996bb1e122cd38e9f16fcb96ad1ecccf0dd5dcb530529a59aa3806024f2f.
+Compare old complete schema12 rows, actual events/charges, fresh versus child-resumed
 world/cursor/history. Include real subprocess paused checkpoint->exit->fork/reopen proof.
 
 Worker creates runtime/__init__.py, contracts.py, controller.py, recorded.py,

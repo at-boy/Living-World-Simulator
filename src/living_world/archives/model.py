@@ -248,7 +248,12 @@ class AttemptConfig:
             )
             for key, value in limits.items():
                 if key != "max_ticks" or value is not None:
-                    integer(value, minimum=1)
+                    integer(
+                        value,
+                        minimum=(
+                            0 if key == "max_ticks" and self.mode == "recorded" else 1
+                        ),
+                    )
         for key, choices in (
             ("recorded_outcome", ("success", "stall", "failure")),
             ("launch_source", ("cli", "browser", "agent")),
@@ -421,7 +426,15 @@ class JournalEntry:
             p = document(
                 self.payload,
                 schemas[self.kind],
-                {"content_digest"} if self.kind == "response_failed" else set(),
+                (
+                    {"content_digest"}
+                    if self.kind == "response_failed"
+                    else (
+                        {"admitted_state_version"}
+                        if self.kind == "control_requested"
+                        else set()
+                    )
+                ),
             )
             for key in ("request_id", "actor_label", "reason"):
                 if key in p:
@@ -457,6 +470,8 @@ class JournalEntry:
                     text(item)
             elif self.kind == "control_requested":
                 envelope(p["envelope"])
+                if "admitted_state_version" in p:
+                    integer(p["admitted_state_version"])
             elif self.kind == "control_resolved":
                 receipt(p["receipt"])
             elif self.kind == "attempt_finished":

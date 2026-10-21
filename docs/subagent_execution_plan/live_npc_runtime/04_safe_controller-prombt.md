@@ -15,3 +15,5 @@ Use focused TDD with task24/.venv Python and PYTHONPATH=src in task checkout. No
 subagents, VCS mutations, dependencies or fullmake/examples. Return stable uncommitted
 diff and canonical04report with commands/results/counts, warnings, self-review and
 concerns. Root independently reviews and owns full gates/commit/integration.
+
+Root canonical-test clarification: task contract pins payload-only hashes and stall max_ticks5; WorldSnapshot.digest includes schema prefix and is a distinct valid value. Do not use default16ticks for the canonical stall matrix or weaken old assertions.

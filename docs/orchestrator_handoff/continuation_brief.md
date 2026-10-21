@@ -1,4 +1,4 @@
-# Continuation brief — live runtime resumed at LN03, October 21, 2026
+# Continuation brief — live runtime LN04 reviewed, October 21, 2026
 
 ## Current design scope and authority
 
@@ -23,9 +23,15 @@ Owner resumed October21 with99%five-hourremaining. Feature0d04c1b and preserved
 main/milestone/tag verified live. LN03 deliverye3d9faf is pushed and integrated by the merge containing its report.
 Independent review and task/merged gates1551/10,39examples, separateexamples/
 whitespace andexact recorded CLI checks passed. Consult03report for evidence.
-LN03 integration5544fdb is complete. LN04 safe-controller contract is prepared;
-implementation/review/gates pending. Read04contract/prompt for explicit producer/
-protocol amendments. LN05–LN09 remain authorized and unstarted. Read current03contract for archive layout, inputs, lease,
+LN03 integration5544fdb is complete. LN04 controller/recorded adapter has independent
+SPEC/QUALITY PASS after two corrections and root task gates1589/10,39examples plus
+exact CLI matrices on task and merged trees. Delivery906d23f is pushed; integration
+completes with the merge containing04report. Read04contract/prompt
+for explicit producer/protocol amendments, especially model-free driver initialize
+and paused partial preparation with activity/error properties. LN05–LN09 remain
+authorized and unstarted. A narrow LN05 feedback-seam investigation is saved in
+the ignored current-plan workspace; root must resolve its exact contract before
+implementation. Read current03contract for archive layout, inputs, lease,
 parent continuity and explicit mirror source context. Do not repeat LN01/LN02.
 Preserve all branches/checkouts and current-plan ignored SDD ledger/evidence under
 .worktrees/live-npc-runtime/.superpowers/sdd/2026-10-19-live-npc-runtime. Owner-local
