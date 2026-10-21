@@ -743,3 +743,66 @@ proposals routed through the ordinary resolver and actor-bound work/dispatch
 handlers. Engine managers alone change work, resources, needs, goals, stages and
 terminal truth. The deterministic tapes are acceptance drivers, not evidence
 that a live LLM selects successful strategies.
+
+## LN05 live founders feedback
+
+Live founders composition uses the canonical domain recipe without a proposal tape.
+Its explicit live setup validation preserves canonical camp/valley placements and
+static definitions while permitting legitimate founder destruction, relocation and
+unplacement. Canonical housing attachments retain their historical fixed roster;
+that roster grants neither cognition eligibility nor knowledge. Malformed founder
+identity and corrupt domain records fail preparation closed. Recorded composition
+continues to use its strict validation and unchanged replay pathway.
+
+Engine truth remains exact world entities, spatial containment, need assessments,
+work targets/statuses, goal criteria and outcomes. Feedback selects only scenario
+bound founders who are living, have valid identity and are actually placed inside
+the camp, including transitive containment. Arbitrary new NPCs receive no founder
+decision opportunity. The sole communicated mandate is the camp's SETTLEMENT-owned
+`goal_founding` NPCGoalInterpretation. Camp-owned needs use NPCNeedInterpretation;
+camp work at a currently local location uses NPCWorkInterpretation. Final projection
+prose and offered action vocabulary pass NPCInformationBoundary before inference.
+No raw inspector DTO, hidden threshold, quantity, goal purpose/deadline/progress,
+reservation, remote dispatch detail or unrelated goal becomes visible.
+
+The communicated mandate is `You were asked to help the camp: {description}`.
+Local need/work perceptions are `{label}: {description}`. Changed permitted
+projections are observations of conditions; journal events alone do not establish
+witness knowledge. An eligible holder observes its own previous committed result on
+the next decision boundary, using only `Your proposal was accepted.`,
+`Your proposal could not be carried out.`, or
+`You chose not to propose an action.`. Another actor's speech, proposal, private
+rationale and result never become shared feedback. Ineligible holders retain
+pending results until they can observe them.
+
+ObservationManager and MemoryManager create holder-owned immutable records. The
+mandate has core salience 0.8; changed local conditions and own results have noncore
+salience 0.6. Confidence 1.0 identifies a permitted simulation observation, not an
+NPC inference's truth. Each memory references its actual source observation.
+Engine-only evidence records stable source kind/ID and the qualitative prose hash;
+provider JSON receives none of those IDs or evidence. A changed projection creates
+new history, including a return to an earlier qualitative condition. Unchanged
+sources are deduplicated across reconstruction/restart. Sources that cease to be
+local leave memory history but disappear from current perceptions.
+
+The fixed inference policy selects at most eight current permitted perceptions and
+eight distinct holder-owned memories total, including the required mandate. Core
+and noncore memories occupy separate context tuples without overlap; beliefs,
+experiences, global cognition and other holders' records are excluded. Optional
+entries are pruned oldest first against the injected complete HTTP-body encoder's
+16,000-character limit. Identity, required mandate and offered actions remain;
+preparation fails if those alone exceed the limit. Existing generic assembler and
+retriever policies are unchanged.
+
+DecisionInput actor IDs and gateway handlers remain ephemeral engine-only values.
+Only filtered context and safe ActionOption values may enter the later broker IPC
+or provider request. The archive feedback cursor contains source fingerprints and
+pending own outcome identities, never prompts or runtime objects. Staged cursor
+state has no strong reference to a discarded engine. Detached candidate cognition
+and completed feedback cursor commit atomically through the runtime driver; failed
+preparation never publishes a partial world. The fingerprint binds exact serialized
+context/options to the base snapshot and semantic driver/feedback cursors, excluding
+checkpoint revision renumbering. The driver owns the closed semantic cursor contract
+and must exclude request/attempt UUIDs, wall time and operational revisions/counts.
+LLM output remains an untrusted proposal; ordinary simulation gateways alone own
+world mutation, goal completion and settlement progression.

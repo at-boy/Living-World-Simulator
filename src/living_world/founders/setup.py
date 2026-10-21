@@ -5,6 +5,7 @@ from __future__ import annotations
 from copy import deepcopy
 from dataclasses import fields
 
+from living_world.core.entity import Entity
 from living_world.core.resource_definition import ResourceDefinition
 from living_world.external_world.manager import ExternalWorldReferenceManager
 from living_world.external_world.model import ContactState
@@ -350,7 +351,24 @@ class FoundersSetupManager:
             raise FoundersConfigurationError("setup_mismatch") from None
         _commit(state, staged)
 
+    def initialize_or_validate_live(self, policy: FoundersPolicy) -> None:
+        """Use strict atomic installation only for a genuinely fresh scenario."""
+        if any(
+            event.kind == "canonical_setup_completed"
+            for event in self._state.events.values()
+        ):
+            self.validate_live(policy)
+        else:
+            self.initialize_or_validate(policy)
+
     def validate_existing(self, policy: FoundersPolicy) -> None:
+        self._validate(policy, live=False)
+
+    def validate_live(self, policy: FoundersPolicy) -> None:
+        """Validate canonical invariants while allowing founder lifecycle changes."""
+        self._validate(policy, live=True)
+
+    def _validate(self, policy: FoundersPolicy, *, live: bool) -> None:
         state = self._state
         try:
             self._check_definitions(policy)
@@ -364,7 +382,31 @@ class FoundersSetupManager:
                 ("bryn", "founder"),
             ):
                 entity = state.entities[bindings[label]]
-                if entity.definition_key != key or entity.destroyed_tick is not None:
+                if live and (
+                    type(entity) is not Entity
+                    or entity.id != bindings[label]
+                    or not isinstance(entity.name, str)
+                    or not entity.name.strip()
+                    or type(entity.attributes) is not dict
+                    or type(state.tick) is not int
+                    or state.tick < 0
+                    or type(entity.created_tick) is not int
+                    or entity.created_tick != 0
+                    or (
+                        entity.destroyed_tick is not None
+                        and (
+                            type(entity.destroyed_tick) is not int
+                            or not entity.created_tick
+                            <= entity.destroyed_tick
+                            <= state.tick
+                        )
+                    )
+                ):
+                    raise ValueError
+                if entity.definition_key != key or (
+                    entity.destroyed_tick is not None
+                    and (not live or label not in policy.founder_labels)
+                ):
                     raise ValueError
                 if label in policy.founder_labels:
                     NPCIdentity.from_attribute(entity.attributes.get("npc_identity"))
@@ -374,6 +416,13 @@ class FoundersSetupManager:
                 raise ValueError
             expected = _shadow(state)
             expected.tick = 0
+            if live:
+                # Only the throwaway recipe world restores founders to construct
+                # the canonical static definitions. Never repair the actual world.
+                for label in policy.founder_labels:
+                    expected.entities[bindings[label]].destroyed_tick = None
+                if len(set(bindings.values())) != len(bindings):
+                    raise ValueError
             expected.placements = {}
             expected.events = {}
             for key in _DOMAINS:
@@ -386,7 +435,18 @@ class FoundersSetupManager:
                 "consumption_policies",
                 "settlement_stage_programs",
             ):
-                if getattr(state, key) != getattr(expected, key):
+                actual, required = getattr(state, key), getattr(expected, key)
+                if live and key in {
+                    "need_definitions",
+                    "goal_definitions",
+                    "objective_definitions",
+                }:
+                    if any(
+                        actual.get(record_id) != value
+                        for record_id, value in required.items()
+                    ):
+                        raise ValueError
+                elif actual != required:
                     raise ValueError
             for key in (
                 "need_states",
@@ -402,7 +462,10 @@ class FoundersSetupManager:
                     "consumption_states": "consumption_policies",
                     "settlement_stage_states": "settlement_stage_programs",
                 }[key]
-                if set(getattr(state, key)) != set(getattr(expected, partner)):
+                required = (
+                    getattr(state, partner) if live else getattr(expected, partner)
+                )
+                if set(getattr(state, key)) != set(required):
                     raise ValueError
             refs = tuple(state.external_world_references.values())
             wanted = next(iter(expected.external_world_references.values()))
@@ -431,6 +494,8 @@ class FoundersSetupManager:
             ):
                 raise ValueError
             for key, value in expected.placements.items():
+                if live and key in {bindings[label] for label in policy.founder_labels}:
+                    continue
                 if state.placements.get(key) != value:
                     raise ValueError
             events, work, spatial, _entities, consequences = self._managers(state)
@@ -595,11 +660,17 @@ class FoundersSetupManager:
                 )
 
     def compose(self, policy: FoundersPolicy) -> None:
-        self.validate_existing(policy)
+        self._compose(policy, live=False)
+
+    def compose_live(self, policy: FoundersPolicy) -> None:
+        self._compose(policy, live=True)
+
+    def _compose(self, policy: FoundersPolicy, *, live: bool) -> None:
+        self._validate(policy, live=live)
         staged = _shadow(self._state)
         try:
             self._attachments(staged, policy, create=True)
-            FoundersSetupManager(staged, self._definitions).validate_existing(policy)
+            FoundersSetupManager(staged, self._definitions)._validate(policy, live=live)
         except (TypeError, ValueError, KeyError):
             raise FoundersConfigurationError("setup_mismatch") from None
         _commit(self._state, staged)
@@ -607,6 +678,16 @@ class FoundersSetupManager:
     def restore_resource_vocabulary(
         self, policy: FoundersPolicy, registry: ResourceDefinitionManager
     ) -> None:
-        self.validate_existing(policy)
+        self._restore_resource_vocabulary(policy, registry, live=False)
+
+    def restore_live_resource_vocabulary(
+        self, policy: FoundersPolicy, registry: ResourceDefinitionManager
+    ) -> None:
+        self._restore_resource_vocabulary(policy, registry, live=True)
+
+    def _restore_resource_vocabulary(
+        self, policy: FoundersPolicy, registry: ResourceDefinitionManager, *, live: bool
+    ) -> None:
+        self._validate(policy, live=live)
         for name in ("food", "water", "timber"):
             registry.register(ResourceDefinition(name))

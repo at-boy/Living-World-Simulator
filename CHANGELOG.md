@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add tape-independent founders composition and bounded, holder-scoped qualitative
+  feedback with durable provenance and live lifecycle validation (LN05). Actual
+  Ollama decisions and public runtime entrypoints follow in later tasks.
+
 - Prepare LN05 tape-independent founders/feedback contract with explicit local
   visibility, provenance, retrieval and context budgets; implementation pending.
 

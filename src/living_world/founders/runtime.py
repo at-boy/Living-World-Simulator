@@ -56,16 +56,29 @@ class FoundersCompositionSystem(SimulationSystem):
     def step(self, state: WorldState) -> None:
         if state is not self._state:
             raise FoundersConfigurationError("setup_mismatch")
+        self._compose()
+
+    def _compose(self) -> None:
         self._manager.compose(self._policy)
+
+
+class FoundersLiveCompositionSystem(FoundersCompositionSystem):
+    def _compose(self) -> None:
+        self._manager.compose_live(self._policy)
 
 
 class FoundersOfferProvider:
     def __init__(self, engine: SimulationEngine, policy: FoundersPolicy) -> None:
         self._engine, self._policy = engine, policy
 
+    def _validate(self) -> None:
+        FoundersSetupManager(
+            self._engine.state, self._engine.definitions
+        ).validate_existing(self._policy)
+
     def offers(self, *, actor_id: str, inspector: WorldInspector) -> ReplayActionOffers:
         engine, policy = self._engine, self._policy
-        FoundersSetupManager(engine.state, engine.definitions).validate_existing(policy)
+        self._validate()
         r = policy.rules
         camp = engine.state.scenario_entity_bindings["camp"]
         reference = next(iter(engine.state.external_world_references.values()))
@@ -187,6 +200,43 @@ class FoundersOfferProvider:
         )
 
 
+class FoundersLiveOfferProvider(FoundersOfferProvider):
+    def _validate(self) -> None:
+        FoundersSetupManager(
+            self._engine.state, self._engine.definitions
+        ).validate_live(self._policy)
+
+
+def prepare_live_founders_world(
+    engine: SimulationEngine, scenario: LoadedScenario
+) -> FoundersPolicy:
+    """Explicit live setup; recorded composition keeps its original strict path."""
+    policy = FoundersPolicy.from_scenario(scenario)
+    manager = FoundersSetupManager(engine.state, engine.definitions)
+    manager.initialize_or_validate_live(policy)
+    manager.restore_live_resource_vocabulary(policy, engine.resource_definitions)
+    engine.register_system(
+        FoundersLiveCompositionSystem(engine.state, engine.definitions, policy),
+        key="canonical_founders",
+    )
+    return policy
+
+
+def prepare_founders_world(
+    engine: SimulationEngine, scenario: LoadedScenario
+) -> FoundersPolicy:
+    """Install canonical domain setup in the recorded preparation order."""
+    policy = FoundersPolicy.from_scenario(scenario)
+    manager = FoundersSetupManager(engine.state, engine.definitions)
+    manager.initialize_or_validate(policy)
+    manager.restore_resource_vocabulary(policy, engine.resource_definitions)
+    engine.register_system(
+        FoundersCompositionSystem(engine.state, engine.definitions, policy),
+        key="canonical_founders",
+    )
+    return policy
+
+
 class FoundersPreparation:
     def __init__(self, tape: ProposalTape) -> None:
         if tape is None:
@@ -197,14 +247,7 @@ class FoundersPreparation:
         self._replay: ReplayPreparation | None = None
 
     def prepare(self, engine: SimulationEngine, scenario: LoadedScenario) -> None:
-        policy = FoundersPolicy.from_scenario(scenario)
-        manager = FoundersSetupManager(engine.state, engine.definitions)
-        manager.initialize_or_validate(policy)
-        manager.restore_resource_vocabulary(policy, engine.resource_definitions)
-        engine.register_system(
-            FoundersCompositionSystem(engine.state, engine.definitions, policy),
-            key="canonical_founders",
-        )
+        policy = prepare_founders_world(engine, scenario)
         replay = ReplayPreparation(self._tape, FoundersOfferProvider(engine, policy))
         replay.prepare(engine, scenario)
         self._replay = replay

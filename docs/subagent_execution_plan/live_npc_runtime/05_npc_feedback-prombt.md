@@ -10,9 +10,28 @@ are fixed architecture. No worker scope/architecture choices; ask root if a nece
 producer seam is missing. Preserve recorded payloads/order and existing assertions.
 
 Allowed: runtime/founders.py, feedback.py, newtest_runtime_founders_feedback.py,
-founders/runtime.py and __init__.py extraction/export only, NPCboundarydoc,05report.
+founders/runtime.py and __init__.py shared/live plumbing, founders/setup.py named
+live-only validation/composition API per October21 amendment, NPCboundarydoc,05report.
 No cognition API changes, runtime/__init__ exports, provider/driver/CLI/browser work.
 TDD using task24/.venv Python and PYTHONPATH=src, focusedsuites/scopedlint/format/
 whitespace only. No VCS/fullmake/examples/subagents/dependencies. Return stable
 uncommitted diff and canonicalreport with RED/GREEN commands/counts, warnings,
 selfreview and unresolved concerns. Root owns review/fullgates/commits/integration.
+
+October21 owner resume: prior hold lifted by root's exact live-validation amendment.
+Read amended task fully before edits. Named live manager/factory/provider/system paths
+must preserve recorded strictness, static canonical records and full manager validation;
+allow founder lifecycle/placement and valid extra need/goal/objective records only as
+specified. Historical canonical attachments remain unchanged, not eligibility grants.
+Complete the partial report's adversarial tests/documentation/lint before reviewready.
+No source commits or scope expansion; root owns independent review/full gates.
+
+Root correction after checking ScheduleSystem: malformed NPCIdentity is structural
+corruption and must fail live validation/preparation closed; do not bypass scheduling
+or silently continue the world with corrupt identity. This supersedes the earlier
+ineligible-only ruling, not legitimate lifecycle/placement eligibility.
+
+Semantic cursor ownership: hash base.driver_cursor as supplied semanticJSON; no
+heuristic filtering/guessed schema. LN06 owns closed semantic cursor exclusion of
+operational IDs/time/revisions/counts and sourceidentity in replay. Test checkpoint
+revision renumber equality and semanticcursor drift mismatch.
