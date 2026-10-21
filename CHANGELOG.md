@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Reconcile LN05 live-only founders validation before resuming implementation;
+  recorded validation remains strict and the task draft remains unreviewed.
+
 - Save the usage checkpoint after reviewed LN04 integration. LN05 remains an
   unreviewed task draft pending a live-only founders-validation contract correction.
 

@@ -32,18 +32,16 @@ and paused partial preparation with activity/error properties. LN05–LN09 remai
 authorized. LN05 exact contract/prompt/report is prepared from1e46cc9; no
 implementation completed/approved yet. Draft source/tests/report are uncommitted
 in .worktrees/live-npc-ln05 on codex/live-npc-ln05-npc-feedback, baseee13490.
-Worker is stopped; checkpoint finalized at16%five-hourremaining.
-Partial checks:67baseline,2missingmoduleRED,11draft/recorded passes,8unresolved
-Ruff findings. Drafttar/SHA/report backups are in current-plan ignored evidence. No LN05
-independent review/fullmake/examples/root canonical gates have run. Consult the
-TASK WORKTREE05report for partial evidence; integration's placeholder report is not
-a delivery claim. Before resuming, root must reconcile FoundersSetupManager's strict
-live-founder/original-placement validation with required live relocation/destruction
-across setup/restore/domain/offer paths. Amend05task/prompt BEFORE scope expansion;
-no setup.py edit is currently authorized. Preserve strict recorded behavior. The
-checkpoint hold is copied into both exact task/prompt files. Its narrow feedback
-investigation is saved in ignored current-plan evidence. Do not redispatch completed
-LN01–LN04. No workers should remain active after this checkpoint. Read current03contract for archive layout, inputs, lease,
+Owner resumed again with99%five-hourremaining. Main/milestone/tag/feature remote
+refs and all8draft hashes verified. Root reconciled the strict live-founder/original-
+placement validation seam before expanding05scope: read the October21 amendment in
+05task/prompt (copied to both checkouts). Named live manager/factory/provider/system
+paths permit founder lifecycle/placement and valid extra need/goal/objective records;
+canonical invariants/full manager checks/recorded strictness and historical roster
+attachments remain. Prior hold lifted; partial draft has not passed independent
+review/root gates. Resume original worker, complete its report's adversarial cases,
+documentation and8lint findings. Current-plan ledger/evidence is authoritative.
+Do not repeat completedLN01–LN04. Read current03contract for archive layout, inputs, lease,
 parent continuity and explicit mirror source context. Do not repeat LN01/LN02.
 Preserve all branches/checkouts and current-plan ignored SDD ledger/evidence under
 .worktrees/live-npc-runtime/.superpowers/sdd/2026-10-19-live-npc-runtime. Owner-local

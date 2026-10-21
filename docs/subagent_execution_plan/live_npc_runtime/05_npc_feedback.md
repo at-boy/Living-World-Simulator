@@ -1,23 +1,8 @@
 # Task 5 / LN05 — Tape-independent founders and qualitative feedback
 
-Status: usage checkpoint before review; draft implementation preserved uncommitted.
-Root must reconcile the live-validation seam below before further implementation.
-Original contract based on reviewed integration1e46cc9; capability remains unapproved.
-
-## October21 checkpoint hold
-
-Worker draft uncovered that FoundersSetupManager.validate_existing rejects destroyed
-bound founders and compares their placements to the fixed initial layout. Both
-FoundersOfferProvider.offers and shared restoration invoke this strict validation.
-This conflicts with the required live relocation/destruction cases. Root verified
-setup.py validate_existing and provider call sites. Do not bypass validation or
-relax recorded behavior. Before resuming implementation, root must investigate the
-exact live setup/restore/domain/offer paths, resolve a live-only validation policy,
-and amend this task plus saved prompt BEFORE expanding the allowed file boundary.
-No founders/setup.py change is authorized by this checkpoint. Current feedback draft
-is incomplete, unreviewed and has not passed root gates. Existing recorded contracts
-and hashes remain mandatory. This hold supersedes any decision-complete wording
-elsewhere in the original material until root reconciliation is recorded.
+Status: owner resumed; live-validation seam reconciled below before further work.
+Uncommitted draft remains unreviewed. Contract based on integration1e46cc9 plus
+checkpointd05b98b; October21 live-policy amendment supersedes the earlier hold.
 
 ## Global Constraints
 
@@ -277,7 +262,8 @@ content failure, provider JSON excluding every engine-only field, and candidate 
 
 Allowed worker files ONLY: new runtime/founders.py, runtime/feedback.py,
 tests/test_runtime_founders_feedback.py; existing founders/runtime.py and
-founders/__init__.py for shared setup extraction/export only;
+founders/__init__.py for shared setup and explicit live entry points;
+founders/setup.py for the bounded live-only validation/composition amendment below;
 docs/npc_information_boundary.md for this pathway; this task's05report.
 The original optional cognition/npc_context.py and cognition/retrieval.py edits are
 unnecessary and NOT authorized by this narrower contract. No runtime/__init__.py
@@ -289,3 +275,88 @@ context and engine-only DecisionInput/handlers/cursor. Worker uses focused TDD,
 scoped lint/format and whitespace, no subagents/VCS/full gates. Root owns independent
 review, corrections, full task and merged make, separate examples, whitespace,
 canonical recorded CLI matrices, common-doc updates, commits/push/integration.
+
+## October21 resumed live-validation amendment
+
+Root traced setup/restore/domain/offer paths and independently reconciled a narrow
+read-only investigation. The previous checkpoint hold is lifted ONLY under these
+explicit decisions. Do not weaken recorded validation or duplicate its full logic.
+
+### Named live manager API
+
+Add FoundersSetupManager.initialize_or_validate_live(policy), validate_live(policy),
+compose_live(policy), restore_live_resource_vocabulary(policy,registry). Existing
+strict methods keep their signatures, default behavior and recorded caller paths.
+Refactor shared private validation/composition/resource registration as necessary
+so checks remain in one authoritative manager rather than copied implementations.
+
+Fresh live initialization uses the existing strict initialization atomically; only
+an already-present canonical setup marker permits subsequent live validation.
+Live validation remains read-only. Live compose uses the same shadow/validate/
+attachment/validate/commit transaction and unchanged manager mutation ownership.
+
+Live validation retains canonical policy manifest, required definition vocabulary,
+exact scenario label bindings/identity/type, canonical setup marker, external
+reference configuration, canonical domain definitions and state presence. Camp and
+valley remain live and retain their canonical placements. Canonical definition
+values must match exactly; a missing/changed canonical goal/objective/need cannot
+be hidden by unrelated records. All existing whole-world spatial/work/need/goal/
+stage/consequence manager validation remains enabled. Additional valid need/goal/
+objective records are permitted for any manager-supported owner; compare canonical
+records as required subsets rather than global exact sets. Validate every additional
+record through the existing manager. No new arbitrary stage program, consequence
+policy or external reference is allowed by this amendment.
+
+Only bound founders may be destroyed, moved within/outside camp, transitively
+contained, or unplaced. Preserve their entity IDs, definition keys and historical
+bindings; no deletion/recreation/repair. A malformed NPCIdentity makes that founder
+ineligible for cognition rather than blocking another valid founder; structural
+entity/domain/serialization corruption still fails closed. Feedback independently
+requires live entity, valid identity and actual same-camp placement. Generic new
+NPCs remain outside the fixed founder schedule. Restore and finalize must not
+mutate these dynamic facts or restore original placements.
+
+Attachments retain the existing fixed canonical founder roster as historical
+occupants and existing creation/validation semantics, including when one founder
+is destroyed before or after attachment creation. This engine-only recipe is not
+a current population/cognition eligibility grant. Do not add demographic housing
+migration, remove historical edges, change population truth or infer perception
+from attachments. This is an explicit bounded compatibility decision; dynamic
+housing membership would be a separate domain task.
+
+### Explicit live runtime entry points
+
+Keep prepare_founders_world and recorded FoundersPreparation/FoundersOfferProvider
+caller behavior unchanged. Add prepare_live_founders_world(engine,scenario) using
+the named live setup/vocabulary/compose path and expose it through founders package.
+Add FoundersLiveOfferProvider (shared offer construction; live validation only).
+Use an explicit live domain-system variant or private shared system implementation
+selected solely by prepare_live_founders_world; existing recorded factory/system
+behavior remains strict. No duplicated offer or domain-composition implementation.
+FoundersLiveComposition initialize/restore/finalize and FoundersFeedback eligibility/
+offers must consistently use the live paths, never strict recorded re-entry.
+
+Legitimate work-target changes use existing manager cancellation/terminalization
+and replacement work creation, producing a new work ID. There is no arbitrary
+work-target update API; do not add one or directly replace frozen definitions.
+
+### Required regression evidence and boundary
+
+Before implementation, observe RED for live restore/step/offer preparation after
+manager-owned founder relocation, unplacement and destruction; then GREEN with
+unchanged recorded strict rejection and canonical hashes. Include extra valid
+need/goal/objective records accepted but hidden where unrelated, malformed extras
+rejected by their managers, malformed founder identity excluded, changed canonical
+records rejected, camp/valley placement/liveness still protected, and before/after
+shelter attachment destruction compatibility. Verify exact saved-world equality
+on restore and repeated finalize plus source/offer updates after legitimate work
+replacement. No existing recorded assertions may be weakened.
+
+The allowed file boundary now additionally includes src/living_world/founders/setup.py
+for this amendment, and founders/runtime.py plus founders/__init__.py for the shared
+setup extraction AND explicit live system/provider/factory wiring. All other allowed
+paths/non-goals remain as above. No cognition, scenario, spatial, entity, work,
+consequence, archive schema, provider, CLI or browser source changes. Ask root before
+any further architectural scope expansion. Complete the report's outstanding cursor/
+provenance/boundary/budget cases and documentation; clear the eight reported lint
+findings before readiness. Worker report is historical partial evidence, not approval.

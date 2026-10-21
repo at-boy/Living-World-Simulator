@@ -1188,3 +1188,14 @@ stopped for usage headroom; no LN05 completion or live-model claim.
 Final checkpoint evidence: draft+recorded11passed; Ruff8unresolved. All childagents
 completed/stopped. Drafttar/SHA/report saved in ignored current-plan workspace;
 source remains uncommitted/unreviewed. Final usage16%remaining before checkpointpush.
+
+
+## 2026-10-21 — LN05 owner resume and live-validation reconciliation
+
+Fresh allowance99%remaining; release/feature remote refs and all eight draft backup
+hashes verified. Narrow read-only probe traced setup, restore, domain, offers and
+attachments. Root amended exact05task/prompt before adding setup.py to scope:
+named live validation allows founder lifecycle/placement and valid extra domain
+records while retaining canonical subsets, camp/valley, manager checks and historical
+attachment roster. Explicit live factory/provider/system keeps recorded calls strict.
+No additional product source edits before worker resume; partial evidence preserved.
