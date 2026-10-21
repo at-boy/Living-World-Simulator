@@ -12,3 +12,5 @@ No subagents, stage/commit/merge/push, full make/examples, dependencies or unrel
 edits. Report command/result/counts, meaningful warnings, self-review and concerns
 in 03_attempt_lifecycle-report.md; root independently reviews and runs full gates.
 Return stable uncommitted DONE/NEEDS_CONTEXT/BLOCKED with concise evidence.
+
+Root clarification: retain_inputs self-owns a short lease or borrows an already current-thread-owned lease without reacquiring/releasing it. Add owned_by_current_thread(ref) on AttemptLease and require it for open_attempt(read_only=False). Explicit competing handles remain nonreentrant; inherited-process bookkeeping is invalid.

@@ -135,8 +135,12 @@ Attempts/open/discovery perform no mkdir, lock creation, manifest rewrite, SQLit
 migration/recovery write or historical mutation. open_attempt validates ref/metadata
 and returns AttemptArchive.open with requested read_only. A complete checkpoint
 requires valid retained inputs; pre-world attempts may have no inputs yet. Explicit
-writer callers must hold AttemptLease throughout mutation; read-only open takes
-no ownership. Querying history never marks a live owned attempt interrupted.
+open_attempt(read_only=False) callers must hold AttemptLease throughout mutation;
+verify current-process/current-thread ownership before returning a writer. Read-only
+open takes no ownership. Mutating retain_inputs owns a short lease when called alone;
+when its caller already owns that same attempt on this process/thread, it borrows
+that lease without reacquiring or releasing it. reserve/fork likewise own their
+creation mutations; no helper releases a caller-owned lease. Querying history never marks a live owned attempt interrupted.
 
 ### Retained reconstruction inputs
 
@@ -191,13 +195,18 @@ A child setup error after reservation leaves its attempt inspectable; do not del
 
 ### Exclusive ownership
 
-AttemptLease(ref) acquire/release plus static is_owned(ref)->bool and context-manager
+AttemptLease(ref) acquire/release plus static is_owned(ref)->bool,
+static owned_by_current_thread(ref)->bool, and context-manager
 support. Acquire uses existing fixed owner.lock and nonblocking stdlib advisory
 exclusive locking (fcntl POSIX, msvcrt Windows), owned descriptor retained until
 release. Only acquire may create a missing lock for a valid reservation. Probe opens
 an existing lock and never writes bytes/mtime; absent lock means unowned, errors raise.
 Handle same-process competing handles and real competing processes, release after
 unexpected exit, double release, closed resources and inherited-process misuse.
+Track own active handle identity in process/thread-local ownership bookkeeping;
+this is not a persisted PID death heuristic. Reject an independent competing acquire
+even on the same thread. owned_by_current_thread checks the retained live handle
+and process/thread identity; inherited bookkeeping alone is not ownership.
 No PID metadata or process killing. Browser/history reads never acquire run ownership.
 Windows implementation should be isolated; report if only POSIX was exercised.
 
