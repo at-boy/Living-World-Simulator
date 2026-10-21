@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add tape-independent founders composition and bounded, holder-scoped qualitative
+  feedback with durable provenance and live lifecycle validation (LN05). Actual
+  Ollama decisions and public runtime entrypoints follow in later tasks.
+
 - Pin semantic driver-cursor ownership for restart/replay fingerprints; provider
   cursor production remains LN06 and operational metadata stays separate.
 

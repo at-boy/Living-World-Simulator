@@ -10,7 +10,7 @@ Integration: codex/live-npc-runtime; no main/tag/milestone changes.
 | LN02 | Complete; delivery099da9a; task/merged gates passed | [plan](02_archive_store.md), [saved prompt](02_archive_store-prombt.md), [report](02_archive_store-report.md) |
 | LN03 | Complete; deliverye3d9faf; task/merged gates passed | [plan](03_attempt_lifecycle.md), [saved prompt](03_attempt_lifecycle-prombt.md), [report](03_attempt_lifecycle-report.md) |
 | LN04 | Complete; delivery906d23f; task/merged gates passed | [plan](04_safe_controller.md), [saved prompt](04_safe_controller-prombt.md), [report](04_safe_controller-report.md) |
-| LN05 | Resumed; amended live-validation contract; draft implementation pending review | [plan](05_npc_feedback.md), [saved prompt](05_npc_feedback-prombt.md), [report](05_npc_feedback-report.md) |
+| LN05 | Complete; delivery64efb1e; task/merged gates1652/10,39examples passed | [plan](05_npc_feedback.md), [saved prompt](05_npc_feedback-prombt.md), [report](05_npc_feedback-report.md) |
 | LN06–LN09 | Authorized sequence, not yet dispatched | See the master plan; materialize each exact contract just before execution. |
 
 Execution uses one bounded worker and an independent reviewer per nontrivial task,

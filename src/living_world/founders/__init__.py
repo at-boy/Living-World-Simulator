@@ -9,6 +9,8 @@ from .runtime import (
     FoundersPreparation,
     founders_terminal_conditions,
     load_inspection_engine,
+    prepare_founders_world,
+    prepare_live_founders_world,
 )
 from .setup import FoundersSetupManager
 
@@ -23,4 +25,6 @@ __all__ = [
     "founders_terminal_conditions",
     "load_inspection_engine",
     "materialize_founders_assets",
+    "prepare_founders_world",
+    "prepare_live_founders_world",
 ]

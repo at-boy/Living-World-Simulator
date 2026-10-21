@@ -1,7 +1,7 @@
 # Task 5 / LN05 — Tape-independent founders and qualitative feedback
 
-Status: owner resumed; live-validation seam reconciled below before further work.
-Uncommitted draft remains unreviewed. Contract based on integration1e46cc9 plus
+Status: complete; independent review and task/merged validation passed; integration
+evidence is recorded in05report. Contract based on integration1e46cc9 plus
 checkpointd05b98b; October21 live-policy amendment supersedes the earlier hold.
 
 ## Global Constraints
@@ -41,7 +41,7 @@ RED must identify the absent required behavior; GREEN means all selected tests p
 with no unexplained new skips. For later regressions, use the smallest named failing
 case until the complete focused set is ready.
 
-- [ ] **Step 1 — Add failing tests** `test_only_local_alive_founders_receive_camp_changes`,
+- [x] **Step 1 — Add failing tests** `test_only_local_alive_founders_receive_camp_changes`,
   `test_private_cognition_and_hidden_goal_values_never_enter_requests`,
   `test_unchanged_perception_does_not_duplicate_memory_on_restart`,
   `test_actor_result_is_observed_on_next_decision`, `test_context_budget_is_deterministic`.
@@ -56,16 +56,16 @@ case until the complete focused set is ready.
   ```
   Pin the exact qualitative templates in test fixtures: communicated mandate,
   local need/work projections and acted/witnessed results; no invented numeric prose.
-- [ ] **Step 2 — Observe RED** new feedback tests using managers to create actual
+- [x] **Step 2 — Observe RED** new feedback tests using managers to create actual
   placements/goals/observations/memories, including another holder's secret records.
-- [ ] **Step 3 — Implement** explicitly communicate mandate once; living same-camp
+- [x] **Step 3 — Implement** explicitly communicate mandate once; living same-camp
   eligibility via existing spatial manager, owned result feedback and observed camp
   changes only. Use existing typed goal/need/work/external projections and validate
   every final prose through NPCInformationBoundary. Record observations/memories
   through managers. Mandate uses CognitiveSalience(0.8, is_core=True); changed local
   conditions/results use CognitiveSalience(0.6, is_core=False). Never fabricate a
   perception from an unseen dispatch or another NPC's uncommunicated model speech.
-- [ ] **Step 4 — Implement bounded retrieval** expose core mandate plus at most eight
+- [x] **Step 4 — Implement bounded retrieval** expose core mandate plus at most eight
   current perceptions and eight distinct holder-owned retrieved memories total
   (deduplicate core/retrieved overlap). Stable salience/newest/tie-ID ordering; prune
   oldest optional entries until injected request_size <=16000 characters; retain required
@@ -73,10 +73,10 @@ case until the complete focused set is ready.
   Fingerprint exact serialized input and base world/driver identity; exclude actor_id,
   operational UUID/time from provider JSON. Capture staged provenance in archive cursor
   for deterministic reconstruction, not extra untyped world attributes.
-- [ ] **Step 5 — Observe GREEN** context/information-boundary/perception/feedback suites;
+- [x] **Step 5 — Observe GREEN** context/information-boundary/perception/feedback suites;
   relocate or destroy an actor between boundaries, mutate a work target legitimately,
   and assert changed safe inputs/offers. Recorded fixtures/hashes stay unchanged.
-- [ ] **Step 6 — Review, root gates and commit** `feat: feed observed world changes into NPC decisions`.
+- [x] **Step 6 — Review, root gates and commit** `feat: feed observed world changes into NPC decisions`.
 
 
 ## Root-resolved architecture and scope

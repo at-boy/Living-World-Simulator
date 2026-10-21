@@ -1,4 +1,4 @@
-# Continuation brief — LN04 complete, LN05 usage checkpoint, October 21, 2026
+# Continuation brief — LN05 complete, October 21, 2026
 
 ## Current design scope and authority
 
@@ -29,19 +29,13 @@ exact CLI matrices on task and merged trees. Delivery906d23f is pushed; integrat
 is1e46cc9. Read04contract/prompt
 for explicit producer/protocol amendments, especially model-free driver initialize
 and paused partial preparation with activity/error properties. LN05–LN09 remain
-authorized. LN05 exact contract/prompt/report is prepared from1e46cc9; no
-implementation completed/approved yet. Draft source/tests/report are uncommitted
-in .worktrees/live-npc-ln05 on codex/live-npc-ln05-npc-feedback, baseee13490.
-Owner resumed again with99%five-hourremaining. Main/milestone/tag/feature remote
-refs and all8draft hashes verified. Root reconciled the strict live-founder/original-
-placement validation seam before expanding05scope: read the October21 amendment in
-05task/prompt (copied to both checkouts). Named live manager/factory/provider/system
-paths permit founder lifecycle/placement and valid extra need/goal/objective records;
-canonical invariants/full manager checks/recorded strictness and historical roster
-attachments remain. Prior hold lifted; partial draft has not passed independent
-review/root gates. Resume original worker, complete its report's adversarial cases,
-documentation and8lint findings. Current-plan ledger/evidence is authoritative.
-Do not repeat completedLN01–LN04. Read current03contract for archive layout, inputs, lease,
+authorized. LN05 live composition/qualitative feedback passed independent SPEC/QUALITY review
+with NO SUBSTANTIVE FINDINGS and root task/mergedmake1652/10,39examples plus exact CLI
+matrices. Delivery64efb1e is pushed; integration completes with05report. Its exact
+live-validation contract and semantic cursor obligation bind LN06. Root splits
+LN06 into bounded recovery-journal producer(6a), then provider/broker/live/replay(6b).
+No6implementation yet; draft6acontract and probe notes in current-plan workspace. Do not repeat
+completedLN01–LN05. Read current03contract for archive layout, inputs, lease,
 parent continuity and explicit mirror source context. Do not repeat LN01/LN02.
 Preserve all branches/checkouts and current-plan ignored SDD ledger/evidence under
 .worktrees/live-npc-runtime/.superpowers/sdd/2026-10-19-live-npc-runtime. Owner-local

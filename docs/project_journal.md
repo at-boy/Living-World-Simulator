@@ -1210,3 +1210,17 @@ LN05 semantic-cursor clarification: feedback hashes opaque semantic JSON, exclud
 checkpoint revision itself. LN06 defines the closed producer cursor and source
 identity; operational IDs/time/revisions/request counts must remain outside it.
 Task/prompt synchronized before final worker tests; no new source scope.
+
+
+## 2026-10-21 — LN05 reviewed task validation
+
+Named live-only setup/compose/offer validation supports founder lifecycle/placement
+without weakening recorded behavior. Holder feedback, provenance, cursor/restart
+and bounded context passed independent spec/quality review with no findings. Root
+taskmake1652/10,39examples and exact fresh/resume matrices passed. Separate/merged
+evidence recorded in05report; no provider-inference success claim.
+
+LN05 delivery64efb1e pushed. Mergedmake1652/10,39examples and exact canonicalCLI
+matrices passed after root-owned documentation conflict resolution; source unchanged.
+Feature integration completes with05report; owner edit/release refs preserved.
+LN06 recovery-journal/inference split keeps bounded producer and consumer reviews.

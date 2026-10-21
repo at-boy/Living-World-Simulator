@@ -10,10 +10,10 @@ is owner-approved for execution. LN01 shared snapshot codec has passed independe
 delivery5f64056 and integration evidence are recorded in its report. LN02 atomic archive storage delivery099da9a passed independent review and task/merged
 gates1503/10 with39examples; integration evidence is recorded in its report. LN03 attempt catalog/input ownership deliverye3d9faf passed independent review and
 task/merged gates1551/10,39examples. LN04 safe controller/recorded adapter passed independent review and task/merged gates1589/10,39examples; delivery906d23f and integration evidence in04report.
-LN05 draft is preserved uncommitted in .worktrees/live-npc-ln05; no independent
-review/root gates. Root reconciled strict founders setup versus live relocation/destruction in the
-October21 task amendment before resuming implementation; recorded validation unchanged. Corrupt NPC identity remains fail-closed under existing scheduling.
-LN06 must supply a closed semantic cursor excluding operational IDs/time/counts.
+LN05 feedback/live composition passed independent review and task gates1652/10,
+39examples; delivery64efb1e and task/merged evidence recorded in05report.
+LN06 is split into journal/recovery producer integrity (6a) and inference/replay (6b);
+it remains incomplete until both are reviewed. LN06 must supply a closed semantic cursor excluding operational IDs/time/counts.
 Live decisions, public control entrypoints and automatically archived entrypoints remain later tasks. Future player commands remain separate from current operator controls.
 
 
