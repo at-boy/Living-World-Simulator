@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add discoverable isolated attempts, exact retained inputs, exclusive leases,
+  selected-checkpoint child attempts and safe compatibility exports (LN03).
+
 - Resume the approved runtime sequence with LN03 attempt/input/ownership/mirror
   contract; no new runtime capability claimed by this planning checkpoint.
 

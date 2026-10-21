@@ -1,6 +1,6 @@
 # Task 3 / LN03 — Attempt lifecycle and retained reconstruction inputs
 
-Status: owner-authorized execution resumed October21,2026, base0d04c1b.
+Status: complete, reviewed deliverye3d9faf; task/merged validation passed.
 Root owns architecture/review/full gates/VCS/integration. LN01/LN02 are complete.
 Binding [design](../../superpowers/specs/2026-10-19-live-npc-runtime-design.md) and
 [master plan](../../superpowers/plans/2026-10-19-live-npc-runtime.md).
@@ -45,7 +45,7 @@ RED must identify the absent required behavior; GREEN means all selected tests p
 with no unexplained new skips. For later regressions, use the smallest named failing
 case until the complete focused set is ready.
 
-- [ ] **Step 1 — Add failing tests** unique attempt reservation; parent fork exact
+- [x] **Step 1 — Add failing tests** unique attempt reservation; parent fork exact
   checkpoint; immutable assets with relative definition paths, spaces/?/#; missing or
   modified assets; path traversal/symlink escape; active-owner versus abandoned run;
   pre-world setup failure; mirror failure after archive commit.
@@ -55,9 +55,9 @@ case until the complete focused set is ready.
   assert catalog.open_attempt(parent.attempt_id).checkpoint(3) == before
   assert catalog.open_attempt(child.attempt_id).checkpoint().snapshot == before.snapshot
   ```
-- [ ] **Step 2 — Observe RED** run the two new archive test modules. Use two actual
+- [x] **Step 2 — Observe RED** run the two new archive test modules. Use two actual
   processes for exclusive ownership and unexpected exit, temporary filesystem roots.
-- [ ] **Step 3 — Implement** reserve UUID attempt directory before loading scenario;
+- [x] **Step 3 — Implement** reserve UUID attempt directory before loading scenario;
   default catalog root `$XDG_STATE_HOME/living-world/runs` or
   `~/.local/state/living-world/runs`, explicit root overrides; no code mutates HOME.
   Capture asset bytes by SHA256 into local content-addressed storage and preserve
@@ -66,17 +66,17 @@ case until the complete focused set is ready.
   stdlib advisory file locking (fcntl on POSIX, msvcrt on Windows); never infer death
   from PID alone. Read discovery derives interrupted status if no owner exists;
   GET/discovery does not persist that status or mutate historical DB bytes.
-- [ ] **Step 4 — Implement compatibility export** backup/construct a standalone
+- [x] **Step 4 — Implement compatibility export** backup/construct a standalone
   closed temp SQLite snapshot in destination directory, fsync then atomic replace.
   Validate source/destination alias and reject overwrite of archive-owned storage.
   Parent input is read-only; child copies its exact world/cursors and reconstruction
   inputs with parent reference. New-model config requires explicit child settings;
   no archived model/token credentials inferred. Mirror failure is `ArchiveMirrorError`
   with archived attempt/revision and failed destination, never a fake rollback claim.
-- [ ] **Step 5 — Observe GREEN** test all catalog/mirror cases, including destination
+- [x] **Step 5 — Observe GREEN** test all catalog/mirror cases, including destination
   disk/permission failure after archive commit and corrupt/future-format input. Views
   preserve DB bytes; failed-before-initialization attempts show `tick=None`.
-- [ ] **Step 6 — Review, root gates and commit** `feat: retain discoverable isolated run attempts`.
+- [x] **Step 6 — Review, root gates and commit** `feat: retain discoverable isolated run attempts`.
 
 
 ## Root-resolved storage contract
@@ -135,8 +135,12 @@ Attempts/open/discovery perform no mkdir, lock creation, manifest rewrite, SQLit
 migration/recovery write or historical mutation. open_attempt validates ref/metadata
 and returns AttemptArchive.open with requested read_only. A complete checkpoint
 requires valid retained inputs; pre-world attempts may have no inputs yet. Explicit
-writer callers must hold AttemptLease throughout mutation; read-only open takes
-no ownership. Querying history never marks a live owned attempt interrupted.
+open_attempt(read_only=False) callers must hold AttemptLease throughout mutation;
+verify current-process/current-thread ownership before returning a writer. Read-only
+open takes no ownership. Mutating retain_inputs owns a short lease when called alone;
+when its caller already owns that same attempt on this process/thread, it borrows
+that lease without reacquiring or releasing it. reserve/fork likewise own their
+creation mutations; no helper releases a caller-owned lease. Querying history never marks a live owned attempt interrupted.
 
 ### Retained reconstruction inputs
 
@@ -191,13 +195,18 @@ A child setup error after reservation leaves its attempt inspectable; do not del
 
 ### Exclusive ownership
 
-AttemptLease(ref) acquire/release plus static is_owned(ref)->bool and context-manager
+AttemptLease(ref) acquire/release plus static is_owned(ref)->bool,
+static owned_by_current_thread(ref)->bool, and context-manager
 support. Acquire uses existing fixed owner.lock and nonblocking stdlib advisory
 exclusive locking (fcntl POSIX, msvcrt Windows), owned descriptor retained until
 release. Only acquire may create a missing lock for a valid reservation. Probe opens
 an existing lock and never writes bytes/mtime; absent lock means unowned, errors raise.
 Handle same-process competing handles and real competing processes, release after
 unexpected exit, double release, closed resources and inherited-process misuse.
+Track own active handle identity in process/thread-local ownership bookkeeping;
+this is not a persisted PID death heuristic. Reject an independent competing acquire
+even on the same thread. owned_by_current_thread checks the retained live handle
+and process/thread identity; inherited bookkeeping alone is not ownership.
 No PID metadata or process killing. Browser/history reads never acquire run ownership.
 Windows implementation should be isolated; report if only POSIX was exercised.
 

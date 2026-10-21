@@ -8,8 +8,8 @@ Ollama, qualitative feedback, controls and automatic run archives. Written desig
 is owner-approved and pushed; the [implementation plan](superpowers/plans/2026-10-19-live-npc-runtime.md)
 is owner-approved for execution. LN01 shared snapshot codec has passed independent review and task/merged validation;
 delivery5f64056 and integration evidence are recorded in its report. LN02 atomic archive storage delivery099da9a passed independent review and task/merged
-gates1503/10 with39examples; integration evidence is recorded in its report. LN03 attempt catalog/input ownership contract is prepared after owner resume;
-implementation/review/gates pending.
+gates1503/10 with39examples; integration evidence is recorded in its report. LN03 attempt catalog/input ownership deliverye3d9faf passed independent review and
+task/merged gates1551/10,39examples. LN04 safe controller is next.
 Live decisions, controls and automatically archived entrypoints are not yet implemented. Future player commands remain separate from current operator controls.
 
 

@@ -20,9 +20,10 @@ and exact recorded CLI matrices passed. See
 [LN02 report](../subagent_execution_plan/live_npc_runtime/02_archive_store-report.md).
 
 Owner resumed October21 with99%five-hourremaining. Feature0d04c1b and preserved
-main/milestone/tag verified live. LN03 exact contract/prompt/report prepared;
-implementation pending root dispatch in .worktrees/live-npc-ln03. LN04–LN09 remain
-authorized and unstarted. Read current03contract for archive layout, inputs, lease,
+main/milestone/tag verified live. LN03 deliverye3d9faf is pushed and integrated by the merge containing its report.
+Independent review and task/merged gates1551/10,39examples, separateexamples/
+whitespace andexact recorded CLI checks passed. Consult03report for evidence.
+LN04 safe controller is next; LN04–LN09 remain authorized and unstarted. Read current03contract for archive layout, inputs, lease,
 parent continuity and explicit mirror source context. Do not repeat LN01/LN02.
 Preserve all branches/checkouts and current-plan ignored SDD ledger/evidence under
 .worktrees/live-npc-runtime/.superpowers/sdd/2026-10-19-live-npc-runtime. Owner-local
