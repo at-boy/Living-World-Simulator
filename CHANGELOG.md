@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Prepare LN04 controller contract, including explicit initial progress, pause/retry
+  states and truthful command admission; implementation and public controls pending.
+
 - Add discoverable isolated attempts, exact retained inputs, exclusive leases,
   selected-checkpoint child attempts and safe compatibility exports (LN03).
 

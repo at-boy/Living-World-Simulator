@@ -9,7 +9,8 @@ Integration: codex/live-npc-runtime; no main/tag/milestone changes.
 | LN01 | Complete; delivery5f64056; task/merged gates passed | [plan](01_world_snapshot_codec.md), [saved prompt](01_world_snapshot_codec-prombt.md), [report](01_world_snapshot_codec-report.md) |
 | LN02 | Complete; delivery099da9a; task/merged gates passed | [plan](02_archive_store.md), [saved prompt](02_archive_store-prombt.md), [report](02_archive_store-report.md) |
 | LN03 | Complete; deliverye3d9faf; task/merged gates passed | [plan](03_attempt_lifecycle.md), [saved prompt](03_attempt_lifecycle-prombt.md), [report](03_attempt_lifecycle-report.md) |
-| LN04–LN09 | Authorized sequence, not yet dispatched | See the master plan; materialize each exact contract just before execution. |
+| LN04 | Contract prepared; implementation pending | [plan](04_safe_controller.md), [saved prompt](04_safe_controller-prombt.md), [report](04_safe_controller-report.md) |
+| LN05–LN09 | Authorized sequence, not yet dispatched | See the master plan; materialize each exact contract just before execution. |
 
 Execution uses one bounded worker and an independent reviewer per nontrivial task,
 root-owned architecture/gates/integration, durable checkouts and truthful reports.
