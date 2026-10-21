@@ -1161,3 +1161,13 @@ all3canonicalCLIhashes/fresh/resume passed. Separate/merged evidence recorded in
 LN04 delivery906d23f pushed; merged1589/10,39examples andcanonicalCLIchecks
 passed. Integration completes with this report. Owner edit and main/tag/milestone
 unchanged. LN05 feedback contract follows; live provider functionality remains later.
+
+
+## 2026-10-21 — LN05 feedback contract
+
+LN04 integration1e46cc9 is reviewed/pushed. Narrow read-only investigation resolved
+existing typed projection and provenance seams. Root specifies scenario-bound live
+local founders, communicated mandate allowlist, holder-only observation/memory
+cursor, generic own results, deterministic8+8 selection/full-body sizing and shared
+setup extraction preserving recorded order. Exact05contract/prompt/report prepared;
+no LN05 source change or live-model claim.

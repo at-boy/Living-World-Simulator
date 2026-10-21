@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Prepare LN05 tape-independent founders/feedback contract with explicit local
+  visibility, provenance, retrieval and context budgets; implementation pending.
+
 - Add a single-owner runtime controller with durable pause/step/stop/retry state,
   immutable complete-revision publication and exact recorded founders adapters (LN04).
   Public entrypoints, browser controls and Ollama decisions follow in later tasks.

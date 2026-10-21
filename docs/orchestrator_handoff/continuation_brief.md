@@ -29,9 +29,9 @@ exact CLI matrices on task and merged trees. Delivery906d23f is pushed; integrat
 completes with the merge containing04report. Read04contract/prompt
 for explicit producer/protocol amendments, especially model-free driver initialize
 and paused partial preparation with activity/error properties. LN05–LN09 remain
-authorized and unstarted. A narrow LN05 feedback-seam investigation is saved in
-the ignored current-plan workspace; root must resolve its exact contract before
-implementation. Read current03contract for archive layout, inputs, lease,
+authorized. LN05 exact contract/prompt/report is prepared from1e46cc9; no
+implementation dispatched yet. Its narrow feedback-seam investigation is saved in
+the ignored current-plan workspace; root-resolved contract is authoritative. Read current03contract for archive layout, inputs, lease,
 parent continuity and explicit mirror source context. Do not repeat LN01/LN02.
 Preserve all branches/checkouts and current-plan ignored SDD ledger/evidence under
 .worktrees/live-npc-runtime/.superpowers/sdd/2026-10-19-live-npc-runtime. Owner-local
