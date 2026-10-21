@@ -1224,3 +1224,13 @@ LN05 delivery64efb1e pushed. Mergedmake1652/10,39examples and exact canonicalCLI
 matrices passed after root-owned documentation conflict resolution; source unchanged.
 Feature integration completes with05report; owner edit/release refs preserved.
 LN06 recovery-journal/inference split keeps bounded producer and consumer reviews.
+
+
+## 2026-10-21 — LN06a producer contract
+
+LN05 integrationf13641e passed all reviewed task/merged gates. Narrow archive probe
+found missing committed-outcome enforcement and parent prefix bounds. Root splits
+original authorized LN06 into6a storage integrity then6b provider/live/replay, keeping
+master plan/owner edit unchanged. Exact6a contract/prompt/report defines immutable
+journal access, optional sealedparent metadata, validated imports and action atomicity
+before implementation. No model calls or product source edits at this checkpoint.

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Define bounded LN06a journal/recovery integrity before provider integration:
+  committed action linkage, sealed parent history and truthful response reuse.
+  Contract only; no provider capability claimed.
+
 - Add tape-independent founders composition and bounded, holder-scoped qualitative
   feedback with durable provenance and live lifecycle validation (LN05). Actual
   Ollama decisions and public runtime entrypoints follow in later tasks.

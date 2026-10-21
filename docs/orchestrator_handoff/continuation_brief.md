@@ -31,10 +31,12 @@ for explicit producer/protocol amendments, especially model-free driver initiali
 and paused partial preparation with activity/error properties. LN05–LN09 remain
 authorized. LN05 live composition/qualitative feedback passed independent SPEC/QUALITY review
 with NO SUBSTANTIVE FINDINGS and root task/mergedmake1652/10,39examples plus exact CLI
-matrices. Delivery64efb1e is pushed; integration completes with05report. Its exact
+matrices. Delivery64efb1e is pushed; integration isf13641e. Its exact
 live-validation contract and semantic cursor obligation bind LN06. Root splits
 LN06 into bounded recovery-journal producer(6a), then provider/broker/live/replay(6b).
-No6implementation yet; draft6acontract and probe notes in current-plan workspace. Do not repeat
+LN06a exact contract/prompt/report prepared fromf13641e; implementation pending.
+Read it for the expanded archive producer boundary, sealed prefix and truthful
+import/action audit rules. Probe/candidate notes are ignored evidence, not taskauthority. Do not repeat
 completedLN01–LN05. Read current03contract for archive layout, inputs, lease,
 parent continuity and explicit mirror source context. Do not repeat LN01/LN02.
 Preserve all branches/checkouts and current-plan ignored SDD ledger/evidence under
