@@ -1,6 +1,23 @@
 # Task 5 / LN05 — Tape-independent founders and qualitative feedback
 
-Status: owner-authorized; decision-complete contract from reviewed integration1e46cc9.
+Status: usage checkpoint before review; draft implementation preserved uncommitted.
+Root must reconcile the live-validation seam below before further implementation.
+Original contract based on reviewed integration1e46cc9; capability remains unapproved.
+
+## October21 checkpoint hold
+
+Worker draft uncovered that FoundersSetupManager.validate_existing rejects destroyed
+bound founders and compares their placements to the fixed initial layout. Both
+FoundersOfferProvider.offers and shared restoration invoke this strict validation.
+This conflicts with the required live relocation/destruction cases. Root verified
+setup.py validate_existing and provider call sites. Do not bypass validation or
+relax recorded behavior. Before resuming implementation, root must investigate the
+exact live setup/restore/domain/offer paths, resolve a live-only validation policy,
+and amend this task plus saved prompt BEFORE expanding the allowed file boundary.
+No founders/setup.py change is authorized by this checkpoint. Current feedback draft
+is incomplete, unreviewed and has not passed root gates. Existing recorded contracts
+and hashes remain mandatory. This hold supersedes any decision-complete wording
+elsewhere in the original material until root reconciliation is recorded.
 
 ## Global Constraints
 

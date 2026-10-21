@@ -16,3 +16,8 @@ TDD using task24/.venv Python and PYTHONPATH=src, focusedsuites/scopedlint/forma
 whitespace only. No VCS/fullmake/examples/subagents/dependencies. Return stable
 uncommitted diff and canonicalreport with RED/GREEN commands/counts, warnings,
 selfreview and unresolved concerns. Root owns review/fullgates/commits/integration.
+
+October21 checkpoint hold: STOP implementation pending root reconciliation of strict
+FoundersSetupManager.validate_existing versus live relocation/destruction. Do not
+relax recorded validation or expand scope. Root must amend task/prompt before work
+resumes; preserve unreviewed draft and current test evidence in05report.

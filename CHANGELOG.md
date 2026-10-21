@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Save the usage checkpoint after reviewed LN04 integration. LN05 remains an
+  unreviewed task draft pending a live-only founders-validation contract correction.
+
 - Prepare LN05 tape-independent founders/feedback contract with explicit local
   visibility, provenance, retrieval and context budgets; implementation pending.
 

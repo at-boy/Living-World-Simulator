@@ -10,7 +10,10 @@ is owner-approved for execution. LN01 shared snapshot codec has passed independe
 delivery5f64056 and integration evidence are recorded in its report. LN02 atomic archive storage delivery099da9a passed independent review and task/merged
 gates1503/10 with39examples; integration evidence is recorded in its report. LN03 attempt catalog/input ownership deliverye3d9faf passed independent review and
 task/merged gates1551/10,39examples. LN04 safe controller/recorded adapter passed independent review and task/merged gates1589/10,39examples; delivery906d23f and integration evidence in04report.
-LN05 exact feedback contract is prepared; implementation/review/gates pending.
+LN05 draft is preserved uncommitted in .worktrees/live-npc-ln05; no independent
+review/root gates. Before further implementation, reconcile strict founders setup
+validation with required live relocation/destruction and amend task/prompt scope;
+keep recorded validation unchanged.
 Live decisions, public control entrypoints and automatically archived entrypoints remain later tasks. Future player commands remain separate from current operator controls.
 
 

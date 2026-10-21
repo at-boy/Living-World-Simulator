@@ -1171,3 +1171,20 @@ local founders, communicated mandate allowlist, holder-only observation/memory
 cursor, generic own results, deterministic8+8 selection/full-body sizing and shared
 setup extraction preserving recorded order. Exact05contract/prompt/report prepared;
 no LN05 source change or live-model claim.
+
+
+## 2026-10-21 — Usage checkpoint after LN04
+
+LN04 delivery906d23f/integration1e46cc9 are pushed with independent review and full
+task/merged1589/10,39examples and exact fresh/resume matrices. LN05 contractee13490
+is pushed; partial source/test draft remains uncommitted in its durable taskworktree.
+Worker reported baseline67passes, expected missingmoduleRED2 and skeletonGREEN2;
+substantial adversarial tests/review/root gates remain. Root verified strict setup
+validation rejects destroyed founders and changed placements; live composition and
+offer provider use it. Task/prompt hold requires root live-only policy reconciliation
+before any scope expansion. Preserve recorded behavior and all checkouts. Worker
+stopped for usage headroom; no LN05 completion or live-model claim.
+
+Final checkpoint evidence: draft+recorded11passed; Ruff8unresolved. All childagents
+completed/stopped. Drafttar/SHA/report saved in ignored current-plan workspace;
+source remains uncommitted/unreviewed. Final usage16%remaining before checkpointpush.

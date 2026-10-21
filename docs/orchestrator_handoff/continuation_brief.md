@@ -1,4 +1,4 @@
-# Continuation brief — live runtime LN04 reviewed, October 21, 2026
+# Continuation brief — LN04 complete, LN05 usage checkpoint, October 21, 2026
 
 ## Current design scope and authority
 
@@ -26,12 +26,24 @@ whitespace andexact recorded CLI checks passed. Consult03report for evidence.
 LN03 integration5544fdb is complete. LN04 controller/recorded adapter has independent
 SPEC/QUALITY PASS after two corrections and root task gates1589/10,39examples plus
 exact CLI matrices on task and merged trees. Delivery906d23f is pushed; integration
-completes with the merge containing04report. Read04contract/prompt
+is1e46cc9. Read04contract/prompt
 for explicit producer/protocol amendments, especially model-free driver initialize
 and paused partial preparation with activity/error properties. LN05–LN09 remain
 authorized. LN05 exact contract/prompt/report is prepared from1e46cc9; no
-implementation dispatched yet. Its narrow feedback-seam investigation is saved in
-the ignored current-plan workspace; root-resolved contract is authoritative. Read current03contract for archive layout, inputs, lease,
+implementation completed/approved yet. Draft source/tests/report are uncommitted
+in .worktrees/live-npc-ln05 on codex/live-npc-ln05-npc-feedback, baseee13490.
+Worker is stopped; checkpoint finalized at16%five-hourremaining.
+Partial checks:67baseline,2missingmoduleRED,11draft/recorded passes,8unresolved
+Ruff findings. Drafttar/SHA/report backups are in current-plan ignored evidence. No LN05
+independent review/fullmake/examples/root canonical gates have run. Consult the
+TASK WORKTREE05report for partial evidence; integration's placeholder report is not
+a delivery claim. Before resuming, root must reconcile FoundersSetupManager's strict
+live-founder/original-placement validation with required live relocation/destruction
+across setup/restore/domain/offer paths. Amend05task/prompt BEFORE scope expansion;
+no setup.py edit is currently authorized. Preserve strict recorded behavior. The
+checkpoint hold is copied into both exact task/prompt files. Its narrow feedback
+investigation is saved in ignored current-plan evidence. Do not redispatch completed
+LN01–LN04. No workers should remain active after this checkpoint. Read current03contract for archive layout, inputs, lease,
 parent continuity and explicit mirror source context. Do not repeat LN01/LN02.
 Preserve all branches/checkouts and current-plan ignored SDD ledger/evidence under
 .worktrees/live-npc-runtime/.superpowers/sdd/2026-10-19-live-npc-runtime. Owner-local
