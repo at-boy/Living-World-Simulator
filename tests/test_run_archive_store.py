@@ -1,6 +1,7 @@
 """Transactional, immutable run archive contracts."""
 
 import sqlite3
+from dataclasses import asdict
 from pathlib import Path
 from typing import Literal
 from uuid import uuid4
@@ -15,6 +16,7 @@ from living_world.archives import (
     AttemptConfig,
     AttemptRef,
     Checkpoint,
+    CommandReceipt,
     JournalEntry,
 )
 from living_world.repositories.world_snapshot import WorldSnapshot, encode_world
@@ -669,3 +671,38 @@ def test_each_terminal_audit_has_its_own_private_lifecycle_link(tmp_path: Path) 
     archive.close()
     with AttemptArchive.open(identity, read_only=True) as reader:
         assert len(reader.lifecycle()) == 3
+
+
+def test_control_actual_admission_version_survives_future_envelope(
+    tmp_path: Path,
+) -> None:
+    archive = AttemptArchive.create(ref(tmp_path), config())
+    requested = JournalEntry(
+        "control_requested",
+        {
+            "envelope": {
+                "command_id": "future",
+                "action": "step",
+                "expected_state_version": 999,
+            },
+            "admitted_state_version": 3,
+        },
+    )
+    archive.record((requested,))
+    assert archive.command("future").state_version == 3
+    rejected = CommandReceipt("future", "rejected", 3, 0, "stale_state_version")
+    archive.record((JournalEntry("control_resolved", {"receipt": asdict(rejected)}),))
+    with AttemptArchive.open(archive.ref, read_only=True) as reopened:
+        assert reopened.command("future") == rejected
+
+
+def test_recorded_zero_tick_configuration_and_other_modes() -> None:
+    assert (
+        AttemptConfig(
+            "recorded", "test", 1, "test", {"limits": {"max_ticks": 0}}
+        ).settings["limits"]["max_ticks"]
+        == 0
+    )
+    for mode in ("ollama", "journal_replay"):
+        with pytest.raises(ArchiveFormatError):
+            AttemptConfig(mode, "test", 1, "test", {"limits": {"max_ticks": 0}})

@@ -1149,3 +1149,11 @@ LN03 integration5544fdb passed all gates. Before controller delegation, root res
 missing initial-cursor/pause/operational protocol seams, future-version receipt truth,
 recorded zero-tick compatibility and postcommit audit failure publication. Exact
 producer corrections are bounded in task/prompt; no controller source implemented.
+
+
+## 2026-10-21 — LN04 reviewed task validation
+
+Controller and recorded adapter passed independent spec/quality review after two
+corrected shutdown/memory-retention defects. Root taskmake1589/10,39examples and
+all3canonicalCLIhashes/fresh/resume passed. Separate/merged evidence recorded in
+04report after completion. No live-model or public control entrypoint claim.

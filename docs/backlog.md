@@ -9,8 +9,8 @@ is owner-approved and pushed; the [implementation plan](superpowers/plans/2026-1
 is owner-approved for execution. LN01 shared snapshot codec has passed independent review and task/merged validation;
 delivery5f64056 and integration evidence are recorded in its report. LN02 atomic archive storage delivery099da9a passed independent review and task/merged
 gates1503/10 with39examples; integration evidence is recorded in its report. LN03 attempt catalog/input ownership deliverye3d9faf passed independent review and
-task/merged gates1551/10,39examples. LN04 safe-controller contract is prepared; implementation/review/gates pending.
-Live decisions, controls and automatically archived entrypoints are not yet implemented. Future player commands remain separate from current operator controls.
+task/merged gates1551/10,39examples. LN04 safe controller/recorded adapter passed independent review and task gates1589/10,39examples; integration evidence follows in04report.
+Live decisions, public control entrypoints and automatically archived entrypoints remain later tasks. Future player commands remain separate from current operator controls.
 
 
 October19 owner integration: milestone6bf4c63 merged to main092715c and tagged

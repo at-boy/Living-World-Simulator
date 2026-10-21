@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add a single-owner runtime controller with durable pause/step/stop/retry state,
+  immutable complete-revision publication and exact recorded founders adapters (LN04).
+  Public entrypoints, browser controls and Ollama decisions follow in later tasks.
+
 - Prepare LN04 controller contract, including explicit initial progress, pause/retry
   states and truthful command admission; implementation and public controls pending.
 
