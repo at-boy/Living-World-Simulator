@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Resume the approved runtime sequence with LN03 attempt/input/ownership/mirror
+  contract; no new runtime capability claimed by this planning checkpoint.
+
 - Add the reviewed atomic archive store: complete checkpoints, progress cursors,
   validated decision/control journals and read-only historical loading (LN02).
   Runtime entrypoints and browser controls follow in later tasks.

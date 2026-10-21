@@ -1,4 +1,4 @@
-# Continuation brief — live runtime LN01–LN02 complete; usage checkpoint, October 19, 2026
+# Continuation brief — live runtime resumed at LN03, October 21, 2026
 
 ## Current design scope and authority
 
@@ -19,14 +19,15 @@ findings; task and merged make each1503/10,39examples, separate examples/whitesp
 and exact recorded CLI matrices passed. See
 [LN02 report](../subagent_execution_plan/live_npc_runtime/02_archive_store-report.md).
 
-Stopped at owner usage guard with16%remaining before final recording. No active
-implementation/reviewer; LN03–LN09 remain authorized and unstarted. Next: refresh
-Git/usage, read the approved design/plan and materialize LN03 attempt lifecycle
-contract/prompt/report; create .worktrees/live-npc-ln03 from current integration.
-Do not repeat LN01/LN02. Preserve all branches/worktrees and ignored current-plan
-SDD ledger/evidence under .worktrees/live-npc-runtime/.superpowers/sdd/
-2026-10-19-live-npc-runtime. Owner-local master-plan text edit remains uncommitted,
-byte-verified against owner-plan-local-edit.patch; preserve it exactly.
+Owner resumed October21 with99%five-hourremaining. Feature0d04c1b and preserved
+main/milestone/tag verified live. LN03 exact contract/prompt/report prepared;
+implementation pending root dispatch in .worktrees/live-npc-ln03. LN04–LN09 remain
+authorized and unstarted. Read current03contract for archive layout, inputs, lease,
+parent continuity and explicit mirror source context. Do not repeat LN01/LN02.
+Preserve all branches/checkouts and current-plan ignored SDD ledger/evidence under
+.worktrees/live-npc-runtime/.superpowers/sdd/2026-10-19-live-npc-runtime. Owner-local
+master-plan edit matches saved owner-plan-local-edit.patch and stays uncommitted.
+Stop with buffer BEFORE five-hourremaining drops below10%; no resets authorized.
 
 Recommended method: bounded sequential workers, independent per-task reviews,
 root-owned integration and final whole-branch review. LN01–LN09 specify exact
