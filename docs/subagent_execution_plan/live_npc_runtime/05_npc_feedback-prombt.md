@@ -25,3 +25,8 @@ allow founder lifecycle/placement and valid extra need/goal/objective records on
 specified. Historical canonical attachments remain unchanged, not eligibility grants.
 Complete the partial report's adversarial tests/documentation/lint before reviewready.
 No source commits or scope expansion; root owns independent review/full gates.
+
+Root correction after checking ScheduleSystem: malformed NPCIdentity is structural
+corruption and must fail live validation/preparation closed; do not bypass scheduling
+or silently continue the world with corrupt identity. This supersedes the earlier
+ineligible-only ruling, not legitimate lifecycle/placement eligibility.

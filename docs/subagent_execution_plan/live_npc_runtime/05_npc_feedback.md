@@ -309,9 +309,10 @@ policy or external reference is allowed by this amendment.
 
 Only bound founders may be destroyed, moved within/outside camp, transitively
 contained, or unplaced. Preserve their entity IDs, definition keys and historical
-bindings; no deletion/recreation/repair. A malformed NPCIdentity makes that founder
-ineligible for cognition rather than blocking another valid founder; structural
-entity/domain/serialization corruption still fails closed. Feedback independently
+bindings; no deletion/recreation/repair. Malformed NPCIdentity is structural world corruption: fail live setup/restore/
+preparation closed with safe errors, matching the existing ScheduleSystem validation.
+Do not weaken or bypass engine scheduling to skip a corrupt identity. Valid founder
+destruction/relocation/unplacement remains supported. Feedback independently
 requires live entity, valid identity and actual same-camp placement. Generic new
 NPCs remain outside the fixed founder schedule. Restore and finalize must not
 mutate these dynamic facts or restore original placements.
@@ -346,7 +347,7 @@ Before implementation, observe RED for live restore/step/offer preparation after
 manager-owned founder relocation, unplacement and destruction; then GREEN with
 unchanged recorded strict rejection and canonical hashes. Include extra valid
 need/goal/objective records accepted but hidden where unrelated, malformed extras
-rejected by their managers, malformed founder identity excluded, changed canonical
+rejected by their managers, malformed founder identity safely rejected, changed canonical
 records rejected, camp/valley placement/liveness still protected, and before/after
 shelter attachment destruction compatibility. Verify exact saved-world equality
 on restore and repeated finalize plus source/offer updates after legitimate work

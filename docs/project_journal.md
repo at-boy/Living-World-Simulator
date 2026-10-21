@@ -1199,3 +1199,9 @@ named live validation allows founder lifecycle/placement and valid extra domain
 records while retaining canonical subsets, camp/valley, manager checks and historical
 attachment roster. Explicit live factory/provider/system keeps recorded calls strict.
 No additional product source edits before worker resume; partial evidence preserved.
+
+LN05 seam clarification: focused RED exposed ScheduleSystem structural NPC identity
+validation. Root checked its existing contract: malformed identity fails world setup/
+restore/preparation closed; no scheduling bypass or new subsystem scope. Exact task/
+prompt amended before correction. Valid lifecycle/placement cases remain GREEN3 in
+worker evidence, not yet reviewed.

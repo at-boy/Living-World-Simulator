@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Clarify that corrupt NPC identity fails closed under existing scheduling rules;
+  live relocation, unplacement and destruction remain within LN05.
+
 - Reconcile LN05 live-only founders validation before resuming implementation;
   recorded validation remains strict and the task draft remains unreviewed.
 
