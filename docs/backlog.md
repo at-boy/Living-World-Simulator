@@ -13,6 +13,7 @@ task/merged gates1551/10,39examples. LN04 safe controller/recorded adapter passe
 LN05 draft is preserved uncommitted in .worktrees/live-npc-ln05; no independent
 review/root gates. Root reconciled strict founders setup versus live relocation/destruction in the
 October21 task amendment before resuming implementation; recorded validation unchanged. Corrupt NPC identity remains fail-closed under existing scheduling.
+LN06 must supply a closed semantic cursor excluding operational IDs/time/counts.
 Live decisions, public control entrypoints and automatically archived entrypoints remain later tasks. Future player commands remain separate from current operator controls.
 
 

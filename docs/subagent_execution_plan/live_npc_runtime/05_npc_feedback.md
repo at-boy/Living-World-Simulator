@@ -361,3 +361,10 @@ consequence, archive schema, provider, CLI or browser source changes. Ask root b
 any further architectural scope expansion. Complete the report's outstanding cursor/
 provenance/boundary/budget cases and documentation; clear the eight reported lint
 findings before readiness. Worker report is historical partial evidence, not approval.
+
+Root semantic-cursor clarification: LN05 hashes base.driver_cursor as opaque semantic
+JSON, without heuristic key filtering or inventing another task's schema. LN06 must
+define a closed semantic cursor excluding request/attempt UUIDs, walltime, operational
+revision and request counts; replay supplies the source semantic identity. Checkpoint
+revision itself is excluded by LN05, so equivalent childrev0 and parentrevN snapshots/
+cursors yield the same fingerprint. Changing semantic cursor data changes identity.

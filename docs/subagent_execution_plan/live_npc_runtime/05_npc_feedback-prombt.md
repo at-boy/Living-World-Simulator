@@ -30,3 +30,8 @@ Root correction after checking ScheduleSystem: malformed NPCIdentity is structur
 corruption and must fail live validation/preparation closed; do not bypass scheduling
 or silently continue the world with corrupt identity. This supersedes the earlier
 ineligible-only ruling, not legitimate lifecycle/placement eligibility.
+
+Semantic cursor ownership: hash base.driver_cursor as supplied semanticJSON; no
+heuristic filtering/guessed schema. LN06 owns closed semantic cursor exclusion of
+operational IDs/time/revisions/counts and sourceidentity in replay. Test checkpoint
+revision renumber equality and semanticcursor drift mismatch.

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Pin semantic driver-cursor ownership for restart/replay fingerprints; provider
+  cursor production remains LN06 and operational metadata stays separate.
+
 - Clarify that corrupt NPC identity fails closed under existing scheduling rules;
   live relocation, unplacement and destruction remain within LN05.
 

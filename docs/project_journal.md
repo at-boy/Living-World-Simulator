@@ -1205,3 +1205,8 @@ validation. Root checked its existing contract: malformed identity fails world s
 restore/preparation closed; no scheduling bypass or new subsystem scope. Exact task/
 prompt amended before correction. Valid lifecycle/placement cases remain GREEN3 in
 worker evidence, not yet reviewed.
+
+LN05 semantic-cursor clarification: feedback hashes opaque semantic JSON, excluding
+checkpoint revision itself. LN06 defines the closed producer cursor and source
+identity; operational IDs/time/revisions/request counts must remain outside it.
+Task/prompt synchronized before final worker tests; no new source scope.
