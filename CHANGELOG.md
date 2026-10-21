@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Save the owner-requested pause after completed LN05; LN06a archive changes
+  remain staged and uncommitted pending independent review and root gates.
+
 - Define bounded LN06a journal/recovery integrity before provider integration:
   committed action linkage, sealed parent history and truthful response reuse.
   Contract only; no provider capability claimed.

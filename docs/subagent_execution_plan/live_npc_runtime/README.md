@@ -11,7 +11,7 @@ Integration: codex/live-npc-runtime; no main/tag/milestone changes.
 | LN03 | Complete; deliverye3d9faf; task/merged gates passed | [plan](03_attempt_lifecycle.md), [saved prompt](03_attempt_lifecycle-prombt.md), [report](03_attempt_lifecycle-report.md) |
 | LN04 | Complete; delivery906d23f; task/merged gates passed | [plan](04_safe_controller.md), [saved prompt](04_safe_controller-prombt.md), [report](04_safe_controller-report.md) |
 | LN05 | Complete; delivery64efb1e; task/merged gates1652/10,39examples passed | [plan](05_npc_feedback.md), [saved prompt](05_npc_feedback-prombt.md), [report](05_npc_feedback-report.md) |
-| LN06a | Recovery-journal producer contract prepared | [plan](06a_journal_recovery.md), [saved prompt](06a_journal_recovery-prombt.md), [report](06a_journal_recovery-report.md) |
+| LN06a | Owner pause: staged/uncommitted;167focused; independent review/root gates pending | [plan](06a_journal_recovery.md), [saved prompt](06a_journal_recovery-prombt.md), [report](06a_journal_recovery-report.md) |
 | LN06b | Authorized provider/live/replay stage; contract follows6a | Original LN06; no implementation yet |
 | LN07–LN09 | Authorized sequence, not yet dispatched | See the master plan; materialize each exact contract just before execution. |
 

@@ -1234,3 +1234,17 @@ original authorized LN06 into6a storage integrity then6b provider/live/replay, k
 master plan/owner edit unchanged. Exact6a contract/prompt/report defines immutable
 journal access, optional sealedparent metadata, validated imports and action atomicity
 before implementation. No model calls or product source edits at this checkpoint.
+
+
+## 2026-10-21 — Owner-requested pause
+
+Owner requested pausing soon. LN05 delivery64efb1e/integrationf13641e is pushed,
+independently reviewed with task/merged1652/10,39examples and exact recorded
+fresh/resume matrices. LN06a contract2325e3d is pushed; worker completed167focused
+tests with clean scoped lint/format/whitespace. Its exact9files remain STAGED and
+UNCOMMITTED in .worktrees/live-npc-ln06a on codex/live-npc-ln06a-journal-recovery.
+No independent6areview, fullmake/examples/rootmatrix or implementationcommit.
+Current-plan ignored evidence contains reviewpackage plus tar/SHA/stageddiff/report
+backup. All childagents completed/stopped; no6areviewer dispatched. Resume at fresh
+6areview only after ownerresume and currentusage/Git/hash check. No provider capability
+claimed; LN06b remains unstarted and candidate notes are not an implementation contract.

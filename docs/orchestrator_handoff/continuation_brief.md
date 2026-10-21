@@ -1,4 +1,4 @@
-# Continuation brief — LN05 complete, October 21, 2026
+# Continuation brief — owner pause after LN05, LN06a review-ready, October 21, 2026
 
 ## Current design scope and authority
 
@@ -34,7 +34,15 @@ with NO SUBSTANTIVE FINDINGS and root task/mergedmake1652/10,39examples plus exa
 matrices. Delivery64efb1e is pushed; integration isf13641e. Its exact
 live-validation contract and semantic cursor obligation bind LN06. Root splits
 LN06 into bounded recovery-journal producer(6a), then provider/broker/live/replay(6b).
-LN06a exact contract/prompt/report prepared fromf13641e; implementation pending.
+LN06a contract2325e3d is pushed. Owner requested pause; worker is DONE/stopped.
+Exact9files remain STAGED/UNCOMMITTED in .worktrees/live-npc-ln06a on
+codex/live-npc-ln06a-journal-recovery, HEAD2325e3d. Worker evidence167focused,
+scopedRuff/Black/whitespace clean. No6a independent review/fullrootgates/sourcecommit.
+Read TASK WORKTREE06a_report, not integration placeholder. Reviewpackage
+ln06a-review-1.diff and tar/SHA/stageddiff/report backups are in ignored current-plan
+workspace. No6areviewer was dispatched; next action after ownerresume/currentusage/
+Git/hash verification is fresh SPEC/QUALITY review of this stable diff. All children
+are completed/stopped. LN06b unstarted; its candidate notes are NOT a taskcontract.
 Read it for the expanded archive producer boundary, sealed prefix and truthful
 import/action audit rules. Probe/candidate notes are ignored evidence, not taskauthority. Do not repeat
 completedLN01–LN05. Read current03contract for archive layout, inputs, lease,
