@@ -1,7 +1,9 @@
 # LN08a — Reusable read-only revision inspection
 
 Status: authorized bounded LN08 inspection stage after reviewed LN07e integration
-`bca7e0b`; root pre-dispatch decision review complete, implementation next.
+`bca7e0b`; implementation independently reviewed and task-validated; delivery and
+feature integration complete by the merge containing this status. Deliverybcbff33;
+task/merged2087/10,39examples/exactacceptance PASS.
 
 **Goal:** share the existing GET-only world routes and reconstruct exact, pinned
 archived checkpoints without a runner, provider or source write.
@@ -158,3 +160,34 @@ No new HTTP endpoint, asset, provider call, owner mutation or NPC context this s
 Original LN08 security/UI/serve acceptance is explicitly deferred, not claimed done.
 Spec coverage and five review risks map to named tests. Boundary and interfaces are
 complete; unresolved architectural choice must be sent to root before worker edits.
+
+
+## Root router compatibility clarification
+
+Verified installed FastAPI0.143.3 include_router stores lazy _IncludedRouter objects
+without .path; this breaks the existing flat create_app route inventory. Preserve
+that existing inventory without weakening its test: attach the reusable router's
+concrete APIRoutes to application.router.routes during create_app construction,
+before requests/OpenAPI generation. The router has no startup/lifespan handlers
+and root mount needs no prefix/dependencies; reuse its handlers, no copied route
+definitions. Do not call private FastAPI internals or alter installed dependencies.
+Later prefixed consumers use normal include_router. Verify root and prefixed actual
+GET JSON, OpenAPI world paths, names/order and readonly method behavior. Existing
+root dependency behavior remains valid; no dynamic post-start route mutation.
+
+
+## Root review correction1 — truthful failed reservation without world
+
+Public catalog.reserve can raise typed ArchiveReservationError after saving valid
+attempt.json with reservation_error=archive_initialization_failed, before any world.
+Public catalog.attempts validates this metadata and reports failed/last_revision=None/
+archive_initialization_failed. This safely identified failed-uninitialized attempt
+has no complete world, so RevisionSource.open must return not_found, not classify
+it as corrupted because open_attempt rejects the deliberate failure marker. Keep
+physical archive_invalid/archive_incomplete handling unchanged; do not treat every
+failed lifecycle/no-revision row as missing rather than corruption. Use existing
+public validated catalog semantics, no source repair or private catalog production API.
+Required genuine RED/GREEN producer regressions: reserve publication raises before
+DB creation; and create empty valid DB then raise before reserve return. Preserve
+typed ref/validated failure metadata, fixed not_found, all source bytes/mtime/entries
+unchanged, no reconstruction/runner/provider call. Seven worker paths unchanged.

@@ -170,3 +170,39 @@ mode. Canonical setup must already exist. `create_app(engine)` then exposes the
 same GET-only API against that fixed snapshot. CLI serving binds only loopback;
 install the optional `server` extra. Ordinary same-engine live reads remain
 available by supplying the running engine directly to `create_app`.
+
+## Reusable pinned revision inspection
+
+`living_world.api.inspection_routes.create_inspection_router(resolve_inspector)`
+provides the same ordered GET-only world routes as `create_app(engine)`. Its
+synchronous resolver receives the request (including prefix path parameters),
+runs in FastAPI's worker thread and resolves one `WorldInspector` per request.
+Trusted embedding applications can mount the router under a server-chosen
+prefix. Health and packaged inspector routes remain with `create_app`; packaged
+assets and their default API URLs are unchanged. Root construction attaches the
+router's concrete routes before startup to preserve the existing flat route
+inventory with FastAPI's lazy router inclusion.
+
+`living_world.api.revision_source.RevisionSource(catalog, controller=None)` opens
+an explicit `(attempt_id, revision)` through `.open(...)`. Each miss validates
+the archive and reconstructs the exact retained world with the shared pure
+archived-inspection loader. No runner, provider, lease, controller publication
+cache, initialization or step is used. The optional controller association is
+validated but does not grant access to live owner state. Failed, stopped and
+interrupted attempts remain inspectable when they have a complete valid world.
+
+The per-source cache serializes reconstruction and retains at most eight exact
+revision views in least-recently-used order. Views are detached from the live
+owner and immutable by convention; callers must use the read-only inspector
+interface. Failed misses preserve valid cached entries. A cached view remains
+the previously validated revision; external archive tampering is detected on a
+later miss, without source repair. Archive handles are closed before returning.
+
+`RevisionSourceError.code` and its message are fixed safe values: `not_found`
+for invalid identity/revision, unknown attempts or absent checkpoints/worlds;
+`archive_invalid` for identified corrupt/incomplete archives, duplicate identity,
+inaccessible catalog storage or failed exact reconstruction. The source never
+creates missing storage or changes source files, timestamps or directory entries.
+These are Python producer interfaces only. Authenticated operator routes,
+controls, browser prefix wiring and CLI serve lifecycle remain later LN08 stages;
+this change exposes no new HTTP route or NPC context.

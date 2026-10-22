@@ -1,3 +1,23 @@
+# Continuation brief — LN08a integrated, October 23, 2026
+
+## Current authoritative state
+
+LN07e deliveryf9281f9/integrationbca7e0b complete. LN08a deliverybcbff33 independently
+reviewed afterone correctedP2; task and mergedmake2087/10existing skips,39examples/
+actualChrome,separateexamples/whitespace/exactcanonical26readablearchives/newCLI7cases
+PASS. Clean featuremerge contains this brief; source exactdelivery unchanged after
+review/gates. Do not redispatch completed implementation/review/task gates.
+Allbranches/worktrees/owner-localedit preserved; protected refs unchanged.
+
+Next finalize exact LN08b local authenticated operatorAPI contract, then isolated
+worker/review/fullgates. Root prepared full8b-contract-draft.md andpromptdraft in
+ignoredSDDworkspace; they are preparation, not sourceauthority untilfinalized/committed.
+Browserassets/CLIserve remain later8stages, realOllama/operatoracceptance LN09.
+OriginalLN07 incomplete until finalserve acceptance. Stop withheadroom BEFORE10%
+five-hourremaining; no reset.
+
+## Prior context
+
 # Continuation brief — LN07e integrated; LN08a authorized, October 23, 2026
 
 ## Current authoritative state

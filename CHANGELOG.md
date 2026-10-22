@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Integrate reviewed read-only revision inspection after repeated full, browser
+  and retained CLI acceptance checks.
+
+- Reuse existing world GET routes and inspect exact archived revisions through a
+  bounded read-only cache, preserving existing inspector behavior and failed runs.
+
 - Define reusable read-only world routes and exact archived revision inspection
   with bounded caching, preserving the existing inspector.
 

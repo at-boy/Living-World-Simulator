@@ -30,7 +30,8 @@ validated delivery1c2c2fc; task/merged2018/10,39examples/exactmatrix passed) and
 task/merged2055/10,39examples,canonical26archives/newCLI7cases passed; integrated
 by the merge containing this entry).
 Runtime service and archived CLI are integrated. LN08a exact reusable-router/revision
-source contract is root-reviewed; implementation next. Auth/control API, browser/serve
+source deliverybcbff33 integrated after independent review and task/merged2087/10,
+39examples/exactacceptance. Authenticated operatorAPI exactcontract next. Auth/control API, browser/serve
 and installed-Ollama acceptance remain upcoming.
 legacy generic/taped/raw-database CLI and injected engine/state-reference hooks must
 remain compatible. Add an explicit archive observer to the existing runner, not a
