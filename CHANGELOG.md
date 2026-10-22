@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Define a bounded recovery correction for validated responses across same-world
+  shutdown checkpoint revisions; source and current-attempt checks remain strict.
+
 - Define LN07a legacy CLI archive observer/session contract, preserving injected
   engine/state-reference behavior and mirror cadence; implementation follows.
 

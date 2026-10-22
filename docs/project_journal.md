@@ -1,5 +1,14 @@
 # Living World Simulator – Project Journal
 
+## LN06c recovery consumer correction — October22,2026
+
+A persistent fake-provider probe used real controller.close and fork(latest). Shutdown
+advanced revision0to1 with identical world/semantic cursors; child unnecessarily made
+2new requests instead of reusing2validated parent responses. Root materialized bounded
+06ccontract: verified external source may alias older base only with exact complete
+world/driver/feedback and <=selectedrevision; local base stays strict. This preserves
+seals/fingerprints/Retry/action authority. No source fix yet; disjoint from LN07a.
+
 ## LN07 bounded compatibility contract — October22,2026
 
 Root splits original LN07 into7a existing-CLI archive producer and7b controller-owned

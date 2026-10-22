@@ -14,7 +14,8 @@ LN05 feedback/live composition passed independent review and task gates1652/10,
 39examples; delivery64efb1e and task/merged evidence recorded in05report.
 LN06a archive delivery6469a38 and LN06b runtime delivery5a3f58a are reviewed and
 integrated; LN06b task/merged gates1758/10,39examples and exact recorded matrices
-passed. Original Task6 is complete. LN07 is split into7a automatically archived legacy CLI and7b controller-owned live/
+passed. Original Task6 delivery is reviewed; consumer integration exposed a bounded06c
+shutdown same-world response-reuse correction, now contracted before live service. LN07 is split into7a automatically archived legacy CLI and7b controller-owned live/
 service/restart entrypoints. Exact7acontract/prompt/report are prepared; implementation
 follows. Original Task7 remains incomplete until both stages.
 legacy generic/taped/raw-database CLI and injected engine/state-reference hooks must

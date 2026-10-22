@@ -95,7 +95,10 @@ archived; legacy mirror semantics are unchanged.
 succeed records attempt_finished and lifecycle completed, or stopped for operator_stop
 (including matching terminal operator_stop); last_revision exact. Failure records
 failed lifecycle/attempt_finished at last complete revision (None before initialworld),
-and candidate_aborted with last revision only for an initialized discarded candidate.
+and candidate_aborted with last revision only for an initialized UNFINISHED runner
+candidate. Track successful observer.finished; a subsequent mirror failure has a
+complete final archived world and must NOT add candidate_aborted. Earlier failed
+step/terminal/finalization candidates may be discarded from their last complete base.
 Do not falsely claim failed attempted tick committed. Normal context exit without
 succeed/fail records interrupted. Settlement idempotent in this session. Cleanup or
 audit failure must not hide original exception; if no prior failure, propagate as
