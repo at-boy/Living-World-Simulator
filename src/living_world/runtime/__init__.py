@@ -13,6 +13,7 @@ from .contracts import (
 )
 from .controller import CommandConflictError, RunController
 from .journal_replay import JournalReplayComposition, JournalReplayDriver
+from .legacy import LegacyArchiveSession, legacy_cursor
 from .ollama_driver import OllamaTickDriver, effective_config_fingerprint
 
 __all__ = [
@@ -24,6 +25,7 @@ __all__ = [
     "DriverCommit",
     "JournalReplayComposition",
     "JournalReplayDriver",
+    "LegacyArchiveSession",
     "OllamaTickDriver",
     "ProviderConfig",
     "RunController",
@@ -33,5 +35,6 @@ __all__ = [
     "TickDriver",
     "TickPreparation",
     "effective_config_fingerprint",
+    "legacy_cursor",
     "provider_config",
 ]

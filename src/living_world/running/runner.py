@@ -55,6 +55,16 @@ class RunResult:
     proposals_finalized: bool | None = None
 
 
+class RunObserver(Protocol):
+    def initialized(
+        self, engine: SimulationEngine, scenario: LoadedScenario
+    ) -> None: ...
+
+    def tick_completed(self, engine: SimulationEngine) -> None: ...
+
+    def finished(self, engine: SimulationEngine, result: RunResult) -> None: ...
+
+
 class ScenarioPreparation(Protocol):
     def prepare(self, engine: SimulationEngine, scenario: LoadedScenario) -> None: ...
 
@@ -93,6 +103,7 @@ class Runner(Protocol):
         *,
         stop_control: StopControl | None = None,
         checkpoint_control: CheckpointControl | None = None,
+        observer: RunObserver | None = None,
     ) -> RunResult: ...
 
 
@@ -146,7 +157,13 @@ class ScenarioRunner:
         *,
         stop_control: StopControl | None = None,
         checkpoint_control: CheckpointControl | None = None,
+        observer: RunObserver | None = None,
     ) -> RunResult:
+        if observer is not None and any(
+            not callable(getattr(observer, name, None))
+            for name in ("initialized", "tick_completed", "finished")
+        ):
+            raise TypeError("Invalid run observer.")
         if not self._engine.persistence_enabled:
             raise RunPersistenceError(
                 "ScenarioRunner requires a persistence-backed engine."
@@ -160,6 +177,7 @@ class ScenarioRunner:
             self._preparation.prepare(self._engine, scenario)
         self._engine._check_failed_tick()
         self._engine._check_replay_preparation()
+        self._observe(observer, "initialized", scenario)
         start_tick = self._engine.state.tick
         tick_limit = self._tick_limit(scenario, configuration)
         completed = 0
@@ -187,6 +205,7 @@ class ScenarioRunner:
                 raise RunSimulationError(
                     f"Simulation failed while advancing tick {self._engine.state.tick}."
                 ) from exc
+            self._observe(observer, "tick_completed")
             completed += 1
             stop_requested = stop_control is not None and stop_control.stop_requested()
             terminal_condition = self._matched_terminal_condition(
@@ -228,6 +247,7 @@ class ScenarioRunner:
                 and reason != StopReason.OPERATOR_STOP
                 and terminal_condition != "operator_stop",
             )
+        self._observe(observer, "finished", result)
         self._save()
         return result
 
@@ -288,6 +308,28 @@ class ScenarioRunner:
             if matched:
                 return name
         return None
+
+    def _observe(
+        self,
+        observer: RunObserver | None,
+        method: str,
+        value: LoadedScenario | RunResult | None = None,
+    ) -> None:
+        if observer is None:
+            return
+        try:
+            if method == "initialized":
+                assert isinstance(value, LoadedScenario)
+                observer.initialized(self._engine, value)
+            elif method == "finished":
+                assert isinstance(value, RunResult)
+                observer.finished(self._engine, value)
+            else:
+                observer.tick_completed(self._engine)
+        except Exception as exc:
+            raise RunPersistenceError(
+                "Could not persist run archive boundary."
+            ) from exc
 
     def _save(self) -> None:
         try:

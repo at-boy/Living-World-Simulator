@@ -42,6 +42,33 @@ def private_name(value: object) -> str:
     return value
 
 
+def _source_definition(base: Path, declaration: object) -> tuple[str, Path]:
+    """Inspect original components before normalizing the private capture role."""
+    if (
+        not isinstance(declaration, str)
+        or not declaration
+        or "\\" in declaration
+        or Path(declaration).is_absolute()
+    ):
+        raise ArchiveFormatError("Expected a relative source definition path.")
+    components: list[str] = []
+    for component in declaration.split("/"):
+        if component in ("", "."):
+            continue
+        if component == "..":
+            if not components:
+                raise ArchiveFormatError(
+                    "Source definition escapes scenario directory."
+                )
+            components.pop()
+        else:
+            components.append(component)
+            # Check before any subsequent '..' could erase a symlink component.
+            safe_path(base.joinpath(*components))
+    name = private_name("/".join(components))
+    return name, safe_path(base / name, regular=True)
+
+
 def atomic_document(path: Path, value: object) -> None:
     safe_path(path)
     descriptor, name = tempfile.mkstemp(prefix=".manifest-", dir=path.parent)
@@ -214,9 +241,8 @@ def retain_inputs(
             raw = yaml.load(scenario_bytes, Loader=_UniqueKeyLoader)
             if not isinstance(raw, dict):
                 raise ArchiveFormatError("Expected scenario mapping.")
-            definition_name = private_name(raw.get("definitions"))
-            definition_path = safe_path(
-                scenario_path.parent / definition_name, regular=True
+            definition_name, definition_path = _source_definition(
+                scenario_path.parent, raw.get("definitions")
             )
             captured = {
                 "scenario/" + scenario_path.name: scenario_bytes,

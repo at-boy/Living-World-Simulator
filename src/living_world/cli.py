@@ -8,6 +8,14 @@ from contextlib import ExitStack
 from pathlib import Path
 from types import FrameType
 
+from living_world import __version__
+from living_world.archives import (
+    ArchiveError,
+    ArchiveReservationError,
+    AttemptConfig,
+    RunCatalog,
+)
+from living_world.definitions.yaml_loader import YAMLWorldDefinitionLoader
 from living_world.founders import (
     FoundersConfigurationError,
     FoundersOutcome,
@@ -27,12 +35,14 @@ from living_world.repositories.sqlite_repository import (
 from living_world.running import (
     RunConfiguration,
     RunPersistenceError,
+    RunResult,
     RunSimulationError,
     ScenarioRunner,
     StopControl,
 )
+from living_world.runtime.legacy import LegacyArchiveSession
 from living_world.scenarios import ScenarioCompatibilityError, ScenarioLoadError
-from living_world.scenarios.scenario import YAMLScenarioLoader
+from living_world.scenarios.scenario import LoadedScenario, YAMLScenarioLoader
 from living_world.simulation.simulation_engine import SimulationEngine
 
 INVALID_CONFIGURATION = 2
@@ -65,6 +75,7 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument(
         "--founders", choices=[outcome.value for outcome in FoundersOutcome]
     )
+    run.add_argument("--archive-root", type=Path)
     run.add_argument("--database", type=Path, default=Path("world.sqlite3"))
     limits = run.add_mutually_exclusive_group()
     limits.add_argument("--max-ticks", type=_non_negative_integer)
@@ -100,61 +111,9 @@ def main(
         previous_handler = signal.signal(signal.SIGINT, control.handle_signal)
     try:
         try:
-            with ExitStack() as assets_lifetime:
-                if arguments.founders:
-                    assets = assets_lifetime.enter_context(
-                        materialize_founders_assets()
-                    )
-                    arguments.scenario = assets.scenario
-                    if arguments.command == "run":
-                        arguments.proposal_tape = assets.tape_for(
-                            FoundersOutcome(arguments.founders)
-                        )
-                        if (
-                            arguments.founders == "stall"
-                            and arguments.max_ticks is None
-                            and not arguments.continuous
-                        ):
-                            arguments.max_ticks = 5
-                if arguments.command == "inspect":
-                    snapshot = load_inspection_engine(
-                        arguments.scenario, arguments.database
-                    )
-                    _serve_inspection(snapshot, arguments.port)
-                    return 0
-                scenario = YAMLScenarioLoader().load(arguments.scenario)
-                canonical = scenario.key == "canonical_founders_v1" or any(
-                    "founders_policy" in item.attributes for item in scenario.entities
-                )
-                if canonical:
-                    FoundersPolicy.from_scenario(scenario)
-                    if arguments.proposal_tape is None:
-                        raise FoundersConfigurationError("missing_tape")
-                repository = SQLiteRepository(str(arguments.database))
-                engine = engine_factory(repository)
-                preparation = (
-                    None
-                    if arguments.proposal_tape is None
-                    else (FoundersPreparation if canonical else ReplayPreparation)(
-                        YAMLProposalTapeLoader().load(arguments.proposal_tape)
-                    )
-                )
-                result = ScenarioRunner(
-                    engine,
-                    preparation,
-                    terminal_conditions=(
-                        founders_terminal_conditions() if canonical else None
-                    ),
-                ).run(
-                    arguments.scenario,
-                    RunConfiguration(
-                        max_ticks=arguments.max_ticks,
-                        save_every=arguments.save_every,
-                        continuous=arguments.continuous,
-                        finalize_proposals=not arguments.checkpoint_only,
-                    ),
-                    stop_control=control,
-                )
+            result = _execute(arguments, control, engine_factory)
+            if result is None:
+                return 0
         except FoundersConfigurationError as exc:
             return _error(
                 (
@@ -183,7 +142,7 @@ def main(
             return _error(INCOMPATIBLE_SAVE, exc)
         except (ScenarioLoadError, TypeError, ValueError) as exc:
             return _error(INVALID_CONFIGURATION, exc)
-        except (RepositoryError, RunPersistenceError) as exc:
+        except (ArchiveError, OSError, RepositoryError, RunPersistenceError) as exc:
             return _error(PERSISTENCE_FAILURE, exc)
         except RunSimulationError as exc:
             return _error(SIMULATION_FAILURE, exc)
@@ -205,6 +164,156 @@ def main(
     finally:
         if previous_handler is not None:
             signal.signal(signal.SIGINT, previous_handler)
+
+
+def _announce(session: LegacyArchiveSession) -> None:
+    print(
+        f"attempt={session.ref.attempt_id} archive={session.ref.directory.absolute()}",
+        file=sys.stderr,
+    )
+
+
+def _execute(
+    arguments: argparse.Namespace,
+    control: StopControl,
+    engine_factory: Callable[[SQLiteRepository], SimulationEngine],
+) -> RunResult | None:
+    reserved = False
+    catalog: RunCatalog | None = None
+    try:
+        with ExitStack() as lifetime:
+            if arguments.founders:
+                assets = lifetime.enter_context(materialize_founders_assets())
+                arguments.scenario = assets.scenario
+                if arguments.command == "run":
+                    arguments.proposal_tape = assets.tape_for(
+                        FoundersOutcome(arguments.founders)
+                    )
+                    if (
+                        arguments.founders == "stall"
+                        and arguments.max_ticks is None
+                        and not arguments.continuous
+                    ):
+                        arguments.max_ticks = 5
+            if arguments.command == "inspect":
+                snapshot = load_inspection_engine(
+                    arguments.scenario, arguments.database
+                )
+                _serve_inspection(snapshot, arguments.port)
+                return None
+            catalog = RunCatalog(arguments.archive_root or RunCatalog.default_root())
+            scenario = YAMLScenarioLoader().load(arguments.scenario)
+            settings: dict[str, object] = {
+                "launch_source": "cli",
+                "driver_format": 1,
+                "finalize_proposals": not arguments.checkpoint_only,
+                "limits": {
+                    "max_ticks": arguments.max_ticks,
+                    "save_every": arguments.save_every,
+                },
+            }
+            if arguments.founders:
+                settings["recorded_outcome"] = arguments.founders
+            reserved = True
+            session = LegacyArchiveSession(
+                catalog,
+                AttemptConfig(
+                    "recorded", scenario.key, scenario.seed, __version__, settings
+                ),
+            )
+            _announce(session)
+            lifetime.enter_context(session)
+            # Preserve policy-before-tape error precedence while capturing inputs.
+            _validate_legacy_scenario(scenario, arguments.proposal_tape)
+            # Preserve the existing loader's error classification before retaining bytes.
+            if arguments.proposal_tape is not None:
+                tape = YAMLProposalTapeLoader().load(arguments.proposal_tape)
+                if (
+                    tape.scenario_key != scenario.key
+                    or tape.scenario_fingerprint != scenario.configuration_fingerprint
+                ):
+                    raise ProposalTapeError("scenario_mismatch")
+            YAMLWorldDefinitionLoader().load(scenario.definition_path)
+            retained = session.retain(
+                arguments.scenario, tape_path=arguments.proposal_tape
+            )
+            scenario = YAMLScenarioLoader().load(retained.scenario_path)
+            canonical = _validate_legacy_scenario(scenario, retained.tape_path)
+            repository = SQLiteRepository(str(arguments.database))
+            engine = engine_factory(repository)
+            preparation = (
+                None
+                if retained.tape_path is None
+                else (FoundersPreparation if canonical else ReplayPreparation)(
+                    YAMLProposalTapeLoader().load(retained.tape_path)
+                )
+            )
+            result = ScenarioRunner(
+                engine,
+                preparation,
+                terminal_conditions=(
+                    founders_terminal_conditions() if canonical else None
+                ),
+            ).run(
+                retained.scenario_path,
+                RunConfiguration(
+                    max_ticks=arguments.max_ticks,
+                    save_every=arguments.save_every,
+                    continuous=arguments.continuous,
+                    finalize_proposals=not arguments.checkpoint_only,
+                ),
+                stop_control=control,
+                observer=session,
+            )
+            session.succeed(result)
+            return result
+    except ArchiveReservationError as exc:
+        print(
+            f"attempt={exc.ref.attempt_id} archive={exc.ref.directory.absolute()}",
+            file=sys.stderr,
+        )
+        raise
+    except Exception:
+        if arguments.command == "run" and not reserved:
+            catalog = catalog or RunCatalog(
+                arguments.archive_root or RunCatalog.default_root()
+            )
+            try:
+                failed = LegacyArchiveSession(
+                    catalog,
+                    AttemptConfig(
+                        "recorded",
+                        "uninitialized",
+                        0,
+                        __version__,
+                        {
+                            "launch_source": "cli",
+                            "driver_format": 1,
+                            "finalize_proposals": not arguments.checkpoint_only,
+                        },
+                    ),
+                )
+            except ArchiveReservationError as exc:
+                print(
+                    f"attempt={exc.ref.attempt_id} archive={exc.ref.directory.absolute()}",
+                    file=sys.stderr,
+                )
+                raise
+            _announce(failed)
+            with failed:
+                failed.fail("initialization_failed")
+        raise
+
+
+def _validate_legacy_scenario(scenario: LoadedScenario, tape_path: Path | None) -> bool:
+    canonical = scenario.key == "canonical_founders_v1" or any(
+        "founders_policy" in item.attributes for item in scenario.entities
+    )
+    if canonical:
+        FoundersPolicy.from_scenario(scenario)
+        if tape_path is None:
+            raise FoundersConfigurationError("missing_tape")
+    return canonical
 
 
 def _serve_inspection(engine: SimulationEngine, port: int) -> None:

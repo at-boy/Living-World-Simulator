@@ -18,8 +18,10 @@ passed. Original Task6 delivery is reviewed; consumer integration exposed a boun
 shutdown same-world response-reuse correction, now independently reviewed with
 task/mergedgates1767/10,39examples; delivery0eca121 integrated by the merge
 containing its report. LN07 is split into7a automatically archived legacy CLI and7b controller-owned live/
-service/restart entrypoints. Exact7acontract/prompt/report are prepared; implementation
-follows. Original Task7 remains incomplete until both stages.
+service/restart entrypoints. LN07a deliverycd5e40d is reviewed; task1800/10,39examples/exactmatrix and26retained
+CLIattempts passed. Merged1809/10,39examples,separateexamples/whitespace/exactmatrix
+and26readable archives passed. Original Task7 remains incomplete; bounded setup/model
+preflight precedes service/live/restart entrypoints.
 legacy generic/taped/raw-database CLI and injected engine/state-reference hooks must
 remain compatible. Add an explicit archive observer to the existing runner, not a
 second copied loop. New live entrypoints retain RunController ownership. LN07 must

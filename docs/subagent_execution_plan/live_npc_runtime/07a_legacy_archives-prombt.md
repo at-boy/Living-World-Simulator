@@ -23,3 +23,11 @@ edit, save exact partial report and stop. Never claim original LN07 complete her
 Root clarification: candidate_aborted is only for initialized unfinished runner
 candidates. After successful observer.finished, mirror failure records failed attempt
 but no candidate_aborted: final archived world is already complete. Pin distinction.
+
+Fixround1 rootamendment:2confirmed review findings (loader-valid relative declarations
+rejected; invalid definitions misclassified4 instead2). Read appendedcontract section
+before editing newlyallowed archives/assets.py and test_run_archive_catalog.py.
+14workerpaths now; manifests private_name and all escape/link/hash safety remainstrict.
+Normalize only safe source declaration role (exactbytes retained); prevalidate through
+existingdefinitionloader afterreserve for exit2. Originalworker focusedRED/GREEN,
+scopedchecks/report, noVCS/fullgates; root scopedrereview beforecommit.

@@ -1,5 +1,14 @@
 # Living World Simulator – Project Journal
 
+## LN07a integration — October22,2026
+
+Reviewed deliverycd5e40d integrated with06c; source unchanged. Taskmake1800/10 and
+mergedmake1809/10,39examples, separateexamples/whitespace/exact canonical matrices
+passed. All26merged normal CLI invocations retain readable complete-checkpoint archives.
+Only root-owned docs conflicted. Original Task7 incomplete: bounded setup/model
+preflight precedes service/live/restart entrypoints; browser and actual model acceptance
+remain LN08/LN09. Owner-local master-plan edit and all branches retained.
+
 ## LN06c integration — October22,2026
 
 Reviewed delivery0eca121 merged cleanly. Task and merged gates each1767/10,39examples,
@@ -24,6 +33,14 @@ advanced revision0to1 with identical world/semantic cursors; child unnecessarily
 06ccontract: verified external source may alias older base only with exact complete
 world/driver/feedback and <=selectedrevision; local base stays strict. This preserves
 seals/fingerprints/Retry/action authority. No source fix yet; disjoint from LN07a.
+
+## LN07a reviewed legacy archive delivery — October22,2026
+
+Independent SPEC/QUALITY PASS after2confirmed compatibility fixes: safe source-relative
+paths retain exactbytes with strict archive bounds, invaliddefinitions remainconfig2.
+Taskmake1800/10,39examples,separateexamples/whitespace/exact recorded matrices passed;
+all26matrixCLI invocations persist complete archives alongside evidence. Source unchanged
+afterreview. Delivery/mergedgates next. No new live/service/browser entrypoint yet.
 
 ## LN07 bounded compatibility contract — October22,2026
 

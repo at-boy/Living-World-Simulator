@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Integrate reviewed automatic legacy CLI archives after task and merged validation;
+  preserve exact recorded worlds and retain all 26 matrix-run archives.
+
 - Integrate the reviewed shutdown response-cache correction after task/merged gates.
 
 - Reuse validated parent responses across exact same-world shutdown checkpoints;
@@ -9,6 +12,9 @@
 
 - Define a bounded recovery correction for validated responses across same-world
   shutdown checkpoint revisions; source and current-attempt checks remain strict.
+
+- Automatically archive existing CLI runs, complete ticks and setup failures while
+  preserving recorded payloads, generic runners, engine hooks and mirror cadence.
 
 - Define LN07a legacy CLI archive observer/session contract, preserving injected
   engine/state-reference behavior and mirror cadence; implementation follows.

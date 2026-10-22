@@ -45,14 +45,15 @@ implementation/review redispatch. LN06 integration2da047f is pushed. LN07 split7
 prepared, implementation pending. Preserve legacy ScenarioRunner injected
 engine/state-reference behavior with an explicit archive observer; live entrypoints
 use controller. Materialize bounded exact contracts before implementation. LN07 must
-pass composition.source_point into replay driver. LN07a is active in .worktrees/live-npc-ln07a atf1ccb90, worker/root/ln07a_implementer.
-Root found/reproduced same-world shutdown checkpoint response-cache miss; exact06c
-contract/prompt/report prepared.06c now reviewed SPEC/QUALITYPASS, root taskmake
-1767/10,39examples taskANDmerged,separateexamples/whitespace/exactmatrix passed.
-Delivery0eca121 is integrated by the merge containing this brief. LN07a fixround1
-independently passed2addressed/0open with amended source-path normalization/definition
-classification; root task gates running. Do not repeat implementation/reviews.
-No LN07b/LN08/LN09 implementation yet.
+pass composition.source_point into replay driver. LN06c delivery0eca121 is integrated as4dbb40b, independently reviewed with task/merged
+1767/10,39examples and exact matrices. LN07a deliverycd5e40d is integrated by the
+merge containing this brief. Its two compatibility findings were corrected and
+independently re-reviewed; task1800/10, merged1809/10,39examples, separateexamples,
+whitespace and exact matrices passed. All26merged CLI acceptance runs persist readable
+archives with complete checkpoints. No implementation/review redispatch for6c/7a.
+Next bounded stage is LN07b setup reservations and model preflight, then LN07c service/
+entrypoints. Draft7b artifacts await their separate root contract commit; no source yet.
+No LN08/LN09 implementation yet.
 Read it for the expanded archive producer boundary, sealed prefix and truthful
 import/action audit rules. Probe/candidate notes are ignored evidence, not taskauthority. Do not repeat
 completedLN01–LN05. Read current03contract for archive layout, inputs, lease,
@@ -148,3 +149,6 @@ SSH include without changing user configuration or host verification.
 For any later authorized work, inspect current Git state and live refs first.
 Stop BEFORE five-hour remaining usage drops below 10%, with a durable checkpoint
 and stopped agents. Historical usage pauses do not authorize new scope or resets.
+
+Current LN07a complete: deliverycd5e40d, reviewed/task1800/10, merged1809/10;
+39examples, separateexamples/whitespace/exactmatrix plus26retained CLIarchives passed.
