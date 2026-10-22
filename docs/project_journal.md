@@ -1,5 +1,13 @@
 # Living World Simulator – Project Journal
 
+## LN07a reviewed legacy archive delivery — October22,2026
+
+Independent SPEC/QUALITY PASS after2confirmed compatibility fixes: safe source-relative
+paths retain exactbytes with strict archive bounds, invaliddefinitions remainconfig2.
+Taskmake1800/10,39examples,separateexamples/whitespace/exact recorded matrices passed;
+all26matrixCLI invocations persist complete archives alongside evidence. Source unchanged
+afterreview. Delivery/mergedgates next. No new live/service/browser entrypoint yet.
+
 ## LN07 bounded compatibility contract — October22,2026
 
 Root splits original LN07 into7a existing-CLI archive producer and7b controller-owned

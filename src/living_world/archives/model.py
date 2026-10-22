@@ -185,8 +185,13 @@ class AttemptConfig:
                 "disturbance",
                 "driver_format",
                 "source_config_fingerprint",
+                "finalize_proposals",
             },
         )
+        if "finalize_proposals" in settings and (
+            self.mode != "recorded" or type(settings["finalize_proposals"]) is not bool
+        ):
+            raise ArchiveFormatError("Finalization flag requires recorded boolean.")
         if "provider" in settings:
             provider = document(
                 settings["provider"],

@@ -812,3 +812,123 @@ def test_archive_parent_metadata_malformed_or_disagrees_rejected(
     with pytest.raises(ArchiveError):
         catalog.open_attempt(child.attempt_id)
     assert database.read_bytes() == before
+
+
+@pytest.mark.parametrize(
+    "declaration", ["./defs ?#.yaml", ".//./defs ?#.yaml", "sub/../defs ?#.yaml"]
+)
+def test_safe_source_declarations_keep_exact_bytes_and_fingerprint(
+    tmp_path: Path, declaration: str
+) -> None:
+    import hashlib
+
+    from living_world.scenarios.scenario import YAMLScenarioLoader
+
+    catalog = RunCatalog(tmp_path / "runs")
+    ref = catalog.reserve(config())
+    scenario = sources(tmp_path)
+    (scenario.parent / "sub").mkdir()
+    scenario.write_text(scenario.read_text().replace("defs ?#.yaml", declaration))
+    original_scenario = scenario.read_bytes()
+    original_definitions = (scenario.parent / "defs ?#.yaml").read_bytes()
+    fingerprint = YAMLScenarioLoader().load(scenario).configuration_fingerprint
+    retained = retain_inputs(ref, scenario, tape_path=None)
+    assert retained.scenario_path.read_bytes() == original_scenario
+    assert retained.definition_path.read_bytes() == original_definitions
+    assert retained.definition_path.name == "defs ?#.yaml"
+    assert (
+        YAMLScenarioLoader().load(retained.scenario_path).configuration_fingerprint
+        == fingerprint
+    )
+    assert (
+        retained.hashes["scenario/" + scenario.name]
+        == hashlib.sha256(original_scenario).hexdigest()
+    )
+    assert (
+        retained.hashes["scenario/defs ?#.yaml"]
+        == hashlib.sha256(original_definitions).hexdigest()
+    )
+    assert load_retained_inputs(ref) == retained
+
+
+@pytest.mark.parametrize(
+    "declaration",
+    [
+        "../source ?#/defs ?#.yaml",
+        "sub/../../source ?#/defs ?#.yaml",
+        "sub\\..\\defs ?#.yaml",
+    ],
+)
+def test_source_normalization_rejects_escape_prefixes_and_backslashes(
+    tmp_path: Path, declaration: str
+) -> None:
+    catalog = RunCatalog(tmp_path / "runs")
+    ref = catalog.reserve(config())
+    scenario = sources(tmp_path)
+    (scenario.parent / "sub").mkdir()
+    scenario.write_text(
+        scenario.read_text().replace('"defs ?#.yaml"', json.dumps(declaration))
+    )
+    with pytest.raises(ArchiveError):
+        retain_inputs(ref, scenario, tape_path=None)
+    assert not (ref.directory / "inputs.json").exists()
+
+
+def test_source_normalization_rejects_cancelled_symlink(tmp_path: Path) -> None:
+    catalog = RunCatalog(tmp_path / "runs")
+    ref = catalog.reserve(config())
+    scenario = sources(tmp_path)
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (scenario.parent / "sub").symlink_to(outside, target_is_directory=True)
+    scenario.write_text(
+        scenario.read_text().replace("defs ?#.yaml", "sub/../defs ?#.yaml")
+    )
+    with pytest.raises(ArchiveError):
+        retain_inputs(ref, scenario, tape_path=None)
+    assert not (ref.directory / "inputs.json").exists()
+
+
+def test_normalized_definition_rejects_hardlinks_and_retained_tamper(
+    tmp_path: Path,
+) -> None:
+    import os
+
+    catalog = RunCatalog(tmp_path / "runs")
+    ref = catalog.reserve(config())
+    scenario = sources(tmp_path)
+    definition = scenario.parent / "defs ?#.yaml"
+    link = tmp_path / "hardlink.yaml"
+    os.link(definition, link)
+    scenario.write_text(scenario.read_text().replace("defs ?#.yaml", "./defs ?#.yaml"))
+    with pytest.raises(ArchiveError):
+        retain_inputs(ref, scenario, tape_path=None)
+    link.unlink()
+    retained = retain_inputs(ref, scenario, tape_path=None)
+    retained.definition_path.write_bytes(b"definitions: [tampered]\n")
+    with pytest.raises(ArchiveError):
+        load_retained_inputs(ref)
+
+
+@pytest.mark.parametrize(
+    "declaration",
+    [
+        "scenario/./defs ?#.yaml",
+        "scenario//defs ?#.yaml",
+        "scenario/sub/../defs ?#.yaml",
+    ],
+)
+def test_manifest_roles_stay_strict_after_source_normalization(
+    tmp_path: Path, declaration: str
+) -> None:
+    catalog = RunCatalog(tmp_path / "runs")
+    ref = catalog.reserve(config())
+    scenario = sources(tmp_path)
+    scenario.write_text(scenario.read_text().replace("defs ?#.yaml", "./defs ?#.yaml"))
+    retain_inputs(ref, scenario, tape_path=None)
+    manifest = ref.directory / "inputs.json"
+    data = json.loads(manifest.read_text())
+    data["definitions"] = declaration
+    manifest.write_text(json.dumps(data))
+    with pytest.raises(ArchiveError):
+        load_retained_inputs(ref)

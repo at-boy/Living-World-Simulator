@@ -95,7 +95,10 @@ archived; legacy mirror semantics are unchanged.
 succeed records attempt_finished and lifecycle completed, or stopped for operator_stop
 (including matching terminal operator_stop); last_revision exact. Failure records
 failed lifecycle/attempt_finished at last complete revision (None before initialworld),
-and candidate_aborted with last revision only for an initialized discarded candidate.
+and candidate_aborted with last revision only for an initialized UNFINISHED runner
+candidate. Track successful observer.finished; a subsequent mirror failure has a
+complete final archived world and must NOT add candidate_aborted. Earlier failed
+step/terminal/finalization candidates may be discarded from their last complete base.
 Do not falsely claim failed attempted tick committed. Normal context exit without
 succeed/fail records interrupted. Settlement idempotent in this session. Cleanup or
 audit failure must not hide original exception; if no prior failure, propagate as
@@ -163,3 +166,31 @@ selfreview/limitations. Worker no VCS/subagents/fullmake/examples/dependency ope
 Root independent review, task+merged make/separateexamples/whitespace and exact recorded
 matrices precede commits/integration. LN07a alone does not claim new live/service/
 archive-resume/replay/serve/browser capabilities or original Task7 completion.
+
+## Independent review correction round1 — explicit scope amendment
+
+Root verified2Important compatibility findings. Add ONLY
+src/living_world/archives/assets.py and tests/test_run_archive_catalog.py to worker
+boundary (14workerpaths total). private_name remains STRICT for archived manifests/
+roles; do not weaken links/hardlinks/destination/path/hash validation.
+
+Source definitions declarations may contain harmless '.'/repeated separators and
+INTERNAL '..' cancellation while staying beneath scenario directory. Normalize only
+the archive destination role to a strict relative name; preserve exact ORIGINAL
+scenario/definition bytes. Walk original relative components before normalization:
+reject absolute/backslash, any prefix escaping scenario parent, and any symlink
+component; skip '.'/empty separators, move parent only while inside root. Derive
+strict normalized destination, then existing safe_path(...regular=True) preserves
+hardlink rejection. No source or destination outside private bounds. Retained YAML
+loader must resolve original declaration to the same captured definition role.
+Test './world.yaml', repeated separators/dots and 'sub/../world.yaml' with exact
+retained bytes/hash/fingerprint, plus escape/link/tamper rejection. Existing archive
+unsafe path checks remain unchanged; source declarations differ from strict manifests.
+
+CLI must run existing YAMLWorldDefinitionLoader on preliminary scenario.definition_path
+AFTER reservation and before retention, preserving configuration ValueError exit2 for
+invalid definitions schema instead of ArchiveFormatError4. Keep existing policy/tape
+error precedence and metadata failure discoverability; retained-tree validation still
+runs independently. Do not turn generic archive-corruption/IO errors into config2.
+Regression invalid definitions =>exit2 +one failed attempt/no inventedworld; all old
+classification tests retained. Record RED/GREEN and scope amendment in report.

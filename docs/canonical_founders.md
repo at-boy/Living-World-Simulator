@@ -90,3 +90,22 @@ history remains unavailable. This allows ordinary ACTIVE-only work authorization
 while real history accumulates, with no synthetic history or gateway exception.
 Replay accepts `dispatch_external_trade` as the existing structured action key;
 that string remains forbidden in prose, labels, descriptions and arguments.
+
+Every `living-world run` invocation now creates an independent recorded attempt
+under `$XDG_STATE_HOME/living-world/runs` (or `~/.local/state/living-world/runs`).
+Use `--archive-root PATH` to choose another catalog. Stderr reports its attempt
+identity and absolute directory before engine initialization. The archive retains
+scenario, definitions and tape and saves the initial prepared world plus every
+complete tick, independently of `--save-every`. Finalization may add another
+revision at the same tick. `--checkpoint-only` records `finalize_proposals=false`;
+older recorded attempt metadata without that flag means true.
+
+`--database` remains the existing SQLite mirror, with its existing save cadence.
+An archive checkpoint can remain authoritative after a mirror save fails; the
+invocation reports persistence failure rather than success. Partial failed ticks
+and failed finalization are never published. Configuration failures are discoverable
+as failed attempts, including a metadata-only `uninitialized` attempt when scenario
+identity could not be loaded. Parser errors and `inspect` create no attempts.
+Raw SQLite continuation creates a new independent attempt whose initial revision
+is the prepared resumed world. This archival stage adds no archive-based resume,
+live provider service, browser control, or replay command.

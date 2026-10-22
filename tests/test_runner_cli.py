@@ -436,3 +436,299 @@ def test_selected_custom_order_precedes_legacy_terminal_and_after_tick_operator(
     )
     assert result.terminal_condition == "first"
     assert result.end_tick == 1
+
+
+def test_cli_automatically_archives_every_tick(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    from living_world.archives import RunCatalog
+
+    root = tmp_path / "archives"
+    assert (
+        main(
+            [
+                "run",
+                str(_scenario(tmp_path)),
+                "--database",
+                str(tmp_path / "world.db"),
+                "--archive-root",
+                str(root),
+                "--save-every",
+                "3",
+            ]
+        )
+        == 0
+    )
+    (summary,) = RunCatalog(root).attempts()
+    assert summary.lifecycle == "completed"
+    assert summary.last_revision == 4
+    assert (
+        f"attempt={summary.ref.attempt_id} archive={summary.ref.directory}"
+        in capsys.readouterr().err
+    )
+
+
+def test_cli_missing_scenario_metadata_attempt(tmp_path: Path) -> None:
+    from living_world.archives import RunCatalog
+
+    root = tmp_path / "archives"
+    assert (
+        main(["run", str(tmp_path / "missing.yaml"), "--archive-root", str(root)])
+        == INVALID_CONFIGURATION
+    )
+    (summary,) = RunCatalog(root).attempts()
+    assert summary.scenario == "uninitialized"
+    assert summary.lifecycle == "failed"
+    assert summary.last_revision is None
+
+
+def test_cli_resume_keeps_original_engine_state_and_thread(tmp_path: Path) -> None:
+    import threading
+
+    from living_world.archives import RunCatalog
+
+    path = _scenario(tmp_path)
+    root = tmp_path / "archives"
+    database = tmp_path / "world.db"
+    args = ["run", str(path), "--database", str(database), "--archive-root", str(root)]
+    assert main([*args, "--max-ticks", "1"]) == 0
+    calls: list[SimulationEngine] = []
+    invoking_thread = threading.get_ident()
+    control = TickStopControl(WorldState(), 3)
+
+    def factory(repository: SQLiteRepository) -> SimulationEngine:
+        assert threading.get_ident() == invoking_thread
+        assert repository.load_world().tick == 1
+        engine = SimulationEngine(repository)
+        calls.append(engine)
+        control.state = engine.state
+        return engine
+
+    assert (
+        main([*args, "--max-ticks", "9"], engine_factory=factory, stop_control=control)
+        == 0
+    )
+    assert len(calls) == 1
+    assert control.state is calls[0].state
+    assert control.state.tick == 3
+    summaries = RunCatalog(root).attempts()
+    assert len(summaries) == 2
+    resumed = next(summary for summary in summaries if summary.lifecycle == "stopped")
+    assert resumed.parent is None
+    assert resumed.last_revision == 2
+    with RunCatalog(root).open_attempt(resumed.ref.attempt_id) as archive:
+        assert archive.checkpoint(0).driver_cursor["next_tick"] == 1
+
+
+def test_cli_factory_failure_is_discoverable_and_releases_lease(tmp_path: Path) -> None:
+    from living_world.archives import AttemptLease, RunCatalog
+
+    root = tmp_path / "archives"
+
+    def factory(repository: SQLiteRepository) -> SimulationEngine:
+        raise ValueError("private factory")
+
+    assert (
+        main(
+            ["run", str(_scenario(tmp_path)), "--archive-root", str(root)],
+            engine_factory=factory,
+        )
+        == INVALID_CONFIGURATION
+    )
+    (summary,) = RunCatalog(root).attempts()
+    assert summary.scenario == "runner-test"
+    assert summary.lifecycle == "failed"
+    assert summary.last_revision is None
+    assert not AttemptLease.is_owned(summary.ref)
+
+
+def test_parser_errors_never_reserve_and_inspect_never_reserves(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from living_world import cli
+    from living_world.archives import RunCatalog
+
+    root = RunCatalog.default_root()
+    with pytest.raises(SystemExit):
+        main(["run", "--archive-root", str(root)])
+    assert not root.exists()
+    path = _scenario(tmp_path)
+    database = tmp_path / "world.db"
+    assert main(["run", str(path), "--database", str(database)]) == 0
+    before = RunCatalog(root).attempts()
+    monkeypatch.setattr(cli, "_serve_inspection", lambda engine, port: None)
+    assert main(["inspect", str(path), "--database", str(database)]) == 0
+    assert RunCatalog(root).attempts() == before
+
+
+@pytest.mark.parametrize("failure", ["step", "mirror"])
+def test_cli_custom_engine_failures_keep_archive_authoritative(
+    tmp_path: Path, failure: str
+) -> None:
+    from living_world.archives import AttemptLease, RunCatalog
+
+    class Engine(SimulationEngine):
+        def step(self) -> None:
+            if failure == "step":
+                self.state.tick += 1
+                raise RuntimeError("private partial tick")
+            super().step()
+
+        def save_world(self) -> None:
+            raise RuntimeError("private mirror failure")
+
+    root = tmp_path / "archives"
+    assert main(
+        [
+            "run",
+            str(_scenario(tmp_path)),
+            "--database",
+            str(tmp_path / "world.db"),
+            "--archive-root",
+            str(root),
+            "--max-ticks",
+            "1",
+        ],
+        engine_factory=Engine,
+    ) == (SIMULATION_FAILURE if failure == "step" else PERSISTENCE_FAILURE)
+    catalog = RunCatalog(root)
+    (summary,) = catalog.attempts()
+    assert summary.lifecycle == "failed"
+    assert summary.last_revision == (0 if failure == "step" else 1)
+    assert not AttemptLease.is_owned(summary.ref)
+    with catalog.open_attempt(summary.ref.attempt_id) as archive:
+        assert [entry.kind for entry in archive.entries()] == (
+            ["candidate_aborted", "attempt_finished"]
+            if failure == "step"
+            else ["attempt_finished"]
+        )
+
+
+def test_run_does_not_import_uvicorn_and_default_database_is_mirror(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import builtins
+
+    from living_world.archives import RunCatalog
+
+    original_import = builtins.__import__
+
+    def guarded_import(name: str, *args: object, **kwargs: object) -> object:
+        assert not name.startswith("uvicorn")
+        return original_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", guarded_import)
+    monkeypatch.chdir(tmp_path)
+    assert main(["run", str(_scenario(tmp_path)), "--max-ticks", "1"]) == 0
+    assert SQLiteRepository("world.sqlite3", read_only=True).load_world().tick == 1
+    (summary,) = RunCatalog(RunCatalog.default_root()).attempts()
+    assert summary.tick == 1
+
+
+def test_invalid_scenario_is_metadata_only_attempt(tmp_path: Path) -> None:
+    from living_world.archives import RunCatalog
+
+    path = tmp_path / "bad.yaml"
+    path.write_text("schema_version: invalid")
+    root = tmp_path / "archives"
+    assert (
+        main(["run", str(path), "--archive-root", str(root)]) == INVALID_CONFIGURATION
+    )
+    (summary,) = RunCatalog(root).attempts()
+    assert summary.scenario == "uninitialized"
+    assert summary.last_revision is None
+    assert not (summary.ref.directory / "inputs.json").exists()
+
+
+@pytest.mark.parametrize(
+    "declaration", ["./world.yaml", ".//./world.yaml", "sub/../world.yaml"]
+)
+def test_cli_loader_valid_relative_definition_declarations(
+    tmp_path: Path, declaration: str
+) -> None:
+    from living_world.archives import RunCatalog, load_retained_inputs
+    from living_world.scenarios.scenario import YAMLScenarioLoader
+
+    scenario = _scenario(tmp_path)
+    (tmp_path / "sub").mkdir()
+    scenario.write_text(
+        scenario.read_text().replace(
+            "definitions: world.yaml", f"definitions: {declaration}"
+        )
+    )
+    expected = YAMLScenarioLoader().load(scenario)
+    original = scenario.read_bytes()
+    root = tmp_path / "archives"
+    assert (
+        main(
+            [
+                "run",
+                str(scenario),
+                "--database",
+                str(tmp_path / "world.db"),
+                "--archive-root",
+                str(root),
+                "--max-ticks",
+                "1",
+            ]
+        )
+        == 0
+    )
+    (summary,) = RunCatalog(root).attempts()
+    retained = load_retained_inputs(summary.ref)
+    assert retained.scenario_path.read_bytes() == original
+    assert (
+        YAMLScenarioLoader().load(retained.scenario_path).configuration_fingerprint
+        == expected.configuration_fingerprint
+    )
+
+
+def test_cli_invalid_definitions_remain_configuration_failure(tmp_path: Path) -> None:
+    from living_world.archives import RunCatalog
+
+    scenario = _scenario(tmp_path)
+    (tmp_path / "world.yaml").write_text("definitions: invalid\n")
+    root, database = tmp_path / "archives", tmp_path / "world.db"
+    assert (
+        main(
+            [
+                "run",
+                str(scenario),
+                "--database",
+                str(database),
+                "--archive-root",
+                str(root),
+            ]
+        )
+        == INVALID_CONFIGURATION
+    )
+    (summary,) = RunCatalog(root).attempts()
+    assert summary.scenario == "runner-test"
+    assert summary.lifecycle == "failed"
+    assert summary.last_revision is None
+    assert not database.exists()
+
+
+@pytest.mark.parametrize("kind", ["io", "corruption"])
+def test_archive_failures_remain_persistence_failures(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, kind: str
+) -> None:
+    from living_world.archives import ArchiveError, RunCatalog
+    from living_world.runtime.legacy import LegacyArchiveSession
+
+    def unavailable(*args: object, **kwargs: object) -> None:
+        raise (
+            OSError("archive IO")
+            if kind == "io"
+            else ArchiveError("archive corruption")
+        )
+
+    monkeypatch.setattr(LegacyArchiveSession, "retain", unavailable)
+    root = tmp_path / "archives"
+    assert (
+        main(["run", str(_scenario(tmp_path)), "--archive-root", str(root)])
+        == PERSISTENCE_FAILURE
+    )
+    (summary,) = RunCatalog(root).attempts()
+    assert summary.lifecycle == "failed"
+    assert summary.last_revision is None

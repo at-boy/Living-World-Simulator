@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Automatically archive existing CLI runs, complete ticks and setup failures while
+  preserving recorded payloads, generic runners, engine hooks and mirror cadence.
+
 - Define LN07a legacy CLI archive observer/session contract, preserving injected
   engine/state-reference behavior and mirror cadence; implementation follows.
 

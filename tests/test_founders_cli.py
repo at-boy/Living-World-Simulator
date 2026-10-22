@@ -85,3 +85,46 @@ def test_inspection_missing_optional_server_is_actionable_without_save_changes(
     assert main(["inspect", "--founders", "--database", str(database)]) == 2
     assert "Install living-world-simulator[server]" in capsys.readouterr().err
     assert database.read_bytes() == before
+
+
+@pytest.mark.parametrize(
+    "outcome,ticks", [("success", 10), ("stall", 5), ("failure", 13)]
+)
+def test_canonical_alias_archive_exact_complete_worlds(
+    tmp_path: Path, outcome: str, ticks: int
+) -> None:
+    from living_world.archives import RunCatalog
+    from living_world.repositories.sqlite_repository import SQLiteRepository
+    from living_world.repositories.world_snapshot import encode_world
+
+    root = tmp_path / "archives"
+    database = tmp_path / "world.sqlite3"
+    assert (
+        main(
+            [
+                "run",
+                "--founders",
+                outcome,
+                "--database",
+                str(database),
+                "--archive-root",
+                str(root),
+                "--save-every",
+                "4",
+            ]
+        )
+        == 0
+    )
+    catalog = RunCatalog(root)
+    (summary,) = catalog.attempts()
+    assert summary.lifecycle == "completed"
+    assert summary.tick == ticks
+    with catalog.open_attempt(summary.ref.attempt_id) as archive:
+        assert archive.latest_revision >= ticks
+        assert archive.checkpoint().snapshot == encode_world(
+            SQLiteRepository(str(database), read_only=True).load_world()
+        )
+        assert archive.config.settings["finalize_proposals"] is True
+        assert [entry.kind for entry in archive.entries()] == ["attempt_finished"]
+        for revision in range(ticks + 1):
+            assert archive.checkpoint(revision).driver_cursor["next_tick"] == revision

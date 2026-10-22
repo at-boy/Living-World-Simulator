@@ -15,8 +15,8 @@ LN05 feedback/live composition passed independent review and task gates1652/10,
 LN06a archive delivery6469a38 and LN06b runtime delivery5a3f58a are reviewed and
 integrated; LN06b task/merged gates1758/10,39examples and exact recorded matrices
 passed. Original Task6 is complete. LN07 is split into7a automatically archived legacy CLI and7b controller-owned live/
-service/restart entrypoints. Exact7acontract/prompt/report are prepared; implementation
-follows. Original Task7 remains incomplete until both stages.
+service/restart entrypoints. LN07a independently reviewed and taskgates1800/10,39examples/exactmatrix/26retained
+attempts passed; delivery/integration/mergedgates next. Original Task7 remains incomplete until both stages.
 legacy generic/taped/raw-database CLI and injected engine/state-reference hooks must
 remain compatible. Add an explicit archive observer to the existing runner, not a
 second copied loop. New live entrypoints retain RunController ownership. LN07 must
