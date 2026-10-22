@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Save the usage checkpoint after reviewed LN06b delivery5a3f58a and task gates;
+  feature integration and merged validation remain pending.
+
 - Pin a shared captured source point for replay composition/driver construction,
   preventing concurrent source progress from choosing inconsistent replay horizons.
 

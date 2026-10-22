@@ -15,8 +15,11 @@ outcomes together, and replay those complete ticks without network access.
 Python>=3.11, strict typing, dataclasses/Protocols, standard library only. Preserve
 world schema12 writes/1–12 reads, archive format1 and exact recorded worlds. Managers
 mutate, systems behave, events immutable. No raw WorldState, IDs, handlers, inspector
-or runtime objects in model input/worker context. No raw invalid output/CoT in any
-archive/log/result file. No model download, provider substitution, GPU install,
+or runtime objects in model input/worker context. No raw provider body, malformed output or CoT in any
+archive/log/result file. Private transient IPC may carry schema/vocabulary-valid
+but still untrusted proposal prose; parent validates the current-world information
+boundary before durable journaling/use, then deletes IPC. This explicit IPC exception
+is necessary because the worker must not receive the authoritative world. No model download, provider substitution, GPU install,
 player API, main/tag/milestone changes or deletion of branches/worktrees.
 
 Defaults: timeout30seconds,512output tokens,1MiB response,temperature0,seed resolved
@@ -123,7 +126,9 @@ pickle DecisionInput/handlers/engine/inspector/actor_id, fingerprints or journal
 Use existing serialized request schema to reconstruct safe context/options in worker.
 
 Use private owned temporary directory + atomic bounded JSON result file as IPC.
-Worker writes safe parsed decision/fixed error/digest only (no raw model output),
+Worker writes structurally parsed untrusted decision/fixed error/digest only
+(no raw provider body, malformed output or CoT; current-world prose validation is
+parent-owned as above),
 parent reads ONLY after process exit. Never use poll-then-blocking framed pipe reads.
 Frame limit8*max_response_bytes+4096 accounts for safe JSON escaping; reject excess or
 malformed result, reparse decision against exact offered actions in parent. job_id

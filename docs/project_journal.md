@@ -1,5 +1,15 @@
 # Living World Simulator – Project Journal
 
+## LN06b delivery usage checkpoint — October 22, 2026
+
+Reviewed delivery5a3f58a is pushed on preserved task branch. Independent SPEC/QUALITY
+PASS, no substantive findings; root task1758/10,39examples, separate examples,
+whitespace and exact recorded matrices passed. Root clarified transient parsed
+untrusted proposal IPC versus durable parent world-boundary validation. Feature
+source still ends at LN06a; next resume merges delivery and repeats all merged gates.
+All children stopped, no LN07 dispatch; stop before five-hour remaining10%.
+Owner plan edit and main/milestone/tag/branches/worktrees preserved.
+
 ## LN06b replay horizon seam — October 22, 2026
 
 During bounded implementation, root found that replay composition and driver could

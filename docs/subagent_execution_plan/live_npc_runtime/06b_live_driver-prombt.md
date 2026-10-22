@@ -35,3 +35,9 @@ captured source_point. Service later passes the SAME point to driver, preventing
 source advancement between constructors from selecting inconsistent horizons. Verify
 supplied checkpoint/seal, load only through it, test inter-constructor append.
 No new files, archive API or broad source changes are authorized by this amendment.
+
+Root review clarification: transient private IPC transports schema/vocabulary-valid
+UNTRUSTED proposal prose before parent current-world boundary validation. Raw provider
+body/malformed output/CoT remain forbidden; parent validates before durable journal/
+use and deletes IPC. Worker cannot validate world-dependent facts without receiving
+forbidden world state. This clarifies transport, not additional model authority.

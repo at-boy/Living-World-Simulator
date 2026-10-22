@@ -15,9 +15,10 @@ LN05 feedback/live composition passed independent review and task gates1652/10,
 LN06 is split into journal/recovery producer integrity (6a) and inference/replay (6b);
 it remains incomplete until both are reviewed. LN06a archive producer has independent SPEC/QUALITY PASS after one bounded correction
 and root task/merged gates1,722/10,39examples plus exact recorded matrices; delivery6469a38
-is pushed and integrated by the merge containing its report. LN06b bounded implementation is underway; independent review/full gates remain
-pending. LN07 must pass one captured replay source_point from composition to driver
-so active-source advancement cannot change their relative horizons. LN06 must supply a closed semantic cursor excluding operational IDs/time/counts.
+is pushed and integrated by the merge containing its report. LN06b delivery5a3f58a is pushed after independent SPEC/QUALITY PASS and root task
+1758/10,39examples/exact recorded matrices. Feature integration and merged gates
+remain pending; next resume starts there, not implementation redispatch. LN07 must
+share composition.source_point with replay driver. LN06 must supply a closed semantic cursor excluding operational IDs/time/counts.
 Live decisions, public control entrypoints and automatically archived entrypoints remain later tasks. Future player commands remain separate from current operator controls.
 
 

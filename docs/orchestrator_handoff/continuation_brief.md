@@ -1,4 +1,4 @@
-# Continuation brief — LN06a complete, LN06b next, October 22, 2026
+# Continuation brief — LN06b reviewed delivery, usage checkpoint, October 22, 2026
 
 ## Current design scope and authority
 
@@ -37,11 +37,14 @@ LN06 into bounded recovery-journal producer(6a), then provider/broker/live/repla
 LN06a delivery6469a38 is pushed and integrated by the merge containing this brief.
 Independent SPEC/QUALITY PASS after one corrected canonical numeric identity issue;
 root task/merged make1722/10,39examples, separate examples and exact recorded matrices
-passed. Task checkout .worktrees/live-npc-ln06a is retained. LN06b is underway in .worktrees/live-npc-ln06b, branchcodex/live-npc-ln06b-live-driver
-base3c5994f, worker/root/ln06b_implementer. Review/sourcecommit/fullgates pending.
-Read task report/diff for current evidence. Exact contract/prompt now include shared
-source_point replay horizon; root amended both checkouts before worker addition.
-LN07 must pass composition.source_point into replay driver. Candidate notes superseded. Do not repeat completed LN01–LN06a.
+passed. Task checkout .worktrees/live-npc-ln06a is retained. LN06b is reviewed (SPEC/QUALITY PASS, no substantive findings), with root task
+make1758/10,39examples, separateexamples/whitespace/exact recorded matrices passed.
+Delivery5a3f58a is pushed on codex/live-npc-ln06b-live-driver
+(.worktrees/live-npc-ln06b); no source changes after review. Root stops for usage headroom before10%.
+Next resume: verify usage/Git, merge delivery into feature, repeat merged gates then
+commit/push integration; Task6 overall remains incomplete until then. All children
+stopped. Read06breport; do not redispatch completed implementation/LN01–LN06a.
+LN07 must pass composition.source_point into replay driver. No LN07–LN09 dispatched.
 Read it for the expanded archive producer boundary, sealed prefix and truthful
 import/action audit rules. Probe/candidate notes are ignored evidence, not taskauthority. Do not repeat
 completedLN01–LN05. Read current03contract for archive layout, inputs, lease,
