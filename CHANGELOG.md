@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Define explicit archived live CLI, exact resume/fork/replay, SIGINT cleanup and
+  read-only checkpoint inspection while preserving existing CLI behavior.
+
 - Add independently reviewed runtime ownership, exact linked restart/fork/replay,
   generic recorded continuation, safe shutdown and archive-first final mirrors.
 

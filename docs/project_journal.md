@@ -1,5 +1,18 @@
 # Living World Simulator – Project Journal
 
+## LN07e archived CLI contract — October 22, 2026
+
+LN07d delivery1c2c2fc/integrationc604463 is complete and pushed; root task/merged
+make2018/10,39examples and exact archive matrices passed. Root prepared and reviewed
+the exact seven-path CLI contract: explicit live/new/resume/fork/replay, no implicit
+mode change, exact config inheritance, bounded SIGINT cancellation during setup and
+inference, archive-derived summaries and read-only selected checkpoint inspection.
+New live retains same pre-reserved attempt; runtime errors preserve known identity
+or a truthful metadata-only failed fallback. Existing hooks/output/recorded aliases
+remain compatible; recorded continuous intent now persists. Initialization/archive
+errors use original exit4. No source at this contract commit; browser/serve follows
+in LN08 and installed-model acceptance in LN09.
+
 ## LN07d reviewed runtime service — October 22, 2026
 
 The owner-thread service composes new and linked recorded/live/replay attempts,

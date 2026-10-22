@@ -1,4 +1,4 @@
-# Continuation brief — LN07d reviewed delivery, October 22, 2026
+# Continuation brief — LN07d complete; LN07e authorized, October 22, 2026
 
 ## Current authoritative state
 
@@ -9,9 +9,10 @@ are authoritative. Worker focused286; root task make2018passed/10existing skips,
 39examples, separateexamples/whitespace and exact canonical matrix passed. All26
 normal matrix CLI archives persist with readable checkpoints. No reviewed source
 changed by make. Delivery1c2c2fc pushed; mergedmake2018/10,39examples, separateexamples/whitespace/
-exactmatrix and26readablearchives passed. Integration is the merge containing this
-brief; LN07d complete. Reviewed source unchanged.
+exactmatrix and26readablearchives passed. Integrationc604463 pushed; LN07d complete. Reviewed source unchanged.
 
+LN07e exact seven-path plan/prompt/report prepared and root-reviewed; implementation
+next in isolated task checkout from this contract. Do not redispatch LN07d.
 Next LN07e archived CLI routes, LN08 browser/serve controls, then LN09 actual
 installed-Ollama/operator acceptance. Do not redispatch completed LN07d source.
 Original Task7 incomplete; no liveCLI/browser acceptance claimed. Preserve branches,
