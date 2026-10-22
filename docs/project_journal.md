@@ -1,5 +1,16 @@
 # Living World Simulator – Project Journal
 
+## LN06 integration complete — October 22, 2026
+
+Delivery5a3f58a merged after independent review and task/merged gates each1758/10,
+39examples, separate examples, whitespace and exact recorded matrices. Only root
+checkpoint documentation conflicted; source/tests match delivery exactly. LN06a+6b
+complete Task6; actualOllama acceptance remains LN09 and public entrypoints LN07/08.
+Root identified legacy CLI engine/state-reference compatibility as a concrete LN07
+seam: preserve ScenarioRunner and add an explicit archive observer rather than
+replacing injected-engine behavior. Exact bounded LN07 contracts follow before code.
+Owner edit/main/milestone/tag/branches/worktrees preserved.
+
 ## LN06b delivery usage checkpoint — October 22, 2026
 
 Reviewed delivery5a3f58a is pushed on preserved task branch. Independent SPEC/QUALITY
@@ -18,6 +29,15 @@ Amended exact contract/saved prompt in feature and task checkouts before additio
 optional source_point:ForkPoint and composition.source_point let LN07 pass one
 verified checkpoint/journal horizon to both. No new archive API/files. Worker is
 implementing/testing LN06b; review and full gates remain pending.
+
+## LN06b reviewed delivery — October 22, 2026
+
+Independent SPEC/QUALITY review passed without substantive findings. Root task make
+passed1,758tests/10existing skips, lint/format/Chrome and39examples; separate examples,
+whitespace and all exact recorded matrices passed. No code changed after review.
+The report records parsed untrusted IPC versus parent-owned world-boundary validation.
+Usage checkpoint before10%; delivery branch preserved, feature integration/merged
+gates remain next. No actualOllama acceptance or public entrypoint claim.
 
 ## LN06b exact contract — October 22, 2026
 

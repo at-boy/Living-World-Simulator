@@ -2,11 +2,17 @@
 
 ## Unreleased
 
+- Integrate reviewed LN06b bounded inference, sealed response recovery and exact
+  offline replay after merged gates. Public entrypoints and real acceptance follow.
+
 - Save the usage checkpoint after reviewed LN06b delivery5a3f58a and task gates;
   feature integration and merged validation remain pending.
 
 - Pin a shared captured source point for replay composition/driver construction,
   preventing concurrent source progress from choosing inconsistent replay horizons.
+
+- Deliver reviewed bounded Ollama decisions, sealed response recovery and exact
+  offline replay on the LN06b task branch; feature integration remains pending.
 
 - Define LN06b bounded Ollama/broker/live/replay contract using reviewed journal
   seals and imports. Implementation, public entrypoints and real acceptance follow.

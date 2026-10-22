@@ -1,9 +1,9 @@
 # LN06b implementation evidence
 
-Status: independent SPEC/QUALITY PASS; root task gates passed. Delivery5a3f58a is
-pushed on preserved codex/live-npc-ln06b-live-driver. Feature integration and merged
-validation remain pending; LN06 overall is not complete. No actual Ollama acceptance
-is claimed. All worker edits stay within the 13-file contract boundary.
+Status: complete LN06b stage; independent SPEC/QUALITY PASS, root task and merged
+gates passed. Delivery5a3f58a is pushed and integrated by the merge containing this
+report. LN06a+LN06b complete original Task6. Actual Ollama acceptance remains LN09;
+public CLI/service/browser entrypoints remain LN07/LN08.
 
 ## Implemented
 
@@ -131,3 +131,22 @@ resume: verify usage/Git/owner patch, merge the reviewed delivery into feature,
 repeat full merged make/separateexamples/whitespace/canonical matrix, then commit/
 push integration and mark Task6 complete. Do not redispatch implementation or repeat
 completed LN01–LN06a. LN07–LN09 remain unstarted; no main/milestone/tag movement.
+
+## Root merged acceptance — October 22, 2026
+
+Owner resumed with100% five-hour allowance. Task branch/ref and owner-local patch
+verified before merge. Only root-owned checkpoint documentation conflicted; reviewed
+source/tests are byte-identical to delivery5a3f58a.
+
+- Full merged `make` with the same VENV: passed, 1,758 tests / 10 existing skips,
+  lint/format, actual Chrome coverage and 39 examples.
+- Separate merged `make examples`: passed, 39 examples.
+- Merged exact canonical recorded matrix: all three hashes, duplicate fresh runs,
+  resume ticks1/3/4 and terminal zero-step checks passed.
+- Staged/unstaged `git diff --check`: passed; owner plan patch unchanged.
+
+Evidence: ln06b-merged-make.log, ln06b-merged-examples.log and
+ln06b-merged-matrix/results.json in current-plan ignored SDD workspace.
+No implementation redispatch or duplicate review was required. All task branches/
+worktrees retained. Main, milestone and release tag unchanged. LN07 exact contract
+is next; old CLI engine/state-reference compatibility must be retained.

@@ -12,14 +12,15 @@ gates1503/10 with39examples; integration evidence is recorded in its report. LN0
 task/merged gates1551/10,39examples. LN04 safe controller/recorded adapter passed independent review and task/merged gates1589/10,39examples; delivery906d23f and integration evidence in04report.
 LN05 feedback/live composition passed independent review and task gates1652/10,
 39examples; delivery64efb1e and task/merged evidence recorded in05report.
-LN06 is split into journal/recovery producer integrity (6a) and inference/replay (6b);
-it remains incomplete until both are reviewed. LN06a archive producer has independent SPEC/QUALITY PASS after one bounded correction
-and root task/merged gates1,722/10,39examples plus exact recorded matrices; delivery6469a38
-is pushed and integrated by the merge containing its report. LN06b delivery5a3f58a is pushed after independent SPEC/QUALITY PASS and root task
-1758/10,39examples/exact recorded matrices. Feature integration and merged gates
-remain pending; next resume starts there, not implementation redispatch. LN07 must
-share composition.source_point with replay driver. LN06 must supply a closed semantic cursor excluding operational IDs/time/counts.
-Live decisions, public control entrypoints and automatically archived entrypoints remain later tasks. Future player commands remain separate from current operator controls.
+LN06a archive delivery6469a38 and LN06b runtime delivery5a3f58a are reviewed and
+integrated; LN06b task/merged gates1758/10,39examples and exact recorded matrices
+passed. Original Task6 is complete. LN07 public CLI/service/restart work is next;
+legacy generic/taped/raw-database CLI and injected engine/state-reference hooks must
+remain compatible. Add an explicit archive observer to the existing runner, not a
+second copied loop. New live entrypoints retain RunController ownership. LN07 must
+share replay composition.source_point with driver. Browser controls remain LN08 and
+actual installed-Ollama/operator acceptance LN09. Future player APIs are separate.
+
 
 
 October19 owner integration: milestone6bf4c63 merged to main092715c and tagged

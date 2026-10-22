@@ -806,3 +806,32 @@ checkpoint revision renumbering. The driver owns the closed semantic cursor cont
 and must exclude request/attempt UUIDs, wall time and operational revisions/counts.
 LLM output remains an untrusted proposal; ordinary simulation gateways alone own
 world mutation, goal completion and settlement progression.
+
+### Bounded live runtime provider flow
+
+The live driver prepares holder-scoped founders feedback and offered action labels
+outside the simulation step. Its request-size callback must measure the complete
+Ollama payload returned by `build_payload`, encoded with sorted compact ASCII JSON;
+the driver and spawned worker independently enforce the 16000-character body cap.
+Required identity, mandate and action vocabulary remain present. Optional feedback
+is pruned by `FoundersFeedback` within its fixed eight-perception/eight-memory caps.
+
+Only provider configuration, serialized NPC-readable context/action vocabulary and
+an owned result path enter a fresh spawned process. Actor/entity IDs, handlers,
+engine state, fingerprints and journal identities remain in the parent. HTTP uses a
+credential-free loopback origin, disables proxy lookup and redirects, bounds raw
+response reads, and reports fixed failure codes plus optional complete-byte hashes.
+Raw invalid responses and reasoning are never persisted. Parent validation checks
+every returned prose field against the current information boundary before recording
+a validated response.
+
+Inference produces proposals only. A private proposal-phase system revalidates
+staged decisions, fetches fresh offers and dispatches through `NPCActionResolver`
+and `SimulationEngine.resolve_npc_action`; ordinary managers retain mutation
+ownership. Speech is not automatically broadcast or copied into shared memory.
+Only complete ticks atomically own action outcomes, exact world snapshots and
+semantic driver/feedback cursors. Sealed fork recovery imports verified safe
+responses with local request identities, and uncertain/failed inference requires
+explicit Retry. Offline replay captures one source checkpoint/journal horizon,
+regenerates filtered requests with source configuration, applies the same gateways,
+and compares complete worlds/cursors/outcomes before publication without network.
