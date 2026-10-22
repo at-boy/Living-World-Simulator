@@ -793,3 +793,85 @@ def test_work_inspection_is_privileged_id_ordered_and_detached() -> None:
     records[0]["definition"]["public_label"] = "changed"
     assert engine.state.work_definitions[definition.id].public_label == "Fetch water"
     assert client.post("/world/work-orders").status_code == 405
+
+
+def test_reusable_router_preserves_all_world_routes() -> None:
+    import threading
+
+    from fastapi import Request
+
+    from living_world.api.inspection_routes import create_inspection_router
+
+    engine, root = make_client()
+    calls: list[tuple[dict[str, object], int]] = []
+    main_thread = threading.get_ident()
+    inspector = EngineWorldInspector(engine)
+
+    def resolve(request: Request) -> WorldInspector:
+        calls.append((dict(request.path_params), threading.get_ident()))
+        return inspector
+
+    app = FastAPI()
+    router = create_inspection_router(resolve)
+    app.include_router(router, prefix="/pinned/{revision}")
+    client = ASGIClient(app)
+    root_routes = [r for r in root.app.routes if r.path.startswith("/world")]
+    assert [r.path for r in root_routes] == [
+        "/world/tick",
+        "/world/replay",
+        "/world/run",
+        "/world",
+        "/world/entities",
+        "/world/entities/{entity_id}",
+        "/world/definitions",
+        "/world/resources",
+        "/world/relationships",
+        "/world/placements",
+        "/world/external-references",
+        "/world/external-dispatches",
+        "/world/goals",
+        "/world/settlement-stages",
+        "/world/needs",
+        "/world/consequences",
+        "/world/work-orders",
+        "/world/events",
+        "/world/npcs",
+        "/world/observations",
+        "/world/memories",
+        "/world/knowledge",
+        "/world/beliefs",
+        "/world/experiences",
+        "/world/cognitive-history/{holder_id}",
+    ]
+    assert [
+        ("/pinned/{revision}" + r.path, r.name, r.methods) for r in router.routes
+    ] == [("/pinned/{revision}" + r.path, r.name, r.methods) for r in root_routes]
+    assert [p for p in app.openapi()["paths"]] == [
+        "/pinned/{revision}" + r.path for r in root_routes
+    ]
+    assert [p for p in root.app.openapi()["paths"] if p.startswith("/world")] == [
+        r.path for r in root_routes
+    ]
+    for route in root_routes:
+        path = route.path.replace("{entity_id}", "entity_000002").replace(
+            "{holder_id}", "entity_000001"
+        )
+        before = len(calls)
+        response = client.get("/pinned/3" + path)
+        expected = root.get(path)
+        assert (response.status_code, response.json()) == (
+            expected.status_code,
+            expected.json(),
+        )
+        assert len(calls) == before + 1
+        assert calls[-1][0]["revision"] == "3"
+        assert calls[-1][1] != main_thread
+        for method in ("POST", "PUT", "PATCH", "DELETE"):
+            assert client.request(method, "/pinned/3" + path).status_code == 405
+    for path in (
+        "/world/entities/missing",
+        "/world/cognitive-history/missing",
+        "/world/run",
+    ):
+        assert client.get("/pinned/3" + path).json() == root.get(path).json()
+        assert client.get("/pinned/3" + path).status_code == 404

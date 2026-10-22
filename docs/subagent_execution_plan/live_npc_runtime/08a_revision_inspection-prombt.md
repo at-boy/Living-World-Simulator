@@ -18,3 +18,12 @@ No VCS/index/commits/subagents/fullmake/examples/installs/othercheckout writes. 
 owns architecture/task/prompt/common docs, independent review and full gates. Important
 ambiguity or prerequisite ->root before choosing architecture or boundary expansion.
 User usage guard: root monitors; obey checkpoint request promptly, stop before10%.
+
+Read root router-compatibility clarification before mounting source change: preserve
+flat existing create_app inventory via concrete route attachment at construction,
+no private FastAPI internals, root/prefixed HTTP and OpenAPI coverage required.
+
+Root review1 failed-reservation clarification binds before correction: valid typed
+archive_initialization_failed reservation with no complete world ->not_found, while
+physical corruption remains archive_invalid. Test both pre-DB and create-then-raise
+producer paths; preserve all failure artifacts; no catalog/source scope expansion.

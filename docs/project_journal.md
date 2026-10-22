@@ -1,5 +1,17 @@
 # Living World Simulator – Project Journal
 
+## LN08a reviewed revision-inspection delivery — October 23, 2026
+
+Shared25GET handlers preserve root/prefixed JSON, names/order/OpenAPI and readonly
+behavior. Detached exact revision source reuses retained-snapshot loader with8LRU,
+concurrency and safe missing/corrupt diagnostics. Root-approved concrete root route
+attachment preserves installedFastAPI lazy-include compatibility without weakening
+old inventory tests. One independentP2 failed reservation/no-world classification
+was corrected with RED2/GREEN2; scoped SPEC/QUALITYPASS, zeroopen. Focused77 and root
+taskmake2087/10,39examples,separateexamples/whitespace/exactcanonical26archives/newCLI7
+cases passed; source unchanged by gates. Feature integration/merged gates follow.
+Auth/controlAPI, browser/serve and installed-model acceptance remain incomplete.
+
 ## LN08a revision-inspection contract — October 23, 2026
 
 LN07e deliveryf9281f9/integrationbca7e0b completes archived CLI consumption after

@@ -1,3 +1,22 @@
+# Continuation brief — LN08a reviewed delivery, October 23, 2026
+
+## Current authoritative state
+
+LN07e deliveryf9281f9/integrationbca7e0b complete. LN08a reusable readonly inspection
+implementation independently reviewed afterone corrected failed-reservation/no-world
+P2; scoped SPEC/QUALITYPASS zeroopen. Focused77; root taskmake2087/10existing skips,
+39examples,separateexamples/whitespace,exactcanonical26readablearchives andnewCLI7cases
+passed. Source unchanged after review. Deliverycommit/push and featureintegration/
+repeatedmergedgates follow. Do not redispatch completed implementation/review.
+
+Next LN08b local authenticated operatorAPI, then browserassets andCLIserve. Draft
+8b-contract-draft.md/ln08b-root-decisions.md inignoredSDDworkspace are rootpreparation,
+not sourceauthority. Exactcontract mustbe finalized against8aintegration beforeworker.
+No operatorcontrols/browser/real-model completion claimed. Usageguard stopbefore10%
+withheadroom; preservebranches/worktrees and exactowneredit.
+
+## Prior context
+
 # Continuation brief — LN07e integrated; LN08a authorized, October 23, 2026
 
 ## Current authoritative state
