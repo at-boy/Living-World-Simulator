@@ -1,16 +1,41 @@
 # Continuation brief — LN07b complete, usage checkpoint, October 22, 2026
 
-## Current resume — October22
+## Current usage checkpoint — resume here
 
-Owner resumed from724d15a with97%five-hourremaining. Earlier15%pause is historical.
-LN07c forksetup reviewed afterone corrected early allocation failure; task1956/10,
-39examples,separateexamples/whitespace/exactmatrix plus26readable archives passed.
-Deliveryada9b8b integrated by the merge containing this brief; merged1956/10,39examples,
-separateexamples/whitespace/exactmatrix with26readable archives passed. Next LN07d
-service/recorded restart (exact17path plan/prompt/report prepared fromd782e20),
-then LN07e CLI consumers.
-Two narrow probes confirm the parent-aware completion seam and legacy generic
-adapter requirements. No service/CLI implementation yet; no07cimplementation/reviewredispatch.
+Owner resumed from724d15a with97%five-hourremaining. LN07c parent-aware deferred
+fork setup is COMPLETE: deliveryada9b8b, integrationd782e20 pushed. Independent
+SPEC/QUALITYPASS afterone corrected earlyallocated linkage failure. Task/merged
+make1956passed/10existing skips,39examples,separateexamples/whitespace/exact
+canonicalmatrices and26mergedreadable CLIarchives passed. No7credispatch.
+
+LN07d contract44392ff pushed. Workercompleted implementation in isolated durable
+.worktrees/live-npc-ln07d, branchcodex/live-npc-ln07d-runtime-service at44392ff.
+Exact17files STAGED and UNCOMMITTED (15workerfiles plus2rootamendedplan/prombt;
+17allowedworkerpaths,2allowedtestfilesunchanged). Focused172passed/61.19s, scoped
+Ruff/Black16Pythonfiles/whitespacepassed. Root has NOT independently reviewed or
+run fulltask/mergedgates; no implementationcommit/integration or capabilityapproval.
+Do NOT repeat completedimplementation or dispatchnextCLI/browserwork.
+
+Allworkers/reviewers completed; pause atabout19%five-hourremaining with headroom
+BEFORE10%. Do not automaticallyresume. NextOWNERresume: usage/Git/ownerpatch/SHA
+verification, then fresh independentSPEC/QUALITYreview of exact ln07d-review-1.diff
+against07dplan/prombt andtaskreport. Reviewcannot be inferred from172focusedpasses.
+Root owns corrections/re-review, fulltaskmake/separateexamples/whitespace/exact
+canonicalmatrix withpersistedCLIarchives, deliverycommit/push, featuremerge plus
+repeatmergedgates. Preserve all branches/checkouts and exact owner-local plan edit.
+
+Evidence current-plan ignored SDDworkspace: ln07d-review-1.diff,
+ln07d-staged-checkpoint.tar.gz,ln07d-staged-sha256.json,ln07d-task-base.txt,
+ln07d-task-status.txt,progress.md. Taskreport is in LN07d taskcheckout. Rootamended
+plan/prombt preserved BOTHcheckouts: semanticterminal meanscustomgamecondition,
+neverhistoricalbudget/Stopmanifest; settle_shutdown leavesarchiveopen forfinalmirror
+failureaudit, thenclose. No source lifecycle propagation. Worker documented one
+interrupted recordedtest session73076/exit130, fixedfinallyshutdown andconfirmed
+cleanup; final172focusedrun clean. No known unresolved issue, reviewrequired.
+
+LN07e CLI, LN08 browser/serve controls and LN09 installed-Ollama/operator acceptance
+remain incomplete. No liveCLI/browsercompletion claimed. Protected main/milestone/
+tag unchanged; ownerpatchSHA294b20313ae2de248301fa20bbb4f9c312d51efa4851a434466f98a588dd93e6.
 
 ## Prior checkpoint
 

@@ -280,3 +280,39 @@ Focused final command: PYTHONPATH=src "$TASK_PY" -m pytest
  tests/test_runtime_controller.py tests/test_runtime_founders_feedback.py
  tests/test_runtime_journal_replay.py -q.
 TASK_PY=/home/at-boy/Projects/codex/Living-World-Simulator/.worktrees/task24/.venv/bin/python.
+
+## Root construction clarification — semantic versus attempt termination
+
+For zero-extra-turn startup, terminal means ONLY an authoritative custom/game
+condition returned by composition.terminal_condition(restored_world). A source
+manifest's COMPLETED from tick/request budget, STOPPED from operator exit, or
+FAILED/INTERRUPTED is an operational attempt outcome, not permanent world death.
+Never copy source lifecycle/attempt_finished/control/request rows into the child.
+New child starts from exact saved world/cursors with renewed child-relative limits;
+valid stopped/budget-limited worlds must continue. Pending/failed provider requests
+still require existing explicit Retry. True custom terminal plain live resume may
+skip GET using resolved pinned config and must not generate/step; changedprovider
+terminal fork still resolves newmodel viaGET, then detects customterminal with0turns.
+
+Regression cases: stop at tickk thenshutdown/resume child+1; budget-limited completed
+nonterminal source resumes andadvances undernew childbudget; truegame terminal
+zeroextraGET/generation forplainresume. No source lifecycle propagation even for
+unchanged explicitfork. Same17paths; this clarifies existing world/attempt ownership.
+
+## Root shutdown/mirror construction clarification
+
+Final mirror must run after Stop publication but before archive close, so a mirror
+failure can durably record failed attempt at the last complete checkpoint. Add
+owner-only RunController.settle_shutdown()->None, factoring existing close settlement
+(initial queue/initialization/stop/pending rejection/discard and safe shutdownfailure)
+without closing archive or setting _closed. It is idempotent for settled/terminal
+controllers. close calls this helper then archive.close and _closed=True as before;
+no copied settlement loop and existing direct close behavior remains compatible.
+
+Service owner shutdown queues internal initialStop when required by contract, calls
+settle_shutdown, exports final complete checkpoint if needed while archive open,
+records mirror_failed via fail_service on failure, then finally controller.close
+and launch bundle close. No service call to private controller._stop, no temporary
+reopening of a closed controller/archive, no source changes. Same17paths.
+Test finalmirrorfailure on stopped/nonterminal shutdown and completed final boundary,
+exact archived snapshotahead and failed lifecycle, safe repeatedshutdown/cleanup.

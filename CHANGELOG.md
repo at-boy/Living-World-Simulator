@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Save the service implementation handoff and usage checkpoint; focused checks pass,
+  while independent review, full gates and integration remain pending.
+
 - Define owner-thread service/restart construction, generic recorded adapters and
   pure startup validation before CLI/browser integration.
 

@@ -1,5 +1,21 @@
 # Living World Simulator – Project Journal
 
+## LN07d worker handoff and usage checkpoint — October22,2026
+
+LN07c deliveryada9b8b/integrationd782e20 complete, task/merged1956/10,39examples and
+exact matrices passed. LN07d contract44392ff is pushed; workercompleted17pathbounded
+implementation in .worktrees/live-npc-ln07d. Exact17changedfiles staged/uncommitted
+(15worker plus2rootamendedtaskdocs);172focusedtests passed with scopedstyle/whitespace.
+No independentreview, fulltask/mergedgates, implementationcommit or integration yet.
+
+Rootpauseabout19%fivehourremaining, beforeowner10%threshold; allagentscompleted.
+Stable reviewdiff,17filetar/SHA/base/status saved inignoredcurrent-planworkspace.
+Nextresume freshindependentreview ofstablehandoff, notimplementationredispatch.
+Two root construction clarifications were appliedbeforecode: worldsemanticterminal
+versusoperationalattemptend, and archiveopen settlementbeforefinalmirror. Worker
+reporttruthfully records interruptedtest73076/exit130 and correctedcleanup; final
+focusedrun clean. CLI/browser/installedmodelacceptance remain upcoming.
+
 ## LN07d service contract — October22,2026
 
 LN07c integrationd782e20 passed all reviewed task/merged gates. Root exact17path
