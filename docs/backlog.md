@@ -17,8 +17,8 @@ integrated; LN06b task/merged gates1758/10,39examples and exact recorded matrice
 passed. Original Task6 delivery is reviewed; consumer integration exposed a bounded06c
 shutdown same-world response-reuse correction, now independently reviewed with
 task/mergedgates1767/10,39examples; delivery0eca121 integrated by the merge
-containing its report. LN07 is split into7a automatically archived legacy CLI and7b controller-owned live/
-service/restart entrypoints. LN07a deliverycd5e40d is reviewed; task1800/10,39examples/exactmatrix and26retained
+containing its report. LN07 is split into7a archived legacy CLI,7b setup/model-preflight producer and
+7c controller-owned live/service/restart entrypoints. LN07a deliverycd5e40d is reviewed; task1800/10,39examples/exactmatrix and26retained
 CLIattempts passed. Merged1809/10,39examples,separateexamples/whitespace/exactmatrix
 and26readable archives passed. Original Task7 remains incomplete; bounded setup/model
 preflight precedes service/live/restart entrypoints.

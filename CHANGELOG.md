@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Define bounded setup reservations and installed-model preflight before immutable
+  live archive configuration; service entrypoints consume this producer next.
+
 - Integrate reviewed automatic legacy CLI archives after task and merged validation;
   preserve exact recorded worlds and retain all 26 matrix-run archives.
 

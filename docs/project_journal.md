@@ -1,5 +1,15 @@
 # Living World Simulator – Project Journal
 
+## LN07b producer contract — October22,2026
+
+LN07a integrationd975539 is pushed. Preflight investigation confirmed that reserving
+ordinary archives before discovering installed model digest would freeze incomplete
+configuration. Root chooses immutable discoverable setup intent, verified retained
+inputs, bounded owned GET worker, then one-time ordinary archive publication. No
+initialized config rewrite. Exact7b contract/prompt defines failure/interruption,
+lease/root/parity checks, model matching and tests;7c will consume these interfaces.
+No source implementation at this contract commit.
+
 ## LN07a integration — October22,2026
 
 Reviewed deliverycd5e40d integrated with06c; source unchanged. Taskmake1800/10 and
