@@ -26,3 +26,17 @@ codex/Living-World-Simulator/.worktrees/task24/.venv/bin/python, PYTHONPATH=src.
 NoVCS/index/subagents/fullmake/examples/install/othercheckoutwrites. ScopedRuff/Black/
 whitespace/selfreview/reportwithactualcounts/commands/limits. Rootreview/fixloops/
 fulltask+mergedgates beforecommit. Stopandcheckpointifrootcallsusagepause.
+
+Root construction clarification: terminalforzero-turnmeansauthoritativecustomgame
+condition, NOT sourceoperationalcompletedbudget/stopped/failedmanifest. Nevercopy
+source lifecycle/attempt_finished rows. Child resumesvalidsavedworld withrenewed
+relativebudget; truecustomterminalplainresumeskipsGET/generation. Readexactamendment.
+
+Rootshutdown/mirrorclarification: factorowner-onlycontroller.settle_shutdown from
+close, archiveopenuntilafterfinalmirror; failurethenfail_service, finallyclose. No
+serviceprivate_stop orduplicatedsettlementloop. Readexactamendmentbeforeimplementation.
+
+Rootreview1 correction expands17->19allowedpaths bycatalog.py andcatalogtests ONLY
+forpostallocationforkerrorrefwrapper. Readexactamendment beforefix. Repairneither
+source norchild; settleallocatednewchildfailed withactualrevision. Earlyprepoll
+cancel usesarchiveopen settle/finalmirror/audit/close; no mirror skipped infinally.

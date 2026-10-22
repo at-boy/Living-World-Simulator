@@ -249,9 +249,18 @@ class AttemptConfig:
                     "max_memories",
                     "max_request_characters",
                     "save_every",
+                    "continuous",
                 },
             )
+            if "continuous" in limits and (
+                self.mode != "recorded"
+                or type(limits["continuous"]) is not bool
+                or (limits["continuous"] and limits.get("max_ticks") is not None)
+            ):
+                raise ArchiveFormatError("Invalid recorded continuous intent.")
             for key, value in limits.items():
+                if key == "continuous":
+                    continue
                 if key != "max_ticks" or value is not None:
                     integer(
                         value,

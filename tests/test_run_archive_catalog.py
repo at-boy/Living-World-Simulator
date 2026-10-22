@@ -556,24 +556,47 @@ def test_nested_loader_paths_preserve_exact_original_scenario_bytes(
     )
 
 
+@pytest.mark.parametrize("phase", ["retention", "before_cp0", "after_cp0"])
 def test_failed_fork_keeps_reserved_child_and_parent_unchanged(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, phase: str
 ) -> None:
     import living_world.archives.catalog as module
 
     catalog, ref, _ = initialized(tmp_path)
-    old = (ref.directory / "archive.sqlite3").read_bytes()
+    old = {
+        p.relative_to(ref.directory): p.read_bytes()
+        for p in ref.directory.rglob("*")
+        if p.is_file()
+    }
+    original_commit = AttemptArchive.commit
 
-    def fail(*args: object, **kwargs: object) -> None:
-        raise ArchiveError("injected retention failure")
+    def fail_retention(*args: object, **kwargs: object) -> None:
+        raise RuntimeError("injected retention failure")
 
-    monkeypatch.setattr(module, "retain_inputs", fail)
-    with pytest.raises(ArchiveError):
+    def commit(archive: AttemptArchive, *args: object, **kwargs: object) -> Checkpoint:
+        if phase == "after_cp0":
+            original_commit(archive, *args, **kwargs)
+        raise OSError("injected clone failure")
+
+    if phase == "retention":
+        monkeypatch.setattr(module, "retain_inputs", fail_retention)
+    else:
+        monkeypatch.setattr(AttemptArchive, "commit", commit)
+    with pytest.raises(ArchiveReservationError) as failure:
         catalog.fork(ref.attempt_id, 0)
+    assert isinstance(failure.value.__cause__, (RuntimeError, OSError))
     summaries = catalog.attempts()
     (child,) = [item for item in summaries if item.ref != ref]
-    assert child.parent == (ref.attempt_id, 0) and child.tick is None
-    assert (ref.directory / "archive.sqlite3").read_bytes() == old
+    assert failure.value.ref == child.ref
+    assert child.parent == (ref.attempt_id, 0)
+    assert child.last_revision == (0 if phase == "after_cp0" else None)
+    with AttemptLease(child.ref):
+        pass
+    assert {
+        p.relative_to(ref.directory): p.read_bytes()
+        for p in ref.directory.rglob("*")
+        if p.is_file()
+    } == old
 
 
 def test_lock_probe_never_changes_mtime_and_closed_handle_is_not_owned(

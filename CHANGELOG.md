@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add independently reviewed runtime ownership, exact linked restart/fork/replay,
+  generic recorded continuation, safe shutdown and archive-first final mirrors.
+
 - Define owner-thread service/restart construction, generic recorded adapters and
   pure startup validation before CLI/browser integration.
 

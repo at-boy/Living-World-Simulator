@@ -1168,3 +1168,18 @@ def test_live_offers_refresh_after_cancelling_and_replacing_work_target(
     assert any("Gather water" in option.target_labels for option in after)
     assert replacement.id != old.id
     assert before != after
+
+
+def test_checkpoint_validation_never_stages_feedback(tmp_path: Path) -> None:
+    from living_world.runtime.feedback import FoundersFeedback
+
+    live = composition(tmp_path)
+    engine = live.initialize()
+    feedback = FoundersFeedback(lambda context, options: 0)
+    cursor = feedback.initialize(engine)
+    base = Checkpoint(0, encode_world(engine.state), {}, cursor)
+    candidate = live.restore(base.snapshot)
+    assert hasattr(feedback, "validate_checkpoint")
+    feedback.validate_checkpoint(candidate, base)
+    assert encode_world(candidate.state) == base.snapshot
+    assert not feedback._staged

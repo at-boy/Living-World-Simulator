@@ -128,6 +128,50 @@ def test_snapshot_repository_is_detached_and_cannot_save() -> None:
         repository.save_world(first)
 
 
+def test_recorded_continuous_intent_is_closed_metadata() -> None:
+    from living_world.archives import ArchiveFormatError
+
+    assert AttemptConfig("recorded", "s", 0, "test", {"limits": {"continuous": True}})
+    for mode, limits in (
+        ("ollama", {"continuous": False}),
+        ("recorded", {"continuous": 1}),
+        ("recorded", {"continuous": True, "max_ticks": 1}),
+    ):
+        with pytest.raises(ArchiveFormatError):
+            AttemptConfig(mode, "s", 0, "test", {"limits": limits})
+
+
+def test_legacy_recorded_cursor_is_preserved_and_validation_is_pure(
+    tmp_path: Path,
+) -> None:
+    from living_world.runtime.legacy import legacy_cursor
+
+    catalog, ref = reserve(tmp_path, "success")
+    with (
+        AttemptLease(ref),
+        catalog.open_attempt(ref.attempt_id, read_only=False) as archive,
+    ):
+        composition = RecordedFoundersComposition(load_retained_inputs(ref))
+        engine = composition.initialize()
+        driver = RecordedTickDriver(cursor_kind="legacy_recorded")
+        commit = driver.initialize(engine, archive)
+        assert dict(commit.driver_cursor) == legacy_cursor(engine)
+        saved = archive.commit(
+            encode_world(engine.state),
+            expected_revision=None,
+            driver_cursor=commit.driver_cursor,
+            feedback_cursor={},
+            entries=(),
+        )
+        before = encode_world(engine.state)
+        driver.validate_checkpoint(engine, saved, archive)
+        assert encode_world(engine.state) == before
+        assert (
+            driver.prepare(engine, saved, archive).finish_tick().driver_cursor
+            == saved.driver_cursor
+        )
+
+
 def test_paused_parent_fork_reproduces_world_cursor_and_history(tmp_path: Path) -> None:
     catalog, ref = reserve(tmp_path, "success")
     with (
@@ -279,3 +323,45 @@ def test_discarded_recorded_candidate_is_collectable_while_composition_lives(
     assert current.state.tick == 1
     composition.finalize(current, stopped=True)
     assert encode_world(current.state).schema_version == 12
+
+
+def test_generic_recorded_without_tape_and_unknown_terminal(tmp_path: Path) -> None:
+    from living_world.runtime import recorded
+
+    assert hasattr(recorded, "RecordedScenarioComposition")
+    (tmp_path / "world.yaml").write_text("definitions:\n  - key: person\n")
+    scenario_path = tmp_path / "scenario.yaml"
+    scenario_path.write_text("""schema_version: 1
+key: generic
+seed: 7
+definitions: world.yaml
+run:
+  max_ticks: 2
+  terminal_conditions: [tick_limit]
+entities:
+  - label: actor
+    definition: person
+    name: Ada
+relationships: []
+""")
+    catalog = RunCatalog(tmp_path / "runs")
+    ref = catalog.reserve(AttemptConfig("recorded", "generic", 7, "test", {}))
+    inputs = retain_inputs(ref, scenario_path, tape_path=None)
+    composition = recorded.RecordedScenarioComposition(inputs, max_ticks=2)
+    engine = composition.initialize()
+    assert composition.terminal_condition(engine) is None
+    engine.step()
+    engine.step()
+    assert composition.terminal_condition(engine) == "tick_limit"
+    composition.finalize(engine, stopped=False)
+    assert encode_world(
+        composition.restore(encode_world(engine.state)).state
+    ) == encode_world(engine.state)
+    scenario_path.write_text(
+        scenario_path.read_text().replace("[tick_limit]", "[unknown]")
+    )
+    ref2 = catalog.reserve(AttemptConfig("recorded", "generic", 7, "test", {}))
+    with pytest.raises(ValueError):
+        recorded.RecordedScenarioComposition(
+            retain_inputs(ref2, scenario_path, tape_path=None)
+        ).initialize()

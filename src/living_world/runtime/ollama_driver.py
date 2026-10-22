@@ -271,11 +271,11 @@ class OllamaTickDriver:
             (),
         )
 
-    def prepare(
+    def validate_checkpoint(
         self, candidate: SimulationEngine, base: Checkpoint, archive: AttemptArchive
-    ) -> _LivePreparation:
-        if archive.checkpoint() != base:
-            raise ArchiveFormatError("Stale complete checkpoint.")
+    ) -> None:
+        if archive.checkpoint(base.revision) != base:
+            raise ArchiveFormatError("Unknown complete checkpoint.")
         if self.config != provider_config(archive.config):
             raise ArchiveFormatError("Provider configuration mismatch.")
         binding = _binding(candidate, archive)
@@ -298,6 +298,16 @@ class OllamaTickDriver:
             linked = _parent(archive, base, {archive.ref.attempt_id})
             if linked is not None:
                 linked[0].close()
+        self.feedback.validate_checkpoint(candidate, base)
+
+    def prepare(
+        self, candidate: SimulationEngine, base: Checkpoint, archive: AttemptArchive
+    ) -> _LivePreparation:
+        if archive.checkpoint() != base:
+            raise ArchiveFormatError("Stale complete checkpoint.")
+        self.validate_checkpoint(candidate, base, archive)
+        fingerprint = effective_config_fingerprint(archive.config)
+        binding = _binding(candidate, archive)
         items = self.feedback.prepare(candidate, base)
         client = client_for(self.config)
         for item in items:
