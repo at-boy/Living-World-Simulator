@@ -1,46 +1,19 @@
-# Continuation brief — LN07e delivered; usage checkpoint, October 22, 2026
+# Continuation brief — LN07e integrated, October 23, 2026
 
-## Resume here
+## Current authoritative state
 
-Owner resumed the approved live NPC runtime plan. Root is checkpointing with headroom
-BEFORE five-hour remaining falls below10%. Do not automatically resume or consume a
-usage reset. All workers/reviewers completed; all validation commands closed.
+Owner resumed with99%five-hourremaining. Reviewed LN07e deliveryf9281f9 is integrated
+by the merge containing this brief. Root repeated mergedmake2055/10existing skips,
+39examples,separateexamples/whitespace, exact canonicalmatrix26readablearchives and
+newCLI7retainedcases including2failed/uninitialized. Source exactdelivery unchanged
+after review/gates; only root-owned docs conflicted. Do not redispatch completed
+implementation/review/task gates. All branches/worktrees/owner-local edit preserved.
 
-Feature checkout `.worktrees/live-npc-runtime`, branch `codex/live-npc-runtime`:
-LN07d delivery1c2c2fc/integrationc604463 complete/pushed, followed by LN07e contract
-0f9e33e and the root checkpoint containing this brief. LN07e source is NOT merged.
-
-LN07e delivery **f9281f9** is committed/pushed on preserved
-`codex/live-npc-ln07e-archived-cli`, checkout `.worktrees/live-npc-ln07e` clean.
-Initial independent review found one P1: a completed/stopped status read before
-shutdown could report success after final mirror failure. Root amended exact task/
-prompt before correction; worker RED2→GREEN2, final focused143/58.25s. Scoped review:
-SPEC PASS / QUALITY PASS, P1 addressed, zero open, NO SUBSTANTIVE FINDINGS.
-
-Root task gates ALL passed:
-- make:2055passed/10existing deliberate skips,39examples;
-- separate make examples:39passed; whitespace and source unchanged by gates;
-- exact full schema12 canonical success/stall/failure matrix, two fresh runs,
-  resume1/3/4 and terminal zero-step;26normal CLIarchives retained/readable;
-- seven clean normal newCLI cases: exact linked initial world/driver/feedback,
-  resumedtick2/forkedtick3 equal uninterrupted worlds, parent bytes unchanged,
-  readonly selected-checkpoint inspection; two failed/uninitialized cases retained.
-Root helper initially used invalid missing-source UUID and hit parser rejection;
-corrected clean rerun passed. All seven initial attempts and failure evidence remain.
-
-Do NOT redispatch completed implementation/review or rerun task gates without new
-source changes. Next OWNER resume:
-1. Check usage, current branches/status/remote refs and preserved owner patch.
-2. Merge f9281f9 into feature using --no-ff --no-commit. Root-owned checkpoint docs
-   may conflict; resolve truthfully, keep reviewed source exactly delivery. Do not
-   include or reset the owner-local master-plan edit.
-3. Run merged make, AFTER completion separate make examples, whitespace, exact
-   canonical matrix and newCLI acceptance helper. Verify source still matches
-   f9281f9,26canonical archives and7newCLI attempts retained/readable.
-4. Append truthful merged acceptance/common docs, commit/push feature integration.
-5. Then materialize bounded LN08 contracts before source; browser/serve controls and
-   historical inspector remain incomplete. LN09 installed-Ollama/operator acceptance
-   follows. Original LN07 remains incomplete until actual serve acceptance in LN08.
+Next: exact bounded LN08a reusable GET router/detached revision source, then local
+auth/operator API, browser assets and CLI serve. LN09 actual installed-Ollama/operator
+acceptance follows. Original LN07 incomplete until actual serve acceptance in LN08.
+No browser controls or real-model acceptance claimed. Usage guard remains stop with
+headroom BEFORE10%five-hourremaining; no reset authorized.
 
 ## Evidence and exact artifacts
 
@@ -65,7 +38,7 @@ ln08-root-preflight.md are root investigation, NOT implementation contracts.
 Reuse GET inspection router/default URLs; detached exact retained-scenario snapshot
 inspection, no runner/preparation/provider;8entry cache and archive fallback. Root
 must synthesize final auth/Origin/CSRF, UI credential memory and serve lifecycle
-contracts, preserve browser compatibility and complete7serve. No LN08 task dispatched.
+contracts, preserve browser compatibility and complete7serve. Root preparing bounded LN08a contract; no LN08 source task dispatched yet.
 
 ## Authority and invariants
 

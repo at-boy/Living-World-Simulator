@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Integrate reviewed archived CLI after repeated merged validation and exact
+  canonical/newCLI acceptance with retained successful and failed archives.
+
+- Add reviewed archived live CLI, exact resume/fork, offline replay, interrupt
+  cleanup and read-only checkpoint inspection; preserve recorded aliases/hooks.
+
 - Checkpoint reviewed, task-validated archived CLI delivery before the usage guard;
   feature integration and merged validation remain pending.
 

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import math
 import signal
 import sys
 from collections.abc import Callable, Sequence
@@ -40,6 +41,12 @@ from living_world.running import (
     ScenarioRunner,
     StopControl,
 )
+from living_world.runtime.entrypoints import (
+    RuntimeCLIError,
+    load_archived_inspection,
+    run_archived,
+    validate_archived_options,
+)
 from living_world.runtime.legacy import LegacyArchiveSession
 from living_world.scenarios import ScenarioCompatibilityError, ScenarioLoadError
 from living_world.scenarios.scenario import LoadedScenario, YAMLScenarioLoader
@@ -76,11 +83,21 @@ def build_parser() -> argparse.ArgumentParser:
         "--founders", choices=[outcome.value for outcome in FoundersOutcome]
     )
     run.add_argument("--archive-root", type=Path)
-    run.add_argument("--database", type=Path, default=Path("world.sqlite3"))
+    run.add_argument("--database", type=Path)
+    run.add_argument("--preset", choices=["founders"])
+    run.add_argument("--driver", choices=["ollama"])
+    run.add_argument("--model")
+    for option in ("resume-attempt", "fork-attempt", "replay-attempt"):
+        run.add_argument("--" + option)
+    run.add_argument("--checkpoint", type=_non_negative_integer)
+    run.add_argument("--base-url")
+    run.add_argument("--timeout-seconds", type=_positive_float)
+    run.add_argument("--max-output-tokens", type=_positive_integer)
+    run.add_argument("--max-requests", type=_positive_integer)
     limits = run.add_mutually_exclusive_group()
     limits.add_argument("--max-ticks", type=_non_negative_integer)
-    limits.add_argument("--continuous", action="store_true")
-    run.add_argument("--save-every", type=_positive_integer, default=1)
+    limits.add_argument("--continuous", action="store_true", default=None)
+    run.add_argument("--save-every", type=_positive_integer)
     run.add_argument("--proposal-tape", type=Path)
     run.add_argument("--checkpoint-only", action="store_true")
     inspect = subcommands.add_parser(
@@ -88,7 +105,10 @@ def build_parser() -> argparse.ArgumentParser:
     )
     inspect.add_argument("scenario", type=Path, nargs="?")
     inspect.add_argument("--founders", action="store_true")
-    inspect.add_argument("--database", type=Path, required=True)
+    inspect.add_argument("--database", type=Path)
+    inspect.add_argument("--attempt")
+    inspect.add_argument("--checkpoint", type=_non_negative_integer)
+    inspect.add_argument("--archive-root", type=Path)
     inspect.add_argument("--port", type=_port, default=8000)
     return parser
 
@@ -101,19 +121,39 @@ def main(
 ) -> int:
     parser = build_parser()
     arguments = parser.parse_args(argv)
-    if bool(arguments.scenario) == bool(arguments.founders):
-        parser.error("Choose exactly one scenario path or --founders.")
-    if arguments.command == "run" and arguments.founders and arguments.proposal_tape:
-        parser.error("--founders and --proposal-tape cannot be combined.")
+    archived = validate_archived_options(arguments, parser)
+    if archived and engine_factory is not SimulationEngine:
+        return _error(
+            INVALID_CONFIGURATION,
+            ValueError("invalid_configuration: custom engine_factory is unsupported"),
+        )
+    if not archived and arguments.command == "run":
+        arguments.database = arguments.database or Path("world.sqlite3")
+        arguments.save_every = arguments.save_every or 1
+        arguments.continuous = bool(arguments.continuous)
     control = stop_control or SignalStopControl()
     previous_handler: signal.Handlers | None = None
     if isinstance(control, SignalStopControl):
         previous_handler = signal.signal(signal.SIGINT, control.handle_signal)
     try:
         try:
-            result = _execute(arguments, control, engine_factory)
+            if archived and arguments.command == "inspect":
+                engine = load_archived_inspection(
+                    RunCatalog(arguments.archive_root or RunCatalog.default_root()),
+                    arguments.attempt,
+                    arguments.checkpoint,
+                )
+                _serve_inspection(engine, arguments.port)
+                return 0
+            result = (
+                run_archived(arguments, control)
+                if archived
+                else _execute(arguments, control, engine_factory)
+            )
             if result is None:
                 return 0
+        except RuntimeCLIError as exc:
+            return _error(exc.exit_code, exc)
         except FoundersConfigurationError as exc:
             return _error(
                 (
@@ -143,11 +183,18 @@ def main(
         except (ScenarioLoadError, TypeError, ValueError) as exc:
             return _error(INVALID_CONFIGURATION, exc)
         except (ArchiveError, OSError, RepositoryError, RunPersistenceError) as exc:
-            return _error(PERSISTENCE_FAILURE, exc)
+            return _error(
+                PERSISTENCE_FAILURE,
+                (
+                    RuntimeCLIError(PERSISTENCE_FAILURE, "archive_failed")
+                    if archived
+                    else exc
+                ),
+            )
         except RunSimulationError as exc:
             return _error(SIMULATION_FAILURE, exc)
         status = "resumed" if result.resumed else "new"
-        reason = result.stop_reason.value
+        reason = getattr(result.stop_reason, "value", result.stop_reason)
         if result.terminal_condition is not None:
             reason = f"{reason}:{result.terminal_condition}"
         print(
@@ -209,6 +256,7 @@ def _execute(
                 "finalize_proposals": not arguments.checkpoint_only,
                 "limits": {
                     "max_ticks": arguments.max_ticks,
+                    "continuous": bool(arguments.continuous),
                     "save_every": arguments.save_every,
                 },
             }
@@ -326,6 +374,13 @@ def _serve_inspection(engine: SimulationEngine, port: int) -> None:
     from living_world.api.server import create_app
 
     uvicorn.run(create_app(engine), host="127.0.0.1", port=port)
+
+
+def _positive_float(value: str) -> float:
+    parsed = float(value)
+    if not math.isfinite(parsed) or parsed <= 0:
+        raise argparse.ArgumentTypeError("must be finite and positive")
+    return parsed
 
 
 def _port(value: str) -> int:

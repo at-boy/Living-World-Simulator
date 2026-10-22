@@ -2,7 +2,8 @@
 
 Status: authorized bounded CLI stage after reviewed LN07d integration c604463.
 Root contract reviewed; implementation independently reviewed and task-validated.
-Feature integration and repeated merged gates remain pending.
+Reviewed deliveryf9281f9 integrated by the merge containing this status; task and
+merged gates2055/10,39examples/exactmatrices passed. LN07e complete.
 Spec: docs/superpowers/specs/2026-10-19-live-npc-runtime-design.md and original LN07.
 Goal: expose reviewed service through explicit real-Ollama run/resume/fork/replay
 commands and read-only archive inspection, preserving every existing CLI alias.

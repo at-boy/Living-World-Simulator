@@ -732,3 +732,32 @@ def test_archive_failures_remain_persistence_failures(
     (summary,) = RunCatalog(root).attempts()
     assert summary.lifecycle == "failed"
     assert summary.last_revision is None
+
+
+def test_legacy_cli_archives_actual_continuous_intent(tmp_path: Path) -> None:
+    from living_world.archives import RunCatalog
+
+    class Stop:
+        def stop_requested(self) -> bool:
+            return True
+
+    root = tmp_path / "archives"
+    assert (
+        main(
+            [
+                "run",
+                str(_scenario(tmp_path)),
+                "--continuous",
+                "--archive-root",
+                str(root),
+                "--database",
+                str(tmp_path / "w.db"),
+            ],
+            stop_control=Stop(),
+        )
+        == 0
+    )
+    ref = RunCatalog(root).attempts()[0].ref
+    with RunCatalog(root).open_attempt(ref.attempt_id) as archive:
+        assert archive.config.settings["limits"]["continuous"] is True
+        assert archive.config.settings["limits"]["max_ticks"] is None

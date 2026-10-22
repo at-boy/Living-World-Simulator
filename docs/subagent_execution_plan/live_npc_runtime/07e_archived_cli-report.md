@@ -227,3 +227,20 @@ Delivery `f9281f9` is committed and pushed on preserved
 root checkpoint; LN07e implementation has NOT been merged there. Do not repeat
 implementation/review/task gates. Next owner resume: verify current state/usage,
 merge reviewed delivery into feature, repeat all merged gates, then commit/push.
+
+
+## Root merged acceptance — October 23, 2026
+
+Reviewed deliveryf9281f9 merged into feature. Only root-owned checkpoint documents
+conflicted; retained reviewed report/contract and historical checkpoint evidence.
+`git diff f9281f9 --exit-code -- src tests`: PASS, exact reviewed source. Merged
+`make VENV=/home/at-boy/Projects/codex/Living-World-Simulator/.worktrees/task24/.venv`:
+PASS,2055passed/10existing deliberate skips,39examples. Separate make examples:
+PASS,39examples. Whitespace PASS; source unchanged by formatting/gates. Canonical
+full schema12 matrix matches task/LN07d with26retained readable checkpoints. Seven
+newCLI normal attempts all retained, including2failed/uninitialized; exact child
+world/cursors, reference equality, parent bytes and readonly inspection PASS.
+Evidence: ignored ln07e-merged-make.log,ln07e-merged-examples.log,
+ln07e-merged-matrix and ln07e-merged-cli. Owner-local plan patch/protected refs remain
+unchanged. LN07e complete; no browser/serve or installed-Ollama acceptance claimed.
+Integration is the merge containing this report; all task branches/checkouts preserved.
