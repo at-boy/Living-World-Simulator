@@ -2,8 +2,9 @@
 
 ## Unreleased
 
-- Save the owner-requested pause after completed LN05; LN06a archive changes
-  remain staged and uncommitted pending independent review and root gates.
+- Add reviewed LN06a recovery-journal integrity: sealed parent prefixes, immutable
+  journal records, checkpoint-owned validated action outcomes and truthful response
+  imports. Provider and runtime consumers remain LN06b.
 
 - Define bounded LN06a journal/recovery integrity before provider integration:
   committed action linkage, sealed parent history and truthful response reuse.

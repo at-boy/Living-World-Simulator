@@ -108,6 +108,7 @@ def test_reservation_is_unique_closed_and_pre_world_failure_discoverable(
         "attempt_id",
         "config",
         "parent",
+        "parent_journal",
         "reserved_at",
         "reservation_error",
     }
@@ -655,3 +656,159 @@ def test_inaccessible_attempt_does_not_hide_good_attempt_or_repair_history(
     assert {
         path: (path.read_bytes(), path.stat().st_mtime_ns) for path in files
     } == files
+
+
+def test_fork_seals_visible_journal_prefix_and_detects_metadata_disagreement(
+    tmp_path: Path,
+) -> None:
+    from living_world.archives import JournalEntry
+
+    catalog, ref, before = initialized(tmp_path)
+    with AttemptLease(ref):
+        writer = catalog.open_attempt(ref.attempt_id, read_only=False)
+        writer.append(
+            JournalEntry("candidate_aborted", {"base_revision": 0, "reason": "before"})
+        )
+    source = catalog.open_attempt(ref.attempt_id)
+    sealed = source.journal_boundary()
+    child = catalog.fork(ref.attempt_id, 0)
+    opened = catalog.open_attempt(child.attempt_id)
+    assert opened.parent_journal_boundary == sealed
+    assert opened.checkpoint() == before
+    with AttemptLease(ref):
+        writer.append(
+            JournalEntry("candidate_aborted", {"base_revision": 0, "reason": "after"})
+        )
+    assert source.journal_boundary() != sealed
+    assert source.journal_boundary(through_sequence=sealed.sequence) == sealed
+    path = child.directory / "attempt.json"
+    data = json.loads(path.read_text())
+    assert data["parent_journal"] == {
+        "sequence": sealed.sequence,
+        "digest": sealed.digest,
+    }
+    data["parent_journal"]["digest"] = "f" * 64
+    path.write_text(json.dumps(data))
+    with pytest.raises(ArchiveError):
+        catalog.open_attempt(child.attempt_id)
+
+
+def test_legacy_absent_parent_journal_metadata_is_readable_without_writes(
+    tmp_path: Path,
+) -> None:
+    import sqlite3
+
+    catalog, ref, _ = initialized(tmp_path)
+    manifest = ref.directory / "attempt.json"
+    data = json.loads(manifest.read_text())
+    data.pop("parent_journal", None)
+    manifest.write_text(json.dumps(data))
+    database = ref.directory / "archive.sqlite3"
+    with sqlite3.connect(database) as connection:
+        raw = json.loads(
+            connection.execute("SELECT payload FROM archive_meta").fetchone()[0]
+        )
+        raw.pop("parent_journal", None)
+        connection.execute("UPDATE archive_meta SET payload=?", (json.dumps(raw),))
+    before = {
+        p: (p.read_bytes(), p.stat().st_mtime_ns)
+        for p in ref.directory.iterdir()
+        if p.is_file()
+    }
+    assert catalog.open_attempt(ref.attempt_id).parent_journal_boundary is None
+    assert {p: (p.read_bytes(), p.stat().st_mtime_ns) for p in before} == before
+
+
+@pytest.mark.parametrize(
+    "metadata",
+    [
+        True,
+        {},
+        {"sequence": -1, "digest": "a" * 64},
+        {"sequence": 0, "digest": "A" * 64},
+        {"sequence": 0, "digest": "a" * 64, "extra": 1},
+    ],
+)
+def test_malformed_parent_journal_metadata_rejected(
+    tmp_path: Path, metadata: object
+) -> None:
+    catalog, ref, _ = initialized(tmp_path)
+    child = catalog.fork(ref.attempt_id, 0)
+    manifest = child.directory / "attempt.json"
+    data = json.loads(manifest.read_text())
+    data["parent_journal"] = metadata
+    manifest.write_text(json.dumps(data))
+    with pytest.raises(ArchiveError):
+        catalog.open_attempt(child.attempt_id)
+
+
+def test_parent_boundary_requires_parent_and_reservation_contract_stays_four_values(
+    tmp_path: Path,
+) -> None:
+    from living_world.archives import JournalBoundary
+    from living_world.archives.catalog import read_reservation
+
+    catalog = RunCatalog(tmp_path / "runs")
+    boundary = JournalBoundary(0, "a" * 64)
+    with pytest.raises(ArchiveError):
+        catalog.reserve(config(), parent_journal_boundary=boundary)
+    ref = catalog.reserve(config())
+    assert len(read_reservation(ref)) == 4
+    with pytest.raises(ArchiveError):
+        AttemptArchive.create(ref, config(), parent_journal_boundary=boundary)
+
+
+def test_sealed_prefix_tampering_changes_recomputed_digest(tmp_path: Path) -> None:
+    import sqlite3
+
+    from living_world.archives import JournalEntry
+
+    catalog, ref, _ = initialized(tmp_path)
+    with AttemptLease(ref):
+        writer = catalog.open_attempt(ref.attempt_id, read_only=False)
+        writer.append(
+            JournalEntry(
+                "candidate_aborted", {"base_revision": 0, "reason": "original"}
+            )
+        )
+    child = catalog.fork(ref.attempt_id, 0)
+    sealed = catalog.open_attempt(child.attempt_id).parent_journal_boundary
+    assert sealed is not None
+    with sqlite3.connect(ref.directory / "archive.sqlite3") as connection:
+        connection.execute(
+            "UPDATE journal SET payload=json_set(payload,'$.reason','tampered')"
+        )
+    source = catalog.open_attempt(ref.attempt_id)
+    assert source.journal_boundary(through_sequence=sealed.sequence) != sealed
+    with sqlite3.connect(ref.directory / "archive.sqlite3") as connection:
+        connection.execute("DELETE FROM journal")
+    with pytest.raises(ArchiveError):
+        source.journal_boundary(through_sequence=sealed.sequence)
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("parent_journal", {"sequence": True, "digest": "a" * 64}),
+        ("parent_journal", {"sequence": 0, "digest": "a" * 64, "extra": 1}),
+        ("parent", None),
+    ],
+)
+def test_archive_parent_metadata_malformed_or_disagrees_rejected(
+    tmp_path: Path, field: str, value: object
+) -> None:
+    import sqlite3
+
+    catalog, ref, _ = initialized(tmp_path)
+    child = catalog.fork(ref.attempt_id, 0)
+    database = child.directory / "archive.sqlite3"
+    with sqlite3.connect(database) as connection:
+        data = json.loads(
+            connection.execute("SELECT payload FROM archive_meta").fetchone()[0]
+        )
+        data[field] = value
+        connection.execute("UPDATE archive_meta SET payload=?", (json.dumps(data),))
+    before = database.read_bytes()
+    with pytest.raises(ArchiveError):
+        catalog.open_attempt(child.attempt_id)
+    assert database.read_bytes() == before

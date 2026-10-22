@@ -21,7 +21,10 @@ from living_world.archives.model import (
     Checkpoint,
     CommandEnvelope,
     CommandReceipt,
+    ForkPoint,
+    JournalBoundary,
     JournalEntry,
+    JournalRecord,
 )
 from living_world.archives.store import AttemptArchive
 
@@ -39,7 +42,10 @@ __all__ = [
     "Checkpoint",
     "CommandEnvelope",
     "CommandReceipt",
+    "ForkPoint",
+    "JournalBoundary",
     "JournalEntry",
+    "JournalRecord",
     "RetainedInputs",
     "RunCatalog",
     "load_retained_inputs",

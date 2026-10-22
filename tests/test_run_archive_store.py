@@ -396,7 +396,13 @@ def test_process_termination_keeps_complete_transaction(
     archive.append(control())
     archive.append(request_entry())
     archive.append(
-        JournalEntry("response_failed", {"request_id": "request", "code": "timeout"})
+        JournalEntry(
+            "response_validated",
+            {
+                "request_id": "request",
+                "decision": {"spoken_text": "Waiting here", "action_request": None},
+            },
+        )
     )
     archive.close()
     # Child reaches a real SQLite boundary, reports it through a pipe, then
@@ -706,3 +712,478 @@ def test_recorded_zero_tick_configuration_and_other_modes() -> None:
     for mode in ("ollama", "journal_replay"):
         with pytest.raises(ArchiveFormatError):
             AttemptConfig(mode, "test", 1, "test", {"limits": {"max_ticks": 0}})
+
+
+def validated(request_id: str = "request", *, action: bool = False) -> JournalEntry:
+    return JournalEntry(
+        "response_validated",
+        {
+            "request_id": request_id,
+            "decision": {
+                "spoken_text": "Waiting here",
+                "action_request": (
+                    {
+                        "action_key": "wait",
+                        "target_label": None,
+                        "rationale": "Wait",
+                        "arguments": {},
+                    }
+                    if action
+                    else None
+                ),
+            },
+        },
+    )
+
+
+def resolution(**changes: object) -> JournalEntry:
+    return JournalEntry(
+        "action_resolved",
+        {
+            "request_id": "request",
+            "base_revision": 0,
+            "source_tick": 0,
+            "actor_label": "Ada",
+            "outcome": "no_action",
+            "event_references": [],
+            **changes,
+        },
+    )
+
+
+def imported(**changes: object) -> JournalEntry:
+    return JournalEntry(
+        "response_reused",
+        {
+            **request_entry().payload,
+            "decision": validated().payload["decision"],
+            "source": {
+                "attempt_id": "12345678123442348234123456789abc",
+                "request_id": "old",
+                "boundary": {"sequence": 3, "digest": "c" * 64},
+            },
+            **changes,
+        },
+    )
+
+
+def test_journal_prefix_records_and_fork_point_are_immutable(tmp_path: Path) -> None:
+    import hashlib
+    from dataclasses import FrozenInstanceError
+
+    from living_world.archives import JournalBoundary, JournalRecord
+    from living_world.archives.model import canonical
+
+    archive = AttemptArchive.create(ref(tmp_path), config())
+    empty = JournalBoundary(0, hashlib.sha256(b"[]").hexdigest())
+    assert archive.journal_boundary() == empty
+    assert archive.journal_records(through_sequence=0) == ()
+    with pytest.raises(ArchiveError):
+        archive.fork_point()
+    commit(archive)
+    archive.append(request_entry())
+    commit(archive, 1, 0, (validated(), resolution()))
+    records = archive.journal_records()
+    assert records == (
+        JournalRecord(1, request_entry(), None, 0),
+        JournalRecord(2, validated(), 1, 1),
+        JournalRecord(3, resolution(), 1, 1),
+    )
+    expected = hashlib.sha256(
+        canonical(
+            [
+                {
+                    "sequence": r.sequence,
+                    "kind": r.entry.kind,
+                    "payload": r.entry.payload,
+                    "checkpoint_revision": r.checkpoint_revision,
+                    "revision_context": r.revision_context,
+                }
+                for r in records
+            ]
+        ).encode()
+    ).hexdigest()
+    assert archive.journal_boundary() == JournalBoundary(3, expected)
+    assert archive.fork_point(0).checkpoint == archive.checkpoint(0)
+    assert archive.fork_point(0).journal_boundary == archive.journal_boundary()
+    assert archive.journal_records(through_sequence=1) == records[:1]
+    assert archive.journal_boundary(through_sequence=0) == empty
+    with pytest.raises(FrozenInstanceError):
+        records[0].sequence = 99
+    with pytest.raises(TypeError):
+        records[0].entry.payload["request"]["identity"] = "Other"
+    before = {
+        p.name: (p.read_bytes(), p.stat().st_mtime_ns) for p in tmp_path.iterdir()
+    }
+    reader = AttemptArchive.open(archive.ref, read_only=True)
+    reader.journal_records()
+    reader.journal_boundary()
+    reader.fork_point()
+    assert {
+        p.name: (p.read_bytes(), p.stat().st_mtime_ns) for p in tmp_path.iterdir()
+    } == before
+
+
+@pytest.mark.parametrize("bound", [True, -1, 1.0, "1", 9])
+def test_journal_prefix_bounds_reject_invalid_or_missing(
+    tmp_path: Path, bound: object
+) -> None:
+    archive = AttemptArchive.create(ref(tmp_path), config())
+    archive.append(request_entry())
+    for accessor in (archive.journal_records, archive.journal_boundary):
+        with pytest.raises(ArchiveError):
+            accessor(through_sequence=bound)
+
+
+@pytest.mark.parametrize("stage", ["pending", "failed", "validated"])
+def test_action_resolution_requires_checkpoint_and_valid_response(
+    tmp_path: Path, stage: str
+) -> None:
+    archive = AttemptArchive.create(ref(tmp_path), config())
+    commit(archive)
+    archive.append(request_entry())
+    if stage == "failed":
+        archive.append(
+            JournalEntry(
+                "response_failed", {"request_id": "request", "code": "timeout"}
+            )
+        )
+    elif stage == "validated":
+        archive.append(validated())
+    before = archive.entries()
+    with pytest.raises(ArchiveError):
+        archive.append(resolution())
+    with pytest.raises(ArchiveError):
+        archive.record((resolution(),))
+    if stage != "validated":
+        with pytest.raises(ArchiveError):
+            commit(archive, 1, 0, (resolution(),))
+        assert archive.checkpoint().revision == 0
+        assert archive.entries() == before
+    else:
+        commit(archive, 1, 0, (resolution(),))
+        with pytest.raises(ArchiveError):
+            commit(archive, 2, 1, (resolution(),))
+        assert archive.checkpoint().revision == 1
+
+
+@pytest.mark.parametrize(
+    "base_tick,request_tick,committed_tick,outcome,action",
+    [
+        (1, 0, 1, "no_action", False),
+        (0, 0, 2, "no_action", False),
+        (0, 1, 2, "no_action", False),
+        (0, 0, 1, "accepted", False),
+        (0, 0, 1, "no_action", True),
+    ],
+)
+def test_invalid_action_tick_and_outcome_roll_back(
+    tmp_path: Path,
+    base_tick: int,
+    request_tick: int,
+    committed_tick: int,
+    outcome: str,
+    action: bool,
+) -> None:
+    archive = AttemptArchive.create(ref(tmp_path), config())
+    first = commit(archive, base_tick)
+    archive.record((request_entry(tick=request_tick), validated(action=action)))
+    before = archive.entries()
+    with pytest.raises(ArchiveError):
+        commit(
+            archive,
+            committed_tick,
+            0,
+            (resolution(source_tick=request_tick, outcome=outcome),),
+        )
+    assert archive.checkpoint() == first
+    assert archive.entries() == before
+
+
+def test_response_import_is_validated_local_identity_without_http_start(
+    tmp_path: Path,
+) -> None:
+    archive = AttemptArchive.create(ref(tmp_path), config())
+    commit(archive)
+    reuse = imported(content_digest="d" * 64, elapsed_seconds=0.5)
+    assert archive.append(reuse) == archive.append(reuse)
+    assert not any(e.kind == "request_started" for e in archive.entries())
+    for divergent in (
+        request_entry(),
+        imported(input_fingerprint="e" * 64),
+        validated(),
+        JournalEntry("response_failed", {"request_id": "request", "code": "timeout"}),
+    ):
+        with pytest.raises(ArchiveError):
+            archive.append(divergent)
+    commit(archive, 1, 0, (resolution(),))
+    assert archive.load_world().tick == 1
+    with AttemptArchive.open(archive.ref, read_only=True) as reader:
+        assert reader.entries() == (reuse, resolution())
+
+
+@pytest.mark.parametrize("kind", ["response_validated", "response_reused"])
+@pytest.mark.parametrize(
+    "changes",
+    [
+        {"elapsed_seconds": True},
+        {"elapsed_seconds": -1},
+        {"elapsed_seconds": float("nan")},
+        {"elapsed_seconds": float("inf")},
+        {"content_digest": "X" * 64},
+        {"unexpected": 3},
+    ],
+)
+def test_response_provenance_rejects_invalid_values(
+    kind: str, changes: dict[str, object]
+) -> None:
+    base = validated() if kind == "response_validated" else imported()
+    with pytest.raises(ArchiveError):
+        JournalEntry(kind, {**base.payload, **changes})
+
+
+def test_response_provenance_legacy_and_optional_values(tmp_path: Path) -> None:
+    archive = AttemptArchive.create(ref(tmp_path), config())
+    archive.append(request_entry())
+    response = JournalEntry(
+        "response_validated",
+        {**validated().payload, "content_digest": "d" * 64, "elapsed_seconds": 0},
+    )
+    archive.append(response)
+    assert archive.entries()[-1] == response
+
+
+def test_response_import_checks_offered_vocabulary_and_identity(tmp_path: Path) -> None:
+    archive = AttemptArchive.create(ref(tmp_path), config())
+    bad_decision = {
+        "spoken_text": None,
+        "action_request": {
+            "action_key": "fly",
+            "target_label": None,
+            "rationale": "Fly",
+            "arguments": {},
+        },
+    }
+    with pytest.raises(ArchiveError):
+        archive.append(imported(decision=bad_decision))
+    archive.append(request_entry())
+    with pytest.raises(ArchiveError):
+        archive.append(imported())
+
+
+def test_journal_gaps_are_preserved_and_missing_bounds_rejected(tmp_path: Path) -> None:
+    archive = AttemptArchive.create(ref(tmp_path), config())
+    archive.append(
+        JournalEntry("candidate_aborted", {"base_revision": 0, "reason": "one"})
+    )
+    archive.append(
+        JournalEntry("candidate_aborted", {"base_revision": 0, "reason": "two"})
+    )
+    with sqlite3.connect(archive.database_path) as connection:
+        connection.execute("DELETE FROM journal WHERE sequence=1")
+    assert tuple(r.sequence for r in archive.journal_records()) == (2,)
+    assert archive.journal_boundary().sequence == 2
+    with pytest.raises(ArchiveError):
+        archive.journal_boundary(through_sequence=1)
+
+
+@pytest.mark.parametrize(
+    "mutation", ["standalone", "failed", "pending", "wrong_owner", "wrong_slot"]
+)
+def test_raw_action_journal_corruption_rejected_on_load(
+    tmp_path: Path, mutation: str
+) -> None:
+    archive = AttemptArchive.create(ref(tmp_path), config())
+    commit(archive)
+    archive.record((request_entry(), validated()))
+    commit(archive, 1, 0, (resolution(),))
+    archive.close()
+    with sqlite3.connect(tmp_path / "archive.sqlite3") as connection:
+        if mutation == "standalone":
+            connection.execute(
+                "UPDATE journal SET checkpoint_revision=NULL WHERE kind='action_resolved'"
+            )
+        elif mutation == "wrong_owner":
+            connection.execute(
+                "UPDATE journal SET checkpoint_revision=0,revision_context=0 WHERE kind='action_resolved'"
+            )
+        elif mutation == "failed":
+            connection.execute(
+                "UPDATE journal SET kind='response_failed',payload=? WHERE kind='response_validated'",
+                ('{"request_id":"request","code":"timeout"}',),
+            )
+        elif mutation == "pending":
+            connection.execute("DELETE FROM journal WHERE kind='response_validated'")
+        else:
+            connection.execute(
+                "UPDATE journal SET payload=json_set(payload,'$.source_tick',1) WHERE kind='request_started'"
+            )
+    with pytest.raises(ArchiveFormatError):
+        AttemptArchive.open(archive.ref, read_only=True)
+
+
+@pytest.mark.parametrize("outcome", ["accepted", "rejected"])
+def test_action_outcomes_and_atomic_request_response_transaction(
+    tmp_path: Path, outcome: str
+) -> None:
+    archive = AttemptArchive.create(ref(tmp_path), config())
+    commit(archive)
+    result = commit(
+        archive,
+        1,
+        0,
+        (request_entry(), validated(action=True), resolution(outcome=outcome)),
+    )
+    assert (
+        commit(
+            archive,
+            1,
+            0,
+            (request_entry(), validated(action=True), resolution(outcome=outcome)),
+        )
+        == result
+    )
+    assert all(r.checkpoint_revision == 1 for r in archive.journal_records())
+
+
+@pytest.mark.parametrize(
+    "record,arguments",
+    [
+        ("JournalBoundary", (True, "a" * 64)),
+        ("JournalBoundary", (-1, "a" * 64)),
+        ("JournalBoundary", (0, "A" * 64)),
+        ("JournalRecord", (0, request_entry(), None, None)),
+        ("JournalRecord", (1, request_entry(), True, None)),
+        ("JournalRecord", (1, request_entry(), None, -1)),
+        ("JournalRecord", (1, object(), None, None)),
+        ("ForkPoint", (object(), object())),
+    ],
+)
+def test_new_record_constructors_reject_bad_types(
+    record: str, arguments: tuple[object, ...]
+) -> None:
+    from living_world import archives
+
+    with pytest.raises(ArchiveError):
+        getattr(archives, record)(*arguments)
+
+
+@pytest.mark.parametrize(
+    "source",
+    [
+        None,
+        {},
+        {
+            "attempt_id": "bad",
+            "request_id": "old",
+            "boundary": {"sequence": 1, "digest": "a" * 64},
+        },
+        {
+            "attempt_id": "12345678123442348234123456789abc",
+            "request_id": "old",
+            "boundary": {"sequence": True, "digest": "a" * 64},
+        },
+        {
+            "attempt_id": "12345678123442348234123456789abc",
+            "request_id": "old",
+            "boundary": {"sequence": 1, "digest": "a" * 64},
+            "extra": 3,
+        },
+    ],
+)
+def test_import_source_schema_is_closed(source: object) -> None:
+    with pytest.raises(ArchiveError):
+        imported(source=source)
+
+
+def test_elapsed_seconds_rejects_unrepresentably_large_integer() -> None:
+    with pytest.raises(ArchiveError):
+        JournalEntry(
+            "response_validated", {**validated().payload, "elapsed_seconds": 10**1000}
+        )
+
+
+def test_fork_point_uses_one_snapshot_during_source_append(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from concurrent.futures import ThreadPoolExecutor
+
+    archive = AttemptArchive.create(ref(tmp_path), config())
+    commit(archive)
+    archive.append(request_entry())
+    expected = archive.journal_boundary()
+    # WAL enables a real concurrent writer while the reader keeps its snapshot.
+    with sqlite3.connect(archive.database_path) as connection:
+        connection.execute("PRAGMA journal_mode=WAL")
+    reader = AttemptArchive.open(archive.ref, read_only=True)
+    original = reader._validate
+
+    def validate_then_append(connection: sqlite3.Connection) -> tuple[Checkpoint, ...]:
+        checkpoints = original(connection)
+
+        def append() -> None:
+            with AttemptArchive.open(archive.ref) as writer:
+                commit(writer, 1, 0, (validated(), resolution()))
+
+        with ThreadPoolExecutor(max_workers=1) as pool:
+            pool.submit(append).result(timeout=10)
+        return checkpoints
+
+    monkeypatch.setattr(reader, "_validate", validate_then_append)
+    point = reader.fork_point()
+    assert point.checkpoint.revision == 0
+    assert point.journal_boundary == expected
+    assert archive.checkpoint().revision == 1
+    assert archive.journal_boundary() != expected
+
+
+@pytest.mark.parametrize(
+    "changes", [{"actor_label": "Other"}, {"base_revision": 1}, {"source_tick": 1}]
+)
+def test_mismatching_action_slot_rolls_back_commands_and_world(
+    tmp_path: Path, changes: dict[str, object]
+) -> None:
+    archive = AttemptArchive.create(ref(tmp_path), config())
+    first = commit(archive)
+    archive.record((request_entry(), validated(), control()))
+    before = archive.entries()
+    with pytest.raises(ArchiveError):
+        commit(archive, 1, 0, (settlement(), resolution(**changes)))
+    assert archive.entries() == before
+    assert archive.checkpoint() == first
+    assert archive.command("step").status == "queued"
+
+
+def test_two_requests_cannot_resolve_same_actor_slot(tmp_path: Path) -> None:
+    archive = AttemptArchive.create(ref(tmp_path), config())
+    commit(archive)
+    archive.record(
+        (request_entry(), validated(), request_entry("second"), validated("second"))
+    )
+    with pytest.raises(ArchiveError):
+        commit(archive, 1, 0, (resolution(), resolution(request_id="second")))
+    assert archive.checkpoint().revision == 0
+    assert not any(e.kind == "action_resolved" for e in archive.entries())
+
+
+@pytest.mark.parametrize("first_elapsed,second_elapsed", [(0, 0.0), (0.0, 0)])
+def test_import_identity_requires_identical_canonical_numeric_provenance(
+    tmp_path: Path, first_elapsed: float, second_elapsed: float
+) -> None:
+    archive = AttemptArchive.create(ref(tmp_path), config())
+    checkpoint = commit(archive)
+    first = imported(elapsed_seconds=first_elapsed)
+    sequence = archive.append(first)
+    assert archive.append(imported(elapsed_seconds=first_elapsed)) == sequence
+    boundary = archive.journal_boundary()
+    records = archive.journal_records()
+    candidate = JournalEntry(
+        "candidate_aborted", {"base_revision": 0, "reason": "must roll back"}
+    )
+    with pytest.raises(ArchiveRevisionConflict):
+        archive.record((candidate, imported(elapsed_seconds=second_elapsed)))
+    assert archive.journal_records() == records
+    assert archive.journal_boundary() == boundary
+    assert archive.checkpoint() == checkpoint
+    assert archive.load_world().tick == 0
+    assert archive.append(first) == sequence

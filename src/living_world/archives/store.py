@@ -22,7 +22,10 @@ from living_world.archives.model import (
     AttemptRef,
     Checkpoint,
     CommandReceipt,
+    ForkPoint,
+    JournalBoundary,
     JournalEntry,
+    JournalRecord,
     canonical,
     document,
     envelope,
@@ -30,6 +33,7 @@ from living_world.archives.model import (
     identifier,
     integer,
     loads,
+    parent_boundary,
     receipt,
     text,
     validate_offered,
@@ -100,6 +104,7 @@ class AttemptArchive:
         config: AttemptConfig,
         *,
         parent: tuple[str, int] | None = None,
+        parent_journal_boundary: JournalBoundary | None = None,
     ) -> AttemptArchive:
         archive = cls(ref, read_only=False)
         if not isinstance(config, AttemptConfig):
@@ -109,6 +114,10 @@ class AttemptArchive:
                 raise ArchiveFormatError("Expected parent attempt/revision pair.")
             identifier(parent[0])
             integer(parent[1])
+        if parent_journal_boundary is not None:
+            if not isinstance(parent_journal_boundary, JournalBoundary):
+                raise ArchiveFormatError("Expected JournalBoundary.")
+            parent_boundary(asdict(parent_journal_boundary), parent)
         try:
             descriptor = os.open(
                 archive.database_path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600
@@ -134,6 +143,11 @@ class AttemptArchive:
                                     "settings": config.settings,
                                 },
                                 "parent": parent,
+                                "parent_journal": (
+                                    None
+                                    if parent_journal_boundary is None
+                                    else asdict(parent_journal_boundary)
+                                ),
                                 "created_at": _timestamp(),
                             }
                         ),
@@ -168,6 +182,10 @@ class AttemptArchive:
     @property
     def parent(self) -> tuple[str, int] | None:
         return self._parent
+
+    @property
+    def parent_journal_boundary(self) -> JournalBoundary | None:
+        return self._parent_journal_boundary
 
     @property
     def created_at(self) -> str:
@@ -223,6 +241,7 @@ class AttemptArchive:
         meta = document(
             loads(rows[0][1]),
             {"format", "lineage_id", "attempt_id", "config", "parent", "created_at"},
+            {"parent_journal"},
         )
         if type(meta["format"]) is not int or meta["format"] != 1:
             raise ArchiveFormatError("Unsupported archive format.")
@@ -244,6 +263,9 @@ class AttemptArchive:
             self._parent = (identifier(parent[0]), integer(parent[1]))
         else:
             self._parent = None
+        self._parent_journal_boundary = parent_boundary(
+            meta.get("parent_journal"), self._parent
+        )
         _validate_timestamp(meta["created_at"])
         self._created_at = meta["created_at"]
 
@@ -271,6 +293,7 @@ class AttemptArchive:
     ) -> dict[str, tuple[str, CommandReceipt]]:
         requests: dict[str, JournalEntry] = {}
         responses: set[str] = set()
+        validated: dict[str, Mapping[str, object]] = {}
         resolved: set[str] = set()
         slots: set[tuple[object, object, object]] = set()
         commands: dict[str, tuple[str, CommandReceipt]] = {}
@@ -283,8 +306,11 @@ class AttemptArchive:
                 if identity in identities:
                     raise ArchiveFormatError("Duplicate journal identity.")
                 identities.add(identity)
-            if kind == "request_started":
+            if kind in ("request_started", "response_reused"):
                 requests[p["request_id"]] = entry
+                if kind == "response_reused":
+                    responses.add(p["request_id"])
+                    validated[p["request_id"]] = p["decision"]
             elif kind in ("response_validated", "response_failed", "action_resolved"):
                 request_id = p["request_id"]
                 if request_id not in requests:
@@ -297,6 +323,11 @@ class AttemptArchive:
                             p[key] != started[key]
                             for key in ("base_revision", "source_tick", "actor_label")
                         )
+                        or request_id not in validated
+                        or checkpoint_revision is None
+                        or checkpoint_revision != p["base_revision"] + 1
+                        or (p["outcome"] == "no_action")
+                        != (validated.get(request_id, {}).get("action_request") is None)
                         or request_id in resolved
                         or slot in slots
                     ):
@@ -311,6 +342,7 @@ class AttemptArchive:
                     responses.add(request_id)
                     if kind == "response_validated":
                         validate_offered(p["decision"], started["request"])
+                        validated[request_id] = p["decision"]
             elif kind == "control_requested":
                 command = envelope(p["envelope"])
                 if command.command_id in commands:
@@ -351,7 +383,9 @@ class AttemptArchive:
 
     @staticmethod
     def _identity(entry: JournalEntry) -> tuple[str, str] | None:
-        if entry.kind in ("request_started", "action_resolved"):
+        if entry.kind in ("request_started", "response_reused"):
+            return ("request_started", entry.payload["request_id"])
+        if entry.kind == "action_resolved":
             return (entry.kind, entry.payload["request_id"])
         if entry.kind.startswith("response_"):
             return ("response", entry.payload["request_id"])
@@ -443,7 +477,7 @@ class AttemptArchive:
                 if entry in remaining:
                     remaining.remove(entry)
                 elif (
-                    entry.kind == "control_resolved"
+                    entry.kind in ("control_resolved", "action_resolved")
                     or self._identity(entry) is None
                     or not any(
                         old == entry and (owner is None or owner < revision)
@@ -453,6 +487,20 @@ class AttemptArchive:
                     raise ArchiveFormatError("Checkpoint audit entry missing.")
             if remaining:
                 raise ArchiveFormatError("Unexpected checkpoint audit entry.")
+        for _, entry, revision, _ in rows:
+            if entry.kind == "action_resolved":
+                base = entry.payload["base_revision"]
+                tick = entry.payload["source_tick"]
+                if (
+                    revision is None
+                    or base >= len(result)
+                    or revision != base + 1
+                    or decode_world(result[base].snapshot).tick != tick
+                    or decode_world(result[revision].snapshot).tick != tick + 1
+                ):
+                    raise ArchiveFormatError(
+                        "Action resolution tick/checkpoint mismatch."
+                    )
         commands = self._audit(rows)
         stored = {}
         for command_id, encoded, envelope_hash, encoded_result in connection.execute(
@@ -498,6 +546,70 @@ class AttemptArchive:
             ):
                 raise ArchiveError("Complete checkpoint does not exist.")
             return checkpoints[-1] if revision is None else checkpoints[revision]
+
+    @staticmethod
+    def _prefix(
+        rows: tuple[tuple[int, JournalEntry, int | None, int | None], ...],
+        through_sequence: int | None,
+    ) -> tuple[JournalRecord, ...]:
+        if through_sequence is not None:
+            integer(through_sequence)
+            if through_sequence != 0 and not any(
+                row[0] == through_sequence for row in rows
+            ):
+                raise ArchiveFormatError("Journal boundary sequence does not exist.")
+        return tuple(
+            JournalRecord(*row)
+            for row in rows
+            if through_sequence is None or row[0] <= through_sequence
+        )
+
+    @staticmethod
+    def _boundary(records: tuple[JournalRecord, ...]) -> JournalBoundary:
+        payload = tuple(
+            {
+                "sequence": record.sequence,
+                "kind": record.entry.kind,
+                "payload": record.entry.payload,
+                "checkpoint_revision": record.checkpoint_revision,
+                "revision_context": record.revision_context,
+            }
+            for record in records
+        )
+        return JournalBoundary(
+            records[-1].sequence if records else 0, _hash(canonical(payload))
+        )
+
+    def journal_records(
+        self, *, through_sequence: int | None = None
+    ) -> tuple[JournalRecord, ...]:
+        with self._connect() as connection:
+            self._validate(connection)
+            return self._prefix(self._journal(connection), through_sequence)
+
+    def journal_boundary(
+        self, *, through_sequence: int | None = None
+    ) -> JournalBoundary:
+        with self._connect() as connection:
+            self._validate(connection)
+            return self._boundary(
+                self._prefix(self._journal(connection), through_sequence)
+            )
+
+    def fork_point(self, revision: int | None = None) -> ForkPoint:
+        if revision is not None:
+            integer(revision)
+        with self._connect() as connection:
+            checkpoints = self._validate(connection)
+            if not checkpoints or (
+                revision is not None and revision >= len(checkpoints)
+            ):
+                raise ArchiveError("Complete checkpoint does not exist.")
+            checkpoint = checkpoints[-1] if revision is None else checkpoints[revision]
+            return ForkPoint(
+                checkpoint,
+                self._boundary(self._prefix(self._journal(connection), None)),
+            )
 
     def load_world(self) -> WorldState:
         return decode_world(self.checkpoint().snapshot)
@@ -607,6 +719,10 @@ class AttemptArchive:
             0
         ]
         for entry in entries:
+            if entry.kind == "action_resolved" and revision is None:
+                raise ArchiveFormatError(
+                    "Action resolution requires a checkpoint transaction."
+                )
             identity = self._identity(entry)
             duplicate = next(
                 (
@@ -619,14 +735,16 @@ class AttemptArchive:
             if duplicate is not None:
                 sequence, old, owner = duplicate
                 if (
-                    entry.kind == "control_resolved"
+                    entry.kind in ("control_resolved", "action_resolved")
                     and revision is not None
                     and owner != revision
                 ):
                     raise ArchiveRevisionConflict(
                         "Settlement belongs to another checkpoint."
                     )
-                if old != entry:
+                if old.kind != entry.kind or canonical(old.payload) != canonical(
+                    entry.payload
+                ):
                     raise ArchiveRevisionConflict("Divergent journal identity reuse.")
                 sequences.append(sequence)
                 continue

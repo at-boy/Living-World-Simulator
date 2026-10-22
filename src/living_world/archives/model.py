@@ -420,21 +420,18 @@ class JournalEntry:
             "control_resolved": {"receipt"},
             "attempt_finished": {"lifecycle", "outcome", "last_revision"},
         }
+        schemas["response_reused"] = schemas["request_started"] | {"decision", "source"}
         try:
             if self.kind not in schemas:
                 raise ArchiveFormatError("Unknown journal kind.")
+            optional = {
+                "response_failed": {"content_digest"},
+                "response_validated": {"content_digest", "elapsed_seconds"},
+                "response_reused": {"content_digest", "elapsed_seconds"},
+                "control_requested": {"admitted_state_version"},
+            }
             p = document(
-                self.payload,
-                schemas[self.kind],
-                (
-                    {"content_digest"}
-                    if self.kind == "response_failed"
-                    else (
-                        {"admitted_state_version"}
-                        if self.kind == "control_requested"
-                        else set()
-                    )
-                ),
+                self.payload, schemas[self.kind], optional.get(self.kind, set())
             )
             for key in ("request_id", "actor_label", "reason"):
                 if key in p:
@@ -445,9 +442,30 @@ class JournalEntry:
             for key in ("input_fingerprint", "config_fingerprint", "content_digest"):
                 if key in p:
                     digest(p[key])
-            if self.kind == "request_started":
+            if "elapsed_seconds" in p:
+                elapsed = p["elapsed_seconds"]
+                if (
+                    type(elapsed) not in (int, float)
+                    or not math.isfinite(elapsed)
+                    or elapsed < 0
+                ):
+                    raise ArchiveFormatError(
+                        "Expected finite nonnegative elapsed time."
+                    )
+            if self.kind in ("request_started", "response_reused"):
                 _require_prose(p["actor_label"], "actor_label")
                 validate_request(p["request"])
+                if self.kind == "response_reused":
+                    validate_decision(p["decision"])
+                    validate_offered(p["decision"], p["request"])
+                    source = document(
+                        p["source"], {"attempt_id", "request_id", "boundary"}
+                    )
+                    identifier(source["attempt_id"])
+                    text(source["request_id"])
+                    JournalBoundary(
+                        **document(source["boundary"], {"sequence", "digest"})
+                    )
             elif self.kind == "response_validated":
                 validate_decision(p["decision"])
             elif self.kind == "response_failed":
@@ -482,7 +500,7 @@ class JournalEntry:
                 if p["last_revision"] is not None:
                     integer(p["last_revision"])
             object.__setattr__(self, "payload", frozen_map(p))
-        except (ValueError, TypeError, KeyError) as exc:
+        except (ValueError, TypeError, KeyError, OverflowError) as exc:
             raise ArchiveFormatError("Invalid journal payload.") from exc
 
 
@@ -491,3 +509,56 @@ def validate_offered(decision: object, request: Mapping[str, object]) -> None:
         parse_decision_response(canonical(decision), actions(request))
     except Exception as exc:
         raise ArchiveFormatError("Decision outside offered vocabulary.") from exc
+
+
+@dataclass(frozen=True)
+class JournalRecord:
+    """One committed immutable journal row with its original linkage."""
+
+    sequence: int
+    entry: JournalEntry
+    checkpoint_revision: int | None
+    revision_context: int | None
+
+    def __post_init__(self) -> None:
+        integer(self.sequence, minimum=1)
+        if not isinstance(self.entry, JournalEntry):
+            raise ArchiveFormatError("Expected JournalEntry.")
+        for revision in (self.checkpoint_revision, self.revision_context):
+            if revision is not None:
+                integer(revision)
+
+
+@dataclass(frozen=True)
+class JournalBoundary:
+    """Digest of an exact visible prefix; sequence zero denotes the empty prefix."""
+
+    sequence: int
+    digest: str
+
+    def __post_init__(self) -> None:
+        integer(self.sequence)
+        digest(self.digest)
+
+
+@dataclass(frozen=True)
+class ForkPoint:
+    """Checkpoint and source journal horizon from a single storage snapshot."""
+
+    checkpoint: Checkpoint
+    journal_boundary: JournalBoundary
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.checkpoint, Checkpoint) or not isinstance(
+            self.journal_boundary, JournalBoundary
+        ):
+            raise ArchiveFormatError("Expected checkpoint and journal boundary.")
+
+
+def parent_boundary(value: object, parent: object) -> JournalBoundary | None:
+    """Parse optional sealed parent metadata shared by reservation and archive."""
+    if value is None:
+        return None
+    if parent is None:
+        raise ArchiveFormatError("Parent journal boundary requires a parent.")
+    return JournalBoundary(**document(value, {"sequence", "digest"}))
