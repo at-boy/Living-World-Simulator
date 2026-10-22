@@ -29,8 +29,9 @@ service/generic recorded restart ownership (LN07d, independently reviewed and
 validated delivery1c2c2fc; task/merged2018/10,39examples/exactmatrix passed) and CLI consumers (LN07e deliveryf9281f9 independently reviewed/task-validated and pushed;
 task/merged2055/10,39examples,canonical26archives/newCLI7cases passed; integrated
 by the merge containing this entry).
-Runtime service and archived CLI are integrated; browser/serve and installed-Ollama
-acceptance remain upcoming.
+Runtime service and archived CLI are integrated. LN08a exact reusable-router/revision
+source contract is root-reviewed; implementation next. Auth/control API, browser/serve
+and installed-Ollama acceptance remain upcoming.
 legacy generic/taped/raw-database CLI and injected engine/state-reference hooks must
 remain compatible. Add an explicit archive observer to the existing runner, not a
 second copied loop. New live entrypoints retain RunController ownership. LN07 must

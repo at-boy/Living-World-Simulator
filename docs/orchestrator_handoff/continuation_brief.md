@@ -1,4 +1,4 @@
-# Continuation brief — LN07e integrated, October 23, 2026
+# Continuation brief — LN07e integrated; LN08a authorized, October 23, 2026
 
 ## Current authoritative state
 
@@ -9,6 +9,8 @@ newCLI7retainedcases including2failed/uninitialized. Source exactdelivery unchan
 after review/gates; only root-owned docs conflicted. Do not redispatch completed
 implementation/review/task gates. All branches/worktrees/owner-local edit preserved.
 
+LN07e integrationbca7e0b is pushed. LN08a exact seven-path task/prompt/report
+08a_revision_inspection are root-reviewed; isolated implementation next.
 Next: exact bounded LN08a reusable GET router/detached revision source, then local
 auth/operator API, browser assets and CLI serve. LN09 actual installed-Ollama/operator
 acceptance follows. Original LN07 incomplete until actual serve acceptance in LN08.
@@ -38,7 +40,7 @@ ln08-root-preflight.md are root investigation, NOT implementation contracts.
 Reuse GET inspection router/default URLs; detached exact retained-scenario snapshot
 inspection, no runner/preparation/provider;8entry cache and archive fallback. Root
 must synthesize final auth/Origin/CSRF, UI credential memory and serve lifecycle
-contracts, preserve browser compatibility and complete7serve. Root preparing bounded LN08a contract; no LN08 source task dispatched yet.
+contracts, preserve browser compatibility and complete7serve. LN08a exact contract now authored and root-reviewed; no source at contract commit.
 
 ## Authority and invariants
 

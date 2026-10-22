@@ -1,5 +1,17 @@
 # Living World Simulator – Project Journal
 
+## LN08a revision-inspection contract — October 23, 2026
+
+LN07e deliveryf9281f9/integrationbca7e0b completes archived CLI consumption after
+review and repeated2055/10,39example/canonical/newCLI gates. Root defined seven-path
+inspection stage: shared GET router preserves create_app behavior; synchronous
+resolver runs once off event loop. RevisionSource reuses pure retained-snapshot loader,
+exact identity/revision, safe not_found/archive_invalid,8LRU and readonly bytes/mtime.
+Failed/stopped/interrupted complete worlds remain inspectable. No mode preparation,
+provider, runner, owner mutation or new operator HTTP exposure. Root self-review
+covered producer/consumer types, boundary, error/cache/concurrency tests and remaining
+auth/UI/serve stages. No source implementation at this contract commit.
+
 ## LN07e feature integration — October 23, 2026
 
 Owner resumed with99%five-hourremaining; remote refs and exact local owner patch

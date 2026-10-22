@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Define reusable read-only world routes and exact archived revision inspection
+  with bounded caching, preserving the existing inspector.
+
 - Integrate reviewed archived CLI after repeated merged validation and exact
   canonical/newCLI acceptance with retained successful and failed archives.
 
