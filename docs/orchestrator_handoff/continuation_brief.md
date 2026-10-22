@@ -47,7 +47,11 @@ engine/state-reference behavior with an explicit archive observer; live entrypoi
 use controller. Materialize bounded exact contracts before implementation. LN07 must
 pass composition.source_point into replay driver. LN07a is active in .worktrees/live-npc-ln07a atf1ccb90, worker/root/ln07a_implementer.
 Root found/reproduced same-world shutdown checkpoint response-cache miss; exact06c
-contract/prompt/report prepared, correction pending on disjoint driver/test files.
+contract/prompt/report prepared.06c now reviewed SPEC/QUALITYPASS, root taskmake
+1767/10,39examples taskANDmerged,separateexamples/whitespace/exactmatrix passed.
+Delivery0eca121 is integrated by the merge containing this brief. LN07a fixround1
+independently passed2addressed/0open with amended source-path normalization/definition
+classification; root task gates running. Do not repeat implementation/reviews.
 No LN07b/LN08/LN09 implementation yet.
 Read it for the expanded archive producer boundary, sealed prefix and truthful
 import/action audit rules. Probe/candidate notes are ignored evidence, not taskauthority. Do not repeat

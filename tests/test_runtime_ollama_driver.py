@@ -2,6 +2,8 @@
 
 from pathlib import Path
 
+import pytest
+
 from living_world.archives import (
     AttemptArchive,
     AttemptConfig,
@@ -320,6 +322,299 @@ def test_sealed_fork_reuses_prefix_and_continues_multiple_ticks(tmp_path: Path) 
             child_archive.close()
         if child_lease is not None:
             child_lease.release()
+        archive.close()
+        lease.release()
+
+
+@pytest.mark.parametrize("completed_ticks", [0, 1])
+def test_shutdown_checkpoint_fork_reuses_responses_and_applies_effects_once(
+    tmp_path: Path,
+    completed_ticks: int,
+) -> None:
+    from dataclasses import asdict
+
+    from living_world.archives import CommandEnvelope
+    from living_world.runtime import RunController, RuntimeState
+
+    catalog, lease, archive, live = live_archive(tmp_path)
+    broker = ActionBroker()
+    driver, base = initialized(archive, live, broker)
+    for _ in range(completed_ticks):
+        base = advance(driver, live, archive, base)
+    expected_calls = 2 * (completed_ticks + 1)
+    controller = RunController(
+        archive, live, driver, max_ticks=None, start_paused=False
+    )
+    try:
+        assert controller.poll().state is RuntimeState.RUNNING
+        assert controller.poll().state is RuntimeState.AWAITING_MODEL
+        assert controller.poll().state is RuntimeState.AWAITING_MODEL
+        controller.submit(
+            CommandEnvelope(
+                "pause-before-effects", "pause", controller.status().state_version
+            )
+        )
+        assert controller.poll().state is RuntimeState.PAUSED
+        assert len(broker.calls) == expected_calls
+        assert (
+            sum(e.kind == "response_validated" for e in archive.entries())
+            == expected_calls
+        )
+        assert not any(
+            e.kind == "action_resolved" and e.payload["base_revision"] == base.revision
+            for e in archive.entries()
+        )
+        source_ids = {
+            e.payload["request_id"]
+            for e in archive.entries()
+            if e.kind == "request_started"
+            and e.payload["base_revision"] == base.revision
+        }
+        controller.close()
+        with catalog.open_attempt(archive.ref.attempt_id) as source:
+            selected = source.checkpoint()
+            assert selected.revision == base.revision + 1
+            assert selected.snapshot == base.snapshot
+            assert selected.driver_cursor == base.driver_cursor
+            assert selected.feedback_cursor == base.feedback_cursor
+        source_bytes = {
+            p.name: p.read_bytes()
+            for p in archive.ref.directory.iterdir()
+            if p.is_file()
+        }
+        ref = catalog.fork(archive.ref.attempt_id, selected.revision)
+        with (
+            AttemptLease(ref),
+            catalog.open_attempt(ref.attempt_id, read_only=False) as child,
+        ):
+            child_driver = OllamaTickDriver(driver.config, driver.feedback, broker)
+            first = advance(child_driver, live, child, child.checkpoint())
+            assert len(broker.calls) == expected_calls
+            imports = [e for e in child.entries() if e.kind == "response_reused"]
+            assert len(imports) == 2
+            assert not any(e.kind == "request_started" for e in child.entries())
+            assert {e.payload["base_revision"] for e in imports} == {0}
+            assert not source_ids.intersection(e.payload["request_id"] for e in imports)
+            assert {e.payload["source"]["request_id"] for e in imports} == source_ids
+            assert all(
+                e.payload["source"]["attempt_id"] == archive.ref.attempt_id
+                for e in imports
+            )
+            assert child.parent_journal_boundary is not None
+            assert all(
+                e.payload["source"]["boundary"] == asdict(child.parent_journal_boundary)
+                for e in imports
+            )
+            outcomes = [e for e in child.entries() if e.kind == "action_resolved"]
+            assert len(outcomes) == 2
+            if completed_ticks == 0:
+                assert all(e.payload["outcome"] == "no_action" for e in outcomes)
+            else:
+                assert any(e.payload["outcome"] == "accepted" for e in outcomes)
+            second = advance(child_driver, live, child, first)
+            assert second.driver_cursor["next_tick"] == completed_ticks + 2
+            assert len(broker.calls) == expected_calls + 2
+            assert sum(e.kind == "action_resolved" for e in child.entries()) == 4
+            assert any(
+                e.kind == "action_resolved" and e.payload["outcome"] == "accepted"
+                for e in child.entries()
+            )
+        # Execute the original base separately to detect duplicate action/work effects.
+        control_ref = catalog.fork(archive.ref.attempt_id, base.revision)
+        with (
+            AttemptLease(control_ref),
+            catalog.open_attempt(control_ref.attempt_id, read_only=False) as control,
+        ):
+            control_driver = OllamaTickDriver(
+                driver.config, driver.feedback, ActionBroker()
+            )
+            control_first = advance(control_driver, live, control, control.checkpoint())
+            assert first.snapshot == control_first.snapshot
+            control_second = advance(control_driver, live, control, control_first)
+            assert second.snapshot == control_second.snapshot
+        assert source_bytes == {
+            p.name: p.read_bytes()
+            for p in archive.ref.directory.iterdir()
+            if p.is_file()
+        }
+    finally:
+        controller.close()
+        lease.release()
+
+
+@pytest.mark.parametrize("failure", [None, "timeout"])
+def test_equivalent_parent_failure_requires_controller_retry(
+    tmp_path: Path, failure: str | None
+) -> None:
+    from living_world.archives import CommandEnvelope
+    from living_world.runtime import RunController, RuntimeState
+
+    catalog, lease, archive, live = live_archive(tmp_path)
+    broker = ImmediateBroker(failure=failure)
+    driver, base = initialized(archive, live, broker)
+    preparation = driver.prepare(live.restore(base.snapshot), base, archive)
+    try:
+        if failure is None:
+            assert preparation.poll() == "waiting"  # pending at process loss
+            broker.close()
+        else:
+            assert ready(preparation) == "provider_error"
+            preparation.close()
+        selected = archive.commit(
+            base.snapshot,
+            expected_revision=base.revision,
+            driver_cursor=base.driver_cursor,
+            feedback_cursor=base.feedback_cursor,
+            entries=(),
+        )
+        source_records = archive.journal_records()
+        ref = catalog.fork(archive.ref.attempt_id, selected.revision)
+        with (
+            AttemptLease(ref),
+            catalog.open_attempt(ref.attempt_id, read_only=False) as child,
+        ):
+            fresh_broker = ImmediateBroker()
+            cold = OllamaTickDriver(driver.config, driver.feedback, fresh_broker)
+            controller = RunController(
+                child, live, cold, max_ticks=None, start_paused=False
+            )
+            try:
+                assert controller.poll().state is RuntimeState.RUNNING
+                assert controller.poll().state is RuntimeState.PROVIDER_ERROR_PAUSED
+                assert controller.status().error_code == (failure or "uncertain")
+                assert fresh_broker.calls == []
+                denied = controller.submit(
+                    CommandEnvelope(
+                        "resume", "resume", controller.status().state_version
+                    )
+                )
+                assert denied.status == "rejected"
+                assert denied.reason == "provider_retry_required"
+                controller.submit(
+                    CommandEnvelope("retry", "retry", controller.status().state_version)
+                )
+                for _ in range(5):
+                    controller.poll()
+                    if controller.status().tick == 1:
+                        break
+                assert controller.status().tick == 1
+                assert len(fresh_broker.calls) == 2
+                assert not any(e.kind == "response_reused" for e in child.entries())
+            finally:
+                controller.close()
+        assert archive.journal_records() == source_records
+    finally:
+        preparation.close()
+        archive.close()
+        lease.release()
+
+
+def test_same_attempt_equivalent_old_base_still_starts_new_requests(
+    tmp_path: Path,
+) -> None:
+    _catalog, lease, archive, live = live_archive(tmp_path)
+    try:
+        broker = ImmediateBroker()
+        driver, base = initialized(archive, live, broker)
+        preparation = driver.prepare(live.restore(base.snapshot), base, archive)
+        assert ready(preparation) == "ready"
+        preparation.close()
+        selected = archive.commit(
+            base.snapshot,
+            expected_revision=base.revision,
+            driver_cursor=base.driver_cursor,
+            feedback_cursor=base.feedback_cursor,
+            entries=(),
+        )
+        cold = OllamaTickDriver(driver.config, driver.feedback, broker)
+        advance(cold, live, archive, selected)
+        assert len(broker.calls) == 4
+        assert not any(e.kind == "response_reused" for e in archive.entries())
+    finally:
+        archive.close()
+        lease.release()
+
+
+@pytest.mark.parametrize("changed", ["snapshot", "driver", "feedback"])
+def test_external_alias_requires_exact_checkpoint_even_with_matching_request(
+    tmp_path: Path, changed: str
+) -> None:
+    from living_world.repositories.world_snapshot import WorldSnapshot
+
+    _catalog, lease, archive, live = live_archive(tmp_path)
+    try:
+        broker = ImmediateBroker()
+        driver, base = initialized(archive, live, broker)
+        preparation = driver.prepare(live.restore(base.snapshot), base, archive)
+        assert ready(preparation) == "ready"
+        preparation.close()
+        request = next(
+            e.payload for e in archive.entries() if e.kind == "request_started"
+        )
+        # Hold request identity constant to isolate the independent checkpoint guard.
+        selected = archive.commit(
+            (
+                WorldSnapshot(
+                    base.snapshot.schema_version, base.snapshot.payload + "\n"
+                )
+                if changed == "snapshot"
+                else base.snapshot
+            ),
+            expected_revision=base.revision,
+            driver_cursor=(
+                {**base.driver_cursor, "next_slot": 1}
+                if changed == "driver"
+                else base.driver_cursor
+            ),
+            feedback_cursor=(
+                {**base.feedback_cursor, "holders": {}}
+                if changed == "feedback"
+                else base.feedback_cursor
+            ),
+            entries=(),
+        )
+        assert selected.revision == 1
+        assert (
+            preparation._find(archive.journal_records(), request, selected, archive)
+            is None
+        )
+        assert len(broker.calls) == 2
+    finally:
+        archive.close()
+        lease.release()
+
+
+def test_external_alias_never_reads_future_or_missing_checkpoint(
+    tmp_path: Path,
+) -> None:
+    from dataclasses import replace
+
+    from living_world.archives import ArchiveError, JournalEntry
+
+    _catalog, lease, archive, live = live_archive(tmp_path)
+    try:
+        driver, base = initialized(archive, live, ImmediateBroker())
+        preparation = driver.prepare(live.restore(base.snapshot), base, archive)
+        assert ready(preparation) == "ready"
+        preparation.close()
+        records = archive.journal_records()
+        started = next(r for r in records if r.entry.kind == "request_started")
+        future_request = {**started.entry.payload, "base_revision": 1}
+        future_records = tuple(
+            (
+                replace(r, entry=JournalEntry("request_started", future_request))
+                if r is started
+                else r
+            )
+            for r in records
+        )
+        assert preparation._find(future_records, future_request, base, archive) is None
+        # An absent older checkpoint cannot be inferred from its request metadata.
+        with pytest.raises(ArchiveError, match="checkpoint does not exist"):
+            preparation._find(
+                future_records, future_request, replace(base, revision=2), archive
+            )
+    finally:
         archive.close()
         lease.release()
 
