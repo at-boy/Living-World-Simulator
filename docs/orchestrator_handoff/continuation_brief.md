@@ -1,4 +1,4 @@
-# Continuation brief — LN08a integrated, October 23, 2026
+# Continuation brief — LN08a integrated; LN08b authorized, October 23, 2026
 
 ## Current authoritative state
 
@@ -9,9 +9,10 @@ PASS. Clean featuremerge contains this brief; source exactdelivery unchanged aft
 review/gates. Do not redispatch completed implementation/review/task gates.
 Allbranches/worktrees/owner-localedit preserved; protected refs unchanged.
 
-Next finalize exact LN08b local authenticated operatorAPI contract, then isolated
-worker/review/fullgates. Root prepared full8b-contract-draft.md andpromptdraft in
-ignoredSDDworkspace; they are preparation, not sourceauthority untilfinalized/committed.
+LN08a integrationc6640b5 pushed. Exact08b_operator_api task/prompt/report now
+root-reviewed and committed; isolated worker/review/fullgates next. Eight worker paths
+bind auth/Origin/CSRF, immutable status, serviceassociation, ownerqueue/receipts,
+readonly archive/pinned routes, lifespan cleanup and shared ASGIClient extension.
 Browserassets/CLIserve remain later8stages, realOllama/operatoracceptance LN09.
 OriginalLN07 incomplete until finalserve acceptance. Stop withheadroom BEFORE10%
 five-hourremaining; no reset.

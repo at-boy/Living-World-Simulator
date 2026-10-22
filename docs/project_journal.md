@@ -1,5 +1,16 @@
 # Living World Simulator – Project Journal
 
+## LN08b local operator API contract — October 23, 2026
+
+LN08a deliverybcbff33/integrationc6640b5 complete after reviewed task/merged2087/10,
+39examples/actualChrome and retained canonical/newCLI acceptance. Root exact8path
+contract binds session-only Bearer/Origin/CSRF, safe arbitrary header handling,
+readonly service/controller association, immutable status, async durable command
+admission/receipt reads, archive metadata and pinned-world routes. Root reconciled
+known failed-uninitialized metadata,8a safe source errors, no secret persistence,
+thread ownership, lifespan cleanup, shared test-client compatibility and deferred
+browser/serve work. No API source at contract commit; root review/gates still bind.
+
 ## LN08a feature integration — October 23, 2026
 
 Deliverybcbff33 cleanly merged; exact reviewed source unchanged. Root repeated

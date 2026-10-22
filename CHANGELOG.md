@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Define local authenticated runtime status/commands and archive APIs, keeping
+  session secrets out of archives and simulation writes on the runtime owner.
+
 - Integrate reviewed read-only revision inspection after repeated full, browser
   and retained CLI acceptance checks.
 
