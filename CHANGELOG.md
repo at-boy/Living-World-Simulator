@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Define LN07a legacy CLI archive observer/session contract, preserving injected
+  engine/state-reference behavior and mirror cadence; implementation follows.
+
 - Integrate reviewed LN06b bounded inference, sealed response recovery and exact
   offline replay after merged gates. Public entrypoints and real acceptance follow.
 

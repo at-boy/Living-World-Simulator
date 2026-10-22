@@ -41,7 +41,8 @@ passed. Task checkout .worktrees/live-npc-ln06a is retained. LN06b delivery5a3f5
 integrated by the merge containing this brief. Root task/merged make1758/10,
 39examples, separateexamples/whitespace/exact recorded matrices passed. Only root
 checkpoint docs conflicted; source matches delivery. Original Task6 complete; no
-implementation/review redispatch. LN07 next: preserve legacy ScenarioRunner injected
+implementation/review redispatch. LN06 integration2da047f is pushed. LN07 split7a/7b; exact7a plan/prompt/report now
+prepared, implementation pending. Preserve legacy ScenarioRunner injected
 engine/state-reference behavior with an explicit archive observer; live entrypoints
 use controller. Materialize bounded exact contracts before implementation. LN07 must
 pass composition.source_point into replay driver. No LN07–LN09 implementation yet.

@@ -1,5 +1,16 @@
 # Living World Simulator – Project Journal
 
+## LN07 bounded compatibility contract — October22,2026
+
+Root splits original LN07 into7a existing-CLI archive producer and7b controller-owned
+live/service/resume/replay entrypoints. A narrow read-only CLI probe verified generic
+no-tape/taped/rawDB support and engine/state-reference hooks cannot be replaced by
+founders-only detached composition. Exact7acontract adds optional RunObserver and
+LegacyArchiveSession, preserving old runner loop/ordering/mirror cadence, plus closed
+recorded finalize_proposals metadata and explicit temporary unit archive roots.
+Parser-invalid and inspect commands remain non-attempts; scenario setup failures are
+metadata-only failed attempts. No source implementation at this contract checkpoint.
+
 ## LN06 integration complete — October 22, 2026
 
 Delivery5a3f58a merged after independent review and task/merged gates each1758/10,
