@@ -1,5 +1,15 @@
 # Living World Simulator – Project Journal
 
+## LN06b exact contract — October 22, 2026
+
+After LN06a integration9875d5e, root materialized the original LN06 provider/live/
+replay remainder. Exact decisions cover spawn ownership/bounded file IPC, full-body
+limits, immutable provider configuration, semantic cursors, sealed response recovery,
+explicit uncertain-request retry, fresh gateway revalidation and exact offline replay.
+No source behavior changes at this checkpoint; common entrypoints remain LN07/LN08.
+The master-plan owner edit remains untouched. Implementation follows one bounded
+worker and independent review; usage stop-before10% remains binding.
+
 ## LN06a recovery journal delivery — October 22, 2026
 
 Bounded archive producer implementation passed independent SPEC/QUALITY review

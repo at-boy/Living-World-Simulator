@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Define LN06b bounded Ollama/broker/live/replay contract using reviewed journal
+  seals and imports. Implementation, public entrypoints and real acceptance follow.
+
 - Add reviewed LN06a recovery-journal integrity: sealed parent prefixes, immutable
   journal records, checkpoint-owned validated action outcomes and truthful response
   imports. Provider and runtime consumers remain LN06b.

@@ -38,8 +38,8 @@ LN06a delivery6469a38 is pushed and integrated by the merge containing this brie
 Independent SPEC/QUALITY PASS after one corrected canonical numeric identity issue;
 root task/merged make1722/10,39examples, separate examples and exact recorded matrices
 passed. Task checkout .worktrees/live-npc-ln06a is retained. LN06b remains unstarted;
-candidate notes are not a task contract. Next: materialize its exact contract/prompt/
-report, then bounded implementation/review. Do not repeat completed LN01–LN06a.
+the exact 06b_live_driver contract/prompt/report are now prepared. Next: bounded
+implementation/review after contract commit. Candidate notes are superseded. Do not repeat completed LN01–LN06a.
 Read it for the expanded archive producer boundary, sealed prefix and truthful
 import/action audit rules. Probe/candidate notes are ignored evidence, not taskauthority. Do not repeat
 completedLN01–LN05. Read current03contract for archive layout, inputs, lease,
