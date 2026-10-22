@@ -23,6 +23,8 @@ CLIattempts passed. Merged1809/10,39examples,separateexamples/whitespace/exactma
 and26readable archives passed. Original Task7 remains incomplete; bounded setup/model
 preflight deliverya4d7e41 now integrated after independent correction review and
 task/merged1876/10,39examples, separateexamples/whitespace/exactmatrix with26archives.
+Parent-aware deferred fork setup is the next bounded producer (LN07c), before
+service/generic recorded restart ownership (LN07d) and CLI consumers (LN07e).
 Service/live/restart remain upcoming.
 legacy generic/taped/raw-database CLI and injected engine/state-reference hooks must
 remain compatible. Add an explicit archive observer to the existing runner, not a

@@ -1,5 +1,17 @@
 # Living World Simulator – Project Journal
 
+## Resume and LN07c producer contract — October22,2026
+
+Owner resumed with97%five-hourremaining; checkpoint724d15a and exact local plan patch
+verified. Two narrow read-only probes resolved archive fork publication and generic
+recorded restart requirements. Ordinaryfork publishes config too early for changed
+model preflight; parentless setup certifies completion before any clone. Root defines
+parent-aware setup with one captured ForkPoint, immutable source hashes/linkage, exact
+cp0 before marker, source advancement allowed and no read-side repair. Four worker
+paths, exact contract/prompt/report prepared before implementation. Next bounded
+service task includes generic recorded adapter and explicit startup validation; CLI
+then follows, serve integration with LN08. No source change at this planning commit.
+
 ## LN07b integration and usage checkpoint — October22,2026
 
 Reviewed deliverya4d7e41 integrated without conflicts. Task/mergedmake1876/10,39examples,

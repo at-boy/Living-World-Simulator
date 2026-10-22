@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Define linked deferred setup for model-changing forks: pin one source checkpoint
+  and journal horizon, then certify completion after the exact child clone.
+
 - Integrate reviewed setup/preflight after task and merged validation; checkpoint
   above the owner usage threshold before service and browser work.
 

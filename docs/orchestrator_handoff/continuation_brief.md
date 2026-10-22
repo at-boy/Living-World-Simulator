@@ -1,6 +1,14 @@
 # Continuation brief — LN07b complete, usage checkpoint, October 22, 2026
 
-## Current checkpoint — resume here
+## Current resume — October22
+
+Owner resumed from724d15a with97%five-hourremaining. Earlier15%pause is historical.
+Exact LN07c fork-setup contract/prompt/report now prepared; implement this bounded
+archive producer before LN07d service/recorded restart and LN07e CLI consumers.
+Two narrow probes confirm the parent-aware completion seam and legacy generic
+adapter requirements. No implementation at this contract checkpoint.
+
+## Prior checkpoint
 
 LN06 complete including shutdown recovery correction0eca121/integration4dbb40b.
 LN07a deliverycd5e40d integratedd975539; reviewed task1800/10, merged1809/10.
