@@ -85,3 +85,19 @@ def test_rejects_non_loopback_url_and_wraps_transport_errors() -> None:
     )
     with pytest.raises(NPCCognitionClientError, match="local Ollama server"):
         client.decide(make_context(), make_actions())
+
+
+def test_build_payload_includes_explicit_bounded_options() -> None:
+    client = OllamaCognitionClient(
+        model="local", max_output_tokens=17, temperature=0.0, seed=42
+    )
+    payload = client.build_payload(make_context(), make_actions())
+    assert payload["options"] == {"num_predict": 17, "temperature": 0.0, "seed": 42}
+    assert payload["stream"] is False
+    assert payload["think"] is False
+
+
+@pytest.mark.parametrize("timeout", [float("nan"), float("inf"), True, 0])
+def test_rejects_invalid_timeout(timeout: float) -> None:
+    with pytest.raises((TypeError, ValueError)):
+        OllamaCognitionClient(model="local", timeout_seconds=timeout)

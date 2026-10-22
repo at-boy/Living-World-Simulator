@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Deliver reviewed bounded Ollama decisions, sealed response recovery and exact
+  offline replay on the LN06b task branch; feature integration remains pending.
+
 - Define LN06b bounded Ollama/broker/live/replay contract using reviewed journal
   seals and imports. Implementation, public entrypoints and real acceptance follow.
 

@@ -15,8 +15,11 @@ outcomes together, and replay those complete ticks without network access.
 Python>=3.11, strict typing, dataclasses/Protocols, standard library only. Preserve
 world schema12 writes/1–12 reads, archive format1 and exact recorded worlds. Managers
 mutate, systems behave, events immutable. No raw WorldState, IDs, handlers, inspector
-or runtime objects in model input/worker context. No raw invalid output/CoT in any
-archive/log/result file. No model download, provider substitution, GPU install,
+or runtime objects in model input/worker context. No raw provider body, malformed output or CoT in any
+archive/log/result file. Private transient IPC may carry schema/vocabulary-valid
+but still untrusted proposal prose; parent validates the current-world information
+boundary before durable journaling/use, then deletes IPC. This explicit IPC exception
+is necessary because the worker must not receive the authoritative world. No model download, provider substitution, GPU install,
 player API, main/tag/milestone changes or deletion of branches/worktrees.
 
 Defaults: timeout30seconds,512output tokens,1MiB response,temperature0,seed resolved
@@ -70,10 +73,12 @@ In ollama_driver.py:
 - OllamaTickDriver(config:ProviderConfig,feedback:FoundersFeedback,
   broker:DecisionBroker), implementing existing TickDriver initialize/prepare.
 In journal_replay.py:
-- JournalReplayComposition(source:AttemptArchive,composition:FoundersLiveComposition)
+- JournalReplayComposition(source:AttemptArchive,composition:FoundersLiveComposition,
+  *,source_point:ForkPoint|None=None), read-only source_point:ForkPoint property,
   implements ScenarioComposition; initialize restores captured source checkpoint0
   through composition.restore, restore/terminal/finalize delegate live behavior.
-- JournalReplayDriver(source:AttemptArchive,feedback:FoundersFeedback), implementing
+- JournalReplayDriver(source:AttemptArchive,feedback:FoundersFeedback,
+  *,source_point:ForkPoint|None=None), implementing
   TickDriver with zero provider/broker calls. Export both for LN07.
 Use existing DriverCommit/TickPreparation protocols unchanged.
 
@@ -121,7 +126,9 @@ pickle DecisionInput/handlers/engine/inspector/actor_id, fingerprints or journal
 Use existing serialized request schema to reconstruct safe context/options in worker.
 
 Use private owned temporary directory + atomic bounded JSON result file as IPC.
-Worker writes safe parsed decision/fixed error/digest only (no raw model output),
+Worker writes structurally parsed untrusted decision/fixed error/digest only
+(no raw provider body, malformed output or CoT; current-world prose validation is
+parent-owned as above),
 parent reads ONLY after process exit. Never use poll-then-blocking framed pipe reads.
 Frame limit8*max_response_bytes+4096 accounts for safe JSON escaping; reject excess or
 malformed result, reparse decision against exact offered actions in parent. job_id
@@ -246,7 +253,14 @@ No marker granting automatic retry may be persisted in semantic world/cursors.
 
 ## Offline exact replay
 
-Capture source.fork_point() and journal prefix at construction; source readonly,
+Capture source.fork_point() and journal prefix at construction (or verify the supplied
+source_point against source.checkpoint(point.revision) and its exact sealed prefix).
+Composition exposes its captured point; LN07 must pass that same point to driver,
+so a concurrent source append between their constructors cannot choose two horizons.
+Both only load checkpoints through point.checkpoint.revision and journal through its
+boundary; default standalone construction remains supported. Test appending between
+constructors with one shared source_point: replay must stop at the captured horizon.
+Source readonly,
 modeollama, config resolved as above. Later source appends excluded. Composition
 initialize restores exact sourcecheckpoint0 (which may already contain tickN, memories,
 work and pending feedback from a parent), never a fresh WorldState. Driver initialize
