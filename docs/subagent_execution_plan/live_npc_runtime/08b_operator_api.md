@@ -1,7 +1,7 @@
 # LN08b — Local authenticated operator API
 
-Status: authorized bounded local operator API stage after reviewed LN08a integration
-`c6640b5`; root pre-dispatch review complete, implementation next.
+Status: independently reviewed and root task-validated; feature integration pending
+after owner-requested pause. Base LN08a integration c6640b5; contract52da486.
 **Goal:** authenticate local administrative reads and queue durable runtime commands
 without moving simulation ownership into HTTP handlers.
 **Architecture:** in-memory AdminSession guards a separate operator app. RuntimeService
@@ -18,9 +18,10 @@ is privileged operator access only; no operator DTO becomes NPC context. Existin
 create_app GET-only behavior/static/default URLs remain unchanged. No new start/fork/
 resume HTTP endpoint; explicit run construction remains application/CLI composition.
 
-Exactly eight worker paths:
+Exactly nine worker paths (root correction amendment below):
 - src/living_world/api/auth.py (new session/HTTP authorization)
 - src/living_world/api/operator.py (new app/DTO/routes)
+- src/living_world/api/inspection_routes.py (synchronous DTO worker dispatch only)
 - src/living_world/runtime/service.py (readonly controller association getter only)
 - tests/test_runtime_operator_api.py (new)
 - tests/test_runtime_service.py (getter/readiness/shutdown association tests only)
@@ -157,31 +158,31 @@ Existing GET DTO responses unchanged, no runner/model or writes for history.
 
 ## Required tests, TDD and gates
 
-- [ ] Genuine RED then GREEN session and service association, no prototype code first.
-- [ ] Session tests token/nonce independence, hidden repr, origin validation; missing/
+- [x] Genuine RED then GREEN session and service association, no prototype code first.
+- [x] Session tests token/nonce independence, hidden repr, origin validation; missing/
   wrong/non-ASCII Bearer, absent/foreign Origin, wrong/non-ASCII nonce;401/403fixed
   errors, nonce only authenticated status, no CORS/no-store, no alternate method bypass.
-- [ ] Readonly service getter before ready/after shutdown and wrong-controller app
+- [x] Readonly service getter before ready/after shutdown and wrong-controller app
   refusal; app starts no runner; lifespan shutdown joins actual owner resources.
-- [ ] Real command tests duplicate/concurrent/stale step exactly one complete tick,
+- [x] Real command tests duplicate/concurrent/stale step exactly one complete tick,
   changed envelope conflict, queued pause stays pending until durable applied receipt,
   explicit Retry only on provider error, Stop and terminal conflict; verify durable
   archive audit/receipts and actor/world owner thread, no HTTP mutation.
-- [ ] During delayed fake-provider inference, actual status request remains responsive
+- [x] During delayed fake-provider inference, actual status request remains responsive
   and reports last durable tick/revision/activity. At least one real uvicorn loopback
   status/control/auth case, not only monkeypatched route strings. No actual model.
-- [ ] Archive list/details/checkpoints includes success, stopped, failed, interrupted,
+- [x] Archive list/details/checkpoints includes success, stopped, failed, interrupted,
   setup-only and typed failed-uninitialized attempts; safe corrupt/unknown outcomes,
   configuration-source labels, bounded50recent journal/truncation count, no secret leak.
-- [ ] Pinned root/prefixed all-world JSON and safe errors, multiple panels same selected
+- [x] Pinned root/prefixed all-world JSON and safe errors, multiple panels same selected
   revision while owner advances, archived cache-eviction reload and historical no
   controls/steps/provider; all source bytes/mtime/entries unchanged by reads/failures.
-- [ ] Unauthorized requests neither submit nor reconstruct/read protected archive data;
+- [x] Unauthorized requests neither submit nor reconstruct/read protected archive data;
   tokens/nonces absent from all archive files, returned error/DTO JSON and captured logs.
-- [ ] Extend existing test_inspection_api.ASGIClient with optional headers/body bytes and correct query
+- [x] Extend existing test_inspection_api.ASGIClient with optional headers/body bytes and correct query
   separation from path (for real auth-bypass query tests)
   while preserving existing calls/behavior; reuse helper, no copied full client/httpx.
-- [ ] Final focused: PYTHONPATH=src TASK_PY -m pytest tests/test_runtime_operator_api.py
+- [x] Final focused: PYTHONPATH=src TASK_PY -m pytest tests/test_runtime_operator_api.py
   tests/test_runtime_service.py tests/test_inspection_api.py tests/test_runtime_revision_source.py -q.
   TASK_PY=/home/at-boy/Projects/codex/Living-World-Simulator/.worktrees/task24/.venv/bin/python.
   Scoped Ruff/Black/whitespace, self-review/report command/result/counts/warnings only.
@@ -197,4 +198,18 @@ Interfaces:8a router/source provide readonly DTOs; existing controller owns immu
 status and receipts, service.submit is only mutation gateway. Getter adds safe service
 association; test-client extension preserves existing API/browser tests. Error/status/
 security and metadata producer choices are explicit; UI/token-file/serve wiring remain
-later stages. All eight paths and required tests correspond; no NPC boundary change.
+later stages. All nine paths and required tests correspond; no NPC boundary change.
+
+## Root correction amendment — worker dispatch for inspection DTOs
+
+Independent review confirmed shared async GET handlers call synchronous inspector DTO
+methods on the event loop, violating this task's responsiveness contract. Root adds
+inspection_routes.py to the exact worker boundary solely to change synchronous DTO
+handlers from async def to def, preserving all routes, names, signatures, dependency
+resolution, return DTOs and errors. FastAPI dispatches them in its worker pool; no
+second router or copied handler implementation. This applies consistently to existing
+standalone and prefixed consumers. Add a genuine RED/GREEN regression in the existing
+operator test file: block a DTO in a worker while an actual loopback status request
+remains responsive, assert DTO execution is off the event-loop thread, release/join
+in finally. Existing root/prefixed inspection/browser compatibility gates still bind.
+No other source expansion or scheduling/serialization architecture change authorized.

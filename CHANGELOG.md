@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add reviewed authenticated operator status/commands and read-only archive APIs;
+  dispatch inspection work off the request loop. Task validated; integration pending.
+
 - Define local authenticated runtime status/commands and archive APIs, keeping
   session secrets out of archives and simulation writes on the runtime owner.
 
