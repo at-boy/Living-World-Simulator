@@ -21,3 +21,8 @@ Read the final Root pre-dispatch decision review as binding clarification. Exact
 names, no ignored flags, initialization/archive exit4, safe metadata-only fallback,
 resume equality versus changed-config fork, watcher cleanup and inspection nonmutation
 are explicit. If a new architectural ambiguity appears, ask root before choosing.
+
+Root review1: final shutdown truth amendment binds correction before code. Re-read
+controller.status after service.shutdown join, then fail correctly before summary;
+never convert mirror_failed into a terminal condition. Regression for completed and
+operator-stopped final mirror failure, no service/boundary expansion.

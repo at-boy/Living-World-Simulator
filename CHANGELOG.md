@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Checkpoint reviewed, task-validated archived CLI delivery before the usage guard;
+  feature integration and merged validation remain pending.
+
 - Define explicit archived live CLI, exact resume/fork/replay, SIGINT cleanup and
   read-only checkpoint inspection while preserving existing CLI behavior.
 

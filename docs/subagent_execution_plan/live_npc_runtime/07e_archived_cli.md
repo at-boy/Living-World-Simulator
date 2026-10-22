@@ -1,7 +1,8 @@
 # LN07e — Archived runtime CLI and read-only attempt inspection
 
 Status: authorized bounded CLI stage after reviewed LN07d integration c604463.
-Root contract decision review complete; implementation next.
+Root contract reviewed; implementation independently reviewed and task-validated.
+Feature integration and repeated merged gates remain pending.
 Spec: docs/superpowers/specs/2026-10-19-live-npc-runtime-design.md and original LN07.
 Goal: expose reviewed service through explicit real-Ollama run/resume/fork/replay
 commands and read-only archive inspection, preserving every existing CLI alias.
@@ -217,3 +218,18 @@ No terminal failure is described as settlement success. Documentation must inclu
 exact new commands, loopback-only providers, no downloads, failure archives, restart
 lineage, explicit forks, offline replay, read-only selected-checkpoint inspection,
 mirror/archive precedence and the remaining browser/installed-model acceptance work.
+
+
+## Root review correction 1 — final shutdown truth
+
+Independent review confirmed a P1 consumer race: status read before shutdown can be
+COMPLETED/STOPPED while final mirror settlement publishes FAILED during owner join.
+After successful service.shutdown returns, re-read immutable controller.status and
+check final failure before constructing any successful summary. Final mirror/audit
+errors use the existing exit4 mapping, known attempt remains identifiable, archive
+checkpoint remains authoritative. Never interpret failed attempt_finished outcome
+as a game terminal condition or print a success summary for a failed final status.
+Required genuine RED/GREEN: hold a final mirror until shutdown begins then fail it;
+assert exit4, safe mirror_failed, no successful stdout, failed archive at last complete
+checkpoint. Cover completed and operator-stopped shutdown paths. Scope remains seven
+worker paths; root owns this task/prompt amendment. Service behavior remains unchanged.

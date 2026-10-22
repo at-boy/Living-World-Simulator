@@ -26,7 +26,8 @@ task/merged1876/10,39examples, separateexamples/whitespace/exactmatrix with26arc
 Parent-aware deferred fork setup LN07c is reviewed afterone corrected allocation
 failure; deliveryada9b8b integrated with task/merged1956/10,39examples and exactmatrix before
 service/generic recorded restart ownership (LN07d, independently reviewed and
-validated delivery1c2c2fc; task/merged2018/10,39examples/exactmatrix passed) and CLI consumers (LN07e, exact seven-path contract reviewed; implementation next).
+validated delivery1c2c2fc; task/merged2018/10,39examples/exactmatrix passed) and CLI consumers (LN07e deliveryf9281f9 independently reviewed/task-validated and pushed;
+feature integration/repeated merged gates pending).
 Runtime service source is ready; CLI/browser and installed-Ollama acceptance remain upcoming.
 legacy generic/taped/raw-database CLI and injected engine/state-reference hooks must
 remain compatible. Add an explicit archive observer to the existing runner, not a
