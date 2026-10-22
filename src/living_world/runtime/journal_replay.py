@@ -153,12 +153,20 @@ class JournalReplayDriver:
             raise ArchiveFormatError("Replay initial world mismatch.")
         return DriverCommit(first.driver_cursor, first.feedback_cursor, ())
 
+    def validate_checkpoint(
+        self, candidate: SimulationEngine, base: Checkpoint, archive: AttemptArchive
+    ) -> None:
+        self._target(archive)
+        if encode_world(candidate.state) != base.snapshot or not any(
+            _same_checkpoint(point, base) for point in self._source.checkpoints
+        ):
+            raise ArchiveFormatError("Replay candidate or cursor mismatch.")
+        self._feedback.validate_checkpoint(candidate, base)
+
     def prepare(
         self, candidate: SimulationEngine, base: Checkpoint, archive: AttemptArchive
     ) -> _ReplayPreparation:
-        self._target(archive)
-        if encode_world(candidate.state) != base.snapshot:
-            raise ArchiveFormatError("Replay candidate mismatch.")
+        self.validate_checkpoint(candidate, base, archive)
         selected: tuple[Checkpoint, Checkpoint] | None = None
         for previous, current in zip(
             self._source.checkpoints, self._source.checkpoints[1:]

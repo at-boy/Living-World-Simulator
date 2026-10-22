@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add independently reviewed runtime ownership, exact linked restart/fork/replay,
+  generic recorded continuation, safe shutdown and archive-first final mirrors.
+
 - Save the service implementation handoff and usage checkpoint; focused checks pass,
   while independent review, full gates and integration remain pending.
 

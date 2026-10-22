@@ -35,3 +35,8 @@ relativebudget; truecustomterminalplainresumeskipsGET/generation. Readexactamend
 Rootshutdown/mirrorclarification: factorowner-onlycontroller.settle_shutdown from
 close, archiveopenuntilafterfinalmirror; failurethenfail_service, finallyclose. No
 serviceprivate_stop orduplicatedsettlementloop. Readexactamendmentbeforeimplementation.
+
+Rootreview1 correction expands17->19allowedpaths bycatalog.py andcatalogtests ONLY
+forpostallocationforkerrorrefwrapper. Readexactamendment beforefix. Repairneither
+source norchild; settleallocatednewchildfailed withactualrevision. Earlyprepoll
+cancel usesarchiveopen settle/finalmirror/audit/close; no mirror skipped infinally.

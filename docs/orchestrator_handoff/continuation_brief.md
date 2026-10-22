@@ -1,3 +1,25 @@
+# Continuation brief — LN07d reviewed delivery, October 22, 2026
+
+## Current authoritative state
+
+Owner resumed; LN07d runtime service has independent SPEC/QUALITY PASS after two
+corrected P2 findings: typed allocated-child fork failure settlement, and final
+mirror/audit on pre-poll cancellation. Exact amended task/prompt and reviewed report
+are authoritative. Worker focused286; root task make2018passed/10existing skips,
+39examples, separateexamples/whitespace and exact canonical matrix passed. All26
+normal matrix CLI archives persist with readable checkpoints. No reviewed source
+changed by make. Delivery1c2c2fc pushed; mergedmake2018/10,39examples, separateexamples/whitespace/
+exactmatrix and26readablearchives passed. Integration is the merge containing this
+brief; LN07d complete. Reviewed source unchanged.
+
+Next LN07e archived CLI routes, LN08 browser/serve controls, then LN09 actual
+installed-Ollama/operator acceptance. Do not redispatch completed LN07d source.
+Original Task7 incomplete; no liveCLI/browser acceptance claimed. Preserve branches,
+worktrees and owner-local masterplan edit. Usage guard: stop with headroom BEFORE
+10% five-hour remaining; no reset authorized. Protected main/milestone/tag unchanged.
+
+## Historical context (superseded by current state above)
+
 # Continuation brief — LN07b complete, usage checkpoint, October 22, 2026
 
 ## Current usage checkpoint — resume here

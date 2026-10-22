@@ -514,3 +514,42 @@ def test_close_before_initialization_settles_multiple_controls(
             assert reopened.lifecycle()[-1]["state"] == "stopped"
         assert reopened.command("pause").status != "queued"
         assert reopened.command("stop").status != "queued"
+
+
+def test_initial_stop_precedes_terminal_when_requested(tmp_path: Path) -> None:
+    controller, archive = setup(
+        tmp_path, composition=Composition(terminal=True), max_ticks=0
+    )
+    controller = RunController(
+        archive,
+        Composition(terminal=True),
+        Driver(),
+        max_ticks=0,
+        start_paused=False,
+        initial_stop_precedes_terminal=True,
+    )
+    command(controller, "stop")
+    assert controller.poll().state is RuntimeState.STOPPED
+    assert controller.status().tick == 0
+    controller.close()
+
+
+def test_request_budget_stops_committed_world_with_reason(tmp_path: Path) -> None:
+    class BudgetDriver(Driver):
+        def prepare(self, candidate, base, archive):
+            result = super().prepare(candidate, base, archive)
+            result.error_code = "request_budget_exhausted"
+            return result
+
+    controller, archive = setup(
+        tmp_path, driver=BudgetDriver("provider_error"), paused=False
+    )
+    controller.poll()
+    controller.poll()
+    assert hasattr(controller, "stop_for_budget")
+    controller.stop_for_budget()
+    assert controller.status().state is RuntimeState.STOPPED
+    assert controller.status().tick == 0
+    assert archive.lifecycle()[-1]["reason"] == "request_budget_exhausted"
+    assert archive.entries()[-1].payload["outcome"] == "request_budget_exhausted"
+    controller.close()

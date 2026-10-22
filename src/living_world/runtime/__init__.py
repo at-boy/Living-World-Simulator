@@ -16,6 +16,7 @@ from .journal_replay import JournalReplayComposition, JournalReplayDriver
 from .legacy import LegacyArchiveSession, legacy_cursor
 from .ollama_driver import OllamaTickDriver, effective_config_fingerprint
 from .preflight import ProviderPreflightError, preflight_provider
+from .service import RuntimeService, RuntimeStartupError, run_owner_loop
 
 __all__ = [
     "BrokerResult",
@@ -31,6 +32,8 @@ __all__ = [
     "ProviderConfig",
     "ProviderPreflightError",
     "RunController",
+    "RuntimeService",
+    "RuntimeStartupError",
     "RuntimeState",
     "RuntimeStatus",
     "ScenarioComposition",
@@ -40,4 +43,5 @@ __all__ = [
     "legacy_cursor",
     "preflight_provider",
     "provider_config",
+    "run_owner_loop",
 ]

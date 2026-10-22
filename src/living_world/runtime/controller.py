@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections import deque
+from contextlib import suppress
 from dataclasses import asdict
 from threading import get_ident
 from typing import Literal
@@ -14,10 +15,11 @@ from living_world.archives import (
     CommandReceipt,
     JournalEntry,
 )
-from living_world.archives.model import canonical, integer
+from living_world.archives.model import canonical, envelope, integer
 from living_world.repositories.world_snapshot import decode_world, encode_world
 from living_world.simulation.simulation_engine import SimulationEngine
 
+from .broker import ERROR_CODES
 from .contracts import (
     DriverCommit,
     RuntimeState,
@@ -42,6 +44,7 @@ class RunController:
         *,
         max_ticks: int | None,
         start_paused: bool,
+        initial_stop_precedes_terminal: bool = False,
     ) -> None:
         if (
             not isinstance(archive, AttemptArchive)
@@ -62,6 +65,9 @@ class RunController:
             for name in ("initialize", "prepare")
         ):
             raise TypeError("Invalid controller composition or driver.")
+        if type(initial_stop_precedes_terminal) is not bool:
+            raise TypeError("initial_stop_precedes_terminal must be boolean.")
+        self._initial_stop_precedes_terminal = initial_stop_precedes_terminal
         self._owner = get_ident()
         self._archive, self._composition, self._driver = archive, composition, driver
         self._max_ticks, self._start_paused = max_ticks, start_paused
@@ -234,6 +240,14 @@ class RunController:
             pending.append(self._step)
         if self._active_control is not None and self._active_control not in pending:
             pending.append(self._active_control)
+        # Admission can durably write before an IO error prevents in-memory
+        # queue insertion. Failure settlement also resolves that accepted row.
+        with suppress(Exception):
+            for entry in self._archive.entries():
+                if entry.kind == "control_requested":
+                    command = envelope(entry.payload["envelope"])
+                    if command not in pending:
+                        pending.append(command)
         entries = []
         for command in pending:
             try:
@@ -314,9 +328,12 @@ class RunController:
                 self._checkpoint.driver_cursor, self._checkpoint.feedback_cursor, ()
             )
         self._initial_tick = candidate.state.tick
-        terminal = self._composition.terminal_condition(candidate)
         stopped = any(c.action == "stop" for c in self._initial_controls)
-        done = terminal is not None or self._max_ticks == 0
+        stop_first = stopped and self._initial_stop_precedes_terminal
+        terminal = (
+            None if stop_first else self._composition.terminal_condition(candidate)
+        )
+        done = not stop_first and (terminal is not None or self._max_ticks == 0)
         if done or stopped:
             self._composition.finalize(candidate, stopped=stopped and not done)
         target = (
@@ -424,7 +441,9 @@ class RunController:
         self._discard()
         self._publish(target, error=error)
 
-    def _stop(self, command: CommandEnvelope | None = None) -> None:
+    def _stop(
+        self, command: CommandEnvelope | None = None, *, reason: str | None = None
+    ) -> None:
         self._discard()
         if self._checkpoint is None:
             raise RuntimeError("Stop requires an initialized boundary.")
@@ -462,7 +481,7 @@ class RunController:
             for c in self._pause_controls
         )
         entries += (
-            self._finished(RuntimeState.STOPPED, self._checkpoint.revision + 1),
+            self._finished(RuntimeState.STOPPED, self._checkpoint.revision + 1, reason),
         )
         checkpoint = self._archive.commit(
             encode_world(candidate.state),
@@ -474,10 +493,27 @@ class RunController:
         self._step = None
         self._pause_controls.clear()
         try:
-            self._archive.record((), lifecycle=RuntimeState.STOPPED.value)
+            self._archive.record(
+                (), lifecycle=RuntimeState.STOPPED.value, reason=reason
+            )
             self._publish(RuntimeState.STOPPED, checkpoint=checkpoint)
         except Exception:  # noqa: BLE001
             self._fail("audit_failed", committed=checkpoint)
+
+    def stop_for_budget(self) -> None:
+        self._check_owner()
+        if (
+            self._state is not RuntimeState.PROVIDER_ERROR_PAUSED
+            or self.status().error_code != "request_budget_exhausted"
+        ):
+            raise ValueError("Request budget stop requires exhausted provider state.")
+        self._stop(reason="request_budget_exhausted")
+
+    def fail_service(self, code: str) -> None:
+        self._check_owner()
+        if code not in ERROR_CODES | {"mirror_failed", "service_failed"}:
+            raise ValueError("Unknown service failure code.")
+        self._fail(code)
 
     def _advance(self) -> None:
         assert self._checkpoint is not None
@@ -585,11 +621,9 @@ class RunController:
             )
         return self.status()
 
-    def close(self) -> None:
-        if self._owner != get_ident():
-            raise RuntimeError("Controller operation requires its owner thread.")
-        if self._closed:
-            return
+    def settle_shutdown(self) -> None:
+        """Settle pending controls and Stop while leaving the archive open."""
+        self._check_owner()
         try:
             if not self._state.terminal:
                 if self._checkpoint is None:
@@ -613,6 +647,14 @@ class RunController:
             self._discard()
         except Exception:  # noqa: BLE001
             self._fail("shutdown_failed")
+
+    def close(self) -> None:
+        if self._owner != get_ident():
+            raise RuntimeError("Controller operation requires its owner thread.")
+        if self._closed:
+            return
+        try:
+            self.settle_shutdown()
         finally:
             self._archive.close()
             self._closed = True

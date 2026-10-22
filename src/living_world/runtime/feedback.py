@@ -576,6 +576,16 @@ class FoundersFeedback:
             else:
                 optional.remove(oldest)
 
+    def validate_checkpoint(
+        self, candidate: SimulationEngine, base: Checkpoint
+    ) -> None:
+        """Validate closed provenance without observing, staging or mutating cognition."""
+        cursor = self._cursor(base.feedback_cursor)
+        state = decode_world(base.snapshot)
+        self._validate_provenance(state, cursor, state.tick)
+        if encode_world(candidate.state) != base.snapshot:
+            raise RuntimePreparationError("candidate_mismatch")
+
     def prepare(
         self, candidate: SimulationEngine, base: Checkpoint
     ) -> tuple[DecisionInput, ...]:

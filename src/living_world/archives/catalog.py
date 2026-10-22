@@ -1026,16 +1026,19 @@ class RunCatalog:
                 parent.ref.lineage_id,
                 point.journal_boundary,
             )
-            retain_inputs(ref, inputs.scenario_path, tape_path=inputs.tape_path)
-            with (
-                AttemptLease(ref),
-                self.open_attempt(ref.attempt_id, read_only=False) as child,
-            ):
-                child.commit(
-                    checkpoint.snapshot,
-                    expected_revision=None,
-                    driver_cursor=checkpoint.driver_cursor,
-                    feedback_cursor=checkpoint.feedback_cursor,
-                    entries=(),
-                )
+            try:
+                retain_inputs(ref, inputs.scenario_path, tape_path=inputs.tape_path)
+                with (
+                    AttemptLease(ref),
+                    self.open_attempt(ref.attempt_id, read_only=False) as child,
+                ):
+                    child.commit(
+                        checkpoint.snapshot,
+                        expected_revision=None,
+                        driver_cursor=checkpoint.driver_cursor,
+                        feedback_cursor=checkpoint.feedback_cursor,
+                        entries=(),
+                    )
+            except Exception as exc:
+                raise ArchiveReservationError(ref) from exc
             return ref

@@ -1,7 +1,9 @@
 # LN07d — Owner-thread runtime service and exact restart
 
 Status: authorized bounded service stage after reviewed LN07c integration d782e20;
-implementation next. Original Task7 incomplete until service/CLI/serve acceptance.
+implementation independently reviewed, task/merged validated and integrated by the
+merge containing this status. Delivery1c2c2fc; all branches/checkouts preserved.
+Original Task7 incomplete until service/CLI/serve acceptance.
 Spec: docs/superpowers/specs/2026-10-19-live-npc-runtime-design.md, original LN07.
 Existing LN01–07c contracts remain binding. Python>=3.11, strict types, no dependency/
 world/SQL/schema change. Managers mutate, systems behave, immutable events; NPC
@@ -316,3 +318,44 @@ and launch bundle close. No service call to private controller._stop, no tempora
 reopening of a closed controller/archive, no source changes. Same17paths.
 Test finalmirrorfailure on stopped/nonterminal shutdown and completed final boundary,
 exact archived snapshotahead and failed lifecycle, safe repeatedshutdown/cleanup.
+
+## Root independent review correction round 1
+
+Review found two P2 startup failure gaps. Scope is now19workerpaths: prior17 plus
+src/living_world/archives/catalog.py and tests/test_run_archive_catalog.py, narrowly
+for ordinary fork post-allocation error identity. All other excluded boundaries hold.
+
+1. Ordinary catalog.fork owns child allocation but currently loses its reference
+when retention/child copy fails before return. After _reserve returns a ref, wrap
+subsequent ordinary Exception failures in existing ArchiveReservationError(ref),
+preserving original cause, child files and parent bytes. Never enumerate/diff catalog
+contents to guess identity, duplicate the fork loop in service, repair/delete child
+or change successful mode/clone/seal behavior. Pre-allocation validation unchanged.
+No BaseException/control-flow remapping required; service cancellation remains
+cooperative. Update existing failure test to expect typed allocated-ref wrapper.
+
+LaunchFactory linked recorded/replay path catches that typed failure, validates
+returned ref belongs to catalog/new child relationship, acquires its normal owner
+lease and accepts only this newly allocated child for failure settlement. _guard
+then records failed/archive_failed at actual latestrevision (None before commit,0
+if commit succeeded then raised) when SQLite is valid. No invented checkpoint or
+repair if publication itself is incomplete. Startup error always includes allocated
+ref. Same principle for recorded/replay resume and explicit fork.
+
+2. Cancellation after controller construction but before first poll must use SAME
+settle_shutdown -> finalmirror/audit -> close sequence as normal shutdown. Mirror
+state/helper must be available for this path; derive initial/final tick from the
+settled complete publication if initialpoll has not set it yet. Do not merely
+close controller in finally and skip mirror. No duplicate settlement/mirror loops.
+Successful cancellation with a complete stopped world writes exact final mirror.
+Mirror failure durably records mirror_failed at last complete checkpoint while
+archive open; mirror_failed takes precedence over cancelled startup error when
+startup Future has not resolved. Finally always closes owner resources.
+
+Required genuine RED/GREEN: recorded and replay clone failure before cp0 / commit-
+then-raise, all known child ref+parent+failedoutcome / correct revision / sourcebytes
+unchanged / leasecleanup; retention failure identity. Early controlled-constructor
+shutdown with valid mirror and failing mirror, exact completed checkpointahead,
+truthful failed lifecycle/error and repeatedshutdowncleanup. Focused correction
+checks first, then original focused suite PLUS tests/test_run_archive_catalog.py.
+19allowedpaths current; initial17path report is historical and correction supersedes.

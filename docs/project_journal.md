@@ -1,5 +1,23 @@
 # Living World Simulator – Project Journal
 
+## LN07d reviewed runtime service — October 22, 2026
+
+The owner-thread service composes new and linked recorded/live/replay attempts,
+keeps mutation on one owner, validates cursors without staging feedback, and preserves
+world/work/cognition through process restart. Operational Stop/budget outcomes do not
+become game-terminal state. Request limits stop normally; provider failures retain
+explicit Retry. Shutdown settles the archive before the final mirror and close.
+Independent SPEC/QUALITY review found two P2 issues: allocated ordinary-fork errors
+lost child identity, and early cancellation skipped the final mirror. Root amended
+the contract before correction, adding only catalog/error regressions to the scope.
+Scoped re-review: both addressed, zero open, NO SUBSTANTIVE FINDINGS. Worker focused
+286 passed. Root task make: 2018 passed/10 existing skips, 39 examples; separate
+examples, whitespace and exact canonical matrix with 26 readable archives passed.
+Delivery1c2c2fc pushed; mergedmake2018/10,39examples, separateexamples, whitespace
+and exactmatrix/26readablearchives passed. Only root documents conflicted; reviewed
+source unchanged. Integration is the merge containing this entry. CLI/browser
+consumers and installed-Ollama acceptance remain pending.
+
 ## LN07d worker handoff and usage checkpoint — October22,2026
 
 LN07c deliveryada9b8b/integrationd782e20 complete, task/merged1956/10,39examples and
