@@ -172,3 +172,33 @@ Scoped Ruff/Black/whitespace; report true commands/counts/RED/GREEN/limits/selfr
 Worker no VCS/subagents/fullmake/examples/installs. Root independent SPEC/QUALITY review,
 corrections/rereview, task+merged make/separateexamples/whitespace and exact canonical
 matrices before commits/integration. Preserve every branch/checkpoint/owner-local edit.
+
+## Root review amendment — publication completion boundary
+
+Review1 reproduced SQLite-file creation before schema/metadata initialization. Mere
+existence of both final paths is not completion. Add immutable setup_complete.json
+ONLY after ordinary attempt metadata and SQLite initialization both successfully
+finish and close. Closed document {format:1,lineage_id,attempt_id,config_sha256};
+config_sha256 is SHA256 of canonical(config_document(effective)).encode(). Validate
+strict identity/fields/format/digest and parity on ordinary setup-backed open. No
+marker or metadata rewriting, no read-side writes/repair, no SQL/schema change.
+
+A valid setup intent without completion marker remains pending publication even if
+both final paths exist: initializing while owned, failed/archive_incomplete when
+unowned and any final path exists; unowned with neither remains interrupted. Such
+setup cannot open or be reconfigured. Before classification still validate intent,
+any present attempt.json closed identity/config/timestamp/parent/error parity and
+retained inputs/hash/roles; malformed metadata remains archive_invalid. In this
+unmarked publication window retained input identity uses validated setup intent
+without opening partially initialized SQLite. Marker present requires both final
+files and ordinary complete archive/input/config parity; corrupted/tampered marked
+archives remain archive_invalid. Missing marker is an incomplete publication, including
+a crash after valid SQLite creation but before marker; no legacy setup migration is
+needed since this uncommitted format has no released consumers. Old archives without
+setup.json remain unchanged. Failure marker conflicts with any final/completion file.
+
+Test real fault boundary empty SQLite and schema/metadata-partial database; both
+owned/unowned discovery; also fault after valid SQLite before completion marker.
+Discovery/open leave bytes unchanged, no invented checkpoint/repair or second
+completion. Marked completed archive corruption/config/marker tamper remains invalid.
+Same11workerpaths. This root decision precedes correction implementation.

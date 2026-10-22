@@ -52,7 +52,10 @@ independently re-reviewed; task1800/10, merged1809/10,39examples, separateexampl
 whitespace and exact matrices passed. All26merged CLI acceptance runs persist readable
 archives with complete checkpoints. No implementation/review redispatch for6c/7a.
 Next bounded stage is LN07b setup reservations and model preflight, then LN07c service/
-entrypoints. Exact7b contract/prompt/report prepared from integrationd975539; implementation next.
+entrypoints. LN07b implementation passed independent SPEC/QUALITY review after one corrected partial
+SQLite publication issue; root amended completion-marker contract before correction.
+Taskmake1876/10,39examples,separateexamples/whitespace/exactmatrix with26retained
+CLIarchives passed. Delivery/merged gates next; no source redispatch.
 No LN08/LN09 implementation yet.
 Read it for the expanded archive producer boundary, sealed prefix and truthful
 import/action audit rules. Probe/candidate notes are ignored evidence, not taskauthority. Do not repeat

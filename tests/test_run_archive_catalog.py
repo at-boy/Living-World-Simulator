@@ -932,3 +932,451 @@ def test_manifest_roles_stay_strict_after_source_normalization(
     manifest.write_text(json.dumps(data))
     with pytest.raises(ArchiveError):
         load_retained_inputs(ref)
+
+
+def setup_request(**provider: object) -> AttemptConfig:
+    return config("ollama", settings={"provider": {"model": "tiny", **provider}})
+
+
+def setup_effective(**provider: object) -> AttemptConfig:
+    return setup_request(model="tiny:latest", model_digest="a" * 64, **provider)
+
+
+def test_setup_retains_before_archive_and_publishes_once(tmp_path: Path) -> None:
+    catalog = RunCatalog(tmp_path / "runs")
+    requested = setup_request()
+    ref = catalog.reserve_setup(requested)
+    intent = (ref.directory / "setup.json").read_bytes()
+    assert not (ref.directory / "attempt.json").exists()
+    assert not (ref.directory / "archive.sqlite3").exists()
+    assert catalog.setup_config(ref) == requested
+    assert catalog.attempts()[0].lifecycle == "interrupted"
+    with pytest.raises(ArchiveError):
+        catalog.open_attempt(ref.attempt_id)
+    with AttemptLease(ref):
+        assert catalog.attempts()[0].lifecycle == "initializing"
+        retained = retain_inputs(ref, sources(tmp_path), tape_path=None)
+        assert load_retained_inputs(ref) == retained
+        catalog.complete_setup(ref, setup_effective())
+        with pytest.raises(ArchiveError):
+            catalog.complete_setup(ref, setup_effective())
+    assert (ref.directory / "setup.json").read_bytes() == intent
+    with catalog.open_attempt(ref.attempt_id) as archive:
+        assert archive.config == setup_effective()
+        assert archive.latest_revision is None
+    assert catalog.attempts()[0].tick is None
+
+
+def test_setup_failure_is_immutable_read_only_and_no_world(tmp_path: Path) -> None:
+    catalog = RunCatalog(tmp_path / "runs")
+    ref = catalog.reserve_setup(setup_request())
+    with pytest.raises(ArchiveError):
+        catalog.fail_setup(ref, "timeout")
+    with AttemptLease(ref):
+        retain_inputs(ref, sources(tmp_path), tape_path=None)
+        catalog.fail_setup(ref, "timeout")
+        failure = (ref.directory / "setup_failure.json").read_bytes()
+        catalog.fail_setup(ref, "timeout")
+        with pytest.raises(ArchiveError):
+            catalog.fail_setup(ref, "cancelled")
+        with pytest.raises(ArchiveError):
+            catalog.complete_setup(ref, setup_effective())
+    before = {
+        p: (p.read_bytes(), p.stat().st_mtime_ns)
+        for p in catalog.root.rglob("*")
+        if p.is_file()
+    }
+    summary = catalog.attempts()[0]
+    assert (summary.lifecycle, summary.failure_code, summary.tick) == (
+        "failed",
+        "timeout",
+        None,
+    )
+    assert summary.ended_at is not None
+    assert catalog.setup_config(ref) == setup_request()
+    load_retained_inputs(ref)
+    assert before == {
+        p: (p.read_bytes(), p.stat().st_mtime_ns)
+        for p in catalog.root.rglob("*")
+        if p.is_file()
+    }
+    assert (ref.directory / "setup_failure.json").read_bytes() == failure
+    assert not (ref.directory / "archive.sqlite3").exists()
+
+
+@pytest.mark.parametrize(
+    "change", ["root", "lease", "seed", "model", "digest", "option", "inputs"]
+)
+def test_setup_completion_fails_closed(tmp_path: Path, change: str) -> None:
+    catalog = RunCatalog(tmp_path / "runs")
+    ref = catalog.reserve_setup(
+        setup_request(timeout_seconds=1, model_digest="sha256:" + "A" * 64)
+    )
+    with AttemptLease(ref):
+        if change != "inputs":
+            retain_inputs(ref, sources(tmp_path), tape_path=None)
+        effective = setup_effective(timeout_seconds=1)
+        if change == "seed":
+            effective = AttemptConfig("ollama", "test", 8, "rev", effective.settings)
+        elif change == "model":
+            effective = setup_request(
+                model="other", model_digest="a" * 64, timeout_seconds=1
+            )
+        elif change == "digest":
+            effective = setup_request(model_digest="b" * 64, timeout_seconds=1)
+        elif change == "option":
+            effective = setup_effective(timeout_seconds=2)
+        elif change == "root":
+            catalog = RunCatalog(tmp_path / "foreign")
+        if change != "lease":
+            with pytest.raises(ArchiveError):
+                catalog.complete_setup(ref, effective)
+    if change == "lease":
+        with pytest.raises(ArchiveError):
+            catalog.complete_setup(ref, effective)
+    assert not (ref.directory / "attempt.json").exists()
+
+
+def test_setup_completion_cannot_invent_unrequested_provider_defaults(
+    tmp_path: Path,
+) -> None:
+    catalog = RunCatalog(tmp_path / "runs")
+    ref = catalog.reserve_setup(setup_request())
+    with AttemptLease(ref):
+        retain_inputs(ref, sources(tmp_path), tape_path=None)
+        with pytest.raises(ArchiveError):
+            catalog.complete_setup(ref, setup_effective(temperature=0.9))
+    assert not (ref.directory / "attempt.json").exists()
+
+
+def test_pending_retained_tamper_is_discovered(tmp_path: Path) -> None:
+    catalog = RunCatalog(tmp_path / "runs")
+    ref = catalog.reserve_setup(setup_request())
+    retained = retain_inputs(ref, sources(tmp_path), tape_path=None)
+    retained.definition_path.write_text("tampered")
+    assert catalog.attempts()[0].failure_code == "archive_invalid"
+
+
+def test_setup_owner_process_death_leaves_inputs_and_truthful_discovery(
+    tmp_path: Path,
+) -> None:
+    catalog = RunCatalog(tmp_path / "runs")
+    ref = catalog.reserve_setup(setup_request())
+    retained = retain_inputs(ref, sources(tmp_path), tape_path=None)
+    context = multiprocessing.get_context("spawn")
+    parent, child = context.Pipe()
+    process = context.Process(target=_owner, args=(ref, child))
+    process.start()
+    try:
+        assert parent.poll(5) and parent.recv() == "owned"
+        assert catalog.attempts()[0].lifecycle == "initializing"
+        process.terminate()
+        process.join(5)
+        assert catalog.attempts()[0].lifecycle == "interrupted"
+        assert load_retained_inputs(ref) == retained
+        assert not (ref.directory / "archive.sqlite3").exists()
+    finally:
+        if process.is_alive():
+            process.kill()
+            process.join(5)
+        process.close()
+        parent.close()
+        child.close()
+
+
+def test_setup_publication_fault_never_repaired_or_reconfigured(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    catalog = RunCatalog(tmp_path / "runs")
+    ref = catalog.reserve_setup(setup_request())
+    retain_inputs(ref, sources(tmp_path), tape_path=None)
+
+    def fail(*args: object, **kwargs: object) -> None:
+        raise OSError("private failure")
+
+    monkeypatch.setattr(AttemptArchive, "create", fail)
+    with AttemptLease(ref):
+        with pytest.raises(ArchiveReservationError):
+            catalog.complete_setup(ref, setup_effective())
+        before = (ref.directory / "attempt.json").read_bytes()
+        assert catalog.attempts()[0].lifecycle == "initializing"
+        with pytest.raises(ArchiveError):
+            catalog.complete_setup(ref, setup_effective())
+        with pytest.raises(ArchiveError):
+            catalog.fail_setup(ref, "setup_failed")
+    summary = catalog.attempts()[0]
+    assert (summary.lifecycle, summary.failure_code, summary.tick) == (
+        "failed",
+        "archive_incomplete",
+        None,
+    )
+    with pytest.raises(ArchiveError):
+        catalog.open_attempt(ref.attempt_id)
+    assert (ref.directory / "attempt.json").read_bytes() == before
+    assert not (ref.directory / "archive.sqlite3").exists()
+
+
+def test_setup_rejects_foreign_thread_and_metadata_tamper(tmp_path: Path) -> None:
+    from concurrent.futures import ThreadPoolExecutor
+
+    catalog = RunCatalog(tmp_path / "runs")
+    ref = catalog.reserve_setup(setup_request())
+    with AttemptLease(ref), ThreadPoolExecutor(1) as executor:
+        for call in (
+            lambda: catalog.fail_setup(ref, "cancelled"),
+            lambda: catalog.complete_setup(ref, setup_effective()),
+        ):
+            with pytest.raises(ArchiveError):
+                executor.submit(call).result()
+    path = ref.directory / "setup.json"
+    data = json.loads(path.read_text())
+    data["extra"] = "private"
+    path.write_text(json.dumps(data))
+    before = path.read_bytes()
+    with pytest.raises(ArchiveError):
+        catalog.setup_config(ref)
+    assert catalog.attempts()[0].failure_code == "archive_invalid"
+    assert path.read_bytes() == before
+
+
+@pytest.mark.parametrize("field", ["config", "reserved_at", "setup"])
+def test_completed_setup_is_checked_again_on_open(tmp_path: Path, field: str) -> None:
+    catalog = RunCatalog(tmp_path / "runs")
+    ref = catalog.reserve_setup(setup_request())
+    with AttemptLease(ref):
+        retain_inputs(ref, sources(tmp_path), tape_path=None)
+        catalog.complete_setup(ref, setup_effective())
+    path = ref.directory / ("setup.json" if field == "setup" else "attempt.json")
+    data = json.loads(path.read_text())
+    if field == "config":
+        data["config"]["settings"]["provider"]["model_digest"] = "b" * 64
+    elif field == "reserved_at":
+        data["reserved_at"] = "2000-01-01T00:00:00+00:00"
+    else:
+        data["requested_config"]["seed"] = 8
+    path.write_text(json.dumps(data))
+    with pytest.raises(ArchiveError):
+        catalog.open_attempt(ref.attempt_id)
+    assert catalog.attempts()[0].failure_code == "archive_invalid"
+
+
+def test_completed_setup_requires_retained_manifest_even_before_world(
+    tmp_path: Path,
+) -> None:
+    catalog = RunCatalog(tmp_path / "runs")
+    ref = catalog.reserve_setup(setup_request())
+    with AttemptLease(ref):
+        retain_inputs(ref, sources(tmp_path), tape_path=None)
+        catalog.complete_setup(ref, setup_effective())
+    (ref.directory / "inputs.json").unlink()
+    with pytest.raises(ArchiveError):
+        catalog.open_attempt(ref.attempt_id)
+
+
+def test_pending_setup_duplicate_identity_is_invalid(tmp_path: Path) -> None:
+    import shutil
+
+    catalog = RunCatalog(tmp_path / "runs")
+    ref = catalog.reserve_setup(setup_request())
+    lineage = uuid4().hex
+    copied = catalog.root / lineage / ref.attempt_id
+    shutil.copytree(ref.directory, copied)
+    path = copied / "setup.json"
+    data = json.loads(path.read_text())
+    data["lineage_id"] = lineage
+    path.write_text(json.dumps(data))
+    assert all(item.failure_code == "archive_invalid" for item in catalog.attempts())
+
+
+@pytest.mark.parametrize("boundary", ["empty", "schema", "valid"])
+def test_setup_incomplete_sqlite_publication_stays_initializing_until_owner_exits(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, boundary: str
+) -> None:
+    import sqlite3
+
+    catalog = RunCatalog(tmp_path / "runs")
+    ref = catalog.reserve_setup(setup_request())
+    retained = retain_inputs(ref, sources(tmp_path), tape_path=None)
+    original = AttemptArchive.create
+
+    def interrupted_create(*args: object, **kwargs: object) -> None:
+        database = ref.directory / "archive.sqlite3"
+        if boundary == "empty":
+            database.touch()
+        elif boundary == "schema":
+            with sqlite3.connect(database) as connection:
+                connection.execute("CREATE TABLE archive_meta (payload TEXT)")
+        else:
+            original(*args, **kwargs).close()
+        raise OSError("injected publication interruption")
+
+    monkeypatch.setattr(AttemptArchive, "create", interrupted_create)
+    with AttemptLease(ref):
+        with pytest.raises(ArchiveReservationError):
+            catalog.complete_setup(ref, setup_effective())
+        before = {
+            p: (p.read_bytes(), p.stat().st_mtime_ns)
+            for p in ref.directory.rglob("*")
+            if p.is_file()
+        }
+        summary = catalog.attempts()[0]
+        assert (
+            summary.lifecycle,
+            summary.failure_code,
+            summary.tick,
+            summary.last_revision,
+        ) == ("initializing", None, None, None)
+        assert load_retained_inputs(ref) == retained
+        with pytest.raises(ArchiveError):
+            catalog.open_attempt(ref.attempt_id)
+        with pytest.raises(ArchiveError):
+            catalog.complete_setup(ref, setup_effective())
+        with pytest.raises(ArchiveError):
+            catalog.fail_setup(ref, "setup_failed")
+        assert not (ref.directory / "setup_complete.json").exists()
+        assert before == {
+            p: (p.read_bytes(), p.stat().st_mtime_ns)
+            for p in ref.directory.rglob("*")
+            if p.is_file()
+        }
+    summary = catalog.attempts()[0]
+    assert (
+        summary.lifecycle,
+        summary.failure_code,
+        summary.tick,
+        summary.last_revision,
+    ) == ("failed", "archive_incomplete", None, None)
+    with pytest.raises(ArchiveError):
+        catalog.open_attempt(ref.attempt_id)
+    assert load_retained_inputs(ref) == retained
+    assert before == {
+        p: (p.read_bytes(), p.stat().st_mtime_ns)
+        for p in ref.directory.rglob("*")
+        if p.is_file()
+    }
+
+
+@pytest.mark.parametrize(
+    "damage",
+    [
+        "digest",
+        "identity",
+        "extra",
+        "format",
+        "database",
+        "missing_database",
+        "reservation",
+        "failure",
+    ],
+)
+def test_completed_setup_marker_and_archive_corruption_remain_invalid(
+    tmp_path: Path, damage: str
+) -> None:
+    import hashlib
+
+    from living_world.archives.catalog import config_document
+    from living_world.archives.model import canonical
+
+    catalog = RunCatalog(tmp_path / "runs")
+    ref = catalog.reserve_setup(setup_request())
+    with AttemptLease(ref):
+        retain_inputs(ref, sources(tmp_path), tape_path=None)
+        catalog.complete_setup(ref, setup_effective())
+    marker = ref.directory / "setup_complete.json"
+    assert marker.is_file()
+    data = json.loads(marker.read_text())
+    assert data == {
+        "format": 1,
+        "lineage_id": ref.lineage_id,
+        "attempt_id": ref.attempt_id,
+        "config_sha256": hashlib.sha256(
+            canonical(config_document(setup_effective())).encode()
+        ).hexdigest(),
+    }
+    if damage == "digest":
+        data["config_sha256"] = "b" * 64
+    elif damage == "identity":
+        data["attempt_id"] = uuid4().hex
+    elif damage == "extra":
+        data["extra"] = "unexpected"
+    elif damage == "format":
+        data["format"] = True
+    elif damage == "database":
+        (ref.directory / "archive.sqlite3").write_bytes(b"broken")
+    elif damage == "missing_database":
+        (ref.directory / "archive.sqlite3").unlink()
+    elif damage == "reservation":
+        path = ref.directory / "attempt.json"
+        reservation = json.loads(path.read_text())
+        reservation["config"]["settings"]["provider"]["model_digest"] = "b" * 64
+        path.write_text(json.dumps(reservation))
+    else:
+        (ref.directory / "setup_failure.json").write_text(
+            json.dumps(
+                {
+                    "format": 1,
+                    "lineage_id": ref.lineage_id,
+                    "attempt_id": ref.attempt_id,
+                    "code": "setup_failed",
+                    "ended_at": "2000-01-01T00:00:00+00:00",
+                }
+            )
+        )
+    marker.write_text(json.dumps(data))
+    before = {
+        p: (p.read_bytes(), p.stat().st_mtime_ns)
+        for p in ref.directory.rglob("*")
+        if p.is_file()
+    }
+    with pytest.raises(ArchiveError):
+        catalog.open_attempt(ref.attempt_id)
+    assert catalog.attempts()[0].failure_code == "archive_invalid"
+    assert before == {
+        p: (p.read_bytes(), p.stat().st_mtime_ns)
+        for p in ref.directory.rglob("*")
+        if p.is_file()
+    }
+
+
+@pytest.mark.parametrize(
+    "damage", ["identity", "config", "timestamp", "parent", "error", "inputs"]
+)
+def test_unmarked_partial_publication_still_rejects_metadata_or_input_tamper(
+    tmp_path: Path, damage: str
+) -> None:
+    catalog = RunCatalog(tmp_path / "runs")
+    ref = catalog.reserve_setup(setup_request())
+    with AttemptLease(ref):
+        retained = retain_inputs(ref, sources(tmp_path), tape_path=None)
+        catalog.complete_setup(ref, setup_effective())
+        (ref.directory / "setup_complete.json").unlink()
+        if damage == "inputs":
+            retained.definition_path.write_text("tamper")
+        else:
+            path = ref.directory / "attempt.json"
+            data = json.loads(path.read_text())
+            if damage == "identity":
+                data["attempt_id"] = uuid4().hex
+            elif damage == "config":
+                data["config"]["seed"] = 8
+            elif damage == "timestamp":
+                data["reserved_at"] = "2000-01-01T00:00:00+00:00"
+            elif damage == "parent":
+                data["parent"] = [uuid4().hex, 0]
+            else:
+                data["reservation_error"] = "archive_initialization_failed"
+            path.write_text(json.dumps(data))
+        before = {
+            p: (p.read_bytes(), p.stat().st_mtime_ns)
+            for p in ref.directory.rglob("*")
+            if p.is_file()
+        }
+        assert catalog.attempts()[0].failure_code == "archive_invalid"
+        with pytest.raises(ArchiveError):
+            catalog.open_attempt(ref.attempt_id)
+    assert catalog.attempts()[0].failure_code == "archive_invalid"
+    assert before == {
+        p: (p.read_bytes(), p.stat().st_mtime_ns)
+        for p in ref.directory.rglob("*")
+        if p.is_file()
+    }

@@ -1,5 +1,15 @@
 # Living World Simulator – Project Journal
 
+## LN07b reviewed producer delivery — October22,2026
+
+Setup identity and retained inputs precede bounded installed-model GET; immutable
+effective config publishes once. Independent review found one partial SQLite
+initialization classification issue. Root amended contract/prompt before correction;
+completion marker and17regressions passed scoped re-review,1addressed/0open.
+Taskmake1876/10,39examples,separateexamples/whitespace/exact recorded matrix and
+26readable CLI archives passed. Reviewed source unchanged. Delivery/merged gates next;
+service/browser entrypoints remain incomplete.
+
 ## LN07b producer contract — October22,2026
 
 LN07a integrationd975539 is pushed. Preflight investigation confirmed that reserving

@@ -53,6 +53,13 @@ def _invalid_constant(value: str) -> object:
     raise ValueError("Nonfinite JSON number.")
 
 
+def _finite_float(value: str) -> float:
+    result = float(value)
+    if not math.isfinite(result):
+        raise ValueError("Nonfinite JSON number.")
+    return result
+
+
 class _NoRedirect(HTTPRedirectHandler):
     def redirect_request(
         self,
@@ -83,14 +90,6 @@ class UrllibJsonHttpTransport:
         self, *, url: str, payload: dict[str, object], timeout_seconds: float
     ) -> dict[str, object]:
         self._last_response_digest = None
-        _origin(url)
-        if (
-            isinstance(timeout_seconds, bool)
-            or not isinstance(timeout_seconds, (int, float))
-            or not math.isfinite(timeout_seconds)
-            or timeout_seconds <= 0
-        ):
-            raise ValueError("Timeout must be finite and positive.")
         try:
             body = json.dumps(
                 payload,
@@ -101,8 +100,28 @@ class UrllibJsonHttpTransport:
             ).encode("utf-8")
         except (TypeError, ValueError):
             raise LocalLLMHttpError("Local LLM request could not be encoded.") from None
+        return self._request_json(url, timeout_seconds, body=body)
+
+    def get_json(self, *, url: str, timeout_seconds: float) -> dict[str, object]:
+        return self._request_json(url, timeout_seconds)
+
+    def _request_json(
+        self, url: str, timeout_seconds: float, *, body: bytes | None = None
+    ) -> dict[str, object]:
+        self._last_response_digest = None
+        _origin(url)
+        if (
+            isinstance(timeout_seconds, bool)
+            or not isinstance(timeout_seconds, (int, float))
+            or not math.isfinite(timeout_seconds)
+            or timeout_seconds <= 0
+        ):
+            raise ValueError("Timeout must be finite and positive.")
         request = Request(
-            url, data=body, headers={"Content-Type": "application/json"}, method="POST"
+            url,
+            data=body,
+            headers={} if body is None else {"Content-Type": "application/json"},
+            method="GET" if body is None else "POST",
         )
         try:
             with build_opener(ProxyHandler({}), _NoRedirect()).open(
@@ -128,10 +147,14 @@ class UrllibJsonHttpTransport:
             )
         self._last_response_digest = hashlib.sha256(raw).hexdigest()
         try:
-            decoded = json.loads(raw.decode("utf-8"), parse_constant=_invalid_constant)
+            decoded = json.loads(
+                raw.decode("utf-8"),
+                parse_constant=_invalid_constant,
+                parse_float=_finite_float,
+            )
             if not isinstance(decoded, dict):
                 raise TypeError
-        except (UnicodeDecodeError, ValueError, TypeError):
+        except (UnicodeDecodeError, ValueError, TypeError, RecursionError):
             raise LocalLLMHttpError(
                 "Local LLM server returned invalid JSON.", code="invalid_response"
             ) from None

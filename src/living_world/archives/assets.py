@@ -162,12 +162,22 @@ def _validate_tree(
         if loaded.definition_path != tree / definitions:
             raise ArchiveFormatError("Definition role mismatch.")
         YAMLWorldDefinitionLoader().load(loaded.definition_path)
-        with AttemptArchive.open(ref, read_only=True) as archive:
-            if (
-                loaded.key != archive.config.scenario_key
-                or loaded.seed != archive.config.seed
-            ):
-                raise ArchiveFormatError("Scenario identity/config mismatch.")
+        setup = safe_path(ref.directory / "setup.json")
+        complete = safe_path(ref.directory / "setup_complete.json")
+        if setup.exists() and not complete.exists():
+            from living_world.archives.catalog import (
+                RunCatalog,
+                validate_setup_reservation,
+            )
+
+            config = RunCatalog(validate_ref(ref)).setup_config(ref)
+            if safe_path(ref.directory / "attempt.json").exists():
+                validate_setup_reservation(ref, config)
+        else:
+            with AttemptArchive.open(ref, read_only=True) as archive:
+                config = archive.config
+        if loaded.key != config.scenario_key or loaded.seed != config.seed:
+            raise ArchiveFormatError("Scenario identity/config mismatch.")
         if tape is not None:
             recorded = YAMLProposalTapeLoader().load(tree / tape)
             if (

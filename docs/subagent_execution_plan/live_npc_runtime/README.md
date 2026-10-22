@@ -15,7 +15,7 @@ Integration: codex/live-npc-runtime; no main/tag/milestone changes.
 | LN06b | Complete; delivery5a3f58a; reviewed task/merged gates1758/10,39examples passed | [plan](06b_live_driver.md), [saved prompt](06b_live_driver-prombt.md), [report](06b_live_driver-report.md) |
 | LN06c | Complete; delivery0eca121; reviewed task/merged1767/10,39examples | [plan](06c_shutdown_response_reuse.md), [saved prompt](06c_shutdown_response_reuse-prombt.md), [report](06c_shutdown_response_reuse-report.md) |
 | LN07a | Complete; deliverycd5e40d; reviewed task1800/10, merged1809/10,39examples | [plan](07a_legacy_archives.md), [saved prompt](07a_legacy_archives-prombt.md), [report](07a_legacy_archives-report.md) |
-| LN07b | Exact setup/model-preflight producer contract; implementation next | [plan](07b_preflight_setup.md), [saved prompt](07b_preflight_setup-prombt.md), [report](07b_preflight_setup-report.md) |
+| LN07b | Reviewed after fix1; task1876/10,39examples; delivery/merged gates next | [plan](07b_preflight_setup.md), [saved prompt](07b_preflight_setup-prombt.md), [report](07b_preflight_setup-report.md) |
 | LN07c | Service/live/restart consumer follows7b | Original LN07; no implementation yet |
 | LN08–LN09 | Authorized sequence, not yet dispatched | See the master plan. |
 

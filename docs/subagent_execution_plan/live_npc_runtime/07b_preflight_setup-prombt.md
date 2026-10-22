@@ -16,3 +16,8 @@ TDDfocusedverticalslices, trueRED/GREEN; TASK_PY=/home/at-boy/Projects/codex/Liv
 PYTHONPATH=src. NoVCS/subagents/fullmake/examples/install/othercheckout edits. Scoped
 lint/format/whitespace/selfreview/report. Raiseconcreteuncertainty beforechoosing
 architecture/expanding. Onusagepause finishsmalledit, reportexactpartial andSTOP.
+
+Root review1 amendment in exactcontract adds immutable setup_complete.json after
+successful ordinary archive publication. Treat absent marker as incomplete even
+when SQLite path exists; preserve read-only metadata/input checks and marked
+corruption classification. Same11paths; noSQL/schema/repair or scope expansion.
