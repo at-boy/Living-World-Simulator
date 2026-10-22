@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Reuse validated parent responses across exact same-world shutdown checkpoints;
+  preserve strict local request bases, sealed history and explicit failure retry.
+
 - Define a bounded recovery correction for validated responses across same-world
   shutdown checkpoint revisions; source and current-attempt checks remain strict.
 

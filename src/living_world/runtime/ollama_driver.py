@@ -366,7 +366,8 @@ class _LivePreparation:
         self,
         records: tuple[JournalRecord, ...],
         request: Mapping[str, object],
-        revision: int,
+        base: Checkpoint,
+        source: AttemptArchive | None = None,
     ) -> tuple[JournalEntry, JournalEntry | None] | None:
         matching = []
         responses = {
@@ -382,19 +383,24 @@ class _LivePreparation:
         for record in records:
             entry = record.entry
             p = entry.payload
-            if (
-                entry.kind not in ("request_started", "response_reused")
-                or p["base_revision"] != revision
-                or any(
-                    canonical(p[k]) != canonical(request[k])
-                    for k in (
-                        "source_tick",
-                        "actor_label",
-                        "input_fingerprint",
-                        "config_fingerprint",
-                        "request",
-                    )
+            if entry.kind not in ("request_started", "response_reused") or any(
+                canonical(p[k]) != canonical(request[k])
+                for k in (
+                    "source_tick",
+                    "actor_label",
+                    "input_fingerprint",
+                    "config_fingerprint",
+                    "request",
                 )
+            ):
+                continue
+            revision = cast(int, p["base_revision"])
+            # Only a sealed external source may alias an operational checkpoint.
+            # Local requests always retain their actual complete-base identity.
+            if revision != base.revision and (
+                source is None
+                or revision > base.revision
+                or not _same_checkpoint(source.checkpoint(revision), base)
             ):
                 continue
             response = (
@@ -427,7 +433,8 @@ class _LivePreparation:
                 found = self._find(
                     source.journal_records(through_sequence=seal.sequence),
                     request,
-                    base.revision,
+                    base,
+                    source if source is not self.archive else None,
                 )
                 if found is not None:
                     started, response = found

@@ -1,5 +1,13 @@
 # Living World Simulator – Project Journal
 
+## LN06c reviewed correction delivery — October22,2026
+
+External-source lookup now permits an older base only when complete snapshot, driver
+and feedback cursors exactly match the selected sealed checkpoint. Local base stays
+strict; failure/uncertainty still requires Retry. Independent SPEC/QUALITY PASS, no
+substantive findings. Taskmake1767/10,39examples, separateexamples/whitespace/exact
+canonical matrices passed; delivery and merged gates next. No publicAPI/provider change.
+
 ## LN06c recovery consumer correction — October22,2026
 
 A persistent fake-provider probe used real controller.close and fork(latest). Shutdown
