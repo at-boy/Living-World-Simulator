@@ -127,3 +127,29 @@ TASK_PY=/home/at-boy/Projects/codex/Living-World-Simulator/
 commands/counts/RED-GREEN/limits/selfreview. No VCS/subagents/fullmake/examples/installs
 by worker. Root independent review/corrections, task+mergedmake/separateexamples/
 whitespace/exact canonical matrices and persisted CLI archives before commits.
+
+## Root review amendment — early allocated failure windows
+
+Review1 confirmed lock creation / first intent write failures can lose captured
+linkage. Precompute the immutable complete intent (including one reserved_at) after
+allocation; publish it BEFORE creating/acquiring owner.lock. This private creation
+phase owns the newly allocated unique directory, not a previously returned ref.
+All later complete_setup/fail_setup/input operations retain normal lease rules.
+
+On creation failure, make a bounded best-effort attempt to publish exactly that
+captured intent ONLY if absent. Never overwrite existing divergent or malformed
+metadata; validate any existing intent equals captured canonical document. If no
+lock exists, no other caller can obtain a setup lease (AttemptLease only recreates
+missing locks from ordinary published reservation). Private allocation failure
+handling may publish closed setup_failure.json directly in this unique unreturned
+directory, after validating intent and absence of final/completion/failure conflict.
+If lock exists, acquire ordinary lease and use fail_setup; never bypass an owned or
+unsafe lock, mutate final metadata, retry completion or repair an existing attempt.
+No new broad public unchecked writer or AttemptLease rule change.
+
+Inject lock failure, pre-write intent failure and post-write/fsync-like failure;
+subsequent discovery must retain exact parent/config intent and safe setup_failed
+when remaining metadata writes are possible, without source changes. When storage
+rejects ALL further writes, preserve ref on ArchiveReservationError and report the
+unpersistable evidence truthfully; do not claim impossible durable IO or delete UUID.
+Same four worker paths. Root amended before correction; no source scope expansion.

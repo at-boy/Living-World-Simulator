@@ -1,5 +1,14 @@
 # Living World Simulator – Project Journal
 
+## LN07c reviewed fork-setup delivery — October22,2026
+
+Captured source config/input/world/cursor hashes and one sealed journal horizon bind
+linked setup. Effective config and exact childcp0 publish before completion marker.
+Review found one early lock/intentwrite failure losing linkage; root amended contract
+before correction, scoped re-review SPEC/QUALITYPASS,1addressed/0open. Taskmake1956/10,
+39examples,separateexamples/whitespace/exactmatrix and26readable CLI archives passed.
+Source unchanged after review. Delivery/merged gates next; service/CLI follow.
+
 ## Resume and LN07c producer contract — October22,2026
 
 Owner resumed with97%five-hourremaining; checkpoint724d15a and exact local plan patch
