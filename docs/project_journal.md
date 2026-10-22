@@ -1,5 +1,18 @@
 # Living World Simulator – Project Journal
 
+## LN07e reviewed CLI delivery — October 22, 2026
+
+Explicit preset/resume/fork/replay routes use the reviewed service; inspection is
+read-only and selected by checkpoint. Recorded aliases/hooks/output remain compatible.
+Review found one P1 stale status after shutdown: final mirror failure could return
+success. Root amended contract before correction; deterministic completed/stopped
+RED2→GREEN2 regressions and focused143 passed. Scoped re-review SPEC/QUALITY PASS,
+zero open findings. Root task make2055/10,39examples; separateexamples/whitespace, exact
+canonical matrix/26readable archives and seven clean persisted new CLI cases passed.
+All initial helper-error evidence retained. No reviewed source changed by gates.
+Feature merge/repeated gates remain required; checkpoint before owner usage limit.
+Browser/serve LN08 and installed-Ollama LN09 remain pending.
+
 ## LN07e archived CLI contract — October 22, 2026
 
 LN07d delivery1c2c2fc/integrationc604463 is complete and pushed; root task/merged

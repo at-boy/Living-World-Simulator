@@ -1,3 +1,25 @@
+# Continuation brief — LN07e reviewed/task-validated delivery, October 22, 2026
+
+## Current authoritative state
+
+LN07d delivery1c2c2fc/integrationc604463 is complete and pushed. LN07e contract0f9e33e
+produced reviewed CLI implementation in .worktrees/live-npc-ln07e, preserved branch
+codex/live-npc-ln07e-archived-cli. Initial review oneP1 stale final shutdown status was
+corrected after root task/prompt amendment; scoped SPEC/QUALITYPASS, zeroopen.
+Root taskmake2055passed/10existing skips,39examples,separateexamples/whitespace, exact
+canonicalmatrix/26readablearchives and seven clean new CLI cases passed. Source
+unchanged after review. Delivery commit/push next; feature merge/repeated merged
+gates NOT yet done. No implementation/review redispatch for completed source.
+
+Owner usage guard requires pause with headroom BEFORE10%remaining; no reset. Next
+ownerresume verify usage/Git/ownerpatch, merge reviewed delivery into feature, resolve
+only root-owned docs, verify source exact delivery, repeat make/separateexamples/
+whitespace/canonicalmatrix/newCLIacceptance then commit/push integration. LN08
+browser/serve and LN09 installed-Ollama acceptance follow; do not claim them done.
+All task branches/worktrees and exact owner-local masterplan edit remain preserved.
+
+## Prior context (superseded above)
+
 # Continuation brief — LN07d complete; LN07e authorized, October 22, 2026
 
 ## Current authoritative state

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add reviewed archived live CLI, exact resume/fork, offline replay, interrupt
+  cleanup and read-only checkpoint inspection; preserve recorded aliases/hooks.
+
 - Define explicit archived live CLI, exact resume/fork/replay, SIGINT cleanup and
   read-only checkpoint inspection while preserving existing CLI behavior.
 

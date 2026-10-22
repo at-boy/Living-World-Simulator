@@ -128,3 +128,47 @@ def test_canonical_alias_archive_exact_complete_worlds(
         assert [entry.kind for entry in archive.entries()] == ["attempt_finished"]
         for revision in range(ticks + 1):
             assert archive.checkpoint(revision).driver_cursor["next_tick"] == revision
+
+
+@pytest.mark.parametrize(
+    "outcome,ticks", [("success", 10), ("stall", 5), ("failure", 13)]
+)
+def test_founders_archive_checkpoint_resume_keeps_recorded_binding(
+    tmp_path: Path, outcome: str, ticks: int, capsys: pytest.CaptureFixture[str]
+) -> None:
+    from living_world.archives import RunCatalog
+
+    root = tmp_path / "archives"
+    assert (
+        main(
+            [
+                "run",
+                "--founders",
+                outcome,
+                "--archive-root",
+                str(root),
+                "--database",
+                str(tmp_path / "world.db"),
+            ]
+        )
+        == 0
+    )
+    source = RunCatalog(root).attempts()[0].ref
+    capsys.readouterr()
+    assert (
+        main(
+            [
+                "run",
+                "--resume-attempt",
+                source.attempt_id,
+                "--checkpoint",
+                "0",
+                "--archive-root",
+                str(root),
+            ]
+        )
+        == 0
+    )
+    output = capsys.readouterr().out
+    assert f"status=resumed start_tick=0 end_tick={ticks}" in output
+    assert "proposals_finalized=True" in output

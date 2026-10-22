@@ -109,3 +109,69 @@ identity could not be loaded. Parser errors and `inspect` create no attempts.
 Raw SQLite continuation creates a new independent attempt whose initial revision
 is the prepared resumed world. This archival stage adds no archive-based resume,
 live provider service, browser control, or replay command.
+
+## Archived headless runtime CLI
+
+The recorded aliases above still use the established scenario runner. Every new
+recorded attempt now records its actual `--continuous` intent. An existing database
+continues that legacy route; a database alone never selects the live driver.
+
+Run the canonical founders with an already installed Ollama model:
+
+```bash
+living-world run --preset founders --driver ollama --model MODEL
+living-world run --preset founders --driver ollama --model MODEL --max-ticks 5 --max-requests 20 --archive-root ./runs
+```
+
+Providers must use credential-free loopback HTTP(S). Optional overrides are
+`--base-url`, `--timeout-seconds`, and `--max-output-tokens`. No model is downloaded.
+The live defaults are 20 ticks and 40 requests. `--continuous` removes the tick
+budget while retaining the request budget. Each launch prints its attempt ID and
+archive directory on stderr before provider requests, including failed startup.
+Provider failures exit 6 without an automatic retry. SIGINT cooperatively stops and
+cleans up startup or generation. A request-budget stop exits successfully and prints
+`stop_reason=request_budget_exhausted`; this is an operational stop, not settlement
+completion. Failed runs retain their known attempt, or a metadata-only failed
+uninitialized attempt if failure precedes allocation.
+
+Explicit archive restart commands create children with captured parent/checkpoint
+lineage and leave the source attempt unchanged:
+
+```bash
+living-world run --resume-attempt ATTEMPT_ID --archive-root ./runs
+living-world run --resume-attempt ATTEMPT_ID --checkpoint 2 --archive-root ./runs
+living-world run --fork-attempt ATTEMPT_ID --max-ticks 10 --archive-root ./runs
+living-world run --fork-attempt ATTEMPT_ID --model OTHER_MODEL --archive-root ./runs
+living-world run --replay-attempt LIVE_ATTEMPT_ID --archive-root ./runs
+```
+
+Resume preserves the exact saved configuration; explicit equal options are accepted,
+but a changed configuration requires `--fork-attempt`. Fork permits provider and
+budget changes within the saved driver/scenario binding. Changing the model explicitly
+resolves a new installed-model identity; resuming keeps the original digest pin.
+Recorded attempts can change tick limits through a fork while preserving retained
+tapes, replay cursors, finalization policy, and scenario definitions. Offline replay
+uses the captured live journal without contacting Ollama and rejects configuration
+overrides. `--checkpoint` selects a source checkpoint for restart or replay.
+
+The archive is authoritative. On new archived run routes an optional explicit
+`--database` writes a secondary SQLite mirror at the inherited/default save cadence;
+it never supplies restart state. The legacy route still defaults to `world.sqlite3`.
+Mirror failures exit 4 while retaining the authoritative archive checkpoint.
+
+Inspect a selected archive checkpoint through the existing read-only HTTP inspector:
+
+```bash
+living-world inspect --attempt ATTEMPT_ID --archive-root ./runs --port 8000
+living-world inspect --attempt ATTEMPT_ID --checkpoint 0 --archive-root ./runs
+```
+
+Inspection reconstructs the exact retained scenario/definitions and selected snapshot,
+checks equality, and serves existing GET-only endpoints. It neither acquires an owner
+lease nor steps, repairs, writes the archive, or contacts a model. Missing worlds fail
+with exit 4. The optional server dependency is required only for inspection. Existing
+`inspect SCENARIO --database PATH` and `inspect --founders --database PATH` remain
+available. Archive inspection cannot combine a scenario or database target.
+
+Browser runtime controls and final serve acceptance remain LN08 work; installed-Ollama
+acceptance belongs to LN09. This stage adds no `serve` placeholder.
