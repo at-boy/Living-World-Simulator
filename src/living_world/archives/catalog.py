@@ -16,6 +16,7 @@ from uuid import uuid4
 from living_world.archives.assets import (
     atomic_document,
     load_retained_inputs,
+    private_name,
     retain_inputs,
 )
 from living_world.archives.lease import AttemptLease, safe_path, validate_ref
@@ -26,6 +27,7 @@ from living_world.archives.model import (
     ArchiveFormatError,
     AttemptConfig,
     AttemptRef,
+    Checkpoint,
     JournalBoundary,
     canonical,
     digest,
@@ -164,6 +166,61 @@ def validate_setup_config(requested: AttemptConfig, effective: AttemptConfig) ->
             raise ArchiveFormatError("Setup provider option mismatch.")
 
 
+def _config_hash(config: AttemptConfig) -> str:
+    return hashlib.sha256(canonical(config_document(config)).encode()).hexdigest()
+
+
+def _checkpoint_hash(checkpoint: Checkpoint) -> str:
+    return hashlib.sha256(
+        canonical(
+            {
+                "snapshot": {
+                    "schema_version": checkpoint.snapshot.schema_version,
+                    "payload": checkpoint.snapshot.payload,
+                },
+                "driver_cursor": checkpoint.driver_cursor,
+                "feedback_cursor": checkpoint.feedback_cursor,
+            }
+        ).encode()
+    ).hexdigest()
+
+
+def _fork_document(ref: AttemptRef, value: object) -> Mapping[str, object]:
+    data = document(
+        value,
+        {
+            "parent",
+            "parent_journal",
+            "checkpoint_sha256",
+            "source_config_sha256",
+            "input_hashes",
+        },
+    )
+    pair = parent_pair(data["parent"])
+    if pair is None or pair[0] == ref.attempt_id:
+        raise ArchiveFormatError("Invalid setup parent.")
+    if parent_boundary(data["parent_journal"], pair) is None:
+        raise ArchiveFormatError("Missing setup parent boundary.")
+    digest(data["checkpoint_sha256"])
+    digest(data["source_config_sha256"])
+    hashes = data["input_hashes"]
+    if not isinstance(hashes, Mapping):
+        raise ArchiveFormatError("Expected setup input hashes.")
+    for name, expected in hashes.items():
+        private_name(name)
+        digest(expected)
+    return data
+
+
+def validate_setup_inputs(ref: AttemptRef, hashes: Mapping[str, str]) -> None:
+    """Bind retained bytes to the immutable fork intent, including during setup."""
+    data = _setup_document(ref)
+    if "fork" in data:
+        fork = cast(Mapping[str, object], data["fork"])
+        if fork["input_hashes"] != hashes:
+            raise ArchiveFormatError("Setup retained input mismatch.")
+
+
 def _setup_document(ref: AttemptRef, failure: bool = False) -> Mapping[str, object]:
     validate_ref(ref)
     try:
@@ -172,7 +229,9 @@ def _setup_document(ref: AttemptRef, failure: bool = False) -> Mapping[str, obje
             {"code", "ended_at"} if failure else {"requested_config", "reserved_at"}
         )
         data = document(
-            loads(safe_path(ref.directory / name, regular=True).read_text()), fields
+            loads(safe_path(ref.directory / name, regular=True).read_text()),
+            fields,
+            set() if failure else {"fork"},
         )
         if (
             type(data["format"]) is not int
@@ -194,6 +253,8 @@ def _setup_document(ref: AttemptRef, failure: bool = False) -> Mapping[str, obje
             )
             if config.mode != "ollama":
                 raise ArchiveFormatError("Setup requires Ollama mode.")
+            if "fork" in data:
+                _fork_document(ref, data["fork"])
         return data
     except (OSError, ValueError, TypeError, UnicodeError) as exc:
         raise ArchiveFormatError("Invalid setup metadata.") from exc
@@ -252,11 +313,15 @@ def validate_setup_reservation(
 ) -> AttemptConfig:
     config, parent, reserved_at, error, boundary = _read_reservation(ref)
     validate_setup_config(requested, config)
+    data = _setup_document(ref)
+    fork = cast(Mapping[str, object], data.get("fork", {}))
+    expected_parent = parent_pair(fork.get("parent"))
+    expected_boundary = parent_boundary(fork.get("parent_journal"), expected_parent)
     if (
-        parent is not None
-        or boundary is not None
+        parent != expected_parent
+        or boundary != expected_boundary
         or error is not None
-        or reserved_at != _setup_document(ref)["reserved_at"]
+        or reserved_at != data["reserved_at"]
     ):
         raise ArchiveFormatError("Setup reservation mismatch.")
     return config
@@ -479,6 +544,148 @@ class RunCatalog:
             )
         return ref
 
+    def reserve_fork_setup(
+        self,
+        attempt_id: str,
+        revision: int | None,
+        *,
+        requested: AttemptConfig | None = None,
+    ) -> AttemptRef:
+        with self.open_attempt(attempt_id) as parent:
+            if parent.config.mode != "ollama":
+                raise ArchiveFormatError("Fork setup requires Ollama parent.")
+            point = parent.fork_point(revision)
+            source_config = parent.config
+            if requested is None:
+                requested = source_config
+            if (
+                not isinstance(requested, AttemptConfig)
+                or (
+                    requested.mode,
+                    requested.scenario_key,
+                    requested.seed,
+                    requested.software_revision,
+                )
+                != (
+                    source_config.mode,
+                    source_config.scenario_key,
+                    source_config.seed,
+                    source_config.software_revision,
+                )
+                or canonical(
+                    {
+                        k: v
+                        for k, v in requested.settings.items()
+                        if k not in {"provider", "limits"}
+                    }
+                )
+                != canonical(
+                    {
+                        k: v
+                        for k, v in source_config.settings.items()
+                        if k not in {"provider", "limits"}
+                    }
+                )
+            ):
+                raise ArchiveFormatError("Invalid fork setup configuration.")
+            inputs = load_retained_inputs(parent.ref)
+            fork = {
+                "parent": (attempt_id, point.checkpoint.revision),
+                "parent_journal": asdict(point.journal_boundary),
+                "checkpoint_sha256": _checkpoint_hash(point.checkpoint),
+                "source_config_sha256": _config_hash(source_config),
+                "input_hashes": dict(inputs.hashes),
+            }
+            ref = self._allocate(parent.ref.lineage_id)
+            intent = {
+                "format": 1,
+                "lineage_id": ref.lineage_id,
+                "attempt_id": ref.attempt_id,
+                "requested_config": config_document(requested),
+                "reserved_at": datetime.now(UTC).isoformat(),
+                "fork": fork,
+            }
+            try:
+                # This unique allocation has not escaped to a caller. Persist its
+                # captured linkage before attempting to create the ownership lock.
+                atomic_document(ref.directory / "setup.json", intent)
+                self._create_lock(ref)
+                with AttemptLease(ref):
+                    retain_inputs(ref, inputs.scenario_path, tape_path=inputs.tape_path)
+            except (ArchiveError, OSError) as exc:
+                try:
+                    self._fail_fork_allocation(ref, intent)
+                except (ArchiveError, OSError):
+                    pass
+                raise ArchiveReservationError(ref) from exc
+        return ref
+
+    def _fail_fork_allocation(
+        self, ref: AttemptRef, intent: Mapping[str, object]
+    ) -> None:
+        """Best effort evidence for this unique, still-unreturned allocation only."""
+        self._setup_ref(ref)
+        if any(
+            safe_path(ref.directory / name).exists()
+            for name in ("attempt.json", "archive.sqlite3", "setup_complete.json")
+        ):
+            raise ArchiveError("Final setup publication already begun.")
+
+        def preserve_intent() -> None:
+            path = safe_path(ref.directory / "setup.json")
+            if not path.exists():
+                atomic_document(path, intent)
+            if canonical(_setup_document(ref)) != canonical(intent):
+                raise ArchiveFormatError("Allocated setup intent mismatch.")
+
+        lock = safe_path(ref.directory / "owner.lock")
+        if lock.exists():
+            # Never bypass another owner, even during private allocation failure.
+            with AttemptLease(ref):
+                preserve_intent()
+                self.fail_setup(ref, "setup_failed")
+            return
+
+        # No normal setup lease can be acquired without this lock or an ordinary
+        # published reservation. Only this private creation path owns the directory.
+        preserve_intent()
+        failure = safe_path(ref.directory / "setup_failure.json")
+        if failure.exists():
+            if _setup_document(ref, True)["code"] != "setup_failed":
+                raise ArchiveError("Divergent setup failure.")
+            return
+        atomic_document(
+            failure,
+            {
+                "format": 1,
+                "lineage_id": ref.lineage_id,
+                "attempt_id": ref.attempt_id,
+                "code": "setup_failed",
+                "ended_at": datetime.now(UTC).isoformat(),
+            },
+        )
+
+    def _setup_checkpoint(
+        self, ref: AttemptRef, fork: Mapping[str, object]
+    ) -> Checkpoint:
+        pair = parent_pair(fork["parent"])
+        assert pair is not None
+        boundary = parent_boundary(fork["parent_journal"], pair)
+        assert boundary is not None
+        with self.open_attempt(pair[0]) as parent:
+            if parent.ref.lineage_id != ref.lineage_id:
+                raise ArchiveFormatError("Setup parent lineage mismatch.")
+            checkpoint = parent.checkpoint(pair[1])
+            if (
+                _config_hash(parent.config) != fork["source_config_sha256"]
+                or load_retained_inputs(parent.ref).hashes != fork["input_hashes"]
+                or _checkpoint_hash(checkpoint) != fork["checkpoint_sha256"]
+                or parent.journal_boundary(through_sequence=boundary.sequence)
+                != boundary
+            ):
+                raise ArchiveFormatError("Setup parent evidence mismatch.")
+            return checkpoint
+
     def _pending_setup(self, ref: AttemptRef) -> AttemptConfig:
         requested = self.setup_config(ref)
         if not AttemptLease.owned_by_current_thread(ref):
@@ -498,18 +705,33 @@ class RunCatalog:
         validate_setup_config(requested, effective)
         load_retained_inputs(ref)
         data = _setup_document(ref)
+        fork = cast(Mapping[str, object] | None, data.get("fork"))
+        checkpoint = None if fork is None else self._setup_checkpoint(ref, fork)
+        parent = None if fork is None else parent_pair(fork["parent"])
+        boundary = (
+            None if fork is None else parent_boundary(fork["parent_journal"], parent)
+        )
         payload = {
             "format": 1,
             "lineage_id": ref.lineage_id,
             "attempt_id": ref.attempt_id,
             "config": config_document(effective),
-            "parent": None,
-            "parent_journal": None,
+            "parent": parent,
+            "parent_journal": None if boundary is None else asdict(boundary),
             "reserved_at": data["reserved_at"],
             "reservation_error": None,
         }
         try:
-            _publish_archive(ref, effective, payload)
+            _publish_archive(ref, effective, payload, parent, boundary)
+            if checkpoint is not None:
+                with AttemptArchive.open(ref, read_only=False) as child:
+                    child.commit(
+                        checkpoint.snapshot,
+                        expected_revision=None,
+                        driver_cursor=checkpoint.driver_cursor,
+                        feedback_cursor=checkpoint.feedback_cursor,
+                        entries=(),
+                    )
             atomic_document(
                 ref.directory / "setup_complete.json",
                 {
@@ -595,6 +817,17 @@ class RunCatalog:
                     or (ref.directory / "inputs.json").exists()
                 ):
                     load_retained_inputs(ref)
+                if requested is not None:
+                    data = _setup_document(ref)
+                    if "fork" in data:
+                        fork = cast(Mapping[str, object], data["fork"])
+                        if (
+                            _checkpoint_hash(archive.checkpoint(0))
+                            != fork["checkpoint_sha256"]
+                        ):
+                            raise ArchiveFormatError(
+                                "Setup initial checkpoint mismatch."
+                            )
                 return archive
             except BaseException:
                 archive.close()
@@ -625,7 +858,12 @@ class RunCatalog:
                 setup = safe_path(ref.directory / "setup.json")
                 if setup.exists():
                     config = self.setup_config(ref)
-                    started = cast(str, _setup_document(ref)["reserved_at"])
+                    data = _setup_document(ref)
+                    started = cast(str, data["reserved_at"])
+                    if "fork" in data:
+                        parent = parent_pair(
+                            cast(Mapping[str, object], data["fork"])["parent"]
+                        )
                     reservation = safe_path(ref.directory / "attempt.json")
                     effective = (
                         validate_setup_reservation(ref, config)
@@ -675,7 +913,7 @@ class RunCatalog:
                                 ref,
                                 config.mode,
                                 config.scenario_key,
-                                None,
+                                parent,
                                 started,
                                 ended,
                                 lifecycle,

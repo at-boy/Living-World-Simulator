@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Integrate reviewed parent-aware deferred setup after task and merged validation.
+
+- Add reviewed linked deferred fork setup, pinned source history and exact initial
+  clone before completion; retain linkage through recoverable allocation failures.
+
 - Define linked deferred setup for model-changing forks: pin one source checkpoint
   and journal horizon, then certify completion after the exact child clone.
 

@@ -163,6 +163,10 @@ def _validate_tree(
             raise ArchiveFormatError("Definition role mismatch.")
         YAMLWorldDefinitionLoader().load(loaded.definition_path)
         setup = safe_path(ref.directory / "setup.json")
+        if setup.exists():
+            from living_world.archives.catalog import validate_setup_inputs
+
+            validate_setup_inputs(ref, hashes)
         complete = safe_path(ref.directory / "setup_complete.json")
         if setup.exists() and not complete.exists():
             from living_world.archives.catalog import (

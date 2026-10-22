@@ -23,7 +23,8 @@ CLIattempts passed. Merged1809/10,39examples,separateexamples/whitespace/exactma
 and26readable archives passed. Original Task7 remains incomplete; bounded setup/model
 preflight deliverya4d7e41 now integrated after independent correction review and
 task/merged1876/10,39examples, separateexamples/whitespace/exactmatrix with26archives.
-Parent-aware deferred fork setup is the next bounded producer (LN07c), before
+Parent-aware deferred fork setup LN07c is reviewed afterone corrected allocation
+failure; deliveryada9b8b integrated with task/merged1956/10,39examples and exactmatrix before
 service/generic recorded restart ownership (LN07d) and CLI consumers (LN07e).
 Service/live/restart remain upcoming.
 legacy generic/taped/raw-database CLI and injected engine/state-reference hooks must

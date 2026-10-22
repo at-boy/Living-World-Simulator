@@ -3,10 +3,13 @@
 ## Current resume — October22
 
 Owner resumed from724d15a with97%five-hourremaining. Earlier15%pause is historical.
-Exact LN07c fork-setup contract/prompt/report now prepared; implement this bounded
-archive producer before LN07d service/recorded restart and LN07e CLI consumers.
+LN07c forksetup reviewed afterone corrected early allocation failure; task1956/10,
+39examples,separateexamples/whitespace/exactmatrix plus26readable archives passed.
+Deliveryada9b8b integrated by the merge containing this brief; merged1956/10,39examples,
+separateexamples/whitespace/exactmatrix with26readable archives passed. Next LN07d
+service/recorded restart and LN07e CLI consumers.
 Two narrow probes confirm the parent-aware completion seam and legacy generic
-adapter requirements. No implementation at this contract checkpoint.
+adapter requirements. No service/CLI implementation yet; no07cimplementation/reviewredispatch.
 
 ## Prior checkpoint
 

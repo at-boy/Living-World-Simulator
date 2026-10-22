@@ -19,3 +19,8 @@ TDD genuine RED/GREEN; task24VENV Python explicit, PYTHONPATH=src. Focused check
 scoped Ruff/Black/whitespace/selfreview/report. No VCS/index/fullmake/examples/installs/
 subagents/othercheckout changes. Root owns reviews, fullgates and all transitions.
 On usagepause checkpoint partial work/report and stop; preserve all existing edits.
+
+Root review1 amendment in exactplan governs early allocated failures: precompute
+immutable intent, publish beforelock; bounded same-intent best-effort failure metadata
+for unique unreturned allocation only, never bypass ownedlock/repairexistingattempt.
+Test lock and pre/post-write failures; samefourpaths, normal leasesunchanged.

@@ -1,5 +1,21 @@
 # Living World Simulator – Project Journal
 
+## LN07c integration — October22,2026
+
+Reviewed deliveryada9b8b integrated without conflicts. Task/mergedmake1956/10,39examples,
+separateexamples/whitespace/exact matrices and26mergedreadable archives passed. Source
+unchanged. Next LN07d owner-thread service with generic recorded restart, pure startup
+validation, bounded cleanup and exact replay; LN07e CLI then LN08 browser follows.
+
+## LN07c reviewed fork-setup delivery — October22,2026
+
+Captured source config/input/world/cursor hashes and one sealed journal horizon bind
+linked setup. Effective config and exact childcp0 publish before completion marker.
+Review found one early lock/intentwrite failure losing linkage; root amended contract
+before correction, scoped re-review SPEC/QUALITYPASS,1addressed/0open. Taskmake1956/10,
+39examples,separateexamples/whitespace/exactmatrix and26readable CLI archives passed.
+Source unchanged after review. Delivery/merged gates next; service/CLI follow.
+
 ## Resume and LN07c producer contract — October22,2026
 
 Owner resumed with97%five-hourremaining; checkpoint724d15a and exact local plan patch
