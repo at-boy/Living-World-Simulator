@@ -1,5 +1,14 @@
 # Living World Simulator – Project Journal
 
+## LN06b replay horizon seam — October 22, 2026
+
+During bounded implementation, root found that replay composition and driver could
+capture different source endpoints if the source advances between constructors.
+Amended exact contract/saved prompt in feature and task checkouts before addition:
+optional source_point:ForkPoint and composition.source_point let LN07 pass one
+verified checkpoint/journal horizon to both. No new archive API/files. Worker is
+implementing/testing LN06b; review and full gates remain pending.
+
 ## LN06b exact contract — October 22, 2026
 
 After LN06a integration9875d5e, root materialized the original LN06 provider/live/

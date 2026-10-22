@@ -28,3 +28,10 @@ GREEN, boundaries, selfreview and limitations in 06b_live_driver-report.md.
 Send concise progress at coherent slice boundaries; escalate architectural ambiguity
 before choosing. If instructed to pause for usage, finish the current small edit,
 update report with exact partial state and stop. No false DONE/acceptance claims.
+
+Root consumer-seam amendment (October22, before implementation of this addition):
+Replay constructors accept optional source_point:ForkPoint; composition exposes its
+captured source_point. Service later passes the SAME point to driver, preventing
+source advancement between constructors from selecting inconsistent horizons. Verify
+supplied checkpoint/seal, load only through it, test inter-constructor append.
+No new files, archive API or broad source changes are authorized by this amendment.

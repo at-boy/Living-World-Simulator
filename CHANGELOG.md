@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Pin a shared captured source point for replay composition/driver construction,
+  preventing concurrent source progress from choosing inconsistent replay horizons.
+
 - Define LN06b bounded Ollama/broker/live/replay contract using reviewed journal
   seals and imports. Implementation, public entrypoints and real acceptance follow.
 

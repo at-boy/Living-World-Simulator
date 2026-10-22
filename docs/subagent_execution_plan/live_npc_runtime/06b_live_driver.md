@@ -70,10 +70,12 @@ In ollama_driver.py:
 - OllamaTickDriver(config:ProviderConfig,feedback:FoundersFeedback,
   broker:DecisionBroker), implementing existing TickDriver initialize/prepare.
 In journal_replay.py:
-- JournalReplayComposition(source:AttemptArchive,composition:FoundersLiveComposition)
+- JournalReplayComposition(source:AttemptArchive,composition:FoundersLiveComposition,
+  *,source_point:ForkPoint|None=None), read-only source_point:ForkPoint property,
   implements ScenarioComposition; initialize restores captured source checkpoint0
   through composition.restore, restore/terminal/finalize delegate live behavior.
-- JournalReplayDriver(source:AttemptArchive,feedback:FoundersFeedback), implementing
+- JournalReplayDriver(source:AttemptArchive,feedback:FoundersFeedback,
+  *,source_point:ForkPoint|None=None), implementing
   TickDriver with zero provider/broker calls. Export both for LN07.
 Use existing DriverCommit/TickPreparation protocols unchanged.
 
@@ -246,7 +248,14 @@ No marker granting automatic retry may be persisted in semantic world/cursors.
 
 ## Offline exact replay
 
-Capture source.fork_point() and journal prefix at construction; source readonly,
+Capture source.fork_point() and journal prefix at construction (or verify the supplied
+source_point against source.checkpoint(point.revision) and its exact sealed prefix).
+Composition exposes its captured point; LN07 must pass that same point to driver,
+so a concurrent source append between their constructors cannot choose two horizons.
+Both only load checkpoints through point.checkpoint.revision and journal through its
+boundary; default standalone construction remains supported. Test appending between
+constructors with one shared source_point: replay must stop at the captured horizon.
+Source readonly,
 modeollama, config resolved as above. Later source appends excluded. Composition
 initialize restores exact sourcecheckpoint0 (which may already contain tickN, memories,
 work and pending feedback from a parent), never a fresh WorldState. Driver initialize
