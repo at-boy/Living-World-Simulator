@@ -13,8 +13,9 @@ task/merged gates1551/10,39examples. LN04 safe controller/recorded adapter passe
 LN05 feedback/live composition passed independent review and task gates1652/10,
 39examples; delivery64efb1e and task/merged evidence recorded in05report.
 LN06 is split into journal/recovery producer integrity (6a) and inference/replay (6b);
-it remains incomplete until both are reviewed. LN06a exact producer contract is
-prepared; implementation and review pending. LN06 must supply a closed semantic cursor excluding operational IDs/time/counts.
+it remains incomplete until both are reviewed. LN06a archive producer has independent SPEC/QUALITY PASS after one bounded correction
+and root task gates1,722/10,39examples plus exact recorded matrices; delivery/merged
+gates follow. LN06b provider/live/replay contract is next. LN06 must supply a closed semantic cursor excluding operational IDs/time/counts.
 Live decisions, public control entrypoints and automatically archived entrypoints remain later tasks. Future player commands remain separate from current operator controls.
 
 

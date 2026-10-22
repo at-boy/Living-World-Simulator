@@ -1,4 +1,4 @@
-# Continuation brief — LN05 complete, October 21, 2026
+# Continuation brief — LN06a reviewed, task gates passed, October 22, 2026
 
 ## Current design scope and authority
 
@@ -34,7 +34,11 @@ with NO SUBSTANTIVE FINDINGS and root task/mergedmake1652/10,39examples plus exa
 matrices. Delivery64efb1e is pushed; integration isf13641e. Its exact
 live-validation contract and semantic cursor obligation bind LN06. Root splits
 LN06 into bounded recovery-journal producer(6a), then provider/broker/live/replay(6b).
-LN06a exact contract/prompt/report prepared fromf13641e; implementation pending.
+LN06a contract2325e3d has reviewed implementation in .worktrees/live-npc-ln06a.
+Independent SPEC/QUALITY PASS after one corrected canonical numeric identity issue;
+root task make1722/10,39examples, separate examples and exact recorded matrices passed.
+Delivery commit/integration/merged gates follow. LN06b remains unstarted; candidate
+notes are not a task contract. Do not repeat completed LN01–LN05.
 Read it for the expanded archive producer boundary, sealed prefix and truthful
 import/action audit rules. Probe/candidate notes are ignored evidence, not taskauthority. Do not repeat
 completedLN01–LN05. Read current03contract for archive layout, inputs, lease,

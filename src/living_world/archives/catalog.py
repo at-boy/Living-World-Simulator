@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import os
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Literal, cast
@@ -23,10 +23,12 @@ from living_world.archives.model import (
     ArchiveFormatError,
     AttemptConfig,
     AttemptRef,
+    JournalBoundary,
     document,
     identifier,
     integer,
     loads,
+    parent_boundary,
     text,
 )
 from living_world.archives.store import AttemptArchive
@@ -70,9 +72,11 @@ def config_document(config: AttemptConfig) -> Mapping[str, object]:
     }
 
 
-def read_reservation(
+def _read_reservation(
     ref: AttemptRef,
-) -> tuple[AttemptConfig, tuple[str, int] | None, str, str | None]:
+) -> tuple[
+    AttemptConfig, tuple[str, int] | None, str, str | None, JournalBoundary | None
+]:
     validate_ref(ref)
     try:
         path = safe_path(ref.directory / "attempt.json", regular=True)
@@ -87,6 +91,7 @@ def read_reservation(
                 "reserved_at",
                 "reservation_error",
             },
+            {"parent_journal"},
         )
         if (
             type(data["format"]) is not int
@@ -103,14 +108,23 @@ def read_reservation(
         error = data["reservation_error"]
         if error not in (None, "archive_initialization_failed"):
             raise ArchiveFormatError("Unknown reservation error.")
+        parent = parent_pair(data["parent"])
         return (
             config,
-            parent_pair(data["parent"]),
+            parent,
             timestamp(data["reserved_at"]),
             cast(str | None, error),
+            parent_boundary(data.get("parent_journal"), parent),
         )
     except (OSError, ValueError, TypeError, UnicodeError) as exc:
         raise ArchiveFormatError("Invalid reservation metadata.") from exc
+
+
+def read_reservation(
+    ref: AttemptRef,
+) -> tuple[AttemptConfig, tuple[str, int] | None, str, str | None]:
+    config, parent, reserved_at, error, _ = _read_reservation(ref)
+    return config, parent, reserved_at, error
 
 
 @dataclass(frozen=True)
@@ -198,11 +212,19 @@ class RunCatalog:
         return found[0]
 
     def _reserve(
-        self, config: AttemptConfig, parent: tuple[str, int] | None, lineage: str
+        self,
+        config: AttemptConfig,
+        parent: tuple[str, int] | None,
+        lineage: str,
+        parent_journal_boundary: JournalBoundary | None = None,
     ) -> AttemptRef:
         if not isinstance(config, AttemptConfig):
             raise ArchiveFormatError("Expected AttemptConfig.")
         parent = parent_pair(parent)
+        if parent_journal_boundary is not None:
+            if not isinstance(parent_journal_boundary, JournalBoundary):
+                raise ArchiveFormatError("Expected JournalBoundary.")
+            parent_boundary(asdict(parent_journal_boundary), parent)
         safe_path(self.root)
         self.root.mkdir(mode=0o700, parents=True, exist_ok=True)
         lineage_path = safe_path(self.root / identifier(lineage))
@@ -216,6 +238,11 @@ class RunCatalog:
             "attempt_id": ref.attempt_id,
             "config": config_document(config),
             "parent": parent,
+            "parent_journal": (
+                None
+                if parent_journal_boundary is None
+                else asdict(parent_journal_boundary)
+            ),
             "reserved_at": datetime.now(UTC).isoformat(),
             "reservation_error": None,
         }
@@ -229,7 +256,12 @@ class RunCatalog:
                 os.fsync(handle.fileno())
             with AttemptLease(ref):
                 atomic_document(path / "attempt.json", payload)
-                AttemptArchive.create(ref, config, parent=parent).close()
+                AttemptArchive.create(
+                    ref,
+                    config,
+                    parent=parent,
+                    parent_journal_boundary=parent_journal_boundary,
+                ).close()
         except (ArchiveError, OSError) as exc:
             payload["reservation_error"] = "archive_initialization_failed"
             try:
@@ -240,7 +272,11 @@ class RunCatalog:
         return ref
 
     def reserve(
-        self, config: AttemptConfig, *, parent: tuple[str, int] | None = None
+        self,
+        config: AttemptConfig,
+        *,
+        parent: tuple[str, int] | None = None,
+        parent_journal_boundary: JournalBoundary | None = None,
     ) -> AttemptRef:
         pair = parent_pair(parent)
         lineage = uuid4().hex
@@ -248,7 +284,7 @@ class RunCatalog:
             with self.open_attempt(pair[0]) as archive:
                 archive.checkpoint(pair[1])
                 lineage = archive.ref.lineage_id
-        return self._reserve(config, pair, lineage)
+        return self._reserve(config, pair, lineage, parent_journal_boundary)
 
     def open_attempt(
         self, attempt_id: str, *, read_only: bool = True
@@ -256,14 +292,18 @@ class RunCatalog:
         ref = self._find(attempt_id)
         if read_only is False and not AttemptLease.owned_by_current_thread(ref):
             raise ArchiveError("Writer open requires current thread attempt lease.")
-        config, parent, _, error = read_reservation(ref)
+        config, parent, _, error, boundary = _read_reservation(ref)
         if error is not None:
             raise ArchiveError("Attempt archive initialization failed.")
         try:
             safe_path(ref.directory / "archive.sqlite3", regular=True)
             archive = AttemptArchive.open(ref, read_only=read_only)
             try:
-                if archive.config != config or archive.parent != parent:
+                if (
+                    archive.config != config
+                    or archive.parent != parent
+                    or archive.parent_journal_boundary != boundary
+                ):
                     raise ArchiveFormatError("Reservation/archive metadata mismatch.")
                 if (
                     archive.latest_revision is not None
@@ -370,7 +410,8 @@ class RunCatalog:
     ) -> AttemptRef:
         integer(revision)
         with self.open_attempt(attempt_id) as parent:
-            checkpoint = parent.checkpoint(revision)
+            point = parent.fork_point(revision)
+            checkpoint = point.checkpoint
             source_config = parent.config
             inputs = load_retained_inputs(parent.ref)
             if config is None:
@@ -387,7 +428,12 @@ class RunCatalog:
                 }[source_config.mode]
             ):
                 raise ArchiveFormatError("Invalid fork configuration transition.")
-            ref = self._reserve(config, (attempt_id, revision), parent.ref.lineage_id)
+            ref = self._reserve(
+                config,
+                (attempt_id, revision),
+                parent.ref.lineage_id,
+                point.journal_boundary,
+            )
             retain_inputs(ref, inputs.scenario_path, tape_path=inputs.tape_path)
             with (
                 AttemptLease(ref),

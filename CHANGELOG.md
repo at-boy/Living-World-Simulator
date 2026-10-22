@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add reviewed LN06a recovery-journal integrity: sealed parent prefixes, immutable
+  journal records, checkpoint-owned validated action outcomes and truthful response
+  imports. Provider and runtime consumers remain LN06b.
+
 - Define bounded LN06a journal/recovery integrity before provider integration:
   committed action linkage, sealed parent history and truthful response reuse.
   Contract only; no provider capability claimed.

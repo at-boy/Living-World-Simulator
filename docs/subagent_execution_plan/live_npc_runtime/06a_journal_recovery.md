@@ -44,7 +44,7 @@ AttemptArchive additions:
 - journal_boundary(*,through_sequence:int|None=None)->JournalBoundary
 - fork_point(revision:int|None=None)->ForkPoint
 - read-only parent_journal_boundary:JournalBoundary|None property
-- initialize accepts keyword parent_journal_boundary:JournalBoundary|None=None in
+- create (the existing initializer factory) accepts keyword parent_journal_boundary:JournalBoundary|None=None in
   addition to existing parent argument. A boundary requires a parent pair.
 Existing entries() return/API and parent:(attempt_id,revision) tuple API unchanged.
 AttemptConfig contents/fingerprints unchanged. No new SQL table/column/schema version.

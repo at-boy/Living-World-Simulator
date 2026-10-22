@@ -16,3 +16,6 @@ TDD using task24/.venv and PYTHONPATH=src; final focused suites/scopedRuff/Black
 whitespace clean. No VCS/subagents/fullmake/examples/dependencies/provider IO.
 Return stable uncommitteddiff and canonicalreport with RED/GREENcommands/counts,
 warnings,selfreview/concerns. Root owns independentreview/gates/commit/integration.
+
+Initializer naming correction: add parent_journal_boundary to existing
+AttemptArchive.create(); do not invent initialize() or rename current public APIs.
