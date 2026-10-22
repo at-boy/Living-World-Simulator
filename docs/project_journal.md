@@ -1,5 +1,15 @@
 # Living World Simulator – Project Journal
 
+## LN07d service contract — October22,2026
+
+LN07c integrationd782e20 passed all reviewed task/merged gates. Root exact17path
+service contract separates queue/thread coordination from mode/resource construction.
+Decisions cover same pre-reserved attempt, owner-only mutation, pure cursor validation
+before terminal saves, generic recorded adapters, explicit continuous metadata,
+linked live restart/forks, shared replay horizon, normal request-budget stop, archive-
+first mirrors and bounded cancellation/shutdown. CLI/serve/browser remain later stages.
+No service implementation at this contract commit; root retains architecture/review.
+
 ## LN07c integration — October22,2026
 
 Reviewed deliveryada9b8b integrated without conflicts. Task/mergedmake1956/10,39examples,

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Define owner-thread service/restart construction, generic recorded adapters and
+  pure startup validation before CLI/browser integration.
+
 - Integrate reviewed parent-aware deferred setup after task and merged validation.
 
 - Add reviewed linked deferred fork setup, pinned source history and exact initial

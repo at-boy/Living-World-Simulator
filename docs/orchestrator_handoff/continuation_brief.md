@@ -7,7 +7,8 @@ LN07c forksetup reviewed afterone corrected early allocation failure; task1956/1
 39examples,separateexamples/whitespace/exactmatrix plus26readable archives passed.
 Deliveryada9b8b integrated by the merge containing this brief; merged1956/10,39examples,
 separateexamples/whitespace/exactmatrix with26readable archives passed. Next LN07d
-service/recorded restart and LN07e CLI consumers.
+service/recorded restart (exact17path plan/prompt/report prepared fromd782e20),
+then LN07e CLI consumers.
 Two narrow probes confirm the parent-aware completion seam and legacy generic
 adapter requirements. No service/CLI implementation yet; no07cimplementation/reviewredispatch.
 

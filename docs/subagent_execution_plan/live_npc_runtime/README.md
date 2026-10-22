@@ -17,7 +17,7 @@ Integration: codex/live-npc-runtime; no main/tag/milestone changes.
 | LN07a | Complete; deliverycd5e40d; reviewed task1800/10, merged1809/10,39examples | [plan](07a_legacy_archives.md), [saved prompt](07a_legacy_archives-prombt.md), [report](07a_legacy_archives-report.md) |
 | LN07b | Complete; deliverya4d7e41; reviewed task/merged1876/10,39examples | [plan](07b_preflight_setup.md), [saved prompt](07b_preflight_setup-prombt.md), [report](07b_preflight_setup-report.md) |
 | LN07c | Complete; deliveryada9b8b; reviewed task/merged1956/10,39examples | [plan](07c_fork_setup.md), [saved prompt](07c_fork_setup-prombt.md), [report](07c_fork_setup-report.md) |
-| LN07d | Service/recorded adapters/restart ownership follows7c | Original LN07; no implementation yet |
+| LN07d | Exact service/recorded restart contract; implementation next | [plan](07d_runtime_service.md), [saved prompt](07d_runtime_service-prombt.md), [report](07d_runtime_service-report.md) |
 | LN07e | CLI entrypoints follow service; serve binds with LN08 | Original LN07; no implementation yet |
 | LN08–LN09 | Authorized sequence, not yet dispatched | See the master plan. |
 

@@ -25,7 +25,8 @@ preflight deliverya4d7e41 now integrated after independent correction review and
 task/merged1876/10,39examples, separateexamples/whitespace/exactmatrix with26archives.
 Parent-aware deferred fork setup LN07c is reviewed afterone corrected allocation
 failure; deliveryada9b8b integrated with task/merged1956/10,39examples and exactmatrix before
-service/generic recorded restart ownership (LN07d) and CLI consumers (LN07e).
+service/generic recorded restart ownership (LN07d, exact contract prepared) and
+CLI consumers (LN07e).
 Service/live/restart remain upcoming.
 legacy generic/taped/raw-database CLI and injected engine/state-reference hooks must
 remain compatible. Add an explicit archive observer to the existing runner, not a
