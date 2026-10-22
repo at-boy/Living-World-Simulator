@@ -21,7 +21,9 @@ containing its report. LN07 is split into7a archived legacy CLI,7b setup/model-p
 7c controller-owned live/service/restart entrypoints. LN07a deliverycd5e40d is reviewed; task1800/10,39examples/exactmatrix and26retained
 CLIattempts passed. Merged1809/10,39examples,separateexamples/whitespace/exactmatrix
 and26readable archives passed. Original Task7 remains incomplete; bounded setup/model
-preflight precedes service/live/restart entrypoints.
+preflight deliverya4d7e41 now integrated after independent correction review and
+task/merged1876/10,39examples, separateexamples/whitespace/exactmatrix with26archives.
+Service/live/restart remain upcoming.
 legacy generic/taped/raw-database CLI and injected engine/state-reference hooks must
 remain compatible. Add an explicit archive observer to the existing runner, not a
 second copied loop. New live entrypoints retain RunController ownership. LN07 must

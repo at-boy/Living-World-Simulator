@@ -221,6 +221,18 @@ def _worker(config: ProviderConfig, request_json: str, result_path: str) -> None
     os.replace(partial, path)
 
 
+def reap_owned_process(process: BaseProcess) -> None:
+    """Reap only a process created and owned by the calling component."""
+    if process.pid is not None:
+        if process.is_alive():
+            process.terminate()
+        process.join(timeout=0.2)
+        if process.is_alive():
+            process.kill()
+            process.join(timeout=0.2)
+        process.close()
+
+
 class DecisionBroker:
     """Restartable ownership with no framed blocking IPC or persistent worker."""
 
@@ -271,14 +283,7 @@ class DecisionBroker:
     def _cleanup(self) -> None:
         process = self._process
         if process is not None:
-            if process.pid is not None:
-                if process.is_alive():
-                    process.terminate()
-                process.join(timeout=0.2)
-                if process.is_alive():
-                    process.kill()
-                    process.join(timeout=0.2)
-                process.close()
+            reap_owned_process(process)
             self._process = None
         if self._directory is not None:
             self._directory.cleanup()

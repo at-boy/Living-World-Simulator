@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import hashlib
 import os
+import re
+import unicodedata
 from collections.abc import Mapping
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
@@ -24,6 +27,8 @@ from living_world.archives.model import (
     AttemptConfig,
     AttemptRef,
     JournalBoundary,
+    canonical,
+    digest,
     document,
     identifier,
     integer,
@@ -72,6 +77,128 @@ def config_document(config: AttemptConfig) -> Mapping[str, object]:
     }
 
 
+SETUP_CODES = frozenset(
+    {
+        "timeout",
+        "transport",
+        "http_error",
+        "invalid_response",
+        "oversized_response",
+        "worker_failed",
+        "cancelled",
+        "model_missing",
+        "model_digest_mismatch",
+        "invalid_preflight",
+        "setup_failed",
+    }
+)
+
+
+def normalized_digest(value: object) -> str:
+    if not isinstance(value, str):
+        raise ArchiveFormatError("Expected model digest.")
+    value = value.lower().removeprefix("sha256:")
+    if re.fullmatch("[0-9a-f]{64}", value) is None:
+        raise ArchiveFormatError("Expected model digest.")
+    return value
+
+
+def validate_setup_config(requested: AttemptConfig, effective: AttemptConfig) -> None:
+    if not isinstance(effective, AttemptConfig) or requested.mode != "ollama":
+        raise ArchiveFormatError("Invalid setup configuration.")
+    if (
+        requested.mode,
+        requested.scenario_key,
+        requested.seed,
+        requested.software_revision,
+    ) != (
+        effective.mode,
+        effective.scenario_key,
+        effective.seed,
+        effective.software_revision,
+    ) or {
+        k: v for k, v in requested.settings.items() if k != "provider"
+    } != {
+        k: v for k, v in effective.settings.items() if k != "provider"
+    }:
+        raise ArchiveFormatError("Setup intent/config mismatch.")
+    from living_world.runtime.broker import provider_config
+
+    try:
+        original = asdict(provider_config(requested))
+        resolved = asdict(provider_config(effective))
+    except (ValueError, TypeError) as exc:
+        raise ArchiveFormatError("Invalid setup provider configuration.") from exc
+    for key in original.keys() - {"model", "model_digest"}:
+        if original[key] != resolved[key]:
+            raise ArchiveFormatError("Setup provider defaults mismatch.")
+    before = cast(Mapping[str, object], requested.settings.get("provider", {}))
+    after = cast(Mapping[str, object], effective.settings.get("provider", {}))
+    name = before.get("model")
+    if not isinstance(name, str) or after.get("model") not in (
+        name,
+        name + ":latest" if ":" not in name.rsplit("/", 1)[-1] else name,
+    ):
+        raise ArchiveFormatError("Setup model mismatch.")
+    if (
+        not isinstance(after.get("model"), str)
+        or len(cast(str, after["model"])) > 512
+        or any(
+            c.isspace() or unicodedata.category(c).startswith("C")
+            for c in cast(str, after["model"])
+        )
+    ):
+        raise ArchiveFormatError("Invalid setup model name.")
+    actual = normalized_digest(after.get("model_digest"))
+    if actual != after.get("model_digest"):
+        raise ArchiveFormatError("Expected canonical model digest.")
+    for key, value in before.items():
+        if key == "model":
+            continue
+        other = after.get(key)
+        if key == "model_digest":
+            value = normalized_digest(value)
+        if key == "base_url" and isinstance(value, str) and isinstance(other, str):
+            value, other = value.rstrip("/"), other.rstrip("/")
+        if value != other:
+            raise ArchiveFormatError("Setup provider option mismatch.")
+
+
+def _setup_document(ref: AttemptRef, failure: bool = False) -> Mapping[str, object]:
+    validate_ref(ref)
+    try:
+        name = "setup_failure.json" if failure else "setup.json"
+        fields = {"format", "lineage_id", "attempt_id"} | (
+            {"code", "ended_at"} if failure else {"requested_config", "reserved_at"}
+        )
+        data = document(
+            loads(safe_path(ref.directory / name, regular=True).read_text()), fields
+        )
+        if (
+            type(data["format"]) is not int
+            or data["format"] != 1
+            or (data["lineage_id"], data["attempt_id"])
+            != (ref.lineage_id, ref.attempt_id)
+        ):
+            raise ArchiveFormatError("Setup identity mismatch.")
+        timestamp(data["ended_at" if failure else "reserved_at"])
+        if failure:
+            if not isinstance(data["code"], str) or data["code"] not in SETUP_CODES:
+                raise ArchiveFormatError("Invalid setup failure code.")
+        else:
+            config = AttemptConfig(
+                **document(
+                    data["requested_config"],
+                    {"mode", "scenario_key", "seed", "software_revision", "settings"},
+                )
+            )
+            if config.mode != "ollama":
+                raise ArchiveFormatError("Setup requires Ollama mode.")
+        return data
+    except (OSError, ValueError, TypeError, UnicodeError) as exc:
+        raise ArchiveFormatError("Invalid setup metadata.") from exc
+
+
 def _read_reservation(
     ref: AttemptRef,
 ) -> tuple[
@@ -118,6 +245,57 @@ def _read_reservation(
         )
     except (OSError, ValueError, TypeError, UnicodeError) as exc:
         raise ArchiveFormatError("Invalid reservation metadata.") from exc
+
+
+def validate_setup_reservation(
+    ref: AttemptRef, requested: AttemptConfig
+) -> AttemptConfig:
+    config, parent, reserved_at, error, boundary = _read_reservation(ref)
+    validate_setup_config(requested, config)
+    if (
+        parent is not None
+        or boundary is not None
+        or error is not None
+        or reserved_at != _setup_document(ref)["reserved_at"]
+    ):
+        raise ArchiveFormatError("Setup reservation mismatch.")
+    return config
+
+
+def _validate_setup_complete(ref: AttemptRef, config: AttemptConfig) -> None:
+    try:
+        data = document(
+            loads(
+                safe_path(
+                    ref.directory / "setup_complete.json", regular=True
+                ).read_text()
+            ),
+            {"format", "lineage_id", "attempt_id", "config_sha256"},
+        )
+        if (
+            type(data["format"]) is not int
+            or data["format"] != 1
+            or (data["lineage_id"], data["attempt_id"])
+            != (ref.lineage_id, ref.attempt_id)
+            or digest(data["config_sha256"])
+            != hashlib.sha256(canonical(config_document(config)).encode()).hexdigest()
+        ):
+            raise ArchiveFormatError("Setup completion marker mismatch.")
+    except (OSError, ValueError, TypeError, UnicodeError) as exc:
+        raise ArchiveFormatError("Invalid setup completion marker.") from exc
+
+
+def _publish_archive(
+    ref: AttemptRef,
+    config: AttemptConfig,
+    payload: Mapping[str, object],
+    parent: tuple[str, int] | None = None,
+    boundary: JournalBoundary | None = None,
+) -> None:
+    atomic_document(ref.directory / "attempt.json", payload)
+    AttemptArchive.create(
+        ref, config, parent=parent, parent_journal_boundary=boundary
+    ).close()
 
 
 def read_reservation(
@@ -211,6 +389,26 @@ class RunCatalog:
             raise ArchiveFormatError("Unknown or duplicate attempt identity.")
         return found[0]
 
+    def _allocate(self, lineage: str) -> AttemptRef:
+        safe_path(self.root)
+        self.root.mkdir(mode=0o700, parents=True, exist_ok=True)
+        lineage_path = safe_path(self.root / identifier(lineage))
+        lineage_path.mkdir(mode=0o700, exist_ok=True)
+        path = lineage_path / uuid4().hex
+        path.mkdir(mode=0o700)
+        ref = AttemptRef(lineage, path.name, path)
+        return ref
+
+    @staticmethod
+    def _create_lock(ref: AttemptRef) -> None:
+        descriptor = os.open(
+            ref.directory / "owner.lock", os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600
+        )
+        with os.fdopen(descriptor, "wb") as handle:
+            handle.write(b"0")
+            handle.flush()
+            os.fsync(handle.fileno())
+
     def _reserve(
         self,
         config: AttemptConfig,
@@ -225,13 +423,8 @@ class RunCatalog:
             if not isinstance(parent_journal_boundary, JournalBoundary):
                 raise ArchiveFormatError("Expected JournalBoundary.")
             parent_boundary(asdict(parent_journal_boundary), parent)
-        safe_path(self.root)
-        self.root.mkdir(mode=0o700, parents=True, exist_ok=True)
-        lineage_path = safe_path(self.root / identifier(lineage))
-        lineage_path.mkdir(mode=0o700, exist_ok=True)
-        path = lineage_path / uuid4().hex
-        path.mkdir(mode=0o700)
-        ref = AttemptRef(lineage, path.name, path)
+        ref = self._allocate(lineage)
+        path = ref.directory
         payload = {
             "format": 1,
             "lineage_id": ref.lineage_id,
@@ -247,21 +440,9 @@ class RunCatalog:
             "reservation_error": None,
         }
         try:
-            descriptor = os.open(
-                path / "owner.lock", os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600
-            )
-            with os.fdopen(descriptor, "wb") as handle:
-                handle.write(b"0")
-                handle.flush()
-                os.fsync(handle.fileno())
+            self._create_lock(ref)
             with AttemptLease(ref):
-                atomic_document(path / "attempt.json", payload)
-                AttemptArchive.create(
-                    ref,
-                    config,
-                    parent=parent,
-                    parent_journal_boundary=parent_journal_boundary,
-                ).close()
+                _publish_archive(ref, config, payload, parent, parent_journal_boundary)
         except (ArchiveError, OSError) as exc:
             payload["reservation_error"] = "archive_initialization_failed"
             try:
@@ -270,6 +451,98 @@ class RunCatalog:
                 pass
             raise ArchiveReservationError(ref) from exc
         return ref
+
+    def _setup_ref(self, ref: AttemptRef) -> None:
+        if validate_ref(ref) != self.root:
+            raise ArchiveFormatError("Foreign setup reference.")
+
+    def setup_config(self, ref: AttemptRef) -> AttemptConfig:
+        self._setup_ref(ref)
+        data = _setup_document(ref)
+        return AttemptConfig(**cast(dict[str, object], data["requested_config"]))
+
+    def reserve_setup(self, requested: AttemptConfig) -> AttemptRef:
+        if not isinstance(requested, AttemptConfig) or requested.mode != "ollama":
+            raise ArchiveFormatError("Setup requires Ollama configuration.")
+        ref = self._allocate(uuid4().hex)
+        self._create_lock(ref)
+        with AttemptLease(ref):
+            atomic_document(
+                ref.directory / "setup.json",
+                {
+                    "format": 1,
+                    "lineage_id": ref.lineage_id,
+                    "attempt_id": ref.attempt_id,
+                    "requested_config": config_document(requested),
+                    "reserved_at": datetime.now(UTC).isoformat(),
+                },
+            )
+        return ref
+
+    def _pending_setup(self, ref: AttemptRef) -> AttemptConfig:
+        requested = self.setup_config(ref)
+        if not AttemptLease.owned_by_current_thread(ref):
+            raise ArchiveError("Setup publication requires current thread lease.")
+        if any(
+            safe_path(ref.directory / name).exists()
+            for name in ("attempt.json", "archive.sqlite3", "setup_complete.json")
+        ):
+            raise ArchiveError("Final setup publication already begun.")
+        return requested
+
+    def complete_setup(self, ref: AttemptRef, effective: AttemptConfig) -> None:
+        requested = self._pending_setup(ref)
+        if safe_path(ref.directory / "setup_failure.json").exists():
+            _setup_document(ref, True)
+            raise ArchiveError("Setup already failed.")
+        validate_setup_config(requested, effective)
+        load_retained_inputs(ref)
+        data = _setup_document(ref)
+        payload = {
+            "format": 1,
+            "lineage_id": ref.lineage_id,
+            "attempt_id": ref.attempt_id,
+            "config": config_document(effective),
+            "parent": None,
+            "parent_journal": None,
+            "reserved_at": data["reserved_at"],
+            "reservation_error": None,
+        }
+        try:
+            _publish_archive(ref, effective, payload)
+            atomic_document(
+                ref.directory / "setup_complete.json",
+                {
+                    "format": 1,
+                    "lineage_id": ref.lineage_id,
+                    "attempt_id": ref.attempt_id,
+                    "config_sha256": hashlib.sha256(
+                        canonical(config_document(effective)).encode()
+                    ).hexdigest(),
+                },
+            )
+        except (ArchiveError, OSError) as exc:
+            raise ArchiveReservationError(ref) from exc
+
+    def fail_setup(self, ref: AttemptRef, code: str) -> None:
+        self._pending_setup(ref)
+        if not isinstance(code, str) or code not in SETUP_CODES:
+            raise ArchiveFormatError("Invalid setup failure code.")
+        path = safe_path(ref.directory / "setup_failure.json")
+        if path.exists():
+            if _setup_document(ref, True)["code"] != code:
+                raise ArchiveError("Divergent setup failure.")
+            return
+        atomic_document(
+            path,
+            {
+                "format": 1,
+                "lineage_id": ref.lineage_id,
+                "attempt_id": ref.attempt_id,
+                "code": code,
+                "ended_at": datetime.now(UTC).isoformat(),
+            },
+        )
 
     def reserve(
         self,
@@ -292,6 +565,17 @@ class RunCatalog:
         ref = self._find(attempt_id)
         if read_only is False and not AttemptLease.owned_by_current_thread(ref):
             raise ArchiveError("Writer open requires current thread attempt lease.")
+        setup = safe_path(ref.directory / "setup.json")
+        requested = self.setup_config(ref) if setup.exists() else None
+        if (
+            requested is not None
+            and safe_path(ref.directory / "setup_failure.json").exists()
+        ):
+            _setup_document(ref, True)
+            raise ArchiveError("Setup failed.")
+        if requested is not None:
+            config = validate_setup_reservation(ref, requested)
+            _validate_setup_complete(ref, config)
         config, parent, _, error, boundary = _read_reservation(ref)
         if error is not None:
             raise ArchiveError("Attempt archive initialization failed.")
@@ -306,7 +590,8 @@ class RunCatalog:
                 ):
                     raise ArchiveFormatError("Reservation/archive metadata mismatch.")
                 if (
-                    archive.latest_revision is not None
+                    requested is not None
+                    or archive.latest_revision is not None
                     or (ref.directory / "inputs.json").exists()
                 ):
                     load_retained_inputs(ref)
@@ -335,6 +620,71 @@ class RunCatalog:
             failure = None
             try:
                 validate_ref(ref)
+                if ref.attempt_id in duplicates:
+                    raise ArchiveFormatError("Duplicate attempt identity.")
+                setup = safe_path(ref.directory / "setup.json")
+                if setup.exists():
+                    config = self.setup_config(ref)
+                    started = cast(str, _setup_document(ref)["reserved_at"])
+                    reservation = safe_path(ref.directory / "attempt.json")
+                    effective = (
+                        validate_setup_reservation(ref, config)
+                        if reservation.exists()
+                        else None
+                    )
+                    complete = safe_path(ref.directory / "setup_complete.json").exists()
+                    if complete:
+                        if effective is None:
+                            raise ArchiveFormatError(
+                                "Completed setup lacks reservation."
+                            )
+                        _validate_setup_complete(ref, effective)
+                    if safe_path(ref.directory / "inputs.json").exists():
+                        load_retained_inputs(ref)
+                    final = [
+                        safe_path(ref.directory / n).exists()
+                        for n in ("attempt.json", "archive.sqlite3")
+                    ]
+                    failed = safe_path(ref.directory / "setup_failure.json").exists()
+                    if failed:
+                        data = _setup_document(ref, True)
+                        if any(final) or complete:
+                            raise ArchiveFormatError(
+                                "Failure/final publication conflict."
+                            )
+                        lifecycle, failure, ended = (
+                            "failed",
+                            cast(str, data["code"]),
+                            cast(str, data["ended_at"]),
+                        )
+                    elif not complete:
+                        owned = AttemptLease.is_owned(ref)
+                        lifecycle = (
+                            "initializing"
+                            if owned
+                            else ("failed" if any(final) else "interrupted")
+                        )
+                        failure = (
+                            "archive_incomplete" if any(final) and not owned else None
+                        )
+                    else:
+                        lifecycle = ""
+                    if lifecycle:
+                        result.append(
+                            AttemptSummary(
+                                ref,
+                                config.mode,
+                                config.scenario_key,
+                                None,
+                                started,
+                                ended,
+                                lifecycle,
+                                None,
+                                None,
+                                failure,
+                            )
+                        )
+                        continue
                 config, parent, started, reservation_error = read_reservation(ref)
                 if ref.attempt_id in duplicates:
                     raise ArchiveFormatError("Duplicate attempt identity.")
@@ -388,7 +738,11 @@ class RunCatalog:
                     # Inaccessibility does not establish that publication is absent.
                     # Preserve safely known metadata and continue other attempts.
                     pass
-                failure = "archive_incomplete" if missing else "archive_invalid"
+                failure = (
+                    "archive_incomplete"
+                    if missing and not (ref.directory / "setup.json").exists()
+                    else "archive_invalid"
+                )
             result.append(
                 AttemptSummary(
                     ref,

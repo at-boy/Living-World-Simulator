@@ -15,6 +15,7 @@ from .controller import CommandConflictError, RunController
 from .journal_replay import JournalReplayComposition, JournalReplayDriver
 from .legacy import LegacyArchiveSession, legacy_cursor
 from .ollama_driver import OllamaTickDriver, effective_config_fingerprint
+from .preflight import ProviderPreflightError, preflight_provider
 
 __all__ = [
     "BrokerResult",
@@ -28,6 +29,7 @@ __all__ = [
     "LegacyArchiveSession",
     "OllamaTickDriver",
     "ProviderConfig",
+    "ProviderPreflightError",
     "RunController",
     "RuntimeState",
     "RuntimeStatus",
@@ -36,5 +38,6 @@ __all__ = [
     "TickPreparation",
     "effective_config_fingerprint",
     "legacy_cursor",
+    "preflight_provider",
     "provider_config",
 ]

@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Integrate reviewed setup/preflight after task and merged validation; checkpoint
+  above the owner usage threshold before service and browser work.
+
+- Add reviewed immutable setup reservations and bounded installed-model preflight,
+  with truthful interrupted publication discovery and safe owned-process cleanup.
+
 - Define bounded setup reservations and installed-model preflight before immutable
   live archive configuration; service entrypoints consume this producer next.
 

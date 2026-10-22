@@ -1,4 +1,31 @@
-# Continuation brief — LN06 complete, LN07 next, October 22, 2026
+# Continuation brief — LN07b complete, usage checkpoint, October 22, 2026
+
+## Current checkpoint — resume here
+
+LN06 complete including shutdown recovery correction0eca121/integration4dbb40b.
+LN07a deliverycd5e40d integratedd975539; reviewed task1800/10, merged1809/10.
+LN07b deliverya4d7e41 is integrated by the merge containing this checkpoint. Independent
+SPEC/QUALITY PASS after one corrected partial-SQLite publication finding. Task AND
+mergedmake1876/10,39examples, separateexamples/whitespace/exact canonical matrices
+passed;26merged CLI invocations persist readable complete-checkpoint archives.
+No source changed after review; no implementation/review redispatch for completed tasks.
+
+Owner usage guard: pause at15%five-hourremaining, BEFORE10%; all workers/reviewers
+completed. Do not automatically resume. On owner resume check usage, branch/status
+and owner patch before proceeding. Integration branch codex/live-npc-runtime;
+LN07b task branch codex/live-npc-ln07b-preflight and durable task worktree retained.
+
+Next: materialize exact LN07c contract/prompt/report. Resolve owner-thread service
+construction/queue/cleanup, generic legacy-recorded archive resume, changed-provider
+fork setup publication, shared replay source point, budget-stop outcome and staging
+serve integration with LN08. Concrete evidence is in ignored current-plan SDD
+ln07c-consumer-prerequisites.md; it is investigation, not implementation authority.
+Original Task7 is incomplete; LN08 browser controls and LN09 actual installed-Ollama/
+operator acceptance remain pending. Preserve all branches and owner-local master-plan
+edit; its exact patch SHA256 is294b20313ae2de248301fa20bbb4f9c312d51efa4851a434466f98a588dd93e6.
+
+The milestone history below is context; this checkpoint supersedes its pending
+LN07a/LN07b implementation/integration statements.
 
 ## Current design scope and authority
 
@@ -52,7 +79,10 @@ independently re-reviewed; task1800/10, merged1809/10,39examples, separateexampl
 whitespace and exact matrices passed. All26merged CLI acceptance runs persist readable
 archives with complete checkpoints. No implementation/review redispatch for6c/7a.
 Next bounded stage is LN07b setup reservations and model preflight, then LN07c service/
-entrypoints. Exact7b contract/prompt/report prepared from integrationd975539; implementation next.
+entrypoints. LN07b implementation passed independent SPEC/QUALITY review after one corrected partial
+SQLite publication issue; root amended completion-marker contract before correction.
+Taskmake1876/10,39examples,separateexamples/whitespace/exactmatrix with26retained
+CLIarchives passed. Delivery/merged gates next; no source redispatch.
 No LN08/LN09 implementation yet.
 Read it for the expanded archive producer boundary, sealed prefix and truthful
 import/action audit rules. Probe/candidate notes are ignored evidence, not taskauthority. Do not repeat

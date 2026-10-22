@@ -1,5 +1,28 @@
 # Living World Simulator – Project Journal
 
+## LN07b integration and usage checkpoint — October22,2026
+
+Reviewed deliverya4d7e41 integrated without conflicts. Task/mergedmake1876/10,39examples,
+separateexamples/whitespace/exact canonical matrices passed;26merged CLI invocations
+retain complete readable archives. Source/tests match reviewed delivery. All workers
+and reviewers completed. Pause at15%five-hourremaining, above owner's10%threshold.
+
+Next resume: check usage/Git/owner patch, then exact LN07c consumer contract before
+implementation. Root's ignored ln07c-consumer-prerequisites.md records concrete
+service ownership/generic recorded restart/changed-provider fork/replay/budget-stop/
+serve staging decisions still needed. No service/browser/installed-model completion
+claim; LN08/LN09 pending. Main/milestone/tag and owner-local plan edit preserved.
+
+## LN07b reviewed producer delivery — October22,2026
+
+Setup identity and retained inputs precede bounded installed-model GET; immutable
+effective config publishes once. Independent review found one partial SQLite
+initialization classification issue. Root amended contract/prompt before correction;
+completion marker and17regressions passed scoped re-review,1addressed/0open.
+Taskmake1876/10,39examples,separateexamples/whitespace/exact recorded matrix and
+26readable CLI archives passed. Reviewed source unchanged. Delivery/merged gates next;
+service/browser entrypoints remain incomplete.
+
 ## LN07b producer contract — October22,2026
 
 LN07a integrationd975539 is pushed. Preflight investigation confirmed that reserving

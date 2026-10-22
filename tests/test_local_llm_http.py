@@ -133,3 +133,59 @@ def test_actual_loopback_http_bounds_redirect_encoding_timeout_and_proxy(
                 assert transport.last_response_digest is None
         server.shutdown()
         thread.join(timeout=2)
+
+
+def test_get_uses_existing_bounded_transport_guards(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    import threading
+    from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+    from living_world.perception.local_llm_http import UrllibJsonHttpTransport
+
+    class Handler(BaseHTTPRequestHandler):
+        def do_GET(self) -> None:
+            if self.path == "/redirect":
+                self.send_response(302)
+                self.send_header("Location", "http://example.com/")
+                self.end_headers()
+                return
+            self.send_response(500 if self.path == "/error" else 200)
+            self.end_headers()
+            self.wfile.write(
+                {
+                    "/huge": b"x" * 100,
+                    "/utf8": b"\xff",
+                    "/json": b"[]",
+                    "/finite": b'{"x":NaN}',
+                    "/overflow": b'{"x":[1e999]}',
+                }.get(self.path, b'{"models":[]}')
+            )
+
+        def log_message(self, format: str, *args: object) -> None:
+            pass
+
+    with ThreadingHTTPServer(("127.0.0.1", 0), Handler) as server:
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        monkeypatch.setenv("http_proxy", "http://127.0.0.1:1")
+        monkeypatch.setenv("no_proxy", "")
+        base = f"http://127.0.0.1:{server.server_port}"
+        transport = UrllibJsonHttpTransport(32)
+        assert transport.get_json(url=base + "/api/tags", timeout_seconds=1) == {
+            "models": []
+        }
+        for endpoint, code in [
+            ("redirect", "http_error"),
+            ("error", "http_error"),
+            ("huge", "oversized_response"),
+            ("utf8", "invalid_response"),
+            ("json", "invalid_response"),
+            ("finite", "invalid_response"),
+            ("overflow", "invalid_response"),
+        ]:
+            with pytest.raises(LocalLLMHttpError) as caught:
+                transport.get_json(url=base + "/" + endpoint, timeout_seconds=1)
+            assert caught.value.code == code
+        server.shutdown()
+        thread.join(2)
