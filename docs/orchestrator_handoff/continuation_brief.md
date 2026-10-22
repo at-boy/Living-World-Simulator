@@ -1,3 +1,37 @@
+# Continuation brief — LN08b task validated; integration pending, October 23, 2026
+
+## Current authoritative state
+
+Owner requested pause soon; pause after saving/pushing this reviewed task delivery.
+Task checkout .worktrees/live-npc-ln08b, branch codex/live-npc-ln08b-operator-api.
+LN08b delivery commit contains this brief. Independent review soleP2 shared async DTO
+work blocked event loop; root amended task/prompt both checkouts before ninth-path
+inspection_routes correction. Actual loopback RED/GREEN and scoped re-review PASS,
+zero open findings. Focused88; root taskmake2105/10existing skips,39examples/actual
+Chrome, separateexamples/whitespace/exactcanonical26readablearchives/newCLI7cases
+including2failed-uninitialized PASS. Source unchanged after review/gates.
+
+Feature codex/live-npc-runtime remains at contract52da486 plus checkpoint docs;
+LN08b SOURCE NOT MERGED. Next ownerresume: verify usage and owner patch, merge this
+delivery, resolve root docs only and repeat full merged gates before integration
+commit/push. Do not redispatch completed implementation/review/task gates.
+All task branches/worktrees preserved; main/milestone/tag unchanged.
+
+Evidence: feature .superpowers/sdd/2026-10-19-live-npc-runtime/ln08b-review-1.diff,
+ln08b-fix-1.diff,ln08b-reviewed-final.diff,ln08b-review-initial.md,ln08b-review-final.md,
+ln08b-task-make.log,ln08b-task-examples.log,ln08b-task-matrix,ln08b-task-cli.
+Every normal acceptance attempt retained. Use exact8btask/prombt/reviewedreport.
+LN08c inspector probe is saved ln08c-inspector-probe.md; no8cimplementation contract
+or source dispatched. Root must specify credential/pinned-prefix/focus protocol
+before browser work. Then CLIserve and LN09actualOllama/operatoracceptance.
+OriginalLN07 remains incomplete until serve acceptance. No real-model gate passed.
+
+Usage stop with headroom BEFORE10%five-hourremaining, no reset/automaticresume.
+Feature ownerlocalplan patch SHA294b20313ae2de248301fa20bbb4f9c312d51efa4851a434466f98a588dd93e6
+remains untouched; never stage/restore/reset/fix that masterplan edit.
+
+## Prior compressed context
+
 # Continuation brief — LN08a integrated; LN08b authorized, October 23, 2026
 
 ## Current authoritative state

@@ -206,3 +206,60 @@ creates missing storage or changes source files, timestamps or directory entries
 These are Python producer interfaces only. Authenticated operator routes,
 controls, browser prefix wiring and CLI serve lifecycle remain later LN08 stages;
 this change exposes no new HTTP route or NPC context.
+
+## Authenticated local runtime operator application
+
+`living_world.api.operator.create_operator_app(service, controller, auth=session)`
+creates a separate privileged loopback application. The caller constructs and starts
+`RuntimeService` explicitly; HTTP handlers never construct, poll, or step a runner.
+The optional controller must be the service's current controller. Passing `None`
+allows an archive-only or not-yet-ready application. App shutdown joins the service
+and its provider resources; closing a browser or requesting a view does not stop it.
+The existing `create_app` application and its public inspection URLs are unchanged.
+No browser page, static assets, or CLI serving command is added here.
+
+Create `AdminSession.issue(origin="http://127.0.0.1:8000")` for the actual listening
+origin. Configured origins are credential-free loopback HTTP(S), canonicalized to
+lowercase with default ports removed; incoming `Origin` must match exactly. Token
+and independent CSRF nonce live only in memory. Keep them out of URLs, cookies,
+logs, archives, browser storage, and command bodies. Every operator request needs
+`Authorization: Bearer <token>`. GET may omit `Origin`; a present foreign origin is
+forbidden. POST also requires exact `Origin` and `X-CSRF-Token`. Authenticated status
+returns that nonce in its `X-CSRF-Token` response header for an in-memory client.
+All responses use `Cache-Control: no-store`; no CORS permissions are installed.
+
+| Route | Result |
+| --- | --- |
+| `GET /runtime/status` | `live: null`, or one immutable last-durable status plus cached nonsecret mode, scenario, model name/digest and configuration error |
+| `POST /runtime/commands` | Exact `command_id`, `action`, `expected_state_version` envelope submitted through the service |
+| `GET /runtime/commands/{command_id}` | Current-attempt durable receipt, including opaque IDs containing slashes |
+| `GET /archives` | Catalog summaries including unsuccessful, interrupted, setup-only, and corrupt discoveries |
+| `GET /archives/{attempt_id}` | Summary, configuration/source, latest recorded outcome, total journal count and last 50 typed entries |
+| `GET /archives/{attempt_id}/checkpoints` | Ascending complete revision/tick metadata; valid attempts without worlds return an empty list |
+| `GET /archives/{attempt_id}/checkpoints/{revision}/world...` | Existing world DTO routes pinned to that exact retained revision |
+| `GET /live/checkpoints/{revision}/world...` | Same pinned DTO routes for the current service attempt |
+
+Command actions are `pause`, `resume`, `step`, `stop`, and explicit `retry`.
+`expected_state_version` is an operational state version, not a checkpoint revision.
+Admission is awaited asynchronously: queued receipts return 202, applied receipts
+200, and rejected receipts 409. A queued Pause/Step receipt acknowledges durable
+admission; only a later applied receipt acknowledges the effect and its checkpoint.
+The same envelope and stable command ID safely rediscover its durable receipt;
+reusing an ID for a different envelope returns `command_conflict`. Provider errors
+require explicit Retry. No HTTP start/resume-from-archive/fork construction endpoint
+exists. After client cancellation, discover the receipt or resubmit the same envelope.
+
+Known valid attempts without worlds expose requested setup configuration or retained
+reservation configuration without inventing a checkpoint or successful preflight.
+Configuration-source labels are `archive`, `requested`, or `reservation`. Outcomes
+are the latest `attempt_finished` value, which may be null; they are not inferred
+success flags. Physical corruption returns 409 `archive_invalid` while list discovery
+retains the row. Unknown identities/revisions return 404 `not_found`. Authentication
+failures use fixed 401 `unauthorized` or 403 `forbidden`; malformed command bodies
+use 422 `invalid_command`. No protected archive reconstruction occurs before auth.
+
+Pinned history uses the shared readonly revision source, reloads exact evicted
+revisions from the archive, and neither advances the world nor invokes a model.
+These privileged operator records must never become NPC context. Initial metadata
+and archive scans run off the event loop. This bounded initial API favors correctness
+over optimizing long archive histories.

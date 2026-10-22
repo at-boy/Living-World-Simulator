@@ -805,3 +805,22 @@ def test_admission_write_then_error_rejects_durable_queued_receipt(
         service.shutdown()
     with catalog.open_attempt(ref.attempt_id) as archive:
         assert archive.command("accepted").status == "rejected"
+
+
+def test_controller_readonly_publication_before_ready_and_after_shutdown(
+    tmp_path: Path,
+) -> None:
+    from living_world.runtime import RuntimeService
+
+    catalog, config, _ref, inputs = reserved(tmp_path)
+    service = RuntimeService(catalog)
+    assert service.controller is None
+    controller = service.start(config, inputs, paused=True)
+    try:
+        assert service.controller is controller
+        with pytest.raises(AttributeError):
+            service.controller = None
+    finally:
+        service.shutdown()
+    assert service.controller is controller
+    assert not service._thread.is_alive()

@@ -59,10 +59,24 @@ class ASGIClient:
     def post(self, path: str) -> HTTPResponse:
         return self.request("POST", path)
 
-    def request(self, method: str, path: str) -> HTTPResponse:
-        return asyncio.run(self._request(method, path))
+    def request(
+        self,
+        method: str,
+        path: str,
+        *,
+        headers: Mapping[str, str] | None = None,
+        body: bytes = b"",
+    ) -> HTTPResponse:
+        return asyncio.run(self._request(method, path, headers=headers, body=body))
 
-    async def _request(self, method: str, path: str) -> HTTPResponse:
+    async def _request(
+        self,
+        method: str,
+        path: str,
+        *,
+        headers: Mapping[str, str] | None = None,
+        body: bytes = b"",
+    ) -> HTTPResponse:
         messages: list[Mapping[str, object]] = []
         request_sent = False
         response_complete = asyncio.Event()
@@ -73,7 +87,7 @@ class ASGIClient:
                 await response_complete.wait()
                 return {"type": "http.disconnect"}
             request_sent = True
-            return {"type": "http.request", "body": b"", "more_body": False}
+            return {"type": "http.request", "body": body, "more_body": False}
 
         async def send(message: Mapping[str, object]) -> None:
             messages.append(message)
@@ -89,10 +103,13 @@ class ASGIClient:
                 "http_version": "1.1",
                 "method": method,
                 "scheme": "http",
-                "path": path,
-                "raw_path": path.encode(),
-                "query_string": b"",
-                "headers": [],
+                "path": path.partition("?")[0],
+                "raw_path": path.partition("?")[0].encode(),
+                "query_string": path.partition("?")[2].encode(),
+                "headers": [
+                    (key.lower().encode(), value.encode("latin1"))
+                    for key, value in (headers or {}).items()
+                ],
                 "client": ("testclient", 50000),
                 "server": ("testserver", 80),
             },

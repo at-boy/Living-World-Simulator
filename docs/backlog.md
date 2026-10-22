@@ -31,8 +31,10 @@ task/merged2055/10,39examples,canonical26archives/newCLI7cases passed; integrate
 by the merge containing this entry).
 Runtime service and archived CLI are integrated. LN08a exact reusable-router/revision
 source deliverybcbff33 integrated after independent review and task/merged2087/10,
-39examples/exactacceptance. LN08b eight-path authenticated operatorAPI exactcontract
-is root-reviewed; isolated implementation next. Auth/control API, browser/serve
+39examples/exactacceptance. LN08b authenticated operatorAPI is independently reviewed after one corrected P2;
+root taskmake2105/10existing skips,39examples,separateexamples/whitespace and exact
+canonical/newCLI acceptance PASS. Task delivery ready; feature integration/repeated
+merged gates pending at owner-requested pause. Auth/control API, browser/serve
 and installed-Ollama acceptance remain upcoming.
 legacy generic/taped/raw-database CLI and injected engine/state-reference hooks must
 remain compatible. Add an explicit archive observer to the existing runner, not a

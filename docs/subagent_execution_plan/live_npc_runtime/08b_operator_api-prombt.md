@@ -5,7 +5,7 @@ task checkout. Read AGENTS.md, whole exact task and this saved prompt first; onl
 directly relevant code/tests afterwards. No handoff/backlog/roadmap/history/masterplan
 reconstruction. Root owns architecture and task/plan/scope decisions.
 
-Eight worker paths only. Keep AdminSession secrets memory-only and hidden from repr,
+Nine worker paths only, including the root correction amendment for shared inspection DTO worker dispatch. Keep AdminSession secrets memory-only and hidden from repr,
 headers-only Bearer plus exact Origin/CSRF guard, arbitrary malformed header safety,
 fixed errors/no-store and no CORS. New readonly service.controller getter verifies
 service/controller identity; status is one immutable complete publication. HTTP never
@@ -23,3 +23,8 @@ Unit temp fixtures allowed; every normal manual simulation retains its archive.
 Root independent SPEC/QUALITY review, corrections/re-review and authoritative full
 checks before any implementation commit/integration. Honor usage checkpoint promptly;
 stop before10%five-hour remaining as root directs.
+
+Root correction: read final task amendment before fixes. Shared inspection route
+handlers use sync def so FastAPI dispatches blocking DTO work off the loop. Preserve
+all routes/signatures/DTOs/errors. Add actual loopback blocked-DTO/status RED/GREEN
+regression in existing operator tests; report evidence and no unrelated changes.
