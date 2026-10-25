@@ -1,7 +1,7 @@
 # LN08b — Local authenticated operator API
 
-Status: independently reviewed and root task-validated; feature integration pending
-after owner-requested pause. Base LN08a integration c6640b5; contract52da486.
+Status: independently reviewed and integrated after task/merged root validation.
+Delivery8731bbf; base LN08a integrationc6640b5; contract52da486.
 **Goal:** authenticate local administrative reads and queue durable runtime commands
 without moving simulation ownership into HTTP handlers.
 **Architecture:** in-memory AdminSession guards a separate operator app. RuntimeService

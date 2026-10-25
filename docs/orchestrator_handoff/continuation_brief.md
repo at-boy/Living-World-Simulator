@@ -1,101 +1,35 @@
-# Continuation brief — LN08b task validated; integration pending, October 23, 2026
+# Continuation brief — LN08b integrated, October26,2026
 
 ## Current authoritative state
 
-Owner requested pause soon; pause after saving/pushing this reviewed task delivery.
-Task checkout .worktrees/live-npc-ln08b, branch codex/live-npc-ln08b-operator-api.
-LN08b delivery8731bbf is committed on the preserved task branch. Independent review soleP2 shared async DTO
-work blocked event loop; root amended task/prompt both checkouts before ninth-path
-inspection_routes correction. Actual loopback RED/GREEN and scoped re-review PASS,
-zero open findings. Focused88; root taskmake2105/10existing skips,39examples/actual
-Chrome, separateexamples/whitespace/exactcanonical26readablearchives/newCLI7cases
-including2failed-uninitialized PASS. Source unchanged after review/gates.
+Owner resumed with99%five-hourremaining; stop with headroom BEFORE10%remaining.
+LN08b delivery8731bbf independently reviewed after one correctedP2 shared inspection
+DTO/eventloop blockage. Taskmake2105/10existing deliberate skips,39examples/Chrome,
+separateexamples/whitespace/exactcanonical26readablearchives/newCLI7cases PASS.
+Repeated merged gates same2105/10/39, exact task results/readablearchives/7CLIcases.
+Source/tests exactlydelivery; only root checkpoint docs conflicted. Feature merge
+containing this brief integrates8b. Do not redispatch completed tasks/reviews/gates.
+Allbranches/checkouts preserved. Main/milestone/tag and ownerlocaledit untouched.
 
-Feature codex/live-npc-runtime remains at contract52da486 plus checkpoint docs;
-LN08b delivery8731bbf SOURCE NOT MERGED. Next ownerresume: verify usage and owner patch, merge this
-delivery, resolve root docs only and repeat full merged gates before integration
-commit/push. Do not redispatch completed implementation/review/task gates.
-All task branches/worktrees preserved; main/milestone/tag unchanged.
+Next: root exactLN08c authenticated pinned existing-inspector contract then bounded
+worker/review/gates; parent runtime control/archive page and CLIserve follow.
+LN08c readonly probe/candidate saved ln08c-inspector-probe.md; draft08c contract in
+ignoredworkspace notsourceauthority untilcommitted. ActualChrome srcdoc originprobe
+confirmed window.origin inherited, location.origin null; useeffectivewindow.origin.
+No8csourcework yet. No installedOllama acceptance passed; LN09 later. OriginalLN07
+remains incomplete until serve acceptance. Do not move protected refs.
 
-Evidence: feature .superpowers/sdd/2026-10-19-live-npc-runtime/ln08b-review-1.diff,
-ln08b-fix-1.diff,ln08b-reviewed-final.diff,ln08b-review-initial.md,ln08b-review-final.md,
-ln08b-task-make.log,ln08b-task-examples.log,ln08b-task-matrix,ln08b-task-cli.
-Every normal acceptance attempt retained. Use exact8btask/prombt/reviewedreport.
-LN08c inspector probe is saved ln08c-inspector-probe.md; no8cimplementation contract
-or source dispatched. Root must specify credential/pinned-prefix/focus protocol
-before browser work. Then CLIserve and LN09actualOllama/operatoracceptance.
-OriginalLN07 remains incomplete until serve acceptance. No real-model gate passed.
+## Current evidence
 
-Usage stop with headroom BEFORE10%five-hourremaining, no reset/automaticresume.
-Feature ownerlocalplan patch SHA294b20313ae2de248301fa20bbb4f9c312d51efa4851a434466f98a588dd93e6
-remains untouched; never stage/restore/reset/fix that masterplan edit.
-
-## Prior compressed context
-
-# Continuation brief — LN08a integrated; LN08b authorized, October 23, 2026
-
-## Current authoritative state
-
-LN07e deliveryf9281f9/integrationbca7e0b complete. LN08a deliverybcbff33 independently
-reviewed afterone correctedP2; task and mergedmake2087/10existing skips,39examples/
-actualChrome,separateexamples/whitespace/exactcanonical26readablearchives/newCLI7cases
-PASS. Clean featuremerge contains this brief; source exactdelivery unchanged after
-review/gates. Do not redispatch completed implementation/review/task gates.
-Allbranches/worktrees/owner-localedit preserved; protected refs unchanged.
-
-LN08a integrationc6640b5 pushed. Exact08b_operator_api task/prompt/report now
-root-reviewed and committed; isolated worker/review/fullgates next. Eight worker paths
-bind auth/Origin/CSRF, immutable status, serviceassociation, ownerqueue/receipts,
-readonly archive/pinned routes, lifespan cleanup and shared ASGIClient extension.
-Browserassets/CLIserve remain later8stages, realOllama/operatoracceptance LN09.
-OriginalLN07 incomplete until finalserve acceptance. Stop withheadroom BEFORE10%
-five-hourremaining; no reset.
-
-## Prior context
-
-# Continuation brief — LN07e integrated; LN08a authorized, October 23, 2026
-
-## Current authoritative state
-
-Owner resumed with99%five-hourremaining. Reviewed LN07e deliveryf9281f9 is integrated
-by the merge containing this brief. Root repeated mergedmake2055/10existing skips,
-39examples,separateexamples/whitespace, exact canonicalmatrix26readablearchives and
-newCLI7retainedcases including2failed/uninitialized. Source exactdelivery unchanged
-after review/gates; only root-owned docs conflicted. Do not redispatch completed
-implementation/review/task gates. All branches/worktrees/owner-local edit preserved.
-
-LN07e integrationbca7e0b is pushed. LN08a exact seven-path task/prompt/report
-08a_revision_inspection are root-reviewed; isolated implementation next.
-Next: exact bounded LN08a reusable GET router/detached revision source, then local
-auth/operator API, browser assets and CLI serve. LN09 actual installed-Ollama/operator
-acceptance follows. Original LN07 incomplete until actual serve acceptance in LN08.
-No browser controls or real-model acceptance claimed. Usage guard remains stop with
-headroom BEFORE10%five-hourremaining; no reset authorized.
-
-## Evidence and exact artifacts
-
-Read exact docs/subagent_execution_plan/live_npc_runtime/07e_archived_cli.md,
-matching -prombt.md and reviewed -report.md. Feature copies include checkpoint state;
-task checkout contains delivered source and full task evidence. Stable ignored SDD:
-`.worktrees/live-npc-runtime/.superpowers/sdd/2026-10-19-live-npc-runtime`.
-Ledger progress.md; ln07e-review-1.diff, ln07e-fix-1.diff, initial/final findings;
-ln07e-task-make.log, ln07e-task-examples.log, ln07e-task-matrix/results.json;
-ln07e-task-cli-recheck/results.json/source-before.json/invocations.jsonl. Initial
-ln07e-task-cli evidence remains preserved. No pending uncommitted task source.
-
-Reusable helpers in that same workspace:
-- recorded_matrix.py --python ABSVENV/bin/python --project ABSFEATURE --output NEWDIR
-- archived_cli_acceptance.py --project ABSFEATURE --output NEWDIR (run using ABSVENV).
-Helpers retain stdout/stderr/invocations, source hashes and every normal archive.
-Canonical helper uses XDG_STATE_HOME=output/state, archives state/living-world/runs.
-NewCLI helper uses output/runs. Never delete acceptance artifacts/failed attempts.
-
-LN08 narrow read-only probe completed; ln08-inspection-probe.md and
-ln08-root-preflight.md are root investigation, NOT implementation contracts.
-Reuse GET inspection router/default URLs; detached exact retained-scenario snapshot
-inspection, no runner/preparation/provider;8entry cache and archive fallback. Root
-must synthesize final auth/Origin/CSRF, UI credential memory and serve lifecycle
-contracts, preserve browser compatibility and complete7serve. LN08a exact contract now authored and root-reviewed; no source at contract commit.
+Exact08b_operator_api task/prombt/reviewedreport are authoritative compressed record.
+Stableignoredworkspace .worktrees/live-npc-runtime/.superpowers/sdd/2026-10-19-live-npc-runtime:
+progress.md; ln08b-review-1.diff/fix-1.diff/reviewed-final.diff; review-initial/final.md;
+ln08b-task/merged-make.log and -examples.log, -matrix/results.json, -cli/results.json.
+Everynormalacceptance attempt retained;26canonicalarchives and7newCLIcases per tree.
+Reusable recorded_matrix.py --python ABSVENV/bin/python --project ABSFEATURE --output
+NEWDIR; archived_cli_acceptance.py --project ABSFEATURE --output NEWDIR viaABSVENV.
+No deletes. All prior task source/review/fullgates compressed into reviewed reports
+and Gitmerges; do not reconstruct milestonehistory.
 
 ## Authority and invariants
 

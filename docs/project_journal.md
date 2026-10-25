@@ -1,5 +1,13 @@
 # Living World Simulator – Project Journal
 
+## LN08b feature integration — October26,2026
+
+Delivery8731bbf merged with exact reviewed source; only two root-owned checkpoint
+docs conflicted. Repeated mergedmake2105/10existing skips,39examples/actualChrome,
+separateexamples/whitespace,exactcanonical26readablearchives/newCLI7retainedcases
+PASS. Ownerpatch/protectedrefs unchanged; branches/checkouts preserved. Authenticated
+fixed-checkpoint inspector, parent controls and CLIserve remain bounded followups.
+
 ## LN08b reviewed task delivery and owner pause — October 23, 2026
 
 Authenticated local operator API, durable owner-queue commands, exact pinned readonly

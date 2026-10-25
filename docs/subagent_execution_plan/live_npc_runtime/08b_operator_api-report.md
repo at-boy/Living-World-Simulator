@@ -1,7 +1,7 @@
 # LN08b local operator API report
 
-Status: independently reviewed and root task-validated delivery; feature integration
-and repeated merged gates remain pending at the owner-requested pause.
+Status: independently reviewed; task and merged root validation PASS. Delivery8731bbf
+is integrated by the feature merge containing this report.
 
 ## Delivered behavior and ownership
 
@@ -154,3 +154,18 @@ Owner requested pause soon; no next task started, no main/milestone/tag movement
 
 Root pause checkpoint: delivery8731bbf committed and pushed on preserved taskbranch;
 feature source is unmerged. Resume with integration/repeated merged gates only.
+
+## Root feature integration — October26,2026
+
+Owner resumed. Live local/remote branches matched delivery8731bbf and checkpoint0ac4fbd;
+protected refs and exact ownerpatch verified unchanged. Merge source/tests exactly
+match delivery; only two root-owned checkpoint documents conflicted and were resolved.
+Repeated merged make PASS2105tests/10existing deliberate skips,224.91s, actual Chrome
+and39examples. Separate make examples after make closed PASS39; git diff --check and
+--cached --check PASS; git diff8731bbf --exit-code --src tests PASS. Canonical matrix
+exactly equals task results;26retained archive latest checkpoints opened readonly.
+NewCLI retained7cases including2failed-uninitialized PASS, exact worlds/cursors and
+unchanged source bytes. Evidence ln08b-merged-make.log,ln08b-merged-examples.log,
+ln08b-merged-matrix and ln08b-merged-cli under same ignored plan workspace.
+All branches/checkouts preserved; feature owner edit untouched. LN08c authenticated
+inspector seam follows, then parent control page/CLIserve. No real-model claim.

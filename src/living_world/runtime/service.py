@@ -108,6 +108,12 @@ class RuntimeService:
     def catalog(self) -> RunCatalog:
         return self._catalog
 
+    @property
+    def controller(self) -> RunController | None:
+        """Return the current publication association without acquiring ownership."""
+        with self._lock:
+            return self._controller
+
     def _launch(
         self, mode: str, args: tuple[object, ...], paused: bool
     ) -> RunController:

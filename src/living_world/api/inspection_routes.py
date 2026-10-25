@@ -15,19 +15,19 @@ def create_inspection_router(
     dependency = Depends(resolve_inspector)
 
     @router.get("/world/tick")
-    async def world_tick(
+    def world_tick(
         inspector: WorldInspector = dependency,
     ) -> dict[str, int]:
         return {"tick": inspector.tick()}
 
     @router.get("/world/replay")
-    async def world_replay(
+    def world_replay(
         inspector: WorldInspector = dependency,
     ) -> Mapping[str, object]:
         return inspector.replay()
 
     @router.get("/world/run")
-    async def world_run(
+    def world_run(
         inspector: WorldInspector = dependency,
     ) -> Mapping[str, object]:
         snapshot = inspector.run_metadata()
@@ -36,19 +36,19 @@ def create_inspection_router(
         return snapshot
 
     @router.get("/world")
-    async def world_summary(
+    def world_summary(
         inspector: WorldInspector = dependency,
     ) -> Mapping[str, object]:
         return inspector.world_summary()
 
     @router.get("/world/entities")
-    async def entities(
+    def entities(
         inspector: WorldInspector = dependency,
     ) -> tuple[Mapping[str, object], ...]:
         return inspector.entities()
 
     @router.get("/world/entities/{entity_id}")
-    async def entity(
+    def entity(
         entity_id: str, inspector: WorldInspector = dependency
     ) -> Mapping[str, object]:
         snapshot = inspector.entity(entity_id)
@@ -57,43 +57,43 @@ def create_inspection_router(
         return snapshot
 
     @router.get("/world/definitions")
-    async def definitions(
+    def definitions(
         inspector: WorldInspector = dependency,
     ) -> tuple[Mapping[str, object], ...]:
         return inspector.definitions()
 
     @router.get("/world/resources")
-    async def resources(
+    def resources(
         inspector: WorldInspector = dependency,
     ) -> tuple[Mapping[str, object], ...]:
         return inspector.resources()
 
     @router.get("/world/relationships")
-    async def relationships(
+    def relationships(
         inspector: WorldInspector = dependency,
     ) -> tuple[Mapping[str, object], ...]:
         return inspector.relationships()
 
     @router.get("/world/placements")
-    async def world_placements(
+    def world_placements(
         inspector: WorldInspector = dependency,
     ) -> tuple[Mapping[str, object], ...]:
         return inspector.placements()
 
     @router.get("/world/external-references")
-    async def external_world_references(
+    def external_world_references(
         inspector: WorldInspector = dependency,
     ) -> tuple[Mapping[str, object], ...]:
         return inspector.external_world_references()
 
     @router.get("/world/external-dispatches")
-    async def external_dispatches(
+    def external_dispatches(
         inspector: WorldInspector = dependency,
     ) -> tuple[Mapping[str, object], ...]:
         return inspector.external_dispatches()
 
     @router.get("/world/goals")
-    async def goals(
+    def goals(
         inspector: WorldInspector = dependency,
     ) -> tuple[Mapping[str, object], ...]:
         return inspector.goals()
@@ -105,67 +105,67 @@ def create_inspection_router(
         return inspector.settlement_stages()
 
     @router.get("/world/needs")
-    async def needs(
+    def needs(
         inspector: WorldInspector = dependency,
     ) -> tuple[Mapping[str, object], ...]:
         return inspector.needs()
 
     @router.get("/world/consequences")
-    async def consequences(
+    def consequences(
         inspector: WorldInspector = dependency,
     ) -> Mapping[str, object]:
         return inspector.consequences()
 
     @router.get("/world/work-orders")
-    async def work_orders(
+    def work_orders(
         inspector: WorldInspector = dependency,
     ) -> tuple[Mapping[str, object], ...]:
         return inspector.work_orders()
 
     @router.get("/world/events")
-    async def events(
+    def events(
         inspector: WorldInspector = dependency,
     ) -> tuple[Mapping[str, object], ...]:
         return inspector.events()
 
     @router.get("/world/npcs")
-    async def npcs(
+    def npcs(
         inspector: WorldInspector = dependency,
     ) -> tuple[Mapping[str, object], ...]:
         return inspector.npcs()
 
     @router.get("/world/observations")
-    async def observations(
+    def observations(
         inspector: WorldInspector = dependency,
     ) -> tuple[Mapping[str, object], ...]:
         return inspector.observations()
 
     @router.get("/world/memories")
-    async def memories(
+    def memories(
         inspector: WorldInspector = dependency,
     ) -> tuple[Mapping[str, object], ...]:
         return inspector.memories()
 
     @router.get("/world/knowledge")
-    async def knowledge(
+    def knowledge(
         inspector: WorldInspector = dependency,
     ) -> tuple[Mapping[str, object], ...]:
         return inspector.knowledge()
 
     @router.get("/world/beliefs")
-    async def beliefs(
+    def beliefs(
         inspector: WorldInspector = dependency,
     ) -> tuple[Mapping[str, object], ...]:
         return inspector.beliefs()
 
     @router.get("/world/experiences")
-    async def experiences(
+    def experiences(
         inspector: WorldInspector = dependency,
     ) -> tuple[Mapping[str, object], ...]:
         return inspector.experiences()
 
     @router.get("/world/cognitive-history/{holder_id}")
-    async def cognitive_history(
+    def cognitive_history(
         holder_id: str, inspector: WorldInspector = dependency
     ) -> Mapping[str, object]:
         snapshot = inspector.cognitive_history(holder_id)

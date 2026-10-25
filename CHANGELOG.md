@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Integrate the reviewed operator API after repeated full/browser and retained
+  recorded/resume/fork validation; preserve all task branches and archives.
+
 - Add reviewed authenticated operator status/commands and read-only archive APIs;
   dispatch inspection work off the request loop. Task validated; integration pending.
 
