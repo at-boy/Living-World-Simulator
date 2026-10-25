@@ -112,3 +112,53 @@ existing canonical snapshot through a read-only SQLite repository and serves it
 at loopback. The optional `server` extra supplies uvicorn. The snapshot does not
 advance or refresh automatically from another running process; all inspector
 routes continue to be GET-only. See [canonical founders](canonical_founders.md).
+
+## Authenticated pinned checkpoints
+
+The local operator application serves protected inspector HTML at
+`/live/checkpoints/{revision}/inspector` and
+`/archives/{attempt_id}/checkpoints/{revision}/inspector`. Authorization and
+checkpoint validation precede HTML delivery. The only public inspector routes
+are the existing packaged CSS and JavaScript assets; every response uses
+`Cache-Control: no-store`. Query parameters never supply credentials or sources.
+The standalone inspection application's `/inspector` keeps its original behavior.
+
+A trusted same-origin parent must fetch the protected HTML with its Bearer
+header and assign the result to an iframe's `srcdoc`. This stage supplies the
+child seam; the runtime parent and control page are separate work. The child
+waits without requesting world data until connected. It sends exactly
+`{type: 'living-world-inspector-ready'}` to its parent using the inherited
+effective `window.origin` as target origin. For `srcdoc`, `location.origin`
+can be `null` and must not be used for this check.
+
+The parent must accept readiness only from its expected iframe's
+`contentWindow` and exact origin, then send
+`{type: 'living-world-inspector-connect', token: '<session token>'}` to that
+frame with that exact target origin. The token is the locally issued 43-character
+URL-safe session secret. The child accepts one connection, keeps its Bearer only
+in memory, and attaches it to GET requests. No messages reflect the token.
+
+A connected live frame accepts
+`{type: 'living-world-inspector-pin', prefix: '/live/checkpoints/1'}` with a
+canonical nonnegative safe-integer revision. Historical frames remain fixed;
+their prefix uses the existing canonical 32-character lowercase UUID4 hex
+attempt identity. Each refresh captures one prefix, authorization header and
+abort signal for all panels. New pins and navigation cancel prior requests,
+and obsolete responses cannot update the view or its loading state.
+Background pin changes preserve selected views, entity/event references, return
+targets, History text and semantic keyboard focus/caret when that target remains
+and the user has not moved focus. Source labels and spatial help describe the
+pinned checkpoint; standalone independent-snapshot guidance remains unchanged.
+
+`{type: 'living-world-inspector-clear'}` terminates the frame's connection,
+invalidates pending work and clears displayed data. It cannot reconnect; the
+parent should destroy the frame on logout. All messages require the exact
+parent source, exact origin, a plain object and the exact documented keys.
+Foreign senders, extra keys, malformed sources and repeated connections are
+ignored. Neither credentials nor arbitrary URLs are accepted from query strings.
+The child has no simulation controls and never issues mutation requests.
+
+`tests/test_runtime_inspector_browser.py` uses actual uvicorn loopback HTTP and
+installed Chrome, a test-only trusted parent, authenticated HTML fetches and
+real checkpoint DTO routes. Its protocol, focus, race and archive-read-only
+checks supplement the unchanged standalone browser regressions.

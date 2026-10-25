@@ -1,7 +1,7 @@
 # LN08c — Authenticated pinned inspector integration
 
-Status: authorized bounded continuation of approved LN08 after reviewed integration
-25fb5a7; root self-review complete. Isolated implementation follows contract commit.
+Status: independently reviewed and root task-validated; feature integration follows.
+Base25fb5a7; exact contractdeefc57; approved LN08 bounded inspector stage.
 **Goal:** embed the existing inspector against authenticated immutable checkpoints,
 preserving standalone behavior and navigation across live revision updates.
 **Architecture:** operator app serves validated protected inspector HTML and public
@@ -59,7 +59,9 @@ fetches, no token/messages/config from URL, normal focus/nav/errors. Reject part
 or malformed bootstrap fail closed (no data requests). Embedded requires BOTH valid
 attributes, window.parent!==window, same-origin http(s) inherited effective window.origin (not location.origin).
 Validate closed prefix grammar: live /live/checkpoints/<canonical nonnegative safe
-integer>; historical /archives/<lowercase UUID4>/checkpoints/<canonical revision>.
+integer>; historical /archives/<canonical UUID4 hex>/checkpoints/<canonical revision>.
+UUID4 is existing archives.model.identifier format: exactly32 lowercase hex digits,
+version nibble4 and RFC variant nibble8/9/a/b, no hyphens (parsed.hex must equal input).
 No URL, percent escape, query, fragment, protocol-relative or trailing slash forms.
 Historical pins remain fixed forever; live updates accept live prefixes only.
 
@@ -112,34 +114,34 @@ is retained. Child is GET-only, has no live controls and never submits commands.
 
 ## Review focus and TDD checks
 
-- [ ] RED protected HTML/source bootstrap/asset behavior via ASGIClient, then GREEN:
+- [x] RED protected HTML/source bootstrap/asset behavior via ASGIClient, then GREEN:
   auth before source access; malformed/missing/corrupt revisions404/409; safe HTML
   attributes only, query ignored, no credentials in HTML/assets/JSON, no-store.
-- [ ] Actual uvicorn plus Chrome trusted-parent harness exercises real authenticated
+- [x] Actual uvicorn plus Chrome trusted-parent harness exercises real authenticated
   HTML fetch/srcdoc handshake and real pinned DTO routes (no route.fulfill replacement
   for acceptance). Missing connection causes zero worldGET; only exact parent/origin
   and closed messages accepted; malformed pins never fetch; credentials absent from
   URL/DOM/localStorage/sessionStorage; every dataGET has Bearer. Test foreign sameorigin
   sibling source and foreignorigin messages (synthetic delivery acceptable negative
   probe), invalid bootstrap, repeatedconnect, clear while requests pending.
-- [ ] Capture actual data URLs for multi-panel view and pin updates; all requests in
+- [x] Capture actual data URLs for multi-panel view and pin updates; all requests in
   each refresh share one revision. Delayed old-pin response can't change current DOM/
   status/busy; newest data wins. Safe explicit controlled response delay may wrap an
   actual route response; no fabricated DTO acceptance.
-- [ ] Background pin updates retain active entity/event/return target, History filter
+- [x] Background pin updates retain active entity/event/return target, History filter
   and keyboard focus/caret; navigation during pending refresh wins. Literal malicious
   scenario/entity/event prose renders without executable nodes. Narrowviewport and
   keyboard access remain functional.
-- [ ] Historical frame ignores pin updates and is GET-only; bytes/mtime/typedentries
+- [x] Historical frame ignores pin updates and is GET-only; bytes/mtime/typedentries
   unchanged before/after browsing and failures; no runner/provider/step calls.
-- [ ] Existing standalone inspection API/UI/browser tests pass unchanged, including
+- [x] Existing standalone inspection API/UI/browser tests pass unchanged, including
   original focus/stale/spatial/missingentity behavior. Do not weaken old assertions.
-- [ ] Focused command: PYTHONPATH=src TASK_PY -m pytest
+- [x] Focused command: PYTHONPATH=src TASK_PY -m pytest
   tests/test_runtime_inspector_browser.py tests/test_runtime_operator_api.py
   tests/test_inspection_api.py tests/test_world_inspector_ui.py
   tests/test_world_inspector_browser.py -q. Use smallest namedcase during RED/fixes.
   TASK_PY=/home/at-boy/Projects/codex/Living-World-Simulator/.worktrees/task24/.venv/bin/python
-- [ ] Scoped Ruff/Black for2Python paths, whitespace/self-review/truthful ownreport.
+- [x] Scoped Ruff/Black for2Python paths, whitespace/self-review/truthful ownreport.
   Record command/result/count/warnings, no successful-output dumps. Root independent
   SPEC/QUALITY review then full task/merged make/separateexamples/whitespace/retained
   canonical/newCLI acceptance before implementation commit and integration.

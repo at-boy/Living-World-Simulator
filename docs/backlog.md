@@ -34,8 +34,8 @@ source deliverybcbff33 integrated after independent review and task/merged2087/1
 39examples/exactacceptance. LN08b authenticated operatorAPI is independently reviewed after one corrected P2;
 root taskmake2105/10existing skips,39examples,separateexamples/whitespace and exact
 canonical/newCLI acceptance PASS. Delivery8731bbf is integrated by the merge containing this entry after repeated
-merged2105/10/39examples/exactacceptance PASS. Auth/control API is integrated. Exact6path LN08c authenticated inspector contract
-is root-reviewed; parent control page, CLIserve and installed-Ollama acceptance
+merged2105/10/39examples/exactacceptance PASS. Auth/control API is integrated. LN08c authenticated inspector is independently reviewed and task-validated
+(2115/10existing skips,39examples/exactarchiveacceptance); integration follows; parent control page, CLIserve and installed-Ollama acceptance
 remain upcoming.
 legacy generic/taped/raw-database CLI and injected engine/state-reference hooks must
 remain compatible. Add an explicit archive observer to the existing runner, not a

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add reviewed authenticated fixed-checkpoint inspector embedding, preserving
+  standalone behavior, navigation, keyboard focus and read-only historical views.
+
 - Define authenticated fixed-checkpoint inspector embedding with strict parent
   messaging and preserved live navigation; runtime controls remain the next stage.
 
