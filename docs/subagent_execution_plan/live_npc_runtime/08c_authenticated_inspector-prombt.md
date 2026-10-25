@@ -21,3 +21,6 @@ checkout writes. Important missing producer/architecture ->root before choosing 
 expanding. Unittemp fixtures allowed; every normal manual run archive retained.
 Root independent review/fix/re-review/full task+merged gates before any sourcecommit.
 Honor root usage guard; checkpoint promptly before10%five-hourremaining.
+
+Root identifier clarification: historical attemptID is existing32lowercase UUID4
+hex withversion4/RFCvariant, nohyphens; match archives.model.identifier exactly.

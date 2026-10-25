@@ -91,10 +91,21 @@
     events: list(v => fields(v, {id: str, tick: integer, kind: str, subject_id: nullableString, attributes: object}))
   };
   const prose = {missing: "Snapshot not found.", unavailable: "Snapshot unavailable. Try Refresh.", spatialRange: "Unsupported spatial numeric range.", malformed: "Malformed or unsupported snapshot."};
-  async function fetchSnapshot(key, entityId = null) {
+  const bootstrap = Object.freeze({...document.documentElement.dataset});
+  const embedded = Object.hasOwn(bootstrap, "inspectionPrefix") || Object.hasOwn(bootstrap, "inspectionKind");
+  const livePrefix = value => typeof value === "string" && /^\/live\/checkpoints\/(0|[1-9][0-9]*)$/.test(value) && Number.isSafeInteger(Number(value.split("/").at(-1)));
+  const historicalPrefix = value => typeof value === "string" && /^\/archives\/[0-9a-f]{12}4[0-9a-f]{3}[89ab][0-9a-f]{15}\/checkpoints\/(0|[1-9][0-9]*)$/.test(value) && Number.isSafeInteger(Number(value.split("/").at(-1)));
+  const validBootstrap = embedded && window.parent !== window && /^https?:\/\//.test(window.origin) &&
+    ((bootstrap.inspectionKind === "live" && livePrefix(bootstrap.inspectionPrefix)) ||
+     (bootstrap.inspectionKind === "historical" && historicalPrefix(bootstrap.inspectionPrefix)));
+  let prefix = validBootstrap ? bootstrap.inspectionPrefix : "";
+  let credential = null, connected = false, terminated = false, pending = null, historyFilter = "";
+  let focusVersion = 0;
+  document.addEventListener("focusin", () => { focusVersion++; });
+  async function fetchSnapshot(key, entityId, request) {
     if (!Object.hasOwn(routes, key) || (key === "entity" && !str(entityId))) throw new Error("malformed");
     let response;
-    try { response = await fetch(routes[key] + (key === "entity" ? encodeURIComponent(entityId) : ""), {method: "GET", credentials: "same-origin", redirect: "error"}); }
+    try { response = await fetch(request.prefix + routes[key] + (key === "entity" ? encodeURIComponent(entityId) : ""), {method: "GET", credentials: "same-origin", redirect: "error", cache: "no-store", headers: request.headers, signal: request.signal}); }
     catch { throw new Error("unavailable"); }
     if (response.status === 404) throw new Error("missing");
     if (!response.ok) throw new Error("unavailable");
@@ -111,7 +122,7 @@
   let current = {view: "Overview", entityId: null, eventId: null};
   let names = new Map();
   const node = (tag, text = "") => { const element = document.createElement(tag); element.textContent = text; return element; };
-  function button(label, action) { const result = node("button", label); result.type = "button"; result.addEventListener("click", action); return result; }
+  function button(label, action, key = label) { const result = node("button", label); result.dataset.focusKey = key; result.type = "button"; result.addEventListener("click", action); return result; }
   const idOf = value => value.id ?? value.key ?? value.definition?.id ?? value.program?.settlement_id ?? value.policy?.id ?? "";
   const compare = (a, b) => a < b ? -1 : a > b ? 1 : 0;
   const ordered = values => [...values].sort((a, b) => compare(idOf(a), idOf(b)));
@@ -139,7 +150,7 @@
     for (const value of ordered(values)) {
       const article = node("article");
       article.append(node("h4", String(idOf(value))));
-      if (entityButtons) article.append(button(value.name, () => openEntityDetail(value.id)));
+      if (entityButtons) article.append(button(value.name, () => openEntityDetail(value.id), `entity:${value.id}`));
       if (label === "Events") { article.dataset.eventId = value.id; if (eventId === value.id) article.classList.add("selected"); }
       article.append(renderValue(value)); records.append(article);
     }
@@ -176,7 +187,7 @@
       for (const p of placed) {
         const g = p.geometry, e = entities.get(p.entity_id);
         const name = e.name;
-        const mark = svgnode("g", {"data-entity-id": e.id, tabindex: "0", role: "button", "aria-label": `Inspect ${name} (${e.id})`, class: "spatial-mark"});
+        const mark = svgnode("g", {"data-entity-id": e.id, "data-focus-key": `spatial:${e.id}`, tabindex: "0", role: "button", "aria-label": `Inspect ${name} (${e.id})`, class: "spatial-mark"});
         const activate = () => openEntityDetail(e.id, "Spatial");
         mark.addEventListener("click", activate);
         mark.addEventListener("keydown", event => { if (["Enter", " "].includes(event.key)) { event.preventDefault(); activate(); } });
@@ -185,12 +196,12 @@
         svg.append(mark);
       }
     }
-    records.append(node("p", "Reported coordinates: +x east/right; +y north/up. Endpoints are separate snapshots."));
+    records.append(node("p", `Reported coordinates: +x east/right; +y north/up. ${embedded ? "All panels use this pinned checkpoint." : "Endpoints are separate snapshots."}`));
     records.append(svg || node("p", "No placed geometry reported."));
     function entry(p, missing = false) {
       const e = entities.get(p.entity_id), article = node("article");
       article.dataset.entityId = e.id;
-      article.append(button(e.name, () => openEntityDetail(e.id, "Spatial")));
+      article.append(button(e.name, () => openEntityDetail(e.id, "Spatial"), `entity:${e.id}`));
       article.append(node("p", missing ? "No placement record" : p.geometry === null ? "Unplaced" : "Placed"));
       article.append(renderValue(missing ? {entity_id: e.id, created_tick: e.created_tick, destroyed_tick: e.destroyed_tick} : {...p, created_tick: e.created_tick, destroyed_tick: e.destroyed_tick}));
       records.append(article);
@@ -217,7 +228,7 @@
   };
   function renderHistory(events) {
     const label = node("label", "Filter history"); label.htmlFor = "history-filter";
-    const input = node("input"); input.id = "history-filter"; input.type = "search";
+    const input = node("input"); input.id = "history-filter"; input.type = "search"; input.dataset.focusKey = "history-filter"; input.value = embedded ? historyFilter : "";
     const container = node("div"); records.append(label, input, container);
     const draw = () => {
       container.replaceChildren();
@@ -226,7 +237,7 @@
       for (const event of selected) { const article = node("article"); article.dataset.eventId = event.id; article.append(node("h3", `${event.tick} · ${event.id}`), renderValue(event)); if (event.id === current.eventId) article.classList.add("selected"); container.append(article); }
     };
     if (current.eventId) records.append(button("Show all history", () => show("History")));
-    input.addEventListener("input", draw); draw();
+    input.addEventListener("input", () => { if (embedded) historyFilter = input.value; draw(); }); draw();
   }
   // Entity entry point accepts only exact fetched references.
   function openEntityDetail(entityId, returnView = "Entities") { return show("Entity detail", entityId, null, true, returnView); }
@@ -235,18 +246,29 @@
     if (object(value)) return Object.entries(value).some(([key, item]) => references(item, entityId, key));
     return value === entityId && ["owner_id", "source_id", "target_id", "subject_id", "source_entity_id", "settlement_id", "location_id", "labor_entity_ids", "entity_id", "capability_id"].includes(field);
   }
-  async function show(view, entityId = null, eventId = null, focus = true, returnView = "Entities") {
+  async function show(view, entityId = null, eventId = null, focus = true, returnView = "Entities", background = false) {
+    if (embedded && (!validBootstrap || !connected || terminated)) return;
+    if (pending) pending.abort();
+    pending = new AbortController();
+    const request = Object.freeze({prefix, headers: credential === null ? {} : {Authorization: `Bearer ${credential}`}, signal: pending.signal});
+    const originalFocus = document.activeElement;
+    const originalFocusVersion = focusVersion;
+    const focusKey = originalFocus?.dataset?.focusKey;
     const token = ++generation; current = {view, entityId, eventId, returnView};
     document.querySelector("#tick").textContent = "Reported tick: unavailable";
-    title.textContent = view; records.replaceChildren(); status.textContent = "Loading snapshots…"; content.setAttribute("aria-busy", "true");
+    title.textContent = view; if (!background) records.replaceChildren(); status.textContent = "Loading snapshots…"; content.setAttribute("aria-busy", "true");
     document.querySelectorAll("#navigation button").forEach(b => { if (b.textContent === view || (view === "Entity detail" && b.textContent === returnView)) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
     if (focus) title.focus();
-    if (entityId !== null) records.append(button(`Back to ${returnView}`, () => show(returnView)));
+    if (entityId !== null && !background) records.append(button(`Back to ${returnView}`, () => show(returnView)));
     try {
       const sources = entityId === null ? views[view].sources : ["entity", "relationships", "needs", "goals", "work", "dispatches", "stages", "events", "consequences"];
       const keys = [...new Set(["world", ...sources])];
-      const values = await Promise.all(keys.map(async key => { try { return await fetchSnapshot(key, entityId); } catch (error) { if (key === "run" && error.message === "missing") return null; throw error; } }));
+      const values = await Promise.all(keys.map(async key => { try { return await fetchSnapshot(key, entityId, request); } catch (error) { if (key === "run" && error.message === "missing") return null; throw error; } }));
       if (token !== generation) return;
+      const restoreFocus = background && focusVersion === originalFocusVersion && document.activeElement === originalFocus;
+      const selection = restoreFocus && originalFocus instanceof HTMLInputElement ? [originalFocus.selectionStart, originalFocus.selectionEnd, originalFocus.selectionDirection] : null;
+      records.replaceChildren();
+      if (entityId !== null) records.append(button(`Back to ${returnView}`, () => show(returnView)));
       const data = Object.fromEntries(keys.map((key, index) => [key, values[index]]));
       document.querySelector("#tick").textContent = `Reported tick: ${data.world.tick}`;
       names = new Map((data.entities || []).map(e => [e.id, e.name]));
@@ -260,6 +282,10 @@
         }
       }
       status.textContent = "Snapshots loaded.";
+      if (restoreFocus && focusKey) {
+        const target = [...document.querySelectorAll("[data-focus-key]")].find(element => element.dataset.focusKey === focusKey);
+        if (target) { target.focus(); if (selection && target instanceof HTMLInputElement) target.setSelectionRange(...selection); }
+      }
     } catch (error) {
       if (token !== generation) return;
       records.replaceChildren(); if (entityId !== null) records.append(button(`Back to ${returnView}`, () => show(returnView)));
@@ -268,5 +294,33 @@
   }
   for (const view of Object.keys(views)) document.querySelector("#navigation").append(button(view, () => show(view)));
   document.querySelector("#refresh").addEventListener("click", () => show(current.view, current.entityId, current.eventId, true, current.returnView));
-  show("Overview", null, null, false);
+  document.querySelector("#refresh").dataset.focusKey = "refresh";
+  if (!embedded) show("Overview", null, null, false);
+  else {
+    status.textContent = validBootstrap ? "Waiting for operator connection." : "Snapshot unavailable. Try Refresh.";
+    if (validBootstrap) {
+      const label = document.querySelector("#snapshot-source");
+      const updateLabel = () => { label.textContent = `${bootstrap.inspectionKind === "live" ? "Live checkpoint" : "Historical checkpoint"} · revision ${prefix.split("/").at(-1)}`; };
+      updateLabel();
+      window.addEventListener("message", event => {
+        if (terminated || event.source !== window.parent || event.origin !== window.origin) return;
+        const value = event.data;
+        if (!object(value) || ![Object.prototype, null].includes(Object.getPrototypeOf(value))) return;
+        const exact = keys => Object.keys(value).length === keys.length && keys.every(key => Object.hasOwn(value, key));
+        if (value.type === "living-world-inspector-clear" && exact(["type"])) {
+          terminated = true; connected = false; credential = null; prefix = ""; historyFilter = ""; names.clear(); current = {view: "Overview", entityId: null, eventId: null};
+          ++generation; if (pending) pending.abort(); pending = null;
+          records.replaceChildren(); title.textContent = "World Inspector"; status.textContent = "Operator connection cleared."; label.textContent = "";
+          document.querySelector("#tick").textContent = "Reported tick: unavailable";
+          document.querySelectorAll("[aria-current]").forEach(element => element.removeAttribute("aria-current"));
+          content.setAttribute("aria-busy", "false");
+        } else if (value.type === "living-world-inspector-connect" && exact(["type", "token"]) && !connected && typeof value.token === "string" && /^[A-Za-z0-9_-]{43}$/.test(value.token)) {
+          credential = value.token; connected = true; show("Overview", null, null, false);
+        } else if (value.type === "living-world-inspector-pin" && exact(["type", "prefix"]) && connected && bootstrap.inspectionKind === "live" && livePrefix(value.prefix) && value.prefix !== prefix) {
+          prefix = value.prefix; updateLabel(); show(current.view, current.entityId, current.eventId, false, current.returnView, true);
+        }
+      });
+      window.parent.postMessage({type: "living-world-inspector-ready"}, window.origin);
+    }
+  }
 })();

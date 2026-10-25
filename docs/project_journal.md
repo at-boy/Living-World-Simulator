@@ -1,5 +1,22 @@
 # Living World Simulator – Project Journal
 
+## LN08c feature integration — October26,2026
+
+Deliveryc3a5b69 cleanly merged, exact reviewed source unchanged. Root repeatedmake
+2115/10existing skips,39examples/Chrome,separateexamples/whitespace,exactcanonical
+26readablearchives/newCLI7retainedcasesPASS. Duplicate rootcontractclarifications
+backedup/matcheddelivery before restore; owneredit/protectedrefs/branches preserved.
+Parentruntimepage andCLIserve next; realinstalledOllama acceptance stillpending.
+
+## LN08c reviewed inspector task delivery — October26,2026
+
+Protected HTML and allowlisted assets reuse reviewed source/auth; strict memory-only
+parent protocol pins coherent multi-panel GETs. Live updates preserve navigation/
+filter/caret/focus, history remains fixed and readonly. Independent SPEC/QUALITYPASS
+NO SUBSTANTIVE FINDINGS. Focused120; root taskmake2115/10existing skips,39examples/
+actualChrome,separateexamples/whitespace/exactcanonical26archives/newCLI7casesPASS.
+Source unchanged after review. Feature integration/repeated merged gates follow.
+
 ## LN08c authenticated inspector contract — October26,2026
 
 LN08b integration25fb5a7 passed repeated2105/10/39example/browser/archive gates. Root

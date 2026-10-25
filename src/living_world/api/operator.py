@@ -7,6 +7,7 @@ import re
 from collections.abc import AsyncIterator, Mapping
 from contextlib import asynccontextmanager
 from dataclasses import asdict
+from importlib.resources import files
 from threading import Lock
 from typing import cast
 
@@ -331,6 +332,48 @@ def create_operator_app(
             raise _error(failure.code) from None
         except (ValueError, OverflowError):
             raise _error("not_found") from None
+
+    @app.get("/inspector/assets/{asset_name}")
+    def inspector_asset(asset_name: str) -> Response:
+        media_types = {"inspector.css": "text/css", "inspector.js": "text/javascript"}
+        if asset_name not in media_types:
+            raise _error("not_found")
+        return Response(
+            files("living_world.api").joinpath(f"static/{asset_name}").read_bytes(),
+            media_type=media_types[asset_name],
+        )
+
+    @app.get("/live/checkpoints/{revision}/inspector", dependencies=[Depends(read)])
+    @app.get(
+        "/archives/{attempt_id}/checkpoints/{revision}/inspector",
+        dependencies=[Depends(read)],
+    )
+    def inspector_page(request: Request) -> Response:
+        resolve(request)
+        params = request.path_params
+        revision = str(int(params["revision"]))
+        attempt_id = params.get("attempt_id")
+        kind = "live" if attempt_id is None else "historical"
+        prefix = (
+            f"/live/checkpoints/{revision}"
+            if attempt_id is None
+            else f"/archives/{attempt_id}/checkpoints/{revision}"
+        )
+        template = (
+            files("living_world.api").joinpath("static/inspector.html").read_text()
+        )
+        marker = '<html lang="en">'
+        if template.count(marker) != 1:
+            raise _error("archive_invalid")
+        return Response(
+            template.replace(
+                marker,
+                f'<html lang="en" data-inspection-prefix="{prefix}" '
+                f'data-inspection-kind="{kind}">',
+                1,
+            ),
+            media_type="text/html",
+        )
 
     app.include_router(
         create_inspection_router(resolve),

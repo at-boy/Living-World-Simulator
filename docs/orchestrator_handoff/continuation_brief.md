@@ -1,34 +1,34 @@
-# Continuation brief — LN08b integrated; LN08c authorized, October26,2026
+# Continuation brief — LN08c integrated, October26,2026
 
 ## Current authoritative state
 
-Owner resumed with99%five-hourremaining; stop with headroom BEFORE10%remaining.
-LN08b delivery8731bbf independently reviewed after one correctedP2 shared inspection
-DTO/eventloop blockage. Taskmake2105/10existing deliberate skips,39examples/Chrome,
-separateexamples/whitespace/exactcanonical26readablearchives/newCLI7cases PASS.
-Repeated merged gates same2105/10/39, exact task results/readablearchives/7CLIcases.
-Source/tests exactlydelivery; only root checkpoint docs conflicted. Feature integration25fb5a7 is pushed. Do not redispatch completed tasks/reviews/gates.
-Allbranches/checkouts preserved. Main/milestone/tag and ownerlocaledit untouched.
+LN08b delivery8731bbf/integration25fb5a7 complete. LN08c deliveryc3a5b69 independently
+reviewed SPEC/QUALITYPASS zero findings; task and mergedmake2115/10existing skips,
+39examples/actualChrome,separateexamples/whitespace/exactcanonical26readablearchives/
+newCLI7retainedcases including2failed-uninitialized PASS. Source exactdelivery;
+cleanmerge contains this brief. Do not redispatch completed tasks/reviews/gates.
+All taskbranches/checkouts preserved; owneredit/protectedrefs unchanged.
 
-Exact08c_authenticated_inspector task/prombt/report are root-reviewed.
-Next: isolated bounded six-path worker/review/gates; parent runtime control/archive page and CLIserve follow.
-LN08c readonly probe/candidate saved ln08c-inspector-probe.md; draft08c contract in
-ignoredworkspace; committed exacttask is sourceauthority. ActualChrome srcdoc originprobe
-confirmed window.origin inherited, location.origin null; useeffectivewindow.origin.
-No8csourcework atcontractcommit. No installedOllama acceptance passed; LN09 later. OriginalLN07
-remains incomplete until serve acceptance. Do not move protected refs.
+Next: exactLN08d parent runtimepage contract/worker/review/gates, then CLIserve.
+8drootdraft .superpowers/sdd/2026-10-19-live-npc-runtime/08d_runtime_page-draft.md
+not sourceauthority untilcommitted. 8e narrowread-onlyserveprobe ln08e-serve-probe.md
+recommends sharedlaunchadapter andservice reuse, no copiedlegacyloop; rootmustdecide
+startupHTTP/serverlifetime/providererror/signals/tokenfile beforeexactcontract.
+OriginalLN07 incomplete untilserveacceptance; no realOllama gate passed.
+Usageguard stopwithheadroom BEFORE10%five-hourremaining; noreset/automaticresume.
 
 ## Current evidence
 
-Exact08b_operator_api task/prombt/reviewedreport are authoritative compressed record.
+Reviewed08c_authenticated_inspector task/prombt/report authoritativecompressedrecord.
 Stableignoredworkspace .worktrees/live-npc-runtime/.superpowers/sdd/2026-10-19-live-npc-runtime:
-progress.md; ln08b-review-1.diff/fix-1.diff/reviewed-final.diff; review-initial/final.md;
-ln08b-task/merged-make.log and -examples.log, -matrix/results.json, -cli/results.json.
-Everynormalacceptance attempt retained;26canonicalarchives and7newCLIcases per tree.
+progress.md;ln08c-review-1.diff,ln08c-review-final.md,ln08c-task/merged-make.log and
+-examples.log,-matrix/results.json,-cli/results.json; every normalrun retained.
+RootnarrowChrome confirmed inheritedwindow.origin vs null location.origin and
+parentcontrolfocus remains afterdelayedpinresponse. Existinginspector assets unchanged
+inpackagecount8; parentruntimepage adds3 later. No actualmodelinference in these gates.
 Reusable recorded_matrix.py --python ABSVENV/bin/python --project ABSFEATURE --output
 NEWDIR; archived_cli_acceptance.py --project ABSFEATURE --output NEWDIR viaABSVENV.
-No deletes. All prior task source/review/fullgates compressed into reviewed reports
-and Gitmerges; do not reconstruct milestonehistory.
+No deletes; prior reviewedreports/Gitmerges compresscompletedhistory.
 
 ## Authority and invariants
 
