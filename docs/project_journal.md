@@ -1,5 +1,14 @@
 # Living World Simulator – Project Journal
 
+## LN08c authenticated inspector contract — October26,2026
+
+LN08b integration25fb5a7 passed repeated2105/10/39example/browser/archive gates. Root
+split approved8 browser work into authenticated inspector, parent controls and CLIserve.
+Exact6path contract binds protected sourceHTML, existingasset allowlist, strictmemory
+Bearer parent protocol, effectivewindow.origin verified inactualChrome, coherentrefresh
+abort/generation, fixedhistory andsemanticfocus/filter/caret preservation. No source
+atcontractcommit. Rootselfreview matched API/source/JS andbrowsercompatibility tests.
+
 ## LN08b feature integration — October26,2026
 
 Delivery8731bbf merged with exact reviewed source; only two root-owned checkpoint

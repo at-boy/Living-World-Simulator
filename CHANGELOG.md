@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Define authenticated fixed-checkpoint inspector embedding with strict parent
+  messaging and preserved live navigation; runtime controls remain the next stage.
+
 - Integrate the reviewed operator API after repeated full/browser and retained
   recorded/resume/fork validation; preserve all task branches and archives.
 

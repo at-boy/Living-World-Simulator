@@ -1,4 +1,4 @@
-# Continuation brief — LN08b integrated, October26,2026
+# Continuation brief — LN08b integrated; LN08c authorized, October26,2026
 
 ## Current authoritative state
 
@@ -7,16 +7,15 @@ LN08b delivery8731bbf independently reviewed after one correctedP2 shared inspec
 DTO/eventloop blockage. Taskmake2105/10existing deliberate skips,39examples/Chrome,
 separateexamples/whitespace/exactcanonical26readablearchives/newCLI7cases PASS.
 Repeated merged gates same2105/10/39, exact task results/readablearchives/7CLIcases.
-Source/tests exactlydelivery; only root checkpoint docs conflicted. Feature merge
-containing this brief integrates8b. Do not redispatch completed tasks/reviews/gates.
+Source/tests exactlydelivery; only root checkpoint docs conflicted. Feature integration25fb5a7 is pushed. Do not redispatch completed tasks/reviews/gates.
 Allbranches/checkouts preserved. Main/milestone/tag and ownerlocaledit untouched.
 
-Next: root exactLN08c authenticated pinned existing-inspector contract then bounded
-worker/review/gates; parent runtime control/archive page and CLIserve follow.
+Exact08c_authenticated_inspector task/prombt/report are root-reviewed.
+Next: isolated bounded six-path worker/review/gates; parent runtime control/archive page and CLIserve follow.
 LN08c readonly probe/candidate saved ln08c-inspector-probe.md; draft08c contract in
-ignoredworkspace notsourceauthority untilcommitted. ActualChrome srcdoc originprobe
+ignoredworkspace; committed exacttask is sourceauthority. ActualChrome srcdoc originprobe
 confirmed window.origin inherited, location.origin null; useeffectivewindow.origin.
-No8csourcework yet. No installedOllama acceptance passed; LN09 later. OriginalLN07
+No8csourcework atcontractcommit. No installedOllama acceptance passed; LN09 later. OriginalLN07
 remains incomplete until serve acceptance. Do not move protected refs.
 
 ## Current evidence
