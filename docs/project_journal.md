@@ -1,5 +1,15 @@
 # Living World Simulator – Project Journal
 
+## LN08d parent runtimepage contract — October26,2026
+
+LN08c integration0b81d97 repeated2115/10/39examples/browser/archive gates PASS. Root
+exact9path contract consumes reviewed auth/commands andchildprotocol, binds session/
+selectiongenerations, serialstatusfreshness, sameID uncertainty/durableACK, allowed
+statebuttons, fixedhistory/outcomes andbounded2detailfetches. Threepackagedassets
+retainoriginal8. Rootselfreviewcovered login/secrets, receiptversion/poll, iframe
+origin/source, stale/logout/navigation, archive/modelprose andreadonly tests. No source
+atcontractcommit; CLIserve/tokenfile remain8e, installedmodelacceptanceLN09.
+
 ## LN08c feature integration — October26,2026
 
 Deliveryc3a5b69 cleanly merged, exact reviewed source unchanged. Root repeatedmake

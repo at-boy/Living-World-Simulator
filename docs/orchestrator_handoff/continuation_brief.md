@@ -1,4 +1,4 @@
-# Continuation brief — LN08c integrated, October26,2026
+# Continuation brief — LN08c integrated; LN08d authorized, October26,2026
 
 ## Current authoritative state
 
@@ -6,12 +6,12 @@ LN08b delivery8731bbf/integration25fb5a7 complete. LN08c deliveryc3a5b69 indepen
 reviewed SPEC/QUALITYPASS zero findings; task and mergedmake2115/10existing skips,
 39examples/actualChrome,separateexamples/whitespace/exactcanonical26readablearchives/
 newCLI7retainedcases including2failed-uninitialized PASS. Source exactdelivery;
-cleanmerge contains this brief. Do not redispatch completed tasks/reviews/gates.
+Feature integration0b81d97 is pushed. Do not redispatch completed tasks/reviews/gates.
 All taskbranches/checkouts preserved; owneredit/protectedrefs unchanged.
 
-Next: exactLN08d parent runtimepage contract/worker/review/gates, then CLIserve.
-8drootdraft .superpowers/sdd/2026-10-19-live-npc-runtime/08d_runtime_page-draft.md
-not sourceauthority untilcommitted. 8e narrowread-onlyserveprobe ln08e-serve-probe.md
+Exact08d_runtime_page task/prombt/report are root-reviewed andcommitted.
+Next: isolated9path runtimepage worker/review/gates, then CLIserve. Rootdraft in
+ignoredworkspace is supplementary; committedexacttask controls sourceauthority. 8e narrowread-onlyserveprobe ln08e-serve-probe.md
 recommends sharedlaunchadapter andservice reuse, no copiedlegacyloop; rootmustdecide
 startupHTTP/serverlifetime/providererror/signals/tokenfile beforeexactcontract.
 OriginalLN07 incomplete untilserveacceptance; no realOllama gate passed.

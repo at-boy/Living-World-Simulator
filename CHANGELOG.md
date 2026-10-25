@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Define the local runtime control and archive page, with memory-only login,
+  durable command tracking and fixed historical inspection.
+
 - Integrate authenticated pinned inspection after repeated full/browser and retained
   archive checks, with all task branches and owner edits preserved.
 
