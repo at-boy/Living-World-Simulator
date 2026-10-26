@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Define shared persistent-runtime selection for Ollama and llama.cpp, with pinned
+  local GGUF identity and unchanged legacy fingerprints; implementation follows.
+
 - Integrate replayable disturbances after repeated full/browser, exact recorded,
   restart, source-and-wheel serving validation; preserve every task branch/archive.
 

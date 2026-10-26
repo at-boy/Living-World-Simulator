@@ -1,5 +1,17 @@
 # Living World Simulator – Project Journal
 
+## LN09b backend contract — October26,2026
+
+Reviewed LN09a deliveryee11870 integrated6321306 after repeated2311/10/39examples
+and exact recorded/CLI/source-and-wheel serving gates. Owner requires both local
+backends. Root contract09b_llama_cpp_runtime.md + savedprombt precede implementation;
+12workerpaths, shared legacy live archive mode plus provider.kind, canonical legacy
+serialization, bounded payload protocol and GGUF SHA256 with reported alias/path
+identity. Read-only seam investigator confirmed decision completeness. Existing native
+llama smoke passed; production adapter/real acceptance and exact private inference
+traces remain pending. GPU/model/backend profile settings are future backlog only.
+
+
 ## LN09a feature integration — October26,2026
 
 Deliveryee11870 integrated cleanly; repeated mergedmake2311passed/10existing skips,

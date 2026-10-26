@@ -8,8 +8,11 @@ committed/pushed and preserved. Independent review and task/merged make each2311
 existing skips, actualChrome/39examples/separateexamples/whitespace/canonical26readonly/
 CLI7/sourceServe4/wheel11+actualServe4 PASS. Task384.50s, merged382.64s; reviewedsource
 unchanged,41normalattempts retained per tree. Original LN09 acceptance incomplete.
-Next activate exact09b backend contract/prombt and isolated branch, then traces/BOTH
-provider acceptance. No redispatch9a or repeat completed gates.
+Execute exact docs/subagent_execution_plan/live_npc_runtime/09b_llama_cpp_runtime.md
+and matching-prombt after root creates .worktrees/live-npc-ln09b on
+codex/live-npc-ln09b-llama-runtime. Contract based on validated integration6321306;
+12workerpaths, solmedium implementer then independent solhighreview/fulltask+merged
+gates. Then bounded traces and BOTHprovider acceptance. No redispatch9a or repeat completed gates.
 
 LN09a root amendment resolves impossible end-boundary canonical work interruption with
 format2 work schedule: typed one-step request/result inside existing atomic work phase,

@@ -6,6 +6,9 @@ with exact recorded/restart/source-and-wheel serving checks; repeated feature in
 gates passed2311/10existing skips,39examples and identical compatibility evidence. Format-two work interruption resolves the canonical single-tick gap.
 Original full real-provider acceptance is still incomplete.
 
+Next authorized implementation is exact LN09b shared llama.cpp backend task/prombt
+in isolated .worktrees/live-npc-ln09b. No backend/trace acceptance claim yet.
+
 ## Additional owner requirements — October26,2026
 
 Before final live-runtime acceptance, verify both Ollama and the installed llama.cpp
