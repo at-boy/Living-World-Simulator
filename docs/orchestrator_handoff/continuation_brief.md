@@ -1,4 +1,4 @@
-# Continuation brief — LN08f CLI serving authorized, October 26, 2026
+# Continuation brief — LN08f reviewed delivery, October 26, 2026
 
 ## Current state and next action
 
@@ -14,10 +14,21 @@ review SPEC/QUALITYPASS/open0, focused179; task/merged2173/10existing skips,
 merged314.77s/actualChrome/39examples, separateexamples/whitespace/exactcanonical26
 readablearchives/CLI7retained/wheel11 PASS. Reviewed source exactdelivery. Owner Recover
 resumed existing completed validation without redispatch. All branches/worktrees
-preserved and owner master-plan diffSHA unchanged. LN08e integration is b26ddf3. Execute exact
-docs/subagent_execution_plan/live_npc_runtime/08f_cli_serve.md and matching saved
--prombt in .worktrees/live-npc-ln08f on codex/live-npc-ln08f-cli-serve. Eight worker
-paths; independent review/full task and merged gates required. Original LN07/LN08 and
+preserved and owner master-plan diffSHA unchanged. LN08e integration is b26ddf3. LN08f in
+.worktrees/live-npc-ln08f/codex/live-npc-ln08f-cli-serve is independentlyreviewed and
+taskvalidated; deliverycommit follows then integrate/repeatmergedgates only.
+Rootmake2230/10existing skips/343.98s, actualChrome/39examples/separateexamples,
+whitespace/exactcanonical26/CLI7/sourcepublicserve4/wheel11+actualserve4 PASS.
+OneP2 failureprecedence corrected round1, re-review SPECQUALITYPASS/open0. Allnormal
+attempts retained; no remaining sourcecorrection/review/taskgates needed.
+
+OwnedtemporaryOllama PID288304, starttime/UID/argv in ignoredworkspace
+ln09-ollama-native-owned.json, session88701 RUNNING. Stop only verifiedownedprocess
+before pause. Preliminaryreal baseline5035c02b05bd45daaa73e5493010d834 thenexactchild
+a2eb3b98e2cf453fb807fbde167330e1: childtick2 with1accepted/1rejected/1workorder,
+exactinitialworld/cursors/sourcebytesunchanged; notfull9acceptance. Process sessions
+41302/99913 finished. Root9a missingdisturbance decisions/probes inignoredworkspace
+only; no9a sourcecontract/worker. Original LN07/LN08 and
 installed-Ollama LN09 remain incomplete. Currentusage100%remaining after naturalwindow
 refresh, no reset used; continue checking and stop with headroom before10%.
 Do not redispatch completed LN08d implementation/review/gates. Original LN07/LN08

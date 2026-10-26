@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add reviewed public local serving with paused startup, secure session delivery,
+  browser controls/archives, exact restart and truthful shutdown failures.
+
 - Define public local serving with paused startup, protected browser controls,
   secure session delivery and service-owned shutdown/restart behavior.
 

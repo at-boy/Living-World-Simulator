@@ -739,3 +739,35 @@ def test_final_mirror_failure_after_terminal_observation_is_not_success(
     assert "PRIVATE" not in captured.err
     assert captured.err.count("attempt=") == 1
     assert child.ref.attempt_id in captured.err
+
+
+def test_headless_fallback_preserves_original_failure_ref_and_single_announcement(
+    tmp_path, capsys
+):
+    from uuid import uuid4
+
+    from living_world.cli import build_parser
+    from living_world.runtime.entrypoints import RuntimeCLIError, run_archived
+
+    class Continue:
+        def stop_requested(self):
+            return False
+
+    root = tmp_path / "runs"
+    arguments = build_parser().parse_args(
+        ["run", "--resume-attempt", uuid4().hex, "--archive-root", str(root)]
+    )
+    with pytest.raises(RuntimeCLIError) as caught:
+        run_archived(arguments, Continue())
+    assert caught.value.reason == "archive_failed" and caught.value.exit_code == 4
+    assert caught.value.ref is None
+    attempts = RunCatalog(root).attempts()
+    assert len(attempts) == 1 and attempts[0].lifecycle == "failed"
+    with RunCatalog(root).open_attempt(attempts[0].ref.attempt_id) as archive:
+        assert archive.config.scenario_key == "uninitialized"
+        assert archive.config.seed == 0
+        assert dict(archive.config.settings) == {
+            "driver_format": 1,
+            "launch_source": "cli",
+        }
+    assert capsys.readouterr().err.count("attempt=") == 1

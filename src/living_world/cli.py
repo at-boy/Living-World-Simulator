@@ -48,6 +48,7 @@ from living_world.runtime.entrypoints import (
     validate_archived_options,
 )
 from living_world.runtime.legacy import LegacyArchiveSession
+from living_world.runtime.serving import ServeCLIError, run_served
 from living_world.scenarios import ScenarioCompatibilityError, ScenarioLoadError
 from living_world.scenarios.scenario import LoadedScenario, YAMLScenarioLoader
 from living_world.simulation.simulation_engine import SimulationEngine
@@ -110,6 +111,35 @@ def build_parser() -> argparse.ArgumentParser:
     inspect.add_argument("--checkpoint", type=_non_negative_integer)
     inspect.add_argument("--archive-root", type=Path)
     inspect.add_argument("--port", type=_port, default=8000)
+    serve = subcommands.add_parser(
+        "serve", help="Serve a local paused world with browser controls and archives."
+    )
+    serve.set_defaults(
+        scenario=None, proposal_tape=None, checkpoint_only=False, replay_attempt=None
+    )
+    serve.add_argument(
+        "--founders", choices=[outcome.value for outcome in FoundersOutcome]
+    )
+    serve.add_argument("--preset", choices=["founders"])
+    serve.add_argument("--driver", choices=["ollama"])
+    serve.add_argument("--model")
+    for option in ("resume-attempt", "fork-attempt"):
+        serve.add_argument("--" + option)
+    serve.add_argument("--archive-root", type=Path)
+    serve.add_argument("--database", type=Path)
+    serve.add_argument("--checkpoint", type=_non_negative_integer)
+    serve.add_argument("--save-every", type=_positive_integer)
+    serve.add_argument("--base-url")
+    serve.add_argument("--timeout-seconds", type=_positive_float)
+    serve.add_argument("--max-output-tokens", type=_positive_integer)
+    serve.add_argument("--max-requests", type=_positive_integer)
+    limits = serve.add_mutually_exclusive_group()
+    limits.add_argument("--max-ticks", type=_non_negative_integer)
+    limits.add_argument("--continuous", action="store_true", default=None)
+    serve.add_argument("--checkpoint-only", action="store_true")
+    serve.add_argument("--start-running", action="store_true")
+    serve.add_argument("--admin-token-file", type=Path)
+    serve.add_argument("--port", type=_serve_port, default=8000)
     return parser
 
 
@@ -132,11 +162,18 @@ def main(
         arguments.save_every = arguments.save_every or 1
         arguments.continuous = bool(arguments.continuous)
     control = stop_control or SignalStopControl()
-    previous_handler: signal.Handlers | None = None
-    if isinstance(control, SignalStopControl):
-        previous_handler = signal.signal(signal.SIGINT, control.handle_signal)
+    previous_handlers: dict[int, signal.Handlers] = {}
     try:
+        if isinstance(control, SignalStopControl):
+            for signum in (
+                (signal.SIGINT, signal.SIGTERM)
+                if arguments.command == "serve"
+                else (signal.SIGINT,)
+            ):
+                previous_handlers[signum] = signal.signal(signum, control.handle_signal)
         try:
+            if arguments.command == "serve":
+                return run_served(arguments, control)
             if archived and arguments.command == "inspect":
                 engine = load_archived_inspection(
                     RunCatalog(arguments.archive_root or RunCatalog.default_root()),
@@ -152,6 +189,8 @@ def main(
             )
             if result is None:
                 return 0
+        except ServeCLIError as exc:
+            return _error(exc.exit_code, exc)
         except RuntimeCLIError as exc:
             return _error(exc.exit_code, exc)
         except FoundersConfigurationError as exc:
@@ -209,8 +248,8 @@ def main(
         )
         return 0
     finally:
-        if previous_handler is not None:
-            signal.signal(signal.SIGINT, previous_handler)
+        for signum, previous in previous_handlers.items():
+            signal.signal(signum, previous)
 
 
 def _announce(session: LegacyArchiveSession) -> None:
@@ -407,6 +446,13 @@ def _positive_integer(value: str) -> int:
 def _error(exit_code: int, error: Exception) -> int:
     print(f"error: {error}", file=sys.stderr)
     return exit_code
+
+
+def _serve_port(value: str) -> int:
+    port = int(value)
+    if not 0 <= port <= 65535:
+        raise argparse.ArgumentTypeError("port must be between 0 and 65535")
+    return port
 
 
 if __name__ == "__main__":
