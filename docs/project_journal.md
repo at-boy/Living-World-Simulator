@@ -1,5 +1,17 @@
 # Living World Simulator – Project Journal
 
+## LN08d reviewed task delivery and usage pause — October 26, 2026
+
+The runtime control/archive page passed independent review after three corrected P2
+findings covering malformed status, receipt revisions and shared detail concurrency.
+Final focused132; root taskmake2140/10existing skips,39examples/actualChrome, separate
+examples/whitespace, exact canonical26archives/newCLI7cases and wheel11resources PASS.
+Source unchanged after review. Root helper pip/zip-import assumptions were corrected
+without installs or product changes; all failed evidence retained. One minor table
+header wrapping item remains for final broad review. Task delivery is preserved;
+feature integration/repeated merged gates wait for resume. Owner edit, branches and
+protected release refs remain intact. CLIserve and actual Ollama acceptance pending.
+
 ## LN08d parent runtimepage contract — October26,2026
 
 LN08c integration0b81d97 repeated2115/10/39examples/browser/archive gates PASS. Root

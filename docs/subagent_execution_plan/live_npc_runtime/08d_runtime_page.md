@@ -1,7 +1,7 @@
 # LN08d — Local runtime control and archive page
 
-Status: authorized bounded continuation of approved LN08 after reviewed LN08c
-integration0b81d97; root self-review complete. Worker after exact contract commit.
+Status: independently reviewed and root task-validated delivery; feature integration
+pending at usage checkpoint. Base0b81d97; exact contractef0209d.
 **Goal:** let a local administrator authenticate, observe/control the current world
 and browse saved checkpoints without losing command or inspection consistency.
 **Architecture:** public packaged login page keeps session credentials only in JS
@@ -96,7 +96,11 @@ liveNone shows no committed checkpoint. Clear protocol before removal on logout 
 source switch; late fetch/ready cannot connect or replace a newer selection.
 
 GET/archives on login and manual Refresh archives. Render all discovered summaries,
-including failed/setup/corrupt. Rows include actual outcome: summary has no outcome,
+including failed/setup/corrupt. Each archive row MUST include attempt, mode/scenario,
+start time, parent attempt/checkpoint (or none), lifecycle/status, actual outcome and
+last committed tick (or no checkpoint), matching the approved design list requirement.
+These summary fields must be visible in the list without selecting details. Retain
+responsive horizontal overflow and text-only values. Rows include actual outcome: summary has no outcome,
 so fetch existing detail GETs with at most2 concurrent requests and cache plain DTOs
 for this archive-refresh generation. Reuse loaded details on selection; invalidate
 on explicit archive refresh/session change. Show Loading/Unavailable/No outcome
@@ -147,23 +151,23 @@ new ID. Disconnect drops local pending display but durable server audit survives
 
 ## TDD, tests and root gates
 
-- [ ] RED absent page/assets/packageentries before source; GREEN exact page routes
+- [x] RED absent page/assets/packageentries before source; GREEN exact page routes
   no-store/allowlist and secret-free HTML. Test pyproject resources + original8retained.
-- [ ] Actual uvicorn/Chrome login/logout and archive-only/live sessions; token/nonce
+- [x] Actual uvicorn/Chrome login/logout and archive-only/live sessions; token/nonce
   absent URLs/storage/rendereddata/archives; wrongtoken and401/403 cleanup, malformed
   data stalecontrols, delayed logout/reconnect/source-selection responses ignored.
-- [ ] Actual real-service pause/resume/single-step (doubleclickone tick), pendingpause
+- [x] Actual real-service pause/resume/single-step (doubleclickone tick), pendingpause
   vs durableACK, state/version rejection, Stop/terminal and explicit fakeproviderRetry;
   status/control remains responsive during delayedfakeprovider. No real model here.
-- [ ] LostPOST before/after actual admission; explicit Retrydelivery sameenvelope/ID
+- [x] LostPOST before/after actual admission; explicit Retrydelivery sameenvelope/ID
   recovers atmostone effect, stable receipts; GETunknown nevernewID; no autoPOSTRetry.
   Controlled response loss/delay may wrap actual routes, no fabricated success DTO.
-- [ ] Parent handshake exactorigin/source andoldframe denial; all child data GETs use
+- [x] Parent handshake exactorigin/source andoldframe denial; all child data GETs use
   one pinned revision withBearer; live updates retain current child view/focus/filter,
   history fixed across live advancement, no controls/no mutations/sourcebytes unchanged.
-- [ ] Archives all-outcomes/setup-only/corrupt details, latest50journal+total, no-world
+- [x] Archives all-outcomes/setup-only/corrupt details, latest50journal+total, no-world
   no fakecheckpoint; malicious prose literal, keyboard and390px usable.
-- [ ] Existing API/inspector tests remain unchanged and pass. Focused: PYTHONPATH=src
+- [x] Existing API/inspector tests remain unchanged and pass. Focused: PYTHONPATH=src
   TASK_PY -m pytest tests/test_runtime_browser.py tests/test_runtime_inspector_browser.py
   tests/test_runtime_operator_api.py tests/test_world_inspector_ui.py
   tests/test_world_inspector_browser.py -q. Smallest namedcase while RED/corrections.
@@ -179,3 +183,34 @@ DTOvalidation tiescommands tooperationalversion; receiptpoll/sameenvelope retry 
 doubleeffects; inspector protocol reusedunchanged; historicalselectiongatescontrols
 andpins; tests eachsecurity/race/persistence boundary. No new NPC/world authority path.
 OriginalLN08 parentUI only; CLIserve/tokenfile/launcher in8e, realOllama LN09 later.
+
+## Root correction amendment — DTO types and shared archive-detail bound
+
+Independent review confirmed three P2 gaps. Same nine worker paths, no API/owner or
+architecture scope expansion. State predicate MUST require primitive string before
+known-state membership; arrays/objects never become fresh or enable commands. Receipt
+revision MUST be nonnegative safe integer (not null), matching CommandReceipt. Any
+malformed terminal receipt leaves the original envelope uncertain/pending, no gate
+release/new command ID until a valid durable receipt or identical explicit delivery.
+
+Use ONE shared archive-detail scheduler for the page, maximum2 outstanding detailGETs
+across background outcomes, row selection, refresh and reconnect. Each current
+(session generation, archive-refresh generation, attemptID) has one shared in-flight
+promise/cache; row selection joins that promise or enqueues through the same bound,
+never bypasses it. FIFO queued work is sufficient; displayed catalog order unchanged.
+On explicit archive refresh discard/cancel not-yet-started obsolete queued jobs and
+ignore obsolete results. Already-started detail reads may finish, still occupying
+the shared two slots until settled; new generation jobs wait for capacity. Logout
+aborts actual requests as before; slot accounting survives old finally callbacks and
+new sessions (never reset counters while old requests are unsettled). All canceled
+awaiters settle safely, no unhandled rejections, stale results never cache/render.
+No new polling loops, API/store changes or unbounded metadata GET side path.
+
+Genuine RED/GREEN regressions in existing new testfile: state:['paused'] rejected
+with stale controls; null applied/rejected receipt cannot release gate/replace envelope;
+two held real detailGETs plus uncached selection and explicit archive refresh never
+start a third outstanding detailGET, selected/cache reuse still works after release.
+Use controlled real-response delay/malformed envelope probes, not fake acceptedworld
+DTOs. Focus covering tests during fix; final focused/report/style/whitespace once ready.
+Root scoped independent re-review then full gates. Minor desktop header wrapping is
+recorded separately for finalwholebranchtriage, not part of this correction.

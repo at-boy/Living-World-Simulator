@@ -183,6 +183,23 @@ def create_operator_app(
                     )
             return metadata[attempt_id]
 
+    @app.get("/runtime")
+    def runtime_page() -> Response:
+        return Response(
+            files("living_world.api").joinpath("static/runtime.html").read_bytes(),
+            media_type="text/html",
+        )
+
+    @app.get("/runtime/assets/{asset_name}")
+    def runtime_asset(asset_name: str) -> Response:
+        media_types = {"runtime.css": "text/css", "runtime.js": "text/javascript"}
+        if asset_name not in media_types:
+            raise _error("not_found")
+        return Response(
+            files("living_world.api").joinpath(f"static/{asset_name}").read_bytes(),
+            media_type=media_types[asset_name],
+        )
+
     @app.get("/runtime/status", dependencies=[Depends(read)])
     async def status(response: Response) -> dict[str, object]:
         response.headers["X-CSRF-Token"] = auth.csrf_nonce

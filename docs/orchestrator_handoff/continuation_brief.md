@@ -1,83 +1,78 @@
-# Continuation brief — LN08c integrated; LN08d authorized, October26,2026
+# Continuation brief — LN08d delivery saved; paused, October 26, 2026
 
-## Current authoritative state
+## Current state and next action
 
-LN08b delivery8731bbf/integration25fb5a7 complete. LN08c deliveryc3a5b69 independently
-reviewed SPEC/QUALITYPASS zero findings; task and mergedmake2115/10existing skips,
-39examples/actualChrome,separateexamples/whitespace/exactcanonical26readablearchives/
-newCLI7retainedcases including2failed-uninitialized PASS. Source exactdelivery;
-Feature integration0b81d97 is pushed. Do not redispatch completed tasks/reviews/gates.
-All taskbranches/checkouts preserved; owneredit/protectedrefs unchanged.
+Pause at the owner usage guard; no automatic resume/reset. LN08d delivery commit
+containing this brief is independently reviewed and task-validated in
+.worktrees/live-npc-ln08d on codex/live-npc-ln08d-runtime-page. Feature
+codex/live-npc-runtime has contractef0209d plus checkpoint docs: SOURCE NOT MERGED.
+On owner resume verify allowance/Git/owner patch, integrate this task delivery and
+repeat merged make, separate examples, whitespace, retained canonical/newCLI and
+wheel checks before committing integration. Do not redispatch completed worker,
+review or task gates. All task branches/worktrees must remain preserved.
 
-Exact08d_runtime_page task/prombt/report are root-reviewed andcommitted.
-Next: isolated9path runtimepage worker/review/gates, then CLIserve. Rootdraft in
-ignoredworkspace is supplementary; committedexacttask controls sourceauthority. 8e narrowread-onlyserveprobe ln08e-serve-probe.md
-recommends sharedlaunchadapter andservice reuse, no copiedlegacyloop; rootmustdecide
-startupHTTP/serverlifetime/providererror/signals/tokenfile beforeexactcontract.
-OriginalLN07 incomplete untilserveacceptance; no realOllama gate passed.
-Usageguard stopwithheadroom BEFORE10%five-hourremaining; noreset/automaticresume.
+LN08d review corrected3P2s in one round: primitive state validation, nonnull integer
+receipt revisions with uncertain identity retained, and shared2slot detail scheduler
+across selection/refresh/reconnect. Scoped SPEC/QUALITYPASS, no open substantive
+findings. Minor desktop archive-header word wrapping is deferred to final broad review.
+Final focused132/137.29s. Root taskmake2140/10existing deliberate skips/303.65s, actual
+Chrome/all39examples; separateexamples/whitespace; exact canonical26readablearchives;
+newCLI7retainedcases including2failed-uninitialized; offlinewheel11resources/import/
+runtime routes/CLIhelp PASS. Source/tests/pyproject unchanged after review.
 
-## Current evidence
+LN08b delivery8731bbf/integration25fb5a7 and LN08c deliveryc3a5b69/integration0b81d97
+are complete and pushed after repeated task/merged gates. Parent browser page now
+works against actual runtime services; no public CLIserve or real installed-model
+acceptance is claimed. OriginalLN07 remains incomplete until serve acceptance.
 
-Reviewed08c_authenticated_inspector task/prombt/report authoritativecompressedrecord.
-Stableignoredworkspace .worktrees/live-npc-runtime/.superpowers/sdd/2026-10-19-live-npc-runtime:
-progress.md;ln08c-review-1.diff,ln08c-review-final.md,ln08c-task/merged-make.log and
--examples.log,-matrix/results.json,-cli/results.json; every normalrun retained.
-RootnarrowChrome confirmed inheritedwindow.origin vs null location.origin and
-parentcontrolfocus remains afterdelayedpinresponse. Existinginspector assets unchanged
-inpackagecount8; parentruntimepage adds3 later. No actualmodelinference in these gates.
-Reusable recorded_matrix.py --python ABSVENV/bin/python --project ABSFEATURE --output
-NEWDIR; archived_cli_acceptance.py --project ABSFEATURE --output NEWDIR viaABSVENV.
-No deletes; prior reviewedreports/Gitmerges compresscompletedhistory.
+After8d integration, finalize the shared launch producer/CLIserve task contracts.
+Read ln08e-serve-probe.md and ln08e-root-decisions.md in the ignored workspace: these
+are read-only evidence/candidate root decisions, NOT implementation authority. Likely
+split shared prepared-launch adapter from serve consumer; root must settle exact
+factory/one-shot/recorded preparation/signals/token-file/startup/server-lifetime rules
+before source. No8e task/worker/source is authorized by those draft notes alone.
+LN09 must demonstrate actual installed Ollama decisions/actions and replay/operator
+acceptance. No installs/downloads/drivers; Podman allowed if useful.
+
+## Evidence and reusable validation
+
+Exact08d_runtime_page task/prombt/reviewedreport are canonical. Stable workspace:
+.worktrees/live-npc-runtime/.superpowers/sdd/2026-10-19-live-npc-runtime
+Contains progress.md; ln08d-review-1/fix-1/reviewed-final.diff; initial/final findings;
+ln08d-task-make/examples.log, -matrix, -cli, -wheel-final/results.json; visual captures
+ln08d-runtime-desktop/mobile.png. Every normal acceptance run remains archived.
+Initial wheel helper failed due missingpip; next rawzip import assumption failed;
+corrected installed build backend/extracted-wheel check PASS. Earlier failure evidence
+retained; source metadata untouched because build uses isolated copy.
+
+Reusable helpers (absolute TASKPY below):
+recorded_matrix.py --python TASKPY --project CHECKOUT --output NEWDIR
+archived_cli_acceptance.py --project CHECKOUT --output NEWDIR (run viaTASKPY)
+wheel_runtime_check.py --python TASKPY --project CHECKOUT --output NEWDIR
+Canonical helper archives underoutput/state/living-world/runs; CLIhelper underruns.
+No deletes. Unit test/probe temporary fixtures are allowed; normalmanual runs retained.
 
 ## Authority and invariants
 
-Owner approved design96262fa and full LN01–LN09 plan/execution, branch/worktree
-preservation, reviewed task commits/pushes and feature integration. Scope is installed
-Ollama decisions, qualitative holder-scoped feedback, archive-every-normal-run,
-browser pause/resume/step/Stop/Retry, exact pause–exit–restart with no off-time
-advancement, and player-like disturbance acceptance without a player API. Recorded
-and generic existing behavior remains valuable. No installs/downloads/drivers or
-main/milestone/tag movement; Podman testing allowed. No real installed-model gate
-has passed yet; LN09 must use actual Ollama and demonstrate actual valid actions.
-
-Managers mutate; systems behave; immutable events. NPCs get filtered perception/
-cognition, never raw world/IDs/other-holder secrets. LLM output remains untrusted
-proposal through action gateway; simulation owns truth/goals/stages. Schema12 and
-Python>=3.11 remain supported. Stop/budget end is operational, not game terminal.
-RuntimeService sole owner handles leases/composition/controller/broker; submit Future
-is durable admission, not applied pause ACK. Final mirror/audit precedes archive close.
-
-Root uses bounded workers and independent SPEC/QUALITY review; root owns contracts,
-architecture, task/merged full gates, focused commits, integration and final decisions.
-Common changelog/journal/backlog/report/brief updated before each commit. No source
-commit before review and make/separateexamples/whitespace. All branches/worktrees stay.
-
-## Preserved owner edit and refs
-
-Feature ONLY owner-local master-plan patch at
-`docs/superpowers/plans/2026-10-19-live-npc-runtime.md` contains the accidental prose
-`observasmall, clearly specified tasksble`. Do not stage/restore/reset/fix it.
-Exact git-diff SHA256:294b20313ae2de248301fa20bbb4f9c312d51efa4851a434466f98a588dd93e6.
-Saved owner-plan-local-edit.patch in ignored current-plan workspace. No stashes used.
-
-Protected refs unchanged:
+Owner approved design96262fa and LN01–LN09 execution, bounded task branches/worktrees,
+reviewed commits/pushes and feature integrations. Preserve main/milestone/tag now:
 main d8ea51797b5ca3bfefa37cd5f7bafc95cbee5899;
 milestone/v0.6 6bf4c63637584584a8dfce009d2d1d79987be570;
-v0.6.0rc1 tag object1040fd2e3e4068d3f7dba77be37179299273aa41,
-peeled092715c11ed00b98255ae611fcef1bcfb8f1de9d. Prior v0.6 recorded release is
-complete; this branch adds the actual live loop/browser lifecycle, not v0.7 scope.
+v0.6.0rc1 tag1040fd2e3e4068d3f7dba77be37179299273aa41,
+peeled092715c11ed00b98255ae611fcef1bcfb8f1de9d.
+Managers mutate, systems behave, events immutable. NPCs receive filtered perceptions/
+cognition; LLM output remains an untrusted proposal through the action gateway.
+RuntimeService owns mutation/lease/provider/shutdown. Queued admission is not applied
+ACK. History stays readonly; player APIs and demographic milestones are outside scope.
 
-LN01–LN07c completed delivery/merge evidence is in reviewed reports and Git history;
-do not reconstruct historical tasks. Most recent completed LN07d root task/merged
-gates2018/10,39examples, exactmatrix26readablearchives; delivery1c2c2fc/mergec604463.
+Feature ONLY owner-local masterplan edit remains untouched at
+docs/superpowers/plans/2026-10-19-live-npc-runtime.md (accidental
+observasmall, clearly specified tasksble). Never stage/restore/reset/fix it.
+Exact diff SHA256:294b20313ae2de248301fa20bbb4f9c312d51efa4851a434466f98a588dd93e6.
+Root-owned8d task/prombt corrections are included in delivery and checkpoint; only
+restore duplicate root edits after backup/verification when merging, never ownerplan.
 
-## Environment
-
-Absolute VENV: /home/at-boy/Projects/codex/Living-World-Simulator/.worktrees/task24/.venv
-(Python3.13.5). `make VENV=ABSVENV` requires actual Chrome permissions; separate
-make examples after make closes. Tools may require sandbox escalation for Gitwrites/
-Chrome/network; approved exact worktree/branch fallback is repository-local git
-worktree because native tool cannot choose required branch/path. .worktrees ignored.
-Git network: GIT_SSH_COMMAND='ssh -F /dev/null -o BatchMode=yes'. No global SSH change.
-Stop with buffer BEFORE10%five-hour remaining; no automatic resume or reset.
+TASKPY=/home/at-boy/Projects/codex/Living-World-Simulator/.worktrees/task24/.venv/bin/python
+Python3.13.5; support>=3.11. make requires actualChrome escalation; separate examples
+after make closes. Git network uses GIT_SSH_COMMAND='ssh -F /dev/null -o BatchMode=yes'.
+Stop with headroom BEFORE10%five-hourremaining; no reset.
