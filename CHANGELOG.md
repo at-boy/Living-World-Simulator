@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add reviewed llama.cpp selection through the shared persistent runtime, with
+  pinned local GGUF identity, CLI/browser lifecycle and network-free source replay.
+
 - Define shared persistent-runtime selection for Ollama and llama.cpp, with pinned
   local GGUF identity and unchanged legacy fingerprints; implementation follows.
 

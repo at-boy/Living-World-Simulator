@@ -247,3 +247,33 @@ prior turns are visible, it may respond only to that supplied history and may
 not invent unseen speakers or claims. This is model guidance only: generated
 wording is not rewritten, and the strict response parser and action gateway
 remain unchanged.
+
+## Persistent runtime with llama.cpp
+
+Both local providers use the same persistent runtime and browser controls. Start
+and manage your llama.cpp server separately, bound to loopback, against an unchanged
+local GGUF file. The server must report the selected model ID through `/v1/models`
+and the exact alias and local backing path through `/props`. Native servers and
+same-path mounts are supported; a container-only path cannot establish local file
+identity. llama.cpp's compatibility `/api/tags` digest is not used.
+
+```bash
+living-world serve --preset founders --driver llama.cpp --model YOUR_ALIAS \
+  --model-file /absolute/path/to/model.gguf --admin-token-file /private/token-file
+```
+
+The llama.cpp default URL is `http://127.0.0.1:8080`; use `--base-url` to select
+another loopback address. The browser starts paused. `run` accepts the same provider
+flags for headless operation. Fresh llama.cpp launches require both model and file.
+Ollama retains its existing default port 11434 and rejects `--model-file`.
+
+Preflight streams SHA256 from the regular GGUF file, verifies its identity stayed
+stable, and repeats server alias/path checks under the parent cancellation/deadline.
+The archive retains the configured path spelling and digest as operator metadata;
+the file is never included in cognition requests or copied into archives. These
+checks verify bytes plus server-reported backing path, not resident GPU contents.
+Resume inherits the exact provider/file/settings. Fork may change them through
+normal preflight; switching provider requires an explicit model and, for llama.cpp,
+an explicit model file. A provider/model/file change clears a stale digest pin and
+prevents old response reuse. Offline replay needs neither server nor GGUF file.
+No server, model download, GPU selection or driver installation is managed here.

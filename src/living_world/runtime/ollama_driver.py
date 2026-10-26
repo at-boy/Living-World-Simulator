@@ -46,6 +46,7 @@ from .broker import (
     decision_document,
     encoded_body,
     provider_config,
+    provider_document,
 )
 from .contracts import DriverCommit
 from .disturbances import (
@@ -67,7 +68,7 @@ def effective_config_fingerprint(config: AttemptConfig) -> str:
             "scenario_key": config.scenario_key,
             "seed": config.seed,
             "software_revision": config.software_revision,
-            "provider": asdict(provider_config(config)),
+            "provider": provider_document(provider_config(config)),
             **(
                 {"boundary_disturbance": config.settings["boundary_disturbance"]}
                 if "boundary_disturbance" in config.settings

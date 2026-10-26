@@ -2,14 +2,16 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import multiprocessing
 import os
+import stat
 import threading
 import time
 import unicodedata
 from collections.abc import Mapping
-from dataclasses import asdict, replace
+from dataclasses import replace
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -24,7 +26,13 @@ from living_world.perception.local_llm_http import (
     UrllibJsonHttpTransport,
 )
 
-from .broker import ProviderConfig, encoded_body, provider_config, reap_owned_process
+from .broker import (
+    ProviderConfig,
+    encoded_body,
+    provider_config,
+    provider_document,
+    reap_owned_process,
+)
 
 
 class ProviderPreflightError(Exception):
@@ -85,13 +93,117 @@ def _identity(
     return name, digest
 
 
+def _llama_props(config: ProviderConfig, response: Mapping[str, object]) -> Path:
+    if response.get("model_alias") != config.model:
+        raise ProviderPreflightError("invalid_preflight")
+    value = response.get("model_path")
+    if (
+        not isinstance(value, str)
+        or not value
+        or len(value) > 4096
+        or not Path(value).is_absolute()
+        or any(unicodedata.category(c).startswith("C") for c in value)
+    ):
+        raise ProviderPreflightError("invalid_preflight")
+    try:
+        expected = Path(config.model_file or "").resolve(strict=True)
+    except FileNotFoundError:
+        raise ProviderPreflightError("model_missing") from None
+    except (OSError, ValueError, RuntimeError):
+        raise ProviderPreflightError("invalid_preflight") from None
+    try:
+        actual = Path(value).resolve(strict=True)
+    except (OSError, ValueError, RuntimeError):
+        raise ProviderPreflightError("invalid_preflight") from None
+    if actual != expected:
+        raise ProviderPreflightError("invalid_preflight")
+    return actual
+
+
+def _file_signature(value: os.stat_result) -> tuple[int, int, int, int, int]:
+    return (
+        value.st_dev,
+        value.st_ino,
+        value.st_size,
+        value.st_mtime_ns,
+        value.st_ctime_ns,
+    )
+
+
+def _llama_identity(
+    config: ProviderConfig, transport: UrllibJsonHttpTransport
+) -> tuple[str, str]:
+    def get(route: str) -> Mapping[str, object]:
+        return transport.get_json(
+            url=config.base_url + route, timeout_seconds=config.timeout_seconds
+        )
+
+    models = get("/v1/models").get("data")
+    if not isinstance(models, list) or any(
+        not isinstance(item, dict) for item in models
+    ):
+        raise ProviderPreflightError("invalid_preflight")
+    names = [_model_name(item.get("id")) for item in models]
+    if config.model not in names:
+        raise ProviderPreflightError("model_missing")
+    if names.count(config.model) != 1:
+        raise ProviderPreflightError("invalid_preflight")
+    props = get("/props")
+    path = _llama_props(config, props)
+    opened = False
+    try:
+        descriptor = os.open(path, os.O_RDONLY | os.O_NONBLOCK)
+        opened = True
+        with os.fdopen(descriptor, "rb") as stream:
+            before = os.fstat(stream.fileno())
+            if not stat.S_ISREG(before.st_mode) or stream.read(4) != b"GGUF":
+                raise ProviderPreflightError("invalid_preflight")
+            hasher = hashlib.sha256(b"GGUF")
+            while block := stream.read(1024 * 1024):
+                hasher.update(block)
+            after = os.fstat(stream.fileno())
+        if (
+            _file_signature(before) != _file_signature(after)
+            or Path(config.model_file or "").resolve(strict=True) != path
+            or _file_signature(path.stat()) != _file_signature(after)
+        ):
+            raise ProviderPreflightError("invalid_preflight")
+    except FileNotFoundError:
+        raise ProviderPreflightError(
+            "invalid_preflight" if opened else "model_missing"
+        ) from None
+    except (OSError, ValueError, RuntimeError):
+        raise ProviderPreflightError("invalid_preflight") from None
+    repeated = get("/props")
+    try:
+        repeated_path = _llama_props(config, repeated)
+        unchanged = _file_signature(path.stat()) == _file_signature(after)
+    except (OSError, ProviderPreflightError):
+        raise ProviderPreflightError("invalid_preflight") from None
+    if (
+        not unchanged
+        or repeated_path != path
+        or repeated.get("model_alias") != props.get("model_alias")
+        or repeated.get("model_path") != props.get("model_path")
+    ):
+        raise ProviderPreflightError("invalid_preflight")
+    digest = hasher.hexdigest()
+    if config.model_digest is not None and config.model_digest != digest:
+        raise ProviderPreflightError("model_digest_mismatch")
+    return config.model, digest
+
+
 def _worker(config: ProviderConfig, result_path: str) -> None:
     try:
         transport = UrllibJsonHttpTransport(config.max_response_bytes)
-        response = transport.get_json(
-            url=config.base_url + "/api/tags", timeout_seconds=config.timeout_seconds
-        )
-        name, digest = _identity(config, response)
+        if config.kind == "llama_cpp":
+            name, digest = _llama_identity(config, transport)
+        else:
+            response = transport.get_json(
+                url=config.base_url + "/api/tags",
+                timeout_seconds=config.timeout_seconds,
+            )
+            name, digest = _identity(config, response)
         result: dict[str, object] = {"model": name, "digest": digest}
     except LocalLLMHttpError as error:
         result = {"error": error.code}
@@ -130,9 +242,16 @@ def _read_result(path: Path, config: ProviderConfig) -> ProviderConfig:
         if digest != result["digest"]:
             raise ValueError
         # Validate the selected frame independently of the child parser.
-        checked_name, checked_digest = _identity(
-            config, {"models": [{"name": name, "digest": digest}]}
-        )
+        if config.kind == "llama_cpp":
+            if name != config.model:
+                raise ValueError
+            if config.model_digest is not None and config.model_digest != digest:
+                raise ProviderPreflightError("model_digest_mismatch")
+            checked_name, checked_digest = name, digest
+        else:
+            checked_name, checked_digest = _identity(
+                config, {"models": [{"name": name, "digest": digest}]}
+            )
         return replace(config, model=checked_name, model_digest=checked_digest)
     except ProviderPreflightError:
         raise
@@ -150,7 +269,9 @@ def preflight_provider(
         config = provider_config(requested)
         _model_name(config.model)
         if config.model_digest is not None:
-            normalized_digest(config.model_digest)
+            checked = normalized_digest(config.model_digest)
+            if config.kind == "llama_cpp" and checked != config.model_digest:
+                raise ValueError
     except (ArchiveError, ValueError, TypeError, AttributeError):
         raise ProviderPreflightError("invalid_preflight") from None
     deadline = time.monotonic() + config.timeout_seconds
@@ -173,7 +294,7 @@ def preflight_provider(
                             raise ProviderPreflightError("worker_failed")
                         effective_provider = _read_result(path, config)
                         settings = dict(requested.settings)
-                        settings["provider"] = asdict(effective_provider)
+                        settings["provider"] = provider_document(effective_provider)
                         effective = replace(requested, settings=settings)
                         validate_setup_config(requested, effective)
                         if time.monotonic() >= deadline:

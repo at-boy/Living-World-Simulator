@@ -1,7 +1,7 @@
 # LN09b — Both local backends through the persistent runtime
 
-Status: AUTHORIZED after reviewed LN09a integration6321306; owner explicitly requires
-both providers. This is the exact bounded backend prerequisite, not final acceptance. This prerequisite precedes original LN09 acceptance.
+Status: implementation independently reviewed and task-validated; feature integration pending.
+Owner explicitly requires both providers. This is the exact bounded backend prerequisite, not final acceptance. This prerequisite precedes original LN09 acceptance.
 Spec: approved live-runtime design plus user's explicit Ollama/llama.cpp requirement.
 No server management, downloads or GPU controls inside product/runtime.
 
