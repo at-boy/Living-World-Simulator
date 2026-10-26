@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Define deterministic resource-loss and work-blockage boundaries with retained
+  schedules, manager-owned changes and exact offline replay for acceptance testing.
+
 - Integrate local operator serving after repeated full/browser, recorded, restart,
   source-and-wheel serving checks; preserve all task branches and archives.
 

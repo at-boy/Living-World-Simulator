@@ -1,85 +1,54 @@
-# Continuation brief — CLI serving integrated; disturbance prerequisite next, October 26, 2026
+# Continuation brief — LN09a disturbance prerequisite authorized, October26,2026
 
 ## Current state and next action
 
-Owner resumed execution. LN08d delivery fdfeecf is integrated by the merge
-containing this brief into codex/live-npc-runtime. Independent review and task/merged
-gates PASS: merged make2140/10existing skips/302.60s, actual Chrome and39examples;
-separate examples, whitespace, canonical26readablearchives/newCLI7retainedcases and
-wheel11resources/import/routes/CLIhelp. Reviewed source/tests/pyproject exactdelivery.
-All branches/worktrees and the owner master-plan edit remain preserved.
+Feature codex/live-npc-runtime in .worktrees/live-npc-runtime. LN08d page deliveryfdfeecf
+integratede990961; LN08e sharedlaunch delivery8651a53 integratedb26ddf3; LN08f public
+serve delivery362c383 integrated44b634a. All taskbranches/worktrees preserved.
+OriginalLN07/LN08 are complete. Latest task/merged validation2230passed/10existing
+skips, actualChrome/publicCLIbrowser,39examples and separateexamples, whitespace,
+canonical26readonly/exacthashes,CLI7,sourceServe4,wheel11+actualServe4 PASS. No open
+substantive review findings; one8fP2 corrected and independently re-reviewed.
 
-LN08e delivery8651a53 is integrated by the merge containing this brief. Independent
-review SPEC/QUALITYPASS/open0, focused179; task/merged2173/10existing skips,
-merged314.77s/actualChrome/39examples, separateexamples/whitespace/exactcanonical26
-readablearchives/CLI7retained/wheel11 PASS. Reviewed source exactdelivery. Owner Recover
-resumed existing completed validation without redispatch. All branches/worktrees
-preserved and owner master-plan diffSHA unchanged. LN08e integrationb26ddf3 and LN08f delivery362c383 are complete;8f integrated by the
-merge containing this brief. Independent re-reviewSPECQUALITYPASS/open0 afteroneP2.
-Task/merged2230/10existing skips, merged340.50s/actualChrome/39examples/separateexamples,
-whitespace/exactcanonical26/CLI7/sourceServe4/wheel11+actualServe4 PASS. Reviewedsource
-exactdelivery,41normalacceptanceattempts retained per task/merged tree. Allbranches/
-worktrees preserved, ownerplanSHA unchanged. OriginalLN07/LN08 requirements delivered.
+Execute exact docs/subagent_execution_plan/live_npc_runtime/09a_boundary_disturbances.md
+and matching -prombt in isolated .worktrees/live-npc-ln09a on
+codex/live-npc-ln09a-boundary-disturbances (branch/worktree creation follows contract).
+Eightworkerpaths. Missing producer is authorized prerequisite to originalLN09, not
+newplayer functionality. Root chose fixed versioned boundary2 AFTER candidate step
+and BEFORE atomic advancingcommit/NEXTfeedback; no feedbackequality bypass/synthetic
+checkpoint. Manager-owned changes, immutableaudit and exactsealedsource offlinereplay.
+LN09b harness/example/docs/realbaseline+disruptions/operatorhandoff follows; full9
+acceptance and wholebranchreview remain incomplete. No main/tag integration authority.
 
-Next finalize exactLN09a deterministic completed-boundary disturbance prerequisite
-from ignored ln09a-contract-draft.md +2narrowprobes +rootdecisions, then LN09b acceptance
-harness/examples/docs. No9a sourceauthority/branch/worker yet. Draft proposesfixed
-boundary2 end-of-tick manager changes beforeatomiccommit/nextfeedback, avoiding a
-feedbackequality bypass. No playerAPI; realmodel acceptance stillnotcomplete.
+## Evidence and future acceptance
 
-OwnedOllamaPID288304 STOPPED/reaped0, session88701closed. Nativeinstalled Qwen3-4B
-Q4_K_M usedCUDA24/37layers (verifiedlog), noinstall/download/configchange. Preliminary
-baseline5035c02b05bd45daaa73e5493010d834 tick1nooffers/noactions; exactcoldchild
+Ignored plan workspace .superpowers/sdd/2026-10-19-live-npc-runtime holds progress.md,
+reviewpackages/reports, ln08f-task-* and ln08f-merged-* (41retainednormalattempts each),
+helper scripts recorded_matrix.py, archived_cli_acceptance.py, served_cli_acceptance.py,
+wheel_serving_check.py wrapping unchanged wheel_runtime_check.py. Use uniqueoutputs,
+no completed-task redispatch. Separateexamples onlyaftermake closes. Snapshot source
+before review and confirm unchangedafterfullgates. No successfuloutput dumps.
+
+Root2legacyfiniteprobe attempts preserved in ln08f-finite-tape-probe. Existing shortened
+recorded tapes require --checkpoint-only; serve exposes it only freshrecorded. Never
+suppress unused_entries or invent terminalsuccess; genericbudget outcomeNone.
+
+ln09-baseline-preflight retains3normalattempts:5035c02b05bd45daaa73e5493010d834
+initialtick1/2actualresponses/0offers/0actions; exactcoldchild
 a2eb3b98e2cf453fb807fbde167330e1 tick2/5offerseach/1accepted/1rejected/1workorder;
 offlinereplay29902c5cef134611a1314d2213ed8cc7 withproviderunavailable matches2complete
-world/event/driver/feedback checkpoints, sourcebytesunchanged. All3normalattempts
-retained in ln09-baseline-preflight; sessions41302/99913/73254closed. No ownedbackground
-program remains. Keepchecking5hourusage, stopwithheadroom before10%; noresetused.
+world/event/driver/feedback checkpoints; sourcebytesunchanged. Partial9proof only.
+OwnednativeOllama PID288304 STOPPED/reaped0, all native/simulation sessionsclosed.
+Installedmodel hf.co/Qwen/Qwen3-4B-GGUF:Q4_K_M digest
+3c4f22130d403283bb961721f2c4f83e4409afcbb7a7cd992f425c62b9304e35; nativeCUDA24/37layers
+verified, notcontainerGPUproof. Owner allows containerized Ollama/llama.cpp to useboth
+GPUs ifhelpful; verifydevices/backend, no implicitmodeldownload/driverinstall. Future
+native start: recordexactPID/UID/starttime/logs, stoponlyownedprocess beforepause.
 
-Do not redispatch completed LN08d implementation/review/gates. Original LN07/LN08
-remain incomplete until public serve acceptance; real installed Ollama is LN09.
-Keep checking five-hour allowance and checkpoint before remaining approaches10%.
-
-LN08d review corrected3P2s in one round: primitive state validation, nonnull integer
-receipt revisions with uncertain identity retained, and shared2slot detail scheduler
-across selection/refresh/reconnect. Scoped SPEC/QUALITYPASS, no open substantive
-findings. Minor desktop archive-header word wrapping is deferred to final broad review.
-Final focused132/137.29s. Root taskmake2140/10existing deliberate skips/303.65s, actual
-Chrome/all39examples; separateexamples/whitespace; exact canonical26readablearchives;
-newCLI7retainedcases including2failed-uninitialized; offlinewheel11resources/import/
-runtime routes/CLIhelp PASS. Source/tests/pyproject unchanged after review.
-
-LN08b delivery8731bbf/integration25fb5a7 and LN08c deliveryc3a5b69/integration0b81d97
-are complete and pushed after repeated task/merged gates. Parent browser page now
-works against actual runtime services; no public CLIserve or real installed-model
-acceptance is claimed. OriginalLN07 remains incomplete until serve acceptance.
-
-After8d integration, finalize the shared launch producer/CLIserve task contracts.
-Read ln08e-serve-probe.md and ln08e-root-decisions.md in the ignored workspace: these
-are read-only evidence/candidate root decisions, NOT implementation authority. Likely
-split shared prepared-launch adapter from serve consumer; root must settle exact
-factory/one-shot/recorded preparation/signals/token-file/startup/server-lifetime rules
-before source. No8e task/worker/source is authorized by those draft notes alone.
-LN09 must demonstrate actual installed Ollama decisions/actions and replay/operator
-acceptance. No installs/downloads/drivers; Podman allowed if useful.
-
-## Evidence and reusable validation
-
-Exact08d_runtime_page task/prombt/reviewedreport are canonical. Stable workspace:
-.worktrees/live-npc-runtime/.superpowers/sdd/2026-10-19-live-npc-runtime
-Contains progress.md; ln08d-review-1/fix-1/reviewed-final.diff; initial/final findings;
-ln08d-task-make/examples.log, -matrix, -cli, -wheel-final/results.json; visual captures
-ln08d-runtime-desktop/mobile.png. Every normal acceptance run remains archived.
-Initial wheel helper failed due missingpip; next rawzip import assumption failed;
-corrected installed build backend/extracted-wheel check PASS. Earlier failure evidence
-retained; source metadata untouched because build uses isolated copy.
-
-Reusable helpers (absolute TASKPY below):
-recorded_matrix.py --python TASKPY --project CHECKOUT --output NEWDIR
-archived_cli_acceptance.py --project CHECKOUT --output NEWDIR (run viaTASKPY)
-wheel_runtime_check.py --python TASKPY --project CHECKOUT --output NEWDIR
-Canonical helper archives underoutput/state/living-world/runs; CLIhelper underruns.
-No deletes. Unit test/probe temporary fixtures are allowed; normalmanual runs retained.
+Two narrow9probes +candidate decisions in ln09-disturbance-probe.md,
+ln09-disturbance-domain-probe.md, ln09a-root-decisions.md. Exact task overridesdrafts.
+Minor deferred8d: desktoparchive Parent/Lifecycleheader midwordwrap, finalwholebranch
+review musttriage. No other known open substantivefinding.
 
 ## Authority and invariants
 
@@ -98,7 +67,7 @@ Feature ONLY owner-local masterplan edit remains untouched at
 docs/superpowers/plans/2026-10-19-live-npc-runtime.md (accidental
 observasmall, clearly specified tasksble). Never stage/restore/reset/fix it.
 Exact diff SHA256:294b20313ae2de248301fa20bbb4f9c312d51efa4851a434466f98a588dd93e6.
-Root-owned8d task/prombt corrections are included in delivery and checkpoint; only
+Root-owned task/prombt corrections are included in deliveries; only
 restore duplicate root edits after backup/verification when merging, never ownerplan.
 
 TASKPY=/home/at-boy/Projects/codex/Living-World-Simulator/.worktrees/task24/.venv/bin/python

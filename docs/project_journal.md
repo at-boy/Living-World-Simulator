@@ -1,5 +1,18 @@
 # Living World Simulator – Project Journal
 
+## LN09a prerequisite contract — October26,2026
+
+LN08f integration44b634a passed repeated2230/10/39examples/archive/CLI/serve/wheel gates.
+Two narrow read-only probes found no schedule producer/journal/replay support and
+feedback preparation requires exact publishedbase. Root chose a fixed versioned
+boundary2 at endof completed candidate tick, before atomiccommit/nextfeedback;
+manager-owned resource/work changes and sealedsource offline replay. No synthetic
+checkpoint or service/controller/feedback/domain replacement. Realpreflight proves
+initialtick has0offers, nexttick cancreatework: boundary2 is deliberate. Eightworker
+paths, exacttask/prombt precede implementation. Actualacceptance remains LN09b.
+Owner additionally authorized containerized Ollama/llama.cpp (bothGPU option); existing
+model files only, actualdevice use mustbeverified, no driver/systemreconfiguration.
+
 ## LN08f feature integration — October26,2026
 
 Delivery362c383 integrated cleanly after repeated2230/10existing skips/340.50s,
