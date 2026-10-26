@@ -867,3 +867,24 @@ cleared on preparation close, never serialized as cognition or checkpoint fields
 Only the next normal feedback preparation observes the ordinary qualitative blocked
 work projection and offers; normal following ticks may retry that work. Format-one
 policies retain their original completed-phase semantics.
+
+### Shared persistent llama.cpp provider (LN09b)
+
+The legacy archive mode `ollama` identifies the live runtime; its engine-only
+provider kind selects Ollama or llama.cpp through the same service, driver,
+spawned broker, filtered feedback, proposal parser and action gateway. llama.cpp
+receives only the existing filtered context and offered labels, packaged as
+chat messages with the response schema and bounded generation options. Complete
+request limits apply to this actual chat body in both parent and child.
+
+The operator supplies a local absolute GGUF path. A bounded spawned preflight
+checks the server's exact model ID, alias and backing path, hashes the regular
+GGUF file and checks file identity across the hash and server properties again.
+Path spelling, SHA256 and backend selection remain privileged reproducibility
+metadata in archive configuration/fingerprints. They never enter NPC context,
+memories, inference prose or the chat body. This verifies local file bytes plus
+server-reported alias/path, not resident GPU memory. No model is copied into the
+archive. Offline replay uses retained safe decisions and exact source config;
+it does not need the GGUF file or server. Simulation managers remain authoritative
+for state, completion and progression. Privileged raw inference traces remain a
+separate required task; this provider change does not add or claim those traces.

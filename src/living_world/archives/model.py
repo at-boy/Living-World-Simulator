@@ -6,6 +6,7 @@ import hashlib
 import json
 import math
 import re
+import unicodedata
 from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
@@ -289,10 +290,26 @@ class AttemptConfig:
                     "temperature",
                     "seed",
                     "model_digest",
+                    "kind",
+                    "model_file",
                 },
             )
             for key, value in provider.items():
-                if key in ("model", "model_digest"):
+                if key == "kind":
+                    if value not in ("ollama", "llama_cpp"):
+                        raise ArchiveFormatError("Unknown provider kind.")
+                elif key == "model_file":
+                    if value is not None:
+                        path = text(value)
+                        if (
+                            len(path) > 4096
+                            or not Path(path).is_absolute()
+                            or any(
+                                unicodedata.category(c).startswith("C") for c in path
+                            )
+                        ):
+                            raise ArchiveFormatError("Invalid local model path.")
+                elif key in ("model", "model_digest"):
                     text(value)
                 elif key == "base_url":
                     try:

@@ -44,6 +44,7 @@ from .service import RuntimeService
 _PROVIDER_FLAGS = (
     "driver",
     "model",
+    "model_file",
     "base_url",
     "timeout_seconds",
     "max_output_tokens",
@@ -101,6 +102,8 @@ def validate_archived_options(
     def reject() -> None:
         parser.error("invalid_configuration: incompatible or missing target/options")
 
+    if not hasattr(a, "model_file"):
+        a.model_file = None
     if a.command == "inspect":
         archived = a.attempt is not None
         if sum(bool(v) for v in (a.scenario, a.founders, a.attempt)) != 1:
@@ -146,7 +149,10 @@ def validate_archived_options(
             ):
                 reject()
             if a.preset and (
-                a.driver != "ollama" or not a.model or a.checkpoint is not None
+                a.driver not in ("ollama", "llama.cpp")
+                or not a.model
+                or a.checkpoint is not None
+                or (a.driver == "llama.cpp" and not a.model_file)
             ):
                 reject()
             if a.replay_attempt and _provided(a, _CONFIG_FLAGS):
@@ -157,9 +163,19 @@ def validate_archived_options(
             reject()
         if a.founders and a.proposal_tape:
             reject()
+        if a.model_file is not None and a.driver == "ollama":
+            reject()
         try:
-            if _provided(
-                a, ("model", "base_url", "timeout_seconds", "max_output_tokens")
+            # Resume/fork may inherit provider kind and file from their source.
+            if not (a.resume_attempt or a.fork_attempt) and _provided(
+                a,
+                (
+                    "model",
+                    "model_file",
+                    "base_url",
+                    "timeout_seconds",
+                    "max_output_tokens",
+                ),
             ):
                 ProviderConfig(
                     **{
@@ -173,6 +189,11 @@ def validate_archived_options(
                         if getattr(a, k) is not None
                     },
                     **({} if a.model else {"model": "validation"}),
+                    **(
+                        {"kind": "llama_cpp", "model_file": a.model_file}
+                        if a.driver == "llama.cpp"
+                        else {"model_file": a.model_file}
+                    ),
                 )
         except (ValueError, TypeError):
             reject()
@@ -214,7 +235,7 @@ def _requested(a: argparse.Namespace, catalog: RunCatalog) -> AttemptConfig:
         return original
     settings = dict(original.settings)
     limits = dict(cast(Mapping[str, object], settings.get("limits", {})))
-    if a.driver is not None and original.mode != a.driver:
+    if a.driver is not None and original.mode != "ollama":
         raise RuntimeCLIError(2, "invalid_configuration")
     if original.mode != "ollama" and _provided(a, _PROVIDER_FLAGS):
         raise RuntimeCLIError(2, "invalid_configuration")
@@ -229,10 +250,43 @@ def _requested(a: argparse.Namespace, catalog: RunCatalog) -> AttemptConfig:
     if original.mode == "ollama":
         old = provider_config(original)
         provider = dict(cast(Mapping[str, object], settings.get("provider", {})))
-        for name in ("model", "base_url", "timeout_seconds", "max_output_tokens"):
-            if getattr(a, name) is not None:
-                provider[name] = getattr(a, name)
-        if _model(cast(str, provider["model"])) != _model(old.model):
+        kind = (
+            old.kind
+            if a.driver is None
+            else ("llama_cpp" if a.driver == "llama.cpp" else "ollama")
+        )
+        switched = kind != old.kind
+        if switched:
+            if not a.model or (
+                kind == "llama_cpp" and not getattr(a, "model_file", None)
+            ):
+                raise RuntimeCLIError(2, "invalid_configuration")
+            provider.pop("model_digest", None)
+            provider.pop("kind", None)
+            provider.pop("model_file", None)
+            provider["base_url"] = "http://127.0.0.1:" + (
+                "8080" if kind == "llama_cpp" else "11434"
+            )
+        if kind == "llama_cpp":
+            provider["kind"] = kind
+        if kind == "ollama" and getattr(a, "model_file", None) is not None:
+            raise RuntimeCLIError(2, "invalid_configuration")
+        for name in (
+            "model",
+            "model_file",
+            "base_url",
+            "timeout_seconds",
+            "max_output_tokens",
+        ):
+            value = getattr(a, name, None)
+            if value is not None:
+                provider[name] = value
+        same_model = (
+            cast(str, provider["model"]) == old.model
+            if kind == "llama_cpp"
+            else _model(cast(str, provider["model"])) == _model(old.model)
+        )
+        if switched or not same_model or provider.get("model_file") != old.model_file:
             provider.pop("model_digest", None)
         settings["provider"] = provider
     try:
@@ -257,8 +311,11 @@ def _requested(a: argparse.Namespace, catalog: RunCatalog) -> AttemptConfig:
         same = budget(original) == budget(candidate)
         if original.mode == "ollama":
             old, new = provider_config(original), provider_config(candidate)
-            same = same and replace(old, model=_model(old.model)) == replace(
-                new, model=_model(new.model)
+            same = same and (
+                old == new
+                if old.kind == "llama_cpp" or new.kind == "llama_cpp"
+                else replace(old, model=_model(old.model))
+                == replace(new, model=_model(new.model))
             )
         if not same:
             raise RuntimeCLIError(2, "invalid_configuration")
@@ -312,6 +369,8 @@ def prepare_archived_launch(
     ):
         raise RuntimeCLIError(2, "invalid_configuration")
     a = argparse.Namespace(**vars(arguments))
+    if not hasattr(a, "model_file"):
+        a.model_file = None
     if disturbance is not None and (a.founders or a.replay_attempt):
         raise RuntimeCLIError(2, "invalid_configuration")
     config = None
@@ -374,6 +433,10 @@ def prepare_archived_launch(
                         "save_every": save_every,
                     },
                 }
+                if a.driver == "llama.cpp":
+                    provider = cast(dict[str, object], settings["provider"])
+                    provider.update({"kind": "llama_cpp", "model_file": a.model_file})
+                    provider.setdefault("base_url", "http://127.0.0.1:8080")
                 if disturbance not in (None, "none"):
                     settings["disturbance"] = disturbance
                     settings["boundary_disturbance"] = BoundaryDisturbance(

@@ -86,8 +86,9 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--archive-root", type=Path)
     run.add_argument("--database", type=Path)
     run.add_argument("--preset", choices=["founders"])
-    run.add_argument("--driver", choices=["ollama"])
+    run.add_argument("--driver", choices=["ollama", "llama.cpp"])
     run.add_argument("--model")
+    run.add_argument("--model-file")
     for option in ("resume-attempt", "fork-attempt", "replay-attempt"):
         run.add_argument("--" + option)
     run.add_argument("--checkpoint", type=_non_negative_integer)
@@ -121,8 +122,9 @@ def build_parser() -> argparse.ArgumentParser:
         "--founders", choices=[outcome.value for outcome in FoundersOutcome]
     )
     serve.add_argument("--preset", choices=["founders"])
-    serve.add_argument("--driver", choices=["ollama"])
+    serve.add_argument("--driver", choices=["ollama", "llama.cpp"])
     serve.add_argument("--model")
+    serve.add_argument("--model-file")
     for option in ("resume-attempt", "fork-attempt"):
         serve.add_argument("--" + option)
     serve.add_argument("--archive-root", type=Path)

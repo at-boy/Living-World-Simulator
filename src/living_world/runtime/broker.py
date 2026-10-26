@@ -7,21 +7,24 @@ import math
 import multiprocessing
 import os
 import time
+import unicodedata
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from multiprocessing.process import BaseProcess
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import cast
+from typing import Literal, Protocol, cast
 
 from living_world.archives import AttemptConfig
 from living_world.archives.model import actions, canonical, validate_request
+from living_world.cognition.llama_cpp_cognition_client import LlamaCppCognitionClient
 from living_world.cognition.local_llm_cognition_format import (
     parse_decision_response,
     serialize_decision_request,
 )
 from living_world.cognition.npc_cognition_client import (
     ActionOption,
+    NPCCognitionClient,
     NPCCognitionClientError,
     NPCDecision,
 )
@@ -61,8 +64,22 @@ class ProviderConfig:
     temperature: float = 0.0
     seed: int | None = None
     model_digest: str | None = None
+    kind: Literal["ollama", "llama_cpp"] = "ollama"
+    model_file: str | None = None
 
     def __post_init__(self) -> None:
+        if self.kind not in ("ollama", "llama_cpp"):
+            raise ValueError("Unknown provider kind.")
+        if self.kind == "ollama" and self.model_file is not None:
+            raise ValueError("Ollama does not use a local model file.")
+        if self.kind == "llama_cpp" and (
+            not isinstance(self.model_file, str)
+            or not self.model_file
+            or len(self.model_file) > 4096
+            or not Path(self.model_file).is_absolute()
+            or any(unicodedata.category(c).startswith("C") for c in self.model_file)
+        ):
+            raise ValueError("Expected an absolute local model path.")
         OllamaCognitionClient(
             model=self.model,
             base_url=self.base_url,
@@ -80,6 +97,21 @@ class ProviderConfig:
         object.__setattr__(self, "base_url", validate_local_base_url(self.base_url))
         object.__setattr__(self, "timeout_seconds", float(self.timeout_seconds))
         object.__setattr__(self, "temperature", float(self.temperature))
+
+
+def provider_document(config: ProviderConfig) -> dict[str, object]:
+    """Canonical provider metadata preserving historical Ollama fingerprints."""
+    values = asdict(config)
+    if config.kind == "ollama":
+        del values["kind"]
+        del values["model_file"]
+    return values
+
+
+class PayloadCognitionClient(NPCCognitionClient, Protocol):
+    def build_payload(
+        self, context: NPCContext, actions: tuple[ActionOption, ...]
+    ) -> dict[str, object]: ...
 
 
 def provider_config(config: AttemptConfig) -> ProviderConfig:
@@ -103,8 +135,11 @@ def provider_config(config: AttemptConfig) -> ProviderConfig:
 
 def client_for(
     config: ProviderConfig, transport: UrllibJsonHttpTransport | None = None
-) -> OllamaCognitionClient:
-    return OllamaCognitionClient(
+) -> PayloadCognitionClient:
+    client_type = (
+        LlamaCppCognitionClient if config.kind == "llama_cpp" else OllamaCognitionClient
+    )
+    return client_type(
         model=config.model,
         base_url=config.base_url,
         timeout_seconds=config.timeout_seconds,

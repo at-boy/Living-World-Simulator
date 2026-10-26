@@ -6,8 +6,12 @@ with exact recorded/restart/source-and-wheel serving checks; repeated feature in
 gates passed2311/10existing skips,39examples and identical compatibility evidence. Format-two work interruption resolves the canonical single-tick gap.
 Original full real-provider acceptance is still incomplete.
 
-Next authorized implementation is exact LN09b shared llama.cpp backend task/prombt
-in isolated .worktrees/live-npc-ln09b. No backend/trace acceptance claim yet.
+LN09b deliverybb907a0 shared llama.cpp backend is reviewed and integrated after repeated
+task/merged2373/10existing skips,39examples and exact recorded/restart/source-and-wheel
+checks.
+After integration, exact privileged inference traces and offline/admin analysis need
+bounded contracts before implementation, followed by real BOTHprovider acceptance.
+No complete backend/trace acceptance claim yet.
 
 ## Additional owner requirements — October26,2026
 

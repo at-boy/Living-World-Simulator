@@ -124,22 +124,34 @@ def validate_setup_config(requested: AttemptConfig, effective: AttemptConfig) ->
         k: v for k, v in effective.settings.items() if k != "provider"
     }:
         raise ArchiveFormatError("Setup intent/config mismatch.")
-    from living_world.runtime.broker import provider_config
+    from living_world.runtime.broker import provider_config, provider_document
 
     try:
-        original = asdict(provider_config(requested))
-        resolved = asdict(provider_config(effective))
+        original = provider_document(provider_config(requested))
+        resolved = provider_document(provider_config(effective))
     except (ValueError, TypeError) as exc:
         raise ArchiveFormatError("Invalid setup provider configuration.") from exc
-    for key in original.keys() - {"model", "model_digest"}:
-        if original[key] != resolved[key]:
-            raise ArchiveFormatError("Setup provider defaults mismatch.")
+    if {
+        key: value
+        for key, value in original.items()
+        if key not in {"model", "model_digest"}
+    } != {
+        key: value
+        for key, value in resolved.items()
+        if key not in {"model", "model_digest"}
+    }:
+        raise ArchiveFormatError("Setup provider defaults mismatch.")
     before = cast(Mapping[str, object], requested.settings.get("provider", {}))
     after = cast(Mapping[str, object], effective.settings.get("provider", {}))
     name = before.get("model")
     if not isinstance(name, str) or after.get("model") not in (
         name,
-        name + ":latest" if ":" not in name.rsplit("/", 1)[-1] else name,
+        (
+            name + ":latest"
+            if original.get("kind", "ollama") == "ollama"
+            and ":" not in name.rsplit("/", 1)[-1]
+            else name
+        ),
     ):
         raise ArchiveFormatError("Setup model mismatch.")
     if (
@@ -155,7 +167,7 @@ def validate_setup_config(requested: AttemptConfig, effective: AttemptConfig) ->
     if actual != after.get("model_digest"):
         raise ArchiveFormatError("Expected canonical model digest.")
     for key, value in before.items():
-        if key == "model":
+        if key in ("model", "kind", "model_file"):
             continue
         other = after.get(key)
         if key == "model_digest":

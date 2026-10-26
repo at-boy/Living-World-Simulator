@@ -1,18 +1,28 @@
-# Continuation brief — LN09a complete, both-provider runtime next, October26,2026
+# Continuation brief — LN09b complete, exact inference traces next, October26,2026
 
 ## Current state
 
-Feature codex/live-npc-runtime in .worktrees/live-npc-runtime integrates deliveryee11870.
-LN09a task .worktrees/live-npc-ln09a / codex/live-npc-ln09a-boundary-disturbances is
-committed/pushed and preserved. Independent review and task/merged make each2311/10
-existing skips, actualChrome/39examples/separateexamples/whitespace/canonical26readonly/
-CLI7/sourceServe4/wheel11+actualServe4 PASS. Task384.50s, merged382.64s; reviewedsource
-unchanged,41normalattempts retained per tree. Original LN09 acceptance incomplete.
-Execute exact docs/subagent_execution_plan/live_npc_runtime/09b_llama_cpp_runtime.md
-and matching-prombt after root creates .worktrees/live-npc-ln09b on
-codex/live-npc-ln09b-llama-runtime. Contract based on validated integration6321306;
-12workerpaths, solmedium implementer then independent solhighreview/fulltask+merged
-gates. Then bounded traces and BOTHprovider acceptance. No redispatch9a or repeat completed gates.
+Feature codex/live-npc-runtime in .worktrees/live-npc-runtime integrates reviewed
+LN09b deliverybb907a0 (taskbranch .worktrees/live-npc-ln09b /
+codex/live-npc-ln09b-llama-runtime committed/pushed and preserved). Root task/merged
+make each2373/10existing skips, actualChrome/39examples/separateexamples/whitespace/
+exactcanonical26readonly/CLI7/sourceServe4/wheel11+actualServe4PASS; task427.57s,
+merged428.71s. Reviewedsource unchanged,41normalattempts retained per gate tree.
+Fresh independent solhigh review SPEC/QUALITYPASS NO SUBSTANTIVE FINDINGS; package
+d5ebb4ce4e7754d2942c80b84d762505b6472aea8ff210ba635592d68b0e7048. Final96focused/
+62central/scoped9PythonstylePASS; prior285extendedbeforefinalhardening noted in report.
+LN09a deliveryee11870 integrated6321306, likewise fully reviewed/validated. Alltask
+branches/worktrees, archives and protected owner edit preserved. Do NOT redispatch
+completed9a/9b workers/review/gates. No active worker/reviewer/modelserver remains.
+
+NEXT: exact privileged per-inference request/response/backend/model/timing traces, then
+admin/offline analysis, then real BOTHprovider fullacceptance/compatibility/wholebranch
+review. This new trace requirement is owner-authorized but no decision-complete trace
+task/prombt or implementation exists yet. Read inference-trace-root-notes.md, resolve
+archive version/migration, durable worker-spool/import, source seal/reuse/replay and
+standalone readonly analysis contracts BEFORE implementation/delegation. Do not infer
+rawdata logging already exists from request fingerprints/parsed decisions. GPU/model/
+backend profiles are future backlog only. No main/tag actions.
 
 LN09a root amendment resolves impossible end-boundary canonical work interruption with
 format2 work schedule: typed one-step request/result inside existing atomic work phase,
@@ -27,13 +37,15 @@ Separate examples, whitespace and source equality finalized in task report.
 ## Remaining owner-authorized scope
 
 Owner explicitly requires BOTH Ollama and llama.cpp persistent-runtime verification.
-Standalone clients exist, but broker/preflight/CLI currently select Ollama only. Activate
-ignored plan-workspace09b-llama-runtime-contract-draft.md after9a integration: legacy
-modeollama remains live storage mode, provider.kind dispatches shared bounded driver;
-exact old fingerprint serialization preserved. llama installed identity must use actual
-GGUF SHA256 and matching /props alias/path, never dummy llama /api/tags digest.
-Then bounded private inference-trace contracts/storage/capture/admin inspection/export,
-then original full9 acceptance for BOTHbackends and finalwholebranchreview.
+LN09b implements shared broker/preflight/CLI in legacy live modeollama with provider.kind,
+provider_document preserves oldhashes, llama GGUFsha256+matching /props alias/path identity
+uses actuallocalfile not dummy /api/tags. No seconddriver/controller. Backend code is
+reviewed and integrated after task/merged validation; rawtrace tasks precede real acceptance.
+Next read inference-trace-root-notes.md for narrow investigation evidence and unresolved
+rootdecisions. Draft a decision-complete bounded trace-storage/capture task +savedprombt
+before code; admin readonly analysis/inspection/export may need separate boundedtask.
+Originalfull9 manualharness/examples/docs/BOTHprovideractualbaseline+disturbances/
+pausecoldrestart/offlinereplay/Python3.11installed gates/finalwholebranchreview follow.
 
 Owner explicitly requests exact per-call request bytes/backend/model/response/timings
 retained with saves/logs, including invalid/failure responses, for later analysis. This
