@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add reviewed shared archived launch preparation with one-shot ownership, recorded
+  founders input handoff and preserved identity on pre-owner cancellation/failure.
+
 - Define a shared one-shot archived launch adapter for headless runs and the later
   browser server, retaining service ownership and recorded scenario compatibility.
 
