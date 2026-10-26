@@ -39,7 +39,8 @@ merged2105/10/39examples/exactacceptance PASS. Auth/control API is integrated. L
 P2s and task-validated:2140/10existing skips,39examples,exactarchive checks and wheel11
 resources PASS. Deliveryfdfeecf integrated after repeated merged2140/10/39examples,
 exactarchive/CLI and wheel11resources PASS. Shared prepared-launch producer followed
-by public CLIserve and installed-Ollama acceptance remain upcoming.
+by public CLIserve and installed-Ollama acceptance remain upcoming. LN08e shared
+prepared-launch contract is now authorized; LN08f CLIserve has no source contract yet.
 legacy generic/taped/raw-database CLI and injected engine/state-reference hooks must
 remain compatible. Add an explicit archive observer to the existing runner, not a
 second copied loop. New live entrypoints retain RunController ownership. LN07 must

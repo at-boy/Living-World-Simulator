@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Define a shared one-shot archived launch adapter for headless runs and the later
+  browser server, retaining service ownership and recorded scenario compatibility.
+
 - Add the reviewed local control/archive page with durable command tracking and
   authenticated checkpoint inspection. Independently reviewed and integrated after
   repeated full/browser, archive, CLI and packaged-wheel checks.

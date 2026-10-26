@@ -1,5 +1,15 @@
 # Living World Simulator – Project Journal
 
+## LN08e shared-launch contract — October26,2026
+
+LN08d integratione990961 passed repeated2140/10/39examples/browser/archive/wheel gates.
+Root finalized a four-worker-path producer contract: frozen service/one-shot launch,
+existing headless policy, recorded founders retained-input handoff through public
+LegacyArchiveSession enter/retain/directclose, and exact restart/config semantics.
+CLIserve follows as LN08f, isolating HTTP/token/signal decisions. No schema/domain/
+provider/API changes. Root preflight producer-consumer rulings are in the ignored
+execution ledger; this contract and saved prompt precede implementation.
+
 ## LN08d feature integration — October26,2026
 
 Deliveryfdfeecf integrated after repeated merged2140/10existing skips/302.60s,
