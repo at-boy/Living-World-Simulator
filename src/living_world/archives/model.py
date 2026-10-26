@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import math
 import re
@@ -160,6 +161,88 @@ class AttemptRef:
             raise ArchiveFormatError("Directory must be a Path.")
 
 
+@dataclass(frozen=True, kw_only=True)
+class BoundaryDisturbance:
+    """Version-one, fixed completed-boundary policy; never NPC-facing."""
+
+    kind: Literal["resource_loss", "work_blockage"]
+    format: int = 1
+    at_tick: int = 2
+
+    def __post_init__(self) -> None:
+        if (
+            integer(self.format) not in (1, 2)
+            or integer(self.at_tick) != 2
+            or (self.format == 2 and self.kind != "work_blockage")
+        ):
+            raise ArchiveFormatError("Unknown boundary disturbance schedule.")
+        if type(self.kind) is not str or self.kind not in (
+            "resource_loss",
+            "work_blockage",
+        ):
+            raise ArchiveFormatError("Unknown boundary disturbance kind.")
+
+    def as_document(self) -> dict[str, object]:
+        return {"format": self.format, "at_tick": self.at_tick, "kind": self.kind}
+
+    @property
+    def fingerprint(self) -> str:
+        return hashlib.sha256(canonical(self.as_document()).encode()).hexdigest()
+
+
+def parse_boundary_disturbance(value: object) -> BoundaryDisturbance:
+    return BoundaryDisturbance(**document(value, {"format", "at_tick", "kind"}))
+
+
+def _validate_boundary_entry(p: Mapping[str, object]) -> None:
+    policy = BoundaryDisturbance(kind=p["kind"], at_tick=p["boundary_tick"])
+    fingerprints = {policy.fingerprint}
+    if policy.kind == "work_blockage":
+        fingerprints.add(
+            BoundaryDisturbance(kind="work_blockage", format=2).fingerprint
+        )
+    if digest(p["schedule_fingerprint"]) not in fingerprints:
+        raise ArchiveFormatError("Boundary schedule fingerprint mismatch.")
+    target = p["target_id"]
+    if target is not None:
+        text(target)
+    refs = array(p["event_references"])
+    for ref in refs:
+        text(ref)
+    if len(set(refs)) != len(refs):
+        raise ArchiveFormatError("Duplicate boundary event reference.")
+    outcome = p["outcome"]
+    quantities = p["quantity_before"], p["quantity_after"]
+    if outcome == "terminal" or (
+        policy.kind == "work_blockage" and outcome == "no_eligible_work"
+    ):
+        valid = (
+            target is None
+            and p["resource"] is None
+            and quantities == (None, None)
+            and not refs
+        )
+    elif policy.kind == "resource_loss" and outcome in ("applied", "empty_stock"):
+        before, after = integer(quantities[0]), integer(quantities[1])
+        valid = target is not None and p["resource"] == "timber" and after == 0
+        valid = valid and (
+            (before > 0 and len(refs) == 1)
+            if outcome == "applied"
+            else (before == 0 and not refs)
+        )
+    elif policy.kind == "work_blockage" and outcome == "applied":
+        valid = (
+            target is not None
+            and p["resource"] is None
+            and quantities == (None, None)
+            and bool(refs)
+        )
+    else:
+        valid = False
+    if not valid:
+        raise ArchiveFormatError("Invalid boundary disturbance outcome.")
+
+
 @dataclass(frozen=True)
 class AttemptConfig:
     mode: Literal["recorded", "ollama", "journal_replay"]
@@ -183,6 +266,7 @@ class AttemptConfig:
                 "recorded_outcome",
                 "launch_source",
                 "disturbance",
+                "boundary_disturbance",
                 "driver_format",
                 "source_config_fingerprint",
                 "finalize_proposals",
@@ -275,6 +359,12 @@ class AttemptConfig:
         ):
             if key in settings and settings[key] not in choices:
                 raise ArchiveFormatError("Unknown configuration value.")
+        if "boundary_disturbance" in settings:
+            policy = parse_boundary_disturbance(settings["boundary_disturbance"])
+            if self.mode != "ollama" or settings.get("disturbance") != policy.kind:
+                raise ArchiveFormatError(
+                    "Boundary policy requires matching live label."
+                )
         if "driver_format" in settings:
             integer(settings["driver_format"], minimum=1)
         if "source_config_fingerprint" in settings:
@@ -429,6 +519,18 @@ class JournalEntry:
                 "outcome",
                 "event_references",
             },
+            "boundary_disturbance": {
+                "base_revision",
+                "boundary_tick",
+                "kind",
+                "schedule_fingerprint",
+                "outcome",
+                "target_id",
+                "resource",
+                "quantity_before",
+                "quantity_after",
+                "event_references",
+            },
             "candidate_aborted": {"base_revision", "reason"},
             "control_requested": {"envelope"},
             "control_resolved": {"receipt"},
@@ -500,6 +602,8 @@ class JournalEntry:
                     raise ArchiveFormatError("Unknown action outcome.")
                 for item in array(p["event_references"]):
                     text(item)
+            elif self.kind == "boundary_disturbance":
+                _validate_boundary_entry(p)
             elif self.kind == "control_requested":
                 envelope(p["envelope"])
                 if "admitted_state_version" in p:

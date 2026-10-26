@@ -1,76 +1,85 @@
-# Continuation brief — LN09a disturbance prerequisite authorized, October26,2026
+# Continuation brief — LN09a complete, both-provider runtime next, October26,2026
 
-## Current state and next action
+## Current state
 
-Feature codex/live-npc-runtime in .worktrees/live-npc-runtime. LN08d page deliveryfdfeecf
-integratede990961; LN08e sharedlaunch delivery8651a53 integratedb26ddf3; LN08f public
-serve delivery362c383 integrated44b634a. All taskbranches/worktrees preserved.
-OriginalLN07/LN08 are complete. Latest task/merged validation2230passed/10existing
-skips, actualChrome/publicCLIbrowser,39examples and separateexamples, whitespace,
-canonical26readonly/exacthashes,CLI7,sourceServe4,wheel11+actualServe4 PASS. No open
-substantive review findings; one8fP2 corrected and independently re-reviewed.
+Feature codex/live-npc-runtime in .worktrees/live-npc-runtime integrates deliveryee11870.
+LN09a task .worktrees/live-npc-ln09a / codex/live-npc-ln09a-boundary-disturbances is
+committed/pushed and preserved. Independent review and task/merged make each2311/10
+existing skips, actualChrome/39examples/separateexamples/whitespace/canonical26readonly/
+CLI7/sourceServe4/wheel11+actualServe4 PASS. Task384.50s, merged382.64s; reviewedsource
+unchanged,41normalattempts retained per tree. Original LN09 acceptance incomplete.
+Next activate exact09b backend contract/prombt and isolated branch, then traces/BOTH
+provider acceptance. No redispatch9a or repeat completed gates.
 
-Execute exact docs/subagent_execution_plan/live_npc_runtime/09a_boundary_disturbances.md
-and matching -prombt in isolated .worktrees/live-npc-ln09a on
-codex/live-npc-ln09a-boundary-disturbances (branch/worktree creation follows contract).
-Eightworkerpaths. Missing producer is authorized prerequisite to originalLN09, not
-newplayer functionality. Root chose fixed versioned boundary2 AFTER candidate step
-and BEFORE atomic advancingcommit/NEXTfeedback; no feedbackequality bypass/synthetic
-checkpoint. Manager-owned changes, immutableaudit and exactsealedsource offlinereplay.
-LN09b harness/example/docs/realbaseline+disruptions/operatorhandoff follows; full9
-acceptance and wholebranchreview remain incomplete. No main/tag integration authority.
+LN09a root amendment resolves impossible end-boundary canonical work interruption with
+format2 work schedule: typed one-step request/result inside existing atomic work phase,
+ordinary eligibility/readiness then block before charge/progress, skip only selected
+order, retry nexttick. Format1 resource/oldwork and absent hashes unchanged. No schema/
+cursor/playerAPI change. Root reviewed fulltask scope12workerpaths + task/prompts,
+independent SPEC/QUALITY NO SUBSTANTIVE FINDINGS;352focused/10Pythonstyle PASS.
+Root task make2311/10existing skips384.50s, actualChrome/39examples; exactcanonical26
+readonly/CLI7/sourceServe4/wheel11+actualServe4 PASS (41normalattempts retained).
+Separate examples, whitespace and source equality finalized in task report.
 
-## Evidence and future acceptance
+## Remaining owner-authorized scope
 
-Ignored plan workspace .superpowers/sdd/2026-10-19-live-npc-runtime holds progress.md,
-reviewpackages/reports, ln08f-task-* and ln08f-merged-* (41retainednormalattempts each),
-helper scripts recorded_matrix.py, archived_cli_acceptance.py, served_cli_acceptance.py,
-wheel_serving_check.py wrapping unchanged wheel_runtime_check.py. Use uniqueoutputs,
-no completed-task redispatch. Separateexamples onlyaftermake closes. Snapshot source
-before review and confirm unchangedafterfullgates. No successfuloutput dumps.
+Owner explicitly requires BOTH Ollama and llama.cpp persistent-runtime verification.
+Standalone clients exist, but broker/preflight/CLI currently select Ollama only. Activate
+ignored plan-workspace09b-llama-runtime-contract-draft.md after9a integration: legacy
+modeollama remains live storage mode, provider.kind dispatches shared bounded driver;
+exact old fingerprint serialization preserved. llama installed identity must use actual
+GGUF SHA256 and matching /props alias/path, never dummy llama /api/tags digest.
+Then bounded private inference-trace contracts/storage/capture/admin inspection/export,
+then original full9 acceptance for BOTHbackends and finalwholebranchreview.
 
-Root2legacyfiniteprobe attempts preserved in ln08f-finite-tape-probe. Existing shortened
-recorded tapes require --checkpoint-only; serve exposes it only freshrecorded. Never
-suppress unused_entries or invent terminalsuccess; genericbudget outcomeNone.
+Owner explicitly requests exact per-call request bytes/backend/model/response/timings
+retained with saves/logs, including invalid/failure responses, for later analysis. This
+supersedes prior raw invalid-response nonretention. Keep operator-only, never NPC/unsafe
+HTML; retain bounded prefixes with explicit incomplete/unknown status on oversize/crash,
+never fabricate full bytes or times. Read-only architecture notes and pending decisions
+in inference-trace-root-notes.md. This is required scope, not already implemented.
+GPU/model/backend profiles/context-memory limits are FUTURE backlog only.
 
-ln09-baseline-preflight retains3normalattempts:5035c02b05bd45daaa73e5493010d834
-initialtick1/2actualresponses/0offers/0actions; exactcoldchild
-a2eb3b98e2cf453fb807fbde167330e1 tick2/5offerseach/1accepted/1rejected/1workorder;
+## Real backend evidence and environment
+
+Existing /home/at-boy/Projects/codex/llama.cpp/build/bin/llama-server0.7.0-dev/build11741
+commit1b29621ba, model /home/at-boy/Projects/codex/llm-models/gguf/Qwen3.5-4B-Q4_K_M.gguf.
+Owner permits model downloads to that gguf directory if needed; none needed/downloaded.
+Normal llama acceptance must use AMD Vulkan0 per owner; old NVIDIA insufficient for
+intended configuration. Native standalone cognition smoke AMD4.15s and bounded8192ctx
+dualGPU1:1split7.74s valid; verbose dual log verifies AMD+GTX1060 buffers/33of33layers.
+These are NOT persistent-world acceptance. Both ownedservers stopped/reaped0; logs
+in ignored llama-native-preflight. No active provider/container program remains.
+
+Earlier realOllama preflight ln09-baseline-preflight retains3attempts:5035c02b05bd45daaa73e5493010d834
+tick1/2responses/0offers; coldchilda2eb3b98e2cf453fb807fbde167330e1 tick2/1acceptedwork;
 offlinereplay29902c5cef134611a1314d2213ed8cc7 withproviderunavailable matches2complete
-world/event/driver/feedback checkpoints; sourcebytesunchanged. Partial9proof only.
-OwnednativeOllama PID288304 STOPPED/reaped0, all native/simulation sessionsclosed.
-Installedmodel hf.co/Qwen/Qwen3-4B-GGUF:Q4_K_M digest
-3c4f22130d403283bb961721f2c4f83e4409afcbb7a7cd992f425c62b9304e35; nativeCUDA24/37layers
-verified, notcontainerGPUproof. Owner allows containerized Ollama/llama.cpp to useboth
-GPUs ifhelpful; verifydevices/backend, no implicitmodeldownload/driverinstall. Future
-native start: recordexactPID/UID/starttime/logs, stoponlyownedprocess beforepause.
+world/events/cursors, sourcebytes unchanged. Originalmodel hf.co/Qwen/Qwen3-4B-GGUF:Q4_K_M
+digest3c4f22130d403283bb961721f2c4f83e4409afcbb7a7cd992f425c62b9304e35.
 
-Two narrow9probes +candidate decisions in ln09-disturbance-probe.md,
-ln09-disturbance-domain-probe.md, ln09a-root-decisions.md. Exact task overridesdrafts.
-Minor deferred8d: desktoparchive Parent/Lifecycleheader midwordwrap, finalwholebranch
-review musttriage. No other known open substantivefinding.
+## Recovery, ownership and validation
 
-## Authority and invariants
+Ignored .superpowers/sdd/2026-10-19-live-npc-runtime/progress.md is plan recovery ledger;
+reviewpackages, reports, task/merged helperoutputs retained there. Helpers:
+recorded_matrix.py canonical26; archived_cli_acceptance.py7; served_cli_acceptance.py4;
+wheel_serving_check.py wrapping wheel_runtime_check.py11resources+4serve. Use unique
+outputs, no completed-task redispatch. Separateexamples onlyAFTERmake closes.
 
-Owner approved design96262fa and LN01–LN09 execution, bounded task branches/worktrees,
-reviewed commits/pushes and feature integrations. Preserve main/milestone/tag now:
-main d8ea51797b5ca3bfefa37cd5f7bafc95cbee5899;
-milestone/v0.6 6bf4c63637584584a8dfce009d2d1d79987be570;
-v0.6.0rc1 tag1040fd2e3e4068d3f7dba77be37179299273aa41,
-peeled092715c11ed00b98255ae611fcef1bcfb8f1de9d.
-Managers mutate, systems behave, events immutable. NPCs receive filtered perceptions/
-cognition; LLM output remains an untrusted proposal through the action gateway.
-RuntimeService owns mutation/lease/provider/shutdown. Queued admission is not applied
-ACK. History stays readonly; player APIs and demographic milestones are outside scope.
+Owner-local masterplan edit ONLYfeature docs/superpowers/plans/2026-10-19-live-npc-runtime.md
+(accidental observasmall, clearly specified tasksble) MUST NEVER be staged/restored/fixed.
+DiffSHA294b20313ae2de248301fa20bbb4f9c312d51efa4851a434466f98a588dd93e6.
+Feature root continuation/task/prombt duplicates must be backed up/compared before
+restoring exact duplicated paths for integration; never restore ownerplan.
 
-Feature ONLY owner-local masterplan edit remains untouched at
-docs/superpowers/plans/2026-10-19-live-npc-runtime.md (accidental
-observasmall, clearly specified tasksble). Never stage/restore/reset/fix it.
-Exact diff SHA256:294b20313ae2de248301fa20bbb4f9c312d51efa4851a434466f98a588dd93e6.
-Root-owned task/prombt corrections are included in deliveries; only
-restore duplicate root edits after backup/verification when merging, never ownerplan.
+Protected refs last liveverifiedunchanged: main d8ea51797b5ca3bfefa37cd5f7bafc95cbee5899;
+milestone/v0.6 6bf4c63637584584a8dfce009d2d1d79987be570; v0.6.0rc1 tag
+1040fd2e3e4068d3f7dba77be37179299273aa41 peeled092715c11ed00b98255ae611fcef1bcfb8f1de9d.
+No main/tag action authorized now. Owner approved feature integrations/pushes. Managers
+mutate/systems behave/eventsimmutable; RuntimeService solewriter; LLMfiltered proposals
+through gateway; world goals/stages authority preserved. Futureplayer chaos no playerAPI.
 
-TASKPY=/home/at-boy/Projects/codex/Living-World-Simulator/.worktrees/task24/.venv/bin/python
-Python3.13.5; support>=3.11. make requires actualChrome escalation; separate examples
-after make closes. Git network uses GIT_SSH_COMMAND='ssh -F /dev/null -o BatchMode=yes'.
-Stop with headroom BEFORE10%five-hourremaining; no reset.
+Python /home/at-boy/Projects/codex/Living-World-Simulator/.worktrees/task24/.venv/bin/python
+3.13.5, support>=3.11. make requires actualChrome escalation; source equality afterward.
+Git network GIT_SSH_COMMAND='ssh -F /dev/null -o BatchMode=yes'.
+Deferred minor8d: desktoparchive Parent/Lifecycleheader midwordwrap, finalwholebranch
+review musttriage. Stop with headroom BEFORE10%five-hourremaining; noreset/automaticresume.

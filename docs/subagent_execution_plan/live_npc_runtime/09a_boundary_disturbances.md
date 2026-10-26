@@ -1,6 +1,6 @@
 # LN09a — Deterministic completed-boundary disturbances
 
-Status: authorized prerequisite after LN08f integration44b634a.
+Status: COMPLETE — reviewed deliveryee11870 and repeated task/merged validation passed.
 Base44b634a task/merged validated2230/10existing skips,39examples/archive/CLI/serve/wheelPASS.
 Purpose: provide the missing producer for owner-approved LN09 resource_loss and
 work_blockage acceptance, without a player API or harness-owned world mutation.
@@ -8,8 +8,8 @@ Existing service remains sole writer. This is prerequisite behavior, not accepta
 
 ## Scope
 
-Exactly8 worker paths: new src/living_world/runtime/disturbances.py;
-src/living_world/archives/model.py; src/living_world/runtime/entrypoints.py;
+Exactly9 worker paths: new src/living_world/runtime/disturbances.py;
+src/living_world/archives/model.py; src/living_world/archives/catalog.py (narrow fork policy guard only); src/living_world/runtime/entrypoints.py;
 src/living_world/runtime/ollama_driver.py; src/living_world/runtime/journal_replay.py;
 new tests/test_runtime_disturbances.py; docs/npc_information_boundary.md (newpathflow
 only); own docs/subagent_execution_plan/live_npc_runtime/09a_boundary_disturbances-report.md.
@@ -135,8 +135,11 @@ private cognition in prompts. No success injected when actualmodel declines acti
 ## Tests and gates
 
 Meaningful RED beforecode. Unit strictgrammar/legacycompatibility and fakeprovider
-RuntimeService live paths for both policies with eligiblework created by ordinary
-proposal gateway, all-stock resource loss exactly once, workreservation/event order,
+RuntimeService live paths for both policies through ordinary proposal gateway;
+resource loss applies, canonical work truthfully yields no_eligible_work (see limitation
+below). Direct helper work-applied coverage uses a domain-valid multi-tick work offer
+through WorkActionHandler, not a claim about production canonical composition. Cover
+all-stock resource loss exactly once, workreservation/event order,
 empty/noeligible/terminal/malformedstate outcomes, manager/eventfailure no advancing
 commit and sourcestate untouched. None behavior byte-exact to old reference.
 Pause after stagedresponses before boundary2, close/restart childexactworld/cursors,
@@ -157,3 +160,149 @@ Independenthighreview before root task/merged make,separateexamples,canonical26/
 sourcepublicserve4/wheel11+actualserve4. Preservebranches/worktrees/owneredit. LN09b
 manualharness/examples/docs/actualOllama disturbedruns and fullacceptance follow;
 this prerequisite alone cannot complete originalLN09 or authorize main/tag changes.
+
+## Fingerprint clarification — root before producer correction
+
+Existing effective_config_fingerprint hashes scenario/seed/software/provider/feedback,
+not arbitrarysettings. Add top-level boundary_disturbance:record.as_document() to that
+fingerprint document ONLY when an active versioned record is present. Absent record
+and legacy scalar-only labels retain the exact prior document/hash. Do not hash
+unrelated settings or change format1. New schedule must bind every request/livecursor/
+source_config_fingerprint/replay/reuse guard. Add explicit oldhash-preservation and
+newpolicy separation tests; do not merely rely on schedule journal fingerprint.
+Candidate mutation must require matching run_metadata scenario key/seed and valid
+canonical camp settlement. Inspect public service.fork/catalog compatibility too:
+changing/clearing activepolicy through a direct fork config must reject; if existing
+producer does not enforce this, report exact gap before expanding file scope.
+
+## Direct catalog fork clarification — root before correction
+
+RunCatalog.fork currently permits same-mode live configs to alter the active policy.
+Add a narrow pre-reservation guard when source.mode == target.mode == ollama:
+optional versioned boundary_disturbance records must equal, rejecting enable, clear,
+and change. Absent and legacy scalar-only annotations both mean no active policy.
+Keep existing ollama -> journal_replay transition legal: replay target intentionally
+omits the active record and executes sealed SOURCE policy. No general fork settings
+rewrite or legacy compatibility expansion. Direct catalog tests cover enable/clear/
+change rejection before reservation/source-byte effects, unchanged inheritance, and
+legal source-policy offline replay. Other catalog behavior remains unchanged.
+
+## Canonical work viability limitation — root investigation
+
+Canonical FoundersRules.required_progress is1, each eligible normal work order
+progresses/completes in its creating tick, while unavailable work becomes BLOCKED.
+FoundersPolicy.from_scenario rejects altered policy manifests. Therefore this fixed
+completed-boundary policy cannot find READY/ASSIGNED/ACTIVE canonical work through
+ordinary live proposals. Preserve truthful no_eligible_work; never fabricate a work
+order, alter canonical policy, or claim a custom fixture as production acceptance.
+The worker must report this limitation explicitly. Applied work interruption through
+the production composition remains an OPEN prerequisite to LN09 acceptance and task
+completion; root must decide and document a bounded follow-up before implementation.
+No full gates/approval/commit of this incomplete task solely because focused tests pass.
+
+## Root execution-phase amendment — supersedes format-2 work limitations above
+
+Authorization: approved LN09 requires a real work disturbance; read-only probe confirmed
+that a before-work standalone hook still retries BLOCKED work immediately and newly
+created work is PROPOSED. Root ruling: intervene inside existing atomic WorkExecutionSystem,
+only for an explicitly installed one-step request. This preserves canonical definitions,
+normal scheduler order and default recorded behavior. The earlier nine-file/no-domain
+boundary and open-limitation stop are superseded ONLY by this exact amendment. Task
+remains incomplete until new production-path evidence and renewed review/root gates.
+
+Allowed worker paths are now exactly12: previous9 plus NEW src/living_world/work/interruption.py,
+src/living_world/work/execution.py and src/living_world/simulation/simulation_engine.py.
+Tests remain in authorized tests/test_runtime_disturbances.py; no other tests/files.
+Do not edit masterplan or common root status docs. No new world schema, cursor field,
+external API, CLI flag, work policy constants or canonical scenario modification.
+
+Policy compatibility: preserve format1 at_tick2 kinds/resource+work semantics exactly,
+including old completed-phase work/no-eligible outcomes. Accept format2 ONLY with
+kind work_blockage, at_tick2. New factory work_blockage creates format2; resource_loss
+still creates format1. Fingerprint includes unchanged full record; never reinterpret
+format1 or old hashes. Journal payload keys stay identical; schedule_fingerprint binds
+version/phase. Format2 work manager events occur at execution tick1, resulting completed
+checkpoint/audit boundary_tick2. This is deliberate, not an event retimestamping.
+
+work/interruption.py owns frozen keyword-only WorkInterruptionRequest(settlement_id:str,
+execution_tick:int) and WorkInterruptionResult(request:WorkInterruptionRequest,
+outcome:Literal[applied,no_eligible_work],work_id:str|None,event_references:tuple[str,...]).
+Strict nonempty IDs, nonnegative actualint (notbool), closed outcomes, applied nonempty
+work/ref tuple, noeligible None/empty; unique ordered eventrefs. No archive/runtime
+imports or world references. WorkExecutionSystem.configure_interruption(request|None)
+validates/replaces request and clears previous result; readonly interruption_result
+property exposes last successful phase result. SimulationEngine public
+configure_work_interruption(request|None) delegates and checks failed-tick guard;
+readonly work_interruption_result delegates. No scheduler replacement/rebuild required.
+
+Execution: create result ONLY for request.execution_tick == state.tick. Current scheduler
+executes systems before tick increment. No policy means EXACT old ordering/events/world.
+Keep ordinary deadline/prerequisite/permanent-target/readiness and resource/labor/tool
+availability checks. Select FIRST executable target-settlement work in existing work.all()
+order. Newly PROPOSED is normally promoted READY; BLOCKED with successful normal preflight
+is normally marked READY. Existing ASSIGNED/ACTIVE must have a valid reservation first.
+Select before charging/progress; for READY after successful preflight but BEFORE new
+reservation, for valid ASSIGNED/ACTIVE BEFORE adding phase-local labor/tool locks.
+Call existing work.block(id,External work interruption), capture ONLY emitted release/
+blocked eventrefs in manager order, immediately continue that order for this phase.
+Do not consume labor/tool phase locks for interrupted work; other orders execute normally.
+Do not select unavailable/deadline/prerequisite/invalid-target work, fabricate work, or
+mutate dictionaries. At most one selected order; if none emit noeligible result even with
+zero work. Publish result ONLY after atomic shadow phase successfully publishes state;
+exceptions publish neither result nor advancing archive. Next tick retries normally.
+
+runtime/disturbances.py adds frozen PreparedBoundaryDisturbance carrying only parsed
+policy, request|None and terminal_before_step:bool (no engine/WorldState references).
+prepare_boundary_disturbance(candidate,config)->PreparedBoundaryDisturbance|None validates
+binding and only prepares format2 work when candidate.tick+1==2. Use existing central
+founders_terminal_conditions before intervention. Terminal base => prepared terminal flag,
+no installed request. Otherwise configure matching request(camp,candidate.tick) and retain
+prepared token. Other policy/tick =>None, existing finish-only format1 unchanged.
+apply_boundary_disturbance adds optional prepared keyword defaultNone. Format2 completed2
+requires exact matching prepared policy/request. If terminal_before_step, emit terminal;
+else require matching successful engine work_interruption_result and translate exact
+outcome/work/eventrefs into unchanged journal grammar. Applied interruption may coexist
+with resulting terminal checkpoint: later consequences/needs/goals/stage retain authority.
+Do not replace applied with terminal after the effect. Validate matching candidate config,
+metadata/camp for both phases; reject missing/inconsistent results before archive commit.
+
+Live and replay preparation.install call prepare helper before ordinary engine.step and
+retain token; finish_tick passes token before cursor/snapshot checks/commit. Replay uses
+sealed SOURCE config. close clears candidate transient request/result and token; no data
+is retained outside ordinary blocked WorkState/events/config/journal. Failure discards
+candidate under existing service semantics, no fake general rollback. Exact offline
+comparisons and normalized local base_revision remain mandatory for format1 AND2.
+
+NPC flow: only next normal feedback sees fixed qualitative blocked work projection and
+ordinary offers; no new context/feedback API, numbers, IDs, phase/schedule/audit data.
+Document phase and engine-only token/result before new code in existing allowed doc.
+
+TDD: first reproduce canonical factory work policy currently always noeligible. Update
+factory expectation to format2 and prove ordinary fake-provider live gateway-created work
+BLOCKED at completed2 with no selected input charge/progress/effect, next feedback blocked
+prose and later ordinary retry. No custom work fixture may substitute this proof. Cover
+no proposals/unavailable work/zero work, deterministic multiple orders, released reservation
+and lock reuse, injected manager/event failure no result/advancing commit/publication,
+pause/staged response reuse/cold restart/child before+after2/fork inheritance, exact offline
+all-world/events/cursors/audit/revision normalization and tampered version/result/event
+rejection. Preserve format1 resource AND old work helper/replay coverage plus oldhash.
+
+Focused regression command: existing6 modules plus tests/test_work_execution.py if that
+filename exists (otherwise report actual owning test path before changing command). Scoped
+Ruff/Black all authorized Python paths. Append amendment RED/GREEN/evidence to own report;
+root renewed independent review and full task/merged gates before any commit/integration.
+
+Cleanup clarification before worker code: SimulationEngine.configure_work_interruption
+checks failed-tick guard for NON-None requests only. None clearing of transient request/
+result is always allowed, including failed candidates; it changes no WorldState and
+does not clear failed-tick guard or permit engine reuse/step. Test failed-step cleanup
+while subsequent engine.step still rejects. This overrides earlier unconditional-guard
+wording and lets close deterministically release transient references without masking
+the original failure.
+
+Result validation clarification: require matching prepared policy/request/result plus
+ordered referenced immutable events existing with execution tick/kinds/target/camp.
+Do not require final WorkState still BLOCKED if later ordinary consequence systems
+legitimately transition it; applied interruption can coexist with resulting terminal
+checkpoint. Work-phase result and immutable block event establish the action, not a
+forbidden override of subsequent domain authority.

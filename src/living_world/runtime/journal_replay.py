@@ -10,6 +10,7 @@ from uuid import uuid4
 from living_world.archives import (
     ArchiveFormatError,
     AttemptArchive,
+    AttemptConfig,
     Checkpoint,
     ForkPoint,
     JournalEntry,
@@ -29,6 +30,11 @@ from living_world.simulation.simulation_engine import SimulationEngine
 
 from .broker import client_for, decision_document, encoded_body, provider_config
 from .contracts import DriverCommit
+from .disturbances import (
+    PreparedBoundaryDisturbance,
+    apply_boundary_disturbance,
+    prepare_boundary_disturbance,
+)
 from .feedback import FoundersFeedback
 from .founders import FoundersLiveComposition
 from .ollama_driver import (
@@ -71,6 +77,14 @@ class _CapturedSource:
             )
             self.ref = archive.ref
             self.hashes = load_retained_inputs(archive.ref).hashes
+        if any(
+            r.entry.kind == "boundary_disturbance"
+            and r.checkpoint_revision in (None, 0)
+            for r in self.records
+        ):
+            raise ArchiveFormatError(
+                "Uncommitted or initial source boundary disturbance is invalid."
+            )
         for previous, current in zip(self.checkpoints, self.checkpoints[1:]):
             a, b = (
                 decode_world(previous.snapshot).tick,
@@ -80,7 +94,7 @@ class _CapturedSource:
                 r
                 for r in self.records
                 if r.checkpoint_revision == current.revision
-                and r.entry.kind == "action_resolved"
+                and r.entry.kind in ("action_resolved", "boundary_disturbance")
             ]
             if b == a:
                 if not _same_checkpoint(previous, current) or rows:
@@ -294,6 +308,14 @@ class JournalReplayDriver:
             tuple(action_rows),
             self._feedback,
             self._source.fingerprint,
+            self._source.config,
+            previous.revision,
+            tuple(
+                r.entry
+                for r in self._source.records
+                if r.checkpoint_revision == target.revision
+                and r.entry.kind == "boundary_disturbance"
+            ),
         )
 
 
@@ -311,12 +333,19 @@ class _ReplayPreparation:
         expected: tuple[JournalEntry, ...],
         feedback: FoundersFeedback,
         fingerprint: str,
+        source_config: AttemptConfig,
+        source_base_revision: int,
+        expected_boundary: tuple[JournalEntry, ...],
     ) -> None:
         self._candidate, self._base, self._archive = candidate, base, archive
         self._target, self._expected, self._feedback = target, expected, feedback
         self._fingerprint = fingerprint
+        self._source_config = source_config
+        self._source_base_revision = source_base_revision
+        self._expected_boundary = expected_boundary
         self._system = _ProposalSystem(candidate, base, staged)
         self._paused, self._closed = False, False
+        self._boundary: PreparedBoundaryDisturbance | None = None
 
     def poll(self) -> Literal["paused", "ready"]:
         if self._closed:
@@ -330,13 +359,30 @@ class _ReplayPreparation:
         if self._paused or self._closed:
             raise ArchiveFormatError("Replay preparation unavailable.")
         self._candidate.configure_proposal_system(self._system)
+        self._boundary = prepare_boundary_disturbance(
+            self._candidate, self._source_config
+        )
 
     def finish_tick(self) -> DriverCommit:
         outcomes = self._system.outcomes
-        if (
-            outcomes is None
-            or encode_world(self._candidate.state) != self._target.snapshot
-        ):
+        if outcomes is None:
+            raise ArchiveFormatError("Replay complete world diverged.")
+        boundary = apply_boundary_disturbance(
+            self._candidate,
+            self._source_config,
+            base_revision=self._base.revision,
+            prepared=self._boundary,
+        )
+        if len(boundary) != len(self._expected_boundary):
+            raise ArchiveFormatError("Replay boundary disturbance count diverged.")
+        for actual, expected in zip(boundary, self._expected_boundary):
+            if expected.payload["base_revision"] != self._source_base_revision or any(
+                canonical(actual.payload[k]) != canonical(expected.payload[k])
+                for k in actual.payload
+                if k != "base_revision"
+            ):
+                raise ArchiveFormatError("Replay boundary disturbance diverged.")
+        if encode_world(self._candidate.state) != self._target.snapshot:
             raise ArchiveFormatError("Replay complete world diverged.")
         for actual, expected in zip(outcomes, self._expected):
             if any(
@@ -355,12 +401,14 @@ class _ReplayPreparation:
         )
         if canonical(cursor) != canonical(self._target.driver_cursor):
             raise ArchiveFormatError("Replay semantic cursor diverged.")
-        return DriverCommit(cursor, feedback, outcomes)
+        return DriverCommit(cursor, feedback, outcomes + boundary)
 
     def close(self) -> None:
         if self._closed:
             return
         self._closed = True
+        self._candidate.configure_work_interruption(None)
+        self._boundary = None
         self._candidate.configure_proposal_system(None)
         latest = self._archive.checkpoint()
         if (

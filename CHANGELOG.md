@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Integrate replayable disturbances after repeated full/browser, exact recorded,
+  restart, source-and-wheel serving validation; preserve every task branch/archive.
+
+- Add reviewed, replayable resource loss and one-tick work interruption through
+  ordinary engine managers, preserving recorded behavior and exact cold restart.
+
 - Define deterministic resource-loss and work-blockage boundaries with retained
   schedules, manager-owned changes and exact offline replay for acceptance testing.
 

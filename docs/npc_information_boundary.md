@@ -835,3 +835,35 @@ responses with local request identities, and uncertain/failed inference requires
 explicit Retry. Offline replay captures one source checkpoint/journal horizon,
 regenerates filtered requests with source configuration, applies the same gateways,
 and compares complete worlds/cursors/outcomes before publication without network.
+
+### Completed-boundary runtime disturbances (LN09a)
+
+The optional immutable attempt policy applies at completed candidate tick 2, after
+ordinary systems and terminal finalization, before the atomic archive commit.
+EntityManager changes camp timber; WorkManager blocks deterministically selected
+eligible camp work and releases its reservations. EventManager owns immutable
+history. The detached candidate is discarded if completion fails; no disturbed
+world is published ahead of its commit.
+
+At the next preparation, existing feedback samples only holder-scoped local need,
+work and mandate facts. Existing adapters translate these to qualitative prose and
+safe offered labels. Changed qualitative hashes update owner observations and
+memories; unchanged facts retain existing deduplication across restarts. The LLM
+receives filtered context and offers, then proposes an action. The gateway still
+revalidates the authoritative current world. Declined actions do not imply success.
+
+Schedule configuration, exact quantities, manager/entity/work IDs, event references,
+audit rows, archive/checkpoint revisions and fingerprints remain engine-only.
+No raw WorldState, arbitrary runtime objects or other NPCs' private cognition enter
+prompts. Replay reconstructs the same boundary from sealed source configuration;
+it never turns audit fields into NPC observations or prose.
+
+Format-two work blockage uses a one-step typed interruption request inside the
+existing atomic work execution phase, before selected work charges inputs or makes
+progress. The policy still audits completed boundary 2; its ordinary manager events
+retain execution tick 1. The transient prepared token and typed phase result contain
+only engine policy/request/outcome/reference data and stay engine-only. They are
+cleared on preparation close, never serialized as cognition or checkpoint fields.
+Only the next normal feedback preparation observes the ordinary qualitative blocked
+work projection and offers; normal following ticks may retry that work. Format-one
+policies retain their original completed-phase semantics.

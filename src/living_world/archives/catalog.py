@@ -1020,6 +1020,12 @@ class RunCatalog:
                 }[source_config.mode]
             ):
                 raise ArchiveFormatError("Invalid fork configuration transition.")
+            if source_config.mode == config.mode == "ollama" and canonical(
+                source_config.settings.get("boundary_disturbance")
+            ) != canonical(config.settings.get("boundary_disturbance")):
+                raise ArchiveFormatError(
+                    "Invalid fork boundary disturbance policy change."
+                )
             ref = self._reserve(
                 config,
                 (attempt_id, revision),

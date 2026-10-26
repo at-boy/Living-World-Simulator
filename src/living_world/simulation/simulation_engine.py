@@ -58,6 +58,10 @@ from living_world.systems.simulation_system import SimulationSystem
 from living_world.systems.trade_system import TradeSystem
 from living_world.systems.weather_system import WeatherSystem
 from living_world.work.execution import WorkExecutionSystem
+from living_world.work.interruption import (
+    WorkInterruptionRequest,
+    WorkInterruptionResult,
+)
 from living_world.work.manager import WorkManager
 
 
@@ -373,6 +377,17 @@ class SimulationEngine:
     @property
     def scenarios(self) -> ScenarioRuntimeManager:
         return self._scenarios
+
+    def configure_work_interruption(
+        self, request: WorkInterruptionRequest | None
+    ) -> None:
+        if request is not None:
+            self._check_failed_tick()
+        self._work_execution_system.configure_interruption(request)
+
+    @property
+    def work_interruption_result(self) -> WorkInterruptionResult | None:
+        return self._work_execution_system.interruption_result
 
     def configure_proposal_system(self, system: SimulationSystem | None) -> None:
         if system is not None and not callable(getattr(system, "step", None)):

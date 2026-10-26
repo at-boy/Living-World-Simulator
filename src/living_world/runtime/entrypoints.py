@@ -8,7 +8,7 @@ from collections.abc import Callable, Mapping
 from contextlib import suppress
 from dataclasses import dataclass, field, replace
 from threading import Event, Lock, Thread
-from typing import cast
+from typing import Literal, cast
 
 from living_world import __version__
 from living_world.archives import (
@@ -22,7 +22,11 @@ from living_world.archives import (
     retain_inputs,
 )
 from living_world.archives.catalog import SETUP_CODES
-from living_world.archives.model import identifier
+from living_world.archives.model import (
+    BoundaryDisturbance,
+    identifier,
+    parse_boundary_disturbance,
+)
 from living_world.founders import FoundersOutcome, materialize_founders_assets
 from living_world.repositories.world_snapshot import decode_world, encode_world
 from living_world.running import StopControl
@@ -299,12 +303,25 @@ def prepare_archived_launch(
     *,
     catalog: RunCatalog,
     on_reserved: Callable[[AttemptRef], None],
+    disturbance: Literal["none", "resource_loss", "work_blockage"] | None = None,
 ) -> ArchivedLaunch:
     """Prepare an owner without reserving inputs or starting provider work."""
+    if disturbance is not None and (
+        type(disturbance) is not str
+        or disturbance not in ("none", "resource_loss", "work_blockage")
+    ):
+        raise RuntimeCLIError(2, "invalid_configuration")
     a = argparse.Namespace(**vars(arguments))
+    if disturbance is not None and (a.founders or a.replay_attempt):
+        raise RuntimeCLIError(2, "invalid_configuration")
     config = None
     if a.resume_attempt or a.fork_attempt:
         config = _requested(a, catalog)
+        if disturbance is not None:
+            value = config.settings.get("boundary_disturbance")
+            active = "none" if value is None else parse_boundary_disturbance(value).kind
+            if config.mode != "ollama" or disturbance != active:
+                raise RuntimeCLIError(2, "invalid_configuration")
     cadence_config = config
     if a.replay_attempt:
         with catalog.open_attempt(a.replay_attempt) as source:
@@ -357,6 +374,12 @@ def prepare_archived_launch(
                         "save_every": save_every,
                     },
                 }
+                if disturbance not in (None, "none"):
+                    settings["disturbance"] = disturbance
+                    settings["boundary_disturbance"] = BoundaryDisturbance(
+                        kind=disturbance,
+                        format=2 if disturbance == "work_blockage" else 1,
+                    ).as_document()
                 config = AttemptConfig(
                     "ollama", scenario.key, scenario.seed, __version__, settings
                 )
