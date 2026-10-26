@@ -1,7 +1,7 @@
 # LN08d — Local runtime control and archive page
 
-Status: independently reviewed and root task-validated delivery; feature integration
-pending at usage checkpoint. Base0b81d97; exact contractef0209d.
+Status: complete, independently reviewed and task/merged validated; deliveryfdfeecf
+is integrated by the merge containing this task. Base0b81d97; contractef0209d.
 **Goal:** let a local administrator authenticate, observe/control the current world
 and browse saved checkpoints without losing command or inspection consistency.
 **Architecture:** public packaged login page keeps session credentials only in JS

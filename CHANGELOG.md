@@ -3,7 +3,8 @@
 ## Unreleased
 
 - Add the reviewed local control/archive page with durable command tracking and
-  authenticated checkpoint inspection. Task validated; feature integration pending.
+  authenticated checkpoint inspection. Independently reviewed and integrated after
+  repeated full/browser, archive, CLI and packaged-wheel checks.
 
 - Define the local runtime control and archive page, with memory-only login,
   durable command tracking and fixed historical inspection.

@@ -216,13 +216,13 @@ The optional controller must be the service's current controller. Passing `None`
 allows an archive-only or not-yet-ready application. App shutdown joins the service
 and its provider resources; closing a browser or requesting a view does not stop it.
 The existing `create_app` application and its public inspection URLs are unchanged.
-No browser page, static assets, or CLI serving command is added here.
+The packaged `/runtime` browser page uses this application. CLI serving remains a later task.
 
 Create `AdminSession.issue(origin="http://127.0.0.1:8000")` for the actual listening
 origin. Configured origins are credential-free loopback HTTP(S), canonicalized to
 lowercase with default ports removed; incoming `Origin` must match exactly. Token
 and independent CSRF nonce live only in memory. Keep them out of URLs, cookies,
-logs, archives, browser storage, and command bodies. Every operator request needs
+logs, archives, browser storage, and command bodies. Every protected operator request needs
 `Authorization: Bearer <token>`. GET may omit `Origin`; a present foreign origin is
 forbidden. POST also requires exact `Origin` and `X-CSRF-Token`. Authenticated status
 returns that nonce in its `X-CSRF-Token` response header for an in-memory client.
@@ -263,3 +263,38 @@ revisions from the archive, and neither advances the world nor invokes a model.
 These privileged operator records must never become NPC context. Initial metadata
 and archive scans run off the event loop. This bounded initial API favors correctness
 over optimizing long archive histories.
+
+
+## Local runtime page
+
+`GET /runtime` is a public, secret-free login page. Public
+`GET /runtime/assets/runtime.css` and `runtime.js` serve only these two allowlisted
+packaged assets. Page/resource reads run outside the event loop and retain no-store
+headers. A GET never constructs or starts a world.
+
+The page keeps the token, validated status-header CSRF nonce and command envelopes
+only in closure memory. Disconnect/page exit clears them, cancels requests and
+removes the child inspector; admitted server work may still complete. Status polls
+run serially, one second after the previous cycle. Failed status refresh leaves the
+last complete data visibly stale and disables mutation. Authentication failures or
+invalid nonces clear the session. Neither browser storage nor query parameters
+carry credentials.
+
+Commands use the reported operational state version. Queued receipts acknowledge
+admission only; receipt GETs discover durable applied/rejected results. An uncertain
+POST keeps the exact original envelope. Only explicit **Retry delivery** resends it,
+with the same ID/version/action; no automatic POST retry occurs. **Retry model** is a
+separate explicit runtime action. Duplicate action clicks are suppressed while that
+action is outstanding, while a permitted Pause remains available during Step.
+
+The archive list fetches actual detail outcomes through one shared two-request
+limit across background loading, selection, refresh and reconnect. Current-generation
+requests/cache are shared by attempt; obsolete queued work is canceled, while active
+reads retain capacity until they settle. Catalog order and unavailable/corrupt rows
+are retained. Each row shows start time,
+parent attempt/checkpoint and last committed tick without requiring selection.
+Lifecycle never substitutes for outcome. Detail views show configuration source,
+latest 50 typed entries and total journal size. Archive-only and no-world attempts
+remain inspectable without fabricated checkpoints. History selects a fixed complete
+checkpoint and hides live mutation controls. All archive activity is authenticated
+GET-only. The existing service/API/child protocols and NPC boundary are unchanged.

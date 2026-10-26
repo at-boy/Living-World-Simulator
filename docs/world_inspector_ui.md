@@ -124,8 +124,7 @@ are the existing packaged CSS and JavaScript assets; every response uses
 The standalone inspection application's `/inspector` keeps its original behavior.
 
 A trusted same-origin parent must fetch the protected HTML with its Bearer
-header and assign the result to an iframe's `srcdoc`. This stage supplies the
-child seam; the runtime parent and control page are separate work. The child
+header and assign the result to an iframe's `srcdoc`. The packaged `/runtime` page supplies this trusted parent. The child
 waits without requesting world data until connected. It sends exactly
 `{type: 'living-world-inspector-ready'}` to its parent using the inherited
 effective `window.origin` as target origin. For `srcdoc`, `location.origin`
@@ -162,3 +161,31 @@ The child has no simulation controls and never issues mutation requests.
 installed Chrome, a test-only trusted parent, authenticated HTML fetches and
 real checkpoint DTO routes. Its protocol, focus, race and archive-read-only
 checks supplement the unchanged standalone browser regressions.
+
+
+## Runtime parent page
+
+Open `/runtime`, enter the local administrator token and select **Connect**. The
+page shows operational state/version separately from the last committed tick and
+checkpoint. **Disconnect** clears local credentials and previews; it does not stop
+the server simulation. Use **Stop** explicitly when the current state permits it.
+A stale-status label disables mutations until a successful refresh.
+
+The parent fetches protected inspector HTML using Bearer authorization and embeds
+only that trusted template. It registers its readiness listener before installing
+the template, checks the exact message shape, inherited origin and expected frame,
+and sends the existing connection protocol. Live checkpoint pins preserve child
+navigation/filter/focus. Switching attempts, selecting history, logout and page exit
+invalidate older pending responses and clear/remove the old frame.
+
+Select a saved attempt to view its actual outcome, configuration and journal, then
+choose one complete checkpoint. Its preview is labeled historical/read-only and
+remains fixed while the live world advances. **Return to live** restores current
+controls and the live preview. No archive selection resumes/forks a world or calls
+a provider. Setup-only attempts show no committed checkpoint; corrupt attempts stay
+listed with unavailable details. Text from models, scenarios and journals is rendered
+literally. The responsive page supports keyboard controls and narrow viewports.
+
+The runtime browser regressions use real loopback uvicorn and installed Chrome,
+including actual service commands, test-only delayed providers, controlled response
+loss, session/source races and read-only archives. No real model is required.

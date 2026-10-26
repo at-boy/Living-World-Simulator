@@ -1,5 +1,14 @@
 # Living World Simulator – Project Journal
 
+## LN08d feature integration — October26,2026
+
+Deliveryfdfeecf integrated after repeated merged2140/10existing skips/302.60s,
+actualChrome/39examples, separateexamples/whitespace, exactcanonical26readablearchives,
+CLI7retainedcases and offlinewheel11resources gates PASS. Sourceexactreviewed delivery.
+Only rootcheckpoint wording conflicts; no source corrections. All task branches,
+worktrees and protectedrefs preserved, ownerlocaledit unchanged. Shared launchproducer
+and publicCLIserve remain next; installedOllama acceptance remains LN09.
+
 ## LN08d reviewed task delivery and usage pause — October 26, 2026
 
 The runtime control/archive page passed independent review after three corrected P2

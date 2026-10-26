@@ -1,14 +1,18 @@
-# Continuation brief — LN08d delivery saved; paused, October 26, 2026
+# Continuation brief — LN08d integrated; shared launch next, October 26, 2026
 
 ## Current state and next action
 
-Pause at the owner usage guard; no automatic resume/reset. LN08d delivery fdfeecf is independently reviewed and task-validated in
-.worktrees/live-npc-ln08d on codex/live-npc-ln08d-runtime-page. Feature
-codex/live-npc-runtime has contractef0209d plus checkpoint docs: SOURCE NOT MERGED.
-On owner resume verify allowance/Git/owner patch, integrate fdfeecf and
-repeat merged make, separate examples, whitespace, retained canonical/newCLI and
-wheel checks before committing integration. Do not redispatch completed worker,
-review or task gates. All task branches/worktrees must remain preserved.
+Owner resumed execution. LN08d delivery fdfeecf is integrated by the merge
+containing this brief into codex/live-npc-runtime. Independent review and task/merged
+gates PASS: merged make2140/10existing skips/302.60s, actual Chrome and39examples;
+separate examples, whitespace, canonical26readablearchives/newCLI7retainedcases and
+wheel11resources/import/routes/CLIhelp. Reviewed source/tests/pyproject exactdelivery.
+All branches/worktrees and the owner master-plan edit remain preserved.
+
+Next finalize LN08e shared prepared-launch contract, then LN08f CLIserve consumer.
+Do not redispatch completed LN08d implementation/review/gates. Original LN07/LN08
+remain incomplete until public serve acceptance; real installed Ollama is LN09.
+Keep checking five-hour allowance and checkpoint before remaining approaches10%.
 
 LN08d review corrected3P2s in one round: primitive state validation, nonnull integer
 receipt revisions with uncertain identity retained, and shared2slot detail scheduler

@@ -1,7 +1,7 @@
 # LN08d implementation report
 
-Status: independently reviewed and root task-validated delivery. Feature integration
-and repeated merged gates remain pending at the usage pause. Root retains completion authority. Work is in the assigned `live-npc-ln08d` checkout. No commits,
+Status: complete; independently reviewed, root task/merged validated and integrated
+by the merge containing this report. Root retains completion authority. Work is in the assigned `live-npc-ln08d` checkout. No commits,
 index operations, branch/worktree changes, subagents or other-checkout writes were
 performed by the worker.
 
@@ -193,3 +193,23 @@ uncompleted. Preserve all branches/worktrees and the feature owner's local edit.
 
 Pause checkpoint: task delivery fdfeecf committed and pushed on the preserved
 codex/live-npc-ln08d-runtime-page branch. Feature source remains unmerged.
+
+## Root feature integration — October26,2026
+
+Delivery fdfeecf merged without source conflicts; root checkpoint wording conflicts
+resolved. Source/tests/pyproject exactly match reviewed delivery after validation.
+- make VENV=shared absolutevenv: PASS2140,10existing deliberate skips,302.60s;
+  actual Chrome and39examples, no new warnings.
+- Separate make examples after make closed: PASS39.
+- git diff --check and cached equivalent: PASS.
+- recorded_matrix.py: PASS exact historical hashes/outcomes;26retained normalCLI
+  attempts, all latest complete checkpoints opened read-only; matches task results.
+- archived_cli_acceptance.py: PASS7retained attempts including2expectedfailed-
+  uninitialized, exact initialworld/cursors, sourcebytes unchanged, resume/fork parity.
+- wheel_runtime_check.py: PASS offline isolated build/extracted import,11resource
+  bytes, public runtime/inspector, protected status and CLIhelp;0normal simulations.
+Evidence in ignored workspace ln08d-merged-{make,examples,matrix,cli,wheel}.
+Task checkout/branch preserved. Owner local-plan diffSHA294b20313ae2de248301fa20bbb4f9c312d51efa4851a434466f98a588dd93e6
+unchanged. Protected main/milestone/tag unchanged. Three prior P2s closed; minor
+archive-header wrapping remains deferred final broadreview. Public CLIserve and real
+installed-Ollama acceptance are still outstanding; this is not full LN07–LN09 completion.
