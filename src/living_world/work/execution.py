@@ -15,6 +15,10 @@ from living_world.spatial.model import Point
 from living_world.state.world_state import WorldState
 from living_world.systems.resource_system import ResourceSystem
 from living_world.systems.simulation_system import SimulationSystem
+from living_world.work.interruption import (
+    WorkInterruptionRequest,
+    WorkInterruptionResult,
+)
 from living_world.work.manager import WorkManager
 from living_world.work.model import (
     CapabilityWorkTarget,
@@ -36,9 +40,34 @@ class WorkExecutionSystem(SimulationSystem):
 
     def __init__(self, definitions: DefinitionManager) -> None:
         self._definitions = definitions
+        self._interruption: WorkInterruptionRequest | None = None
+        self._interruption_result: WorkInterruptionResult | None = None
+
+    def configure_interruption(self, request: WorkInterruptionRequest | None) -> None:
+        if request is not None and not isinstance(request, WorkInterruptionRequest):
+            raise TypeError("Expected a work interruption request.")
+        self._interruption = request
+        self._interruption_result = None
+
+    @property
+    def interruption_result(self) -> WorkInterruptionResult | None:
+        return self._interruption_result
 
     def step(self, state: WorldState) -> None:
+        request = self._interruption
+        active = (
+            request
+            if request is not None and request.execution_tick == state.tick
+            else None
+        )
         if not state.work_definitions:
+            if active is not None:
+                self._interruption_result = WorkInterruptionResult(
+                    request=active,
+                    outcome="no_eligible_work",
+                    work_id=None,
+                    event_references=(),
+                )
             return
         shadow = WorldState()
         for item in fields(WorldState):
@@ -48,11 +77,15 @@ class WorkExecutionSystem(SimulationSystem):
             elif isinstance(value, dict):
                 value = dict(value)
             setattr(shadow, item.name, value)
-        self._execute(shadow)
+        result = self._execute(shadow, active)
         for item in fields(WorldState):
             setattr(state, item.name, getattr(shadow, item.name))
+        if active is not None:
+            self._interruption_result = result
 
-    def _execute(self, state: WorldState) -> None:
+    def _execute(
+        self, state: WorldState, interruption: WorkInterruptionRequest | None = None
+    ) -> WorkInterruptionResult | None:
         events = EventManager(state)
         work = WorkManager(state, events)
         spatial = SpatialManager(state, events, work)
@@ -63,6 +96,27 @@ class WorkExecutionSystem(SimulationSystem):
         external = ExternalWorldReferenceManager(state, events)
         used_labor: set[str] = set()
         locked_tools: dict[tuple[str, str], int] = {}
+        result = None
+
+        def interrupt(definition: WorkDefinition) -> bool:
+            nonlocal result
+            if (
+                interruption is None
+                or result is not None
+                or definition.settlement_id != interruption.settlement_id
+            ):
+                return False
+            before = set(state.events)
+            work.block(definition.id, "External work interruption")
+            result = WorkInterruptionResult(
+                request=interruption,
+                outcome="applied",
+                work_id=definition.id,
+                event_references=tuple(
+                    ref for ref in state.events if ref not in before
+                ),
+            )
+            return True
 
         for definition in work.all():
             current = state.work_states[definition.id]
@@ -103,6 +157,8 @@ class WorkExecutionSystem(SimulationSystem):
                     work.block(definition.id, reason)
                     current = state.work_states[definition.id]
                 else:
+                    if interrupt(definition):
+                        continue
                     reservation = state.work_reservations[current.reservation_id]  # type: ignore[index]
                     used_labor.update(reservation.labor_entity_ids)
                     for requirement in reservation.tools:
@@ -121,6 +177,8 @@ class WorkExecutionSystem(SimulationSystem):
                     continue
                 if current.status is WorkStatus.BLOCKED:
                     work.mark_ready(definition.id)
+                if interrupt(definition):
+                    continue
                 current = work.assign_and_reserve(definition.id, labor)
                 used_labor.update(labor)
                 for requirement in definition.tools:
@@ -171,6 +229,15 @@ class WorkExecutionSystem(SimulationSystem):
                     definition,
                 )
                 work.complete(definition.id)
+
+        if interruption is not None and result is None:
+            result = WorkInterruptionResult(
+                request=interruption,
+                outcome="no_eligible_work",
+                work_id=None,
+                event_references=(),
+            )
+        return result
 
     def _available_labor(
         self, state: WorldState, definition: WorkDefinition, used: set[str]

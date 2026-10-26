@@ -48,6 +48,11 @@ from .broker import (
     provider_config,
 )
 from .contracts import DriverCommit
+from .disturbances import (
+    PreparedBoundaryDisturbance,
+    apply_boundary_disturbance,
+    prepare_boundary_disturbance,
+)
 from .feedback import DecisionInput, FoundersFeedback, _inside
 
 
@@ -63,6 +68,11 @@ def effective_config_fingerprint(config: AttemptConfig) -> str:
             "seed": config.seed,
             "software_revision": config.software_revision,
             "provider": asdict(provider_config(config)),
+            **(
+                {"boundary_disturbance": config.settings["boundary_disturbance"]}
+                if "boundary_disturbance" in config.settings
+                else {}
+            ),
             "feedback": {
                 "max_perceptions": 8,
                 "max_memories": 8,
@@ -347,6 +357,7 @@ class _LivePreparation:
         self.paused, self.closed = False, False
         self.system: _ProposalSystem | None = None
         self._aborted = False
+        self._boundary: PreparedBoundaryDisturbance | None = None
 
     def _request(self, item: DecisionInput) -> dict[str, object]:
         payload = client_for(self.driver.config).build_payload(
@@ -598,6 +609,9 @@ class _LivePreparation:
             raise ArchiveFormatError("Proposals are not ready.")
         self.system = _ProposalSystem(self.candidate, self.base, tuple(self.staged))
         self.candidate.configure_proposal_system(self.system)
+        self._boundary = prepare_boundary_disturbance(
+            self.candidate, self.archive.config
+        )
 
     def finish_tick(self) -> DriverCommit:
         if (
@@ -607,16 +621,24 @@ class _LivePreparation:
         ):
             raise ArchiveFormatError("Incomplete live tick.")
         outcomes = self.system.outcomes
+        boundary = apply_boundary_disturbance(
+            self.candidate,
+            self.archive.config,
+            base_revision=self.base.revision,
+            prepared=self._boundary,
+        )
         return DriverCommit(
             _cursor(self.candidate, self.fingerprint, self.binding),
             self.driver.feedback.after_tick(self.candidate, outcomes),
-            outcomes,
+            outcomes + boundary,
         )
 
     def close(self) -> None:
         if self.closed:
             return
         self.closed = True
+        self.candidate.configure_work_interruption(None)
+        self._boundary = None
         self.driver.broker.close()
         if self.active is not None:
             _, job, request = self.active

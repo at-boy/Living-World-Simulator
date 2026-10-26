@@ -1,6 +1,33 @@
 
 # Living World Simulator Backlog
 
+LN09a deterministic disturbances are independently reviewed and task-validated2311/10,
+with exact recorded/restart/source-and-wheel serving checks; feature integration gates
+remain pending. Format-two work interruption resolves the canonical single-tick gap.
+Original full real-provider acceptance is still incomplete.
+
+## Additional owner requirements — October26,2026
+
+Before final live-runtime acceptance, verify both Ollama and the installed llama.cpp
+backend through persistent worlds, controls, cold restart, archives and offline replay.
+The existing standalone llama client is not complete persistent-runtime support.
+Native llama-server and Qwen3.5-4B GGUF are available; normal llama acceptance should
+use the owner's AMD Vulkan0 configuration. Root backend contract precedes implementation.
+
+Also required: privileged per-inference exact request bytes, backend/model identity,
+received response bytes (including invalid/error responses), statuses and clearly scoped
+UTC/monotonic timing data in simulation archives for later analysis. Explicitly mark
+partial/oversized/unavailable responses, preserve safety bounds and failed attempts,
+and keep traces outside NPC context. This owner requirement supersedes earlier raw
+invalid-response nonretention. Trace storage/capture and admin inspection/export need
+bounded contracts and review before claiming implemented; historical traces unavailable
+from older runs must not be fabricated.
+
+Future only: configurable model profiles selecting Ollama or llama.cpp, GPU device(s),
+context/memory limits and hardware compatibility. Current work uses external owned
+server processes; no product GPU launcher or automatic driver changes are authorized.
+
+
 The next approved design scope is live NPC decisions and an observable run lifecycle,
 not demographic v0.7 work. Existing recorded scenarios remain supported. The
 [live runtime design](superpowers/specs/2026-10-19-live-npc-runtime-design.md) covers

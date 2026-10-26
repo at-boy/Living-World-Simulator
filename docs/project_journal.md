@@ -1,5 +1,28 @@
 # Living World Simulator – Project Journal
 
+## LN09a reviewed task delivery — October26,2026
+
+Original completed-boundary work policy could never interrupt canonical single-tick
+work. Independent investigation informed a root-authored format-two amendment: a
+frozen one-step engine-only request inside atomic work execution, after ordinary
+eligibility/readiness and before charge/progress. Only selected work skips that pass,
+manager events remain immutable, and ordinary next-tick retry remains intact. Format-one
+resource/work policies and absent-policy fingerprints remain compatible.
+
+Twelve worker paths, renewed independent spec/quality review NO SUBSTANTIVE FINDINGS;
+352 focused tests and scoped style passed. Root task make passed2311/10existing skips
+in384.50s, actualChrome/39examples; canonical26readonly/exactpriorhashes,CLI7,sourceServe4,
+wheel11resources+actualServe4 passed (41normalattempts retained including failures).
+Separate examples/whitespace and source equality recorded in final task report.
+Integration requires repeated merged gates; original live acceptance remains incomplete.
+
+Owner additionally requires real Ollama AND llama.cpp persistent-runtime verification,
+exact privileged per-LLM request/response/timing traces, and future model/backend/GPU
+profiles. These are recorded in backlog; backend/trace implementation and full acceptance
+are still pending. Existing Qwen3.5 native llama smoke passed AMD and bounded dualGPU;
+normal acceptance follows owner's AMD Vulkan0 setup. No provider server remains running.
+
+
 ## LN09a prerequisite contract — October26,2026
 
 LN08f integration44b634a passed repeated2230/10/39examples/archive/CLI/serve/wheel gates.
