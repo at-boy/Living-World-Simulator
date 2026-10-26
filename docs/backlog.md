@@ -35,8 +35,9 @@ source deliverybcbff33 integrated after independent review and task/merged2087/1
 root taskmake2105/10existing skips,39examples,separateexamples/whitespace and exact
 canonical/newCLI acceptance PASS. Delivery8731bbf is integrated by the merge containing this entry after repeated
 merged2105/10/39examples/exactacceptance PASS. Auth/control API is integrated. LN08c authenticated inspector is independently reviewed and task-validated
-(2115/10existing skips,39examples/exactarchiveacceptance); deliveryc3a5b69 integrated after repeated merged2115/10/39examples/exactacceptancePASS; Exact9path LN08d parentcontrol/archivepage contract is root-reviewed; isolated
-worker/review/gates next. CLIserve and installed-Ollama acceptance remain upcoming.
+(2115/10existing skips,39examples/exactarchiveacceptance); deliveryc3a5b69 integrated after repeated merged2115/10/39examples/exactacceptancePASS; LN08d parent control/archive page is independently reviewed after three corrected
+P2s and task-validated:2140/10existing skips,39examples,exactarchive checks and wheel11
+resources PASS. Delivery is preserved; integration/repeated merged gates await resume. CLIserve and installed-Ollama acceptance remain upcoming.
 legacy generic/taped/raw-database CLI and injected engine/state-reference hooks must
 remain compatible. Add an explicit archive observer to the existing runner, not a
 second copied loop. New live entrypoints retain RunController ownership. LN07 must

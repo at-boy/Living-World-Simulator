@@ -23,3 +23,13 @@ othercheckout writes. Importantproducer/architecturegap ->root beforechoice/expa
 Unittempfixturesallowed; normalmanualsimulations alwaysretainarchives. Rootindependent
 review/corrections/re-review/fulltask+mergedgates/wheel11resources beforecommit.
 Honor root usageguard and checkpoint promptly before10%five-hourremaining.
+
+Root design-list clarification before finalhandoff: archiveROWS themselves showstart,
+parent attempt/checkpoint andlastcommittedtick alongsideattempt/mode/scenario/lifecycle/
+outcome, notonly selecteddetails. Existing9pathboundary unchanged. AddactualDOM list
+assertions forparent/time/tick andnull/no-world inexistingnewbrowser testfile.
+
+Rootfix1: readfinaltaskcorrection. Primitive stringstate, requiredintegerreceiptrevision,
+one shared2slot detailGETscheduler/cache/inflight across background/selection/refresh/
+reconnect; no slotreset while old finally pending. Same9paths, RED/GREEN actualbrowser
+regressions, no unrelatedCSS/owner/API changes. Rootre-review/fullgatesafterreport.
