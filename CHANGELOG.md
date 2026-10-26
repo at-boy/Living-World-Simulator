@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Define public local serving with paused startup, protected browser controls,
+  secure session delivery and service-owned shutdown/restart behavior.
+
 - Integrate shared archived launch preparation after repeated full/browser, retained
   archive/CLI and wheel checks; preserve all task branches and owner edits.
 

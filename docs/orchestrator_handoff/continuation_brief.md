@@ -1,4 +1,4 @@
-# Continuation brief — LN08e integrated, CLI serving next, October 26, 2026
+# Continuation brief — LN08f CLI serving authorized, October 26, 2026
 
 ## Current state and next action
 
@@ -14,8 +14,10 @@ review SPEC/QUALITYPASS/open0, focused179; task/merged2173/10existing skips,
 merged314.77s/actualChrome/39examples, separateexamples/whitespace/exactcanonical26
 readablearchives/CLI7retained/wheel11 PASS. Reviewed source exactdelivery. Owner Recover
 resumed existing completed validation without redispatch. All branches/worktrees
-preserved and owner master-plan diffSHA unchanged. Finalize LN08f CLIserve contract
-from ignored ln08f-contract-draft.md; no source authority yet. Original LN07/LN08 and
+preserved and owner master-plan diffSHA unchanged. LN08e integration is b26ddf3. Execute exact
+docs/subagent_execution_plan/live_npc_runtime/08f_cli_serve.md and matching saved
+-prombt in .worktrees/live-npc-ln08f on codex/live-npc-ln08f-cli-serve. Eight worker
+paths; independent review/full task and merged gates required. Original LN07/LN08 and
 installed-Ollama LN09 remain incomplete. Currentusage100%remaining after naturalwindow
 refresh, no reset used; continue checking and stop with headroom before10%.
 Do not redispatch completed LN08d implementation/review/gates. Original LN07/LN08

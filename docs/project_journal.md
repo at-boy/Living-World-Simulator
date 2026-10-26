@@ -1,5 +1,15 @@
 # Living World Simulator – Project Journal
 
+## LN08f CLIserve contract — October26,2026
+
+LN08e integrationb26ddf3 passed repeated2173/10/39examples/browser/archive/CLI/wheel
+checks. Root finalized eight-worker-path CLI consumer contract, sharing prepared
+launch and extracting existing failure mapping/fallback. Loopback server available
+during setup, pauseddefault, explicitstart-running, tokenfile or interactive delivery,
+anchored nofollow owner-only files, signal restoration and truthful finaljoins.
+Source authority starts only with savedcontract/prombt; no domain/schema/provider/
+service/auth changes. Real installedOllama acceptance remains LN09.
+
 ## LN08e feature integration — October26,2026
 
 Delivery8651a53 integrated after repeated2173/10existing skips/314.77s, actualChrome/
