@@ -1,5 +1,23 @@
 # Living World Simulator – Project Journal
 
+## LN08e feature integration — October26,2026
+
+Delivery8651a53 integrated after repeated2173/10existing skips/314.77s, actualChrome/
+39examples, separateexamples/whitespace/exactcanonical26readablearchives/CLI7/wheel11
+PASS. Source exactreviewed delivery, clean merge. Recover resumed the existing
+completed validation rather than redispatching it. Owner edit/branches preserved.
+Next publicCLIserve consumer; realOllama acceptance remains LN09.
+
+## LN08e reviewed task delivery — October26,2026
+
+Shared adapter preserves headless policy and adds recorded founder preparation for
+later serving. Root pre-review amendments fix ref-less pre-owner cancellation and
+recorded preparation close identity; meaningful RED/GREEN recorded. Independent
+SPEC/QUALITYPASS/open0; focused179, rootmake2173/10existing skips/318.21s, actualChrome/
+39examples, separateexamples/whitespace/exactcanonical26archives/CLI7/wheel11 PASS.
+Source unchanged after review. Task delivery follows; feature merged gates pending.
+No public CLIserve or actual installedmodel acceptance is claimed.
+
 ## LN08e shared-launch contract — October26,2026
 
 LN08d integratione990961 passed repeated2140/10/39examples/browser/archive/wheel gates.

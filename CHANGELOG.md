@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Integrate shared archived launch preparation after repeated full/browser, retained
+  archive/CLI and wheel checks; preserve all task branches and owner edits.
+
+- Add reviewed shared archived launch preparation with one-shot ownership, recorded
+  founders input handoff and preserved identity on pre-owner cancellation/failure.
+
 - Define a shared one-shot archived launch adapter for headless runs and the later
   browser server, retaining service ownership and recorded scenario compatibility.
 

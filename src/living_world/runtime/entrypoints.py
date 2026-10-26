@@ -4,10 +4,10 @@ from __future__ import annotations
 
 import argparse
 import sys
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
 from contextlib import suppress
-from dataclasses import dataclass, replace
-from threading import Event, Thread
+from dataclasses import dataclass, field, replace
+from threading import Event, Lock, Thread
 from typing import cast
 
 from living_world import __version__
@@ -23,7 +23,7 @@ from living_world.archives import (
 )
 from living_world.archives.catalog import SETUP_CODES
 from living_world.archives.model import identifier
-from living_world.founders import materialize_founders_assets
+from living_world.founders import FoundersOutcome, materialize_founders_assets
 from living_world.repositories.world_snapshot import decode_world, encode_world
 from living_world.running import StopControl
 from living_world.scenarios.scenario import YAMLScenarioLoader
@@ -31,6 +31,7 @@ from living_world.simulation.simulation_engine import SimulationEngine
 
 from .broker import ERROR_CODES, ProviderConfig, provider_config
 from .contracts import RuntimeState
+from .controller import RunController
 from .launch import RuntimeStartupError
 from .legacy import LegacyArchiveSession
 from .recorded import SnapshotRepository
@@ -271,6 +272,170 @@ def _exit(code: str) -> int:
     )
 
 
+@dataclass(frozen=True)
+class ArchivedLaunch:
+    """Expose the runtime owner before its one-shot, potentially blocking launch."""
+
+    service: RuntimeService
+    _start: Callable[[bool], RunController] = field(repr=False)
+
+    def launch(self, *, paused: bool) -> RunController:
+        return self._start(paused)
+
+
+def prepare_archived_launch(
+    arguments: argparse.Namespace,
+    *,
+    catalog: RunCatalog,
+    on_reserved: Callable[[AttemptRef], None],
+) -> ArchivedLaunch:
+    """Prepare an owner without reserving inputs or starting provider work."""
+    a = argparse.Namespace(**vars(arguments))
+    config = None
+    if a.resume_attempt or a.fork_attempt:
+        config = _requested(a, catalog)
+    cadence_config = config
+    if a.replay_attempt:
+        with catalog.open_attempt(a.replay_attempt) as source:
+            cadence_config = source.config
+    save_every = a.save_every or 1
+    if cadence_config is not None:
+        save_every = cast(
+            int,
+            cast(Mapping[str, object], cadence_config.settings.get("limits", {})).get(
+                "save_every", 1
+            ),
+        )
+    service = RuntimeService(
+        catalog, on_reserved=on_reserved, mirror_path=a.database, save_every=save_every
+    )
+    guard = Lock()
+    used = False
+
+    def start(paused: bool) -> RunController:
+        nonlocal used, config
+        if type(paused) is not bool:
+            raise RuntimeCLIError(2, "invalid_configuration")
+        with guard:
+            if used:
+                raise RuntimeCLIError(2, "invalid_configuration")
+            used = True
+        if a.preset:
+            with materialize_founders_assets() as assets:
+                scenario = YAMLScenarioLoader().load(assets.scenario)
+                settings: dict[str, object] = {
+                    "launch_source": "cli",
+                    "driver_format": 1,
+                    "provider": {
+                        name: getattr(a, name)
+                        for name in (
+                            "model",
+                            "base_url",
+                            "timeout_seconds",
+                            "max_output_tokens",
+                        )
+                        if getattr(a, name) is not None
+                    },
+                    "limits": {
+                        "max_ticks": (
+                            None
+                            if a.continuous
+                            else (a.max_ticks if a.max_ticks is not None else 20)
+                        ),
+                        "max_requests": a.max_requests or 40,
+                        "save_every": save_every,
+                    },
+                }
+                config = AttemptConfig(
+                    "ollama", scenario.key, scenario.seed, __version__, settings
+                )
+                ref = catalog.reserve_setup(config)
+                try:
+                    with AttemptLease(ref):
+                        inputs = retain_inputs(ref, assets.scenario, tape_path=None)
+                except Exception:  # noqa: BLE001 - preserve allocated setup identity
+                    with suppress(Exception), AttemptLease(ref):
+                        catalog.fail_setup(ref, "setup_failed")
+                    raise RuntimeCLIError(4, "setup_failed", ref) from None
+            try:
+                return service.start(config, inputs, paused=paused)
+            except RuntimeStartupError as error:
+                if error.code != "service_closed" or error.ref is not None:
+                    raise
+                try:
+                    with AttemptLease(ref):
+                        catalog.fail_setup(ref, "setup_failed")
+                except Exception:  # noqa: BLE001 - preserve unowned attempt identity
+                    raise RuntimeCLIError(4, "archive_failed", ref) from None
+                raise RuntimeStartupError(ref, "service_closed") from None
+        elif a.founders:
+            with materialize_founders_assets() as assets:
+                scenario = YAMLScenarioLoader().load(assets.scenario)
+                maximum = a.max_ticks
+                if a.founders == "stall" and maximum is None and not a.continuous:
+                    maximum = 5
+                settings = {
+                    "launch_source": "cli",
+                    "driver_format": 1,
+                    "finalize_proposals": not a.checkpoint_only,
+                    "recorded_outcome": a.founders,
+                    "limits": {
+                        "max_ticks": maximum,
+                        "continuous": bool(a.continuous),
+                        "save_every": save_every,
+                    },
+                }
+                config = AttemptConfig(
+                    "recorded", scenario.key, scenario.seed, __version__, settings
+                )
+                session = LegacyArchiveSession(catalog, config)
+                try:
+                    try:
+                        session.__enter__()
+                        inputs = session.retain(
+                            assets.scenario,
+                            tape_path=assets.tape_for(FoundersOutcome(a.founders)),
+                        )
+                    except Exception:  # noqa: BLE001 - preserve allocated identity
+                        with suppress(Exception):
+                            session.fail("initialization_failed")
+                        raise RuntimeCLIError(
+                            4, "initialization_failed", session.ref
+                        ) from None
+                finally:
+                    try:
+                        session.close()
+                    except Exception:  # noqa: BLE001 - preserve preparation identity
+                        raise RuntimeCLIError(
+                            4, "archive_failed", session.ref
+                        ) from None
+            try:
+                return service.start(config, inputs, paused=paused)
+            except RuntimeStartupError as error:
+                if error.code != "service_closed" or error.ref is not None:
+                    raise
+                try:
+                    try:
+                        session.__enter__()
+                        session.fail("initialization_failed")
+                    finally:
+                        session.close()
+                except Exception:  # noqa: BLE001 - preserve unowned attempt identity
+                    raise RuntimeCLIError(4, "archive_failed", session.ref) from None
+                raise RuntimeStartupError(session.ref, "service_closed") from None
+        elif a.resume_attempt:
+            return service.resume(a.resume_attempt, a.checkpoint, paused=paused)
+        elif a.fork_attempt:
+            assert config is not None
+            return service.fork(
+                a.fork_attempt, a.checkpoint, config=config, paused=paused
+            )
+        else:
+            return service.replay(a.replay_attempt, a.checkpoint, paused=paused)
+
+    return ArchivedLaunch(service, start)
+
+
 def run_archived(
     arguments: argparse.Namespace, control: StopControl
 ) -> ArchivedRunResult | None:
@@ -312,73 +477,11 @@ def run_archived(
 
     watcher: Thread | None = None
     try:
-        config = None
-        if a.resume_attempt or a.fork_attempt:
-            config = _requested(a, catalog)
-        cadence_config = config
-        if a.replay_attempt:
-            with catalog.open_attempt(a.replay_attempt) as source:
-                cadence_config = source.config
-        save_every = a.save_every or 1
-        if cadence_config is not None:
-            save_every = cast(
-                int,
-                cast(
-                    Mapping[str, object], cadence_config.settings.get("limits", {})
-                ).get("save_every", 1),
-            )
-        service = RuntimeService(
-            catalog, on_reserved=announce, mirror_path=a.database, save_every=save_every
-        )
+        prepared = prepare_archived_launch(a, catalog=catalog, on_reserved=announce)
+        service = prepared.service
         watcher = Thread(target=watch, name="living-world-cli-stop", daemon=False)
         watcher.start()
-        if a.preset:
-            with materialize_founders_assets() as assets:
-                scenario = YAMLScenarioLoader().load(assets.scenario)
-                settings: dict[str, object] = {
-                    "launch_source": "cli",
-                    "driver_format": 1,
-                    "provider": {
-                        name: getattr(a, name)
-                        for name in (
-                            "model",
-                            "base_url",
-                            "timeout_seconds",
-                            "max_output_tokens",
-                        )
-                        if getattr(a, name) is not None
-                    },
-                    "limits": {
-                        "max_ticks": (
-                            None
-                            if a.continuous
-                            else (a.max_ticks if a.max_ticks is not None else 20)
-                        ),
-                        "max_requests": a.max_requests or 40,
-                        "save_every": save_every,
-                    },
-                }
-                config = AttemptConfig(
-                    "ollama", scenario.key, scenario.seed, __version__, settings
-                )
-                ref = catalog.reserve_setup(config)
-                try:
-                    with AttemptLease(ref):
-                        inputs = retain_inputs(ref, assets.scenario, tape_path=None)
-                except Exception:  # noqa: BLE001 - preserve allocated setup identity
-                    with suppress(Exception), AttemptLease(ref):
-                        catalog.fail_setup(ref, "setup_failed")
-                    raise RuntimeCLIError(4, "setup_failed", ref) from None
-            controller = service.start(config, inputs, paused=False)
-        elif a.resume_attempt:
-            controller = service.resume(a.resume_attempt, a.checkpoint, paused=False)
-        elif a.fork_attempt:
-            assert config is not None
-            controller = service.fork(
-                a.fork_attempt, a.checkpoint, config=config, paused=False
-            )
-        else:
-            controller = service.replay(a.replay_attempt, a.checkpoint, paused=False)
+        controller = prepared.launch(paused=False)
         while True:
             status = controller.status()
             if watcher_failed.is_set():

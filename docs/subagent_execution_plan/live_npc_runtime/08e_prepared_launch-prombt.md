@@ -21,3 +21,10 @@ Write 08e_prepared_launch-report.md with changed paths, RED/GREEN evidence, exac
 command/result/counts/warnings, architecture/limitations and root gates pending.
 No success-output dumps. Return only status, one-line validation and concerns;
 root independently reviews, validates, commits and integrates. Preserve owner edits.
+
+Root amendment: obey the pre-owner cancellation section added to the task before
+correction. Preserve the already retained identity and settle only ref-less
+service_closed before owner acceptance; no fallback allocation or owner double-write.
+
+Root clarification: initial recorded preparation close failure also becomes
+archive_failed4 with session.ref; do not start service or allocate fallback.

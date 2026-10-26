@@ -1,6 +1,7 @@
 # LN08e — Shared prepared archived launch
 
-Status: authorized for implementation after LN08d integratione990961.
+Status: complete; independently reviewed and task/merged validated. Delivery8651a53
+integrated by the merge containing this task.
 Base: codex/live-npc-runtime e990961, reviewed/merged validated2140/10/39examples.
 Goal: expose the existing RuntimeService before its blocking launch, sharing exact
 launch preparation between headless run and the later local browser server.
@@ -115,3 +116,32 @@ limitations and root gates pending. Do not commit. Root performs independent rea
 review then make, separate make examples, whitespace, retained canonical26/newCLI7
 and wheel11 checks on task and merged trees. Preserve task branch/worktree and owner
 master-plan edit. CLIserve and actual installed-Ollama acceptance remain incomplete.
+
+## Pre-owner cancellation amendment — root decision before correction
+
+The new exposed service can be closed before launch or during input retention. If
+service.start raises RuntimeStartupError with code service_closed AND ref is None,
+no owner accepted the already prepared attempt. Settle that exact local ref under
+preparation ownership, then re-raise RuntimeStartupError(local_ref,service_closed)
+so the caller announces it without allocating a fallback attempt. For live preset,
+use AttemptLease(local_ref) plus catalog.fail_setup(local_ref,setup_failed). For
+recorded founders, reuse the same now-closed LegacyArchiveSession object: enter it,
+fail(initialization_failed), always directclose. Do not construct a second session
+or attempt. If settlement/close fails, raise RuntimeCLIError(4,archive_failed,local_ref)
+instead, preserving physical evidence without repairs. No callback/print here.
+NEVER touch/settle any service.start exception carrying an owner ref; existing owner
+failure/cancellation handling remains authoritative. No changes to service internals.
+Tests both modes closed before launch and a deterministic shutdown-during-retention
+race: exactly one failed/inspectable attempt, closed exception carries that ref,
+no controller/provider call/checkpoint, no leaked lease, one-shot remains consumed.
+Existing callback/error policies and headless cancellation remain unchanged. This
+amendment addresses a lifecycle gap created by exposing the service before launch.
+
+Recorded preparation close clarification: the FIRST direct session.close after
+retention (including finally after enter/retain failure) must also preserve identity.
+If it raises, normalize RuntimeCLIError(4,archive_failed,session.ref), overriding the
+less severe initialization failure if needed, and never call service.start. Preserve
+physical evidence; no repair/re-reservation. Established close releases what it can;
+do not claim successful lease cleanup when close itself failed. Add injected close
+failure tests after successful retention and masking a retention failure, with exact
+ref and one attempt/no controller/provider. No broader failure-normalization refactor.

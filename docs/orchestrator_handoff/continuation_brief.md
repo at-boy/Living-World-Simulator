@@ -1,4 +1,4 @@
-# Continuation brief — LN08e shared launch authorized, October 26, 2026
+# Continuation brief — LN08e integrated, CLI serving next, October 26, 2026
 
 ## Current state and next action
 
@@ -9,10 +9,15 @@ separate examples, whitespace, canonical26readablearchives/newCLI7retainedcases 
 wheel11resources/import/routes/CLIhelp. Reviewed source/tests/pyproject exactdelivery.
 All branches/worktrees and the owner master-plan edit remain preserved.
 
-Next execute docs/subagent_execution_plan/live_npc_runtime/08e_prepared_launch.md
-and matching saved -prombt in isolated .worktrees/live-npc-ln08e, branch
-codex/live-npc-ln08e-prepared-launch. LN08d integration is e990961. LN08f CLIserve
-consumer follows; no8f source authority yet.
+LN08e delivery8651a53 is integrated by the merge containing this brief. Independent
+review SPEC/QUALITYPASS/open0, focused179; task/merged2173/10existing skips,
+merged314.77s/actualChrome/39examples, separateexamples/whitespace/exactcanonical26
+readablearchives/CLI7retained/wheel11 PASS. Reviewed source exactdelivery. Owner Recover
+resumed existing completed validation without redispatch. All branches/worktrees
+preserved and owner master-plan diffSHA unchanged. Finalize LN08f CLIserve contract
+from ignored ln08f-contract-draft.md; no source authority yet. Original LN07/LN08 and
+installed-Ollama LN09 remain incomplete. Currentusage100%remaining after naturalwindow
+refresh, no reset used; continue checking and stop with headroom before10%.
 Do not redispatch completed LN08d implementation/review/gates. Original LN07/LN08
 remain incomplete until public serve acceptance; real installed Ollama is LN09.
 Keep checking five-hour allowance and checkpoint before remaining approaches10%.
