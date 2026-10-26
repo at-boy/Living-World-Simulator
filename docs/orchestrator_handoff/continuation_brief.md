@@ -1,4 +1,4 @@
-# Continuation brief — LN08f CLI serving authorized, October 26, 2026
+# Continuation brief — CLI serving integrated; disturbance prerequisite next, October 26, 2026
 
 ## Current state and next action
 
@@ -14,12 +14,28 @@ review SPEC/QUALITYPASS/open0, focused179; task/merged2173/10existing skips,
 merged314.77s/actualChrome/39examples, separateexamples/whitespace/exactcanonical26
 readablearchives/CLI7retained/wheel11 PASS. Reviewed source exactdelivery. Owner Recover
 resumed existing completed validation without redispatch. All branches/worktrees
-preserved and owner master-plan diffSHA unchanged. LN08e integration is b26ddf3. Execute exact
-docs/subagent_execution_plan/live_npc_runtime/08f_cli_serve.md and matching saved
--prombt in .worktrees/live-npc-ln08f on codex/live-npc-ln08f-cli-serve. Eight worker
-paths; independent review/full task and merged gates required. Original LN07/LN08 and
-installed-Ollama LN09 remain incomplete. Currentusage100%remaining after naturalwindow
-refresh, no reset used; continue checking and stop with headroom before10%.
+preserved and owner master-plan diffSHA unchanged. LN08e integrationb26ddf3 and LN08f delivery362c383 are complete;8f integrated by the
+merge containing this brief. Independent re-reviewSPECQUALITYPASS/open0 afteroneP2.
+Task/merged2230/10existing skips, merged340.50s/actualChrome/39examples/separateexamples,
+whitespace/exactcanonical26/CLI7/sourceServe4/wheel11+actualServe4 PASS. Reviewedsource
+exactdelivery,41normalacceptanceattempts retained per task/merged tree. Allbranches/
+worktrees preserved, ownerplanSHA unchanged. OriginalLN07/LN08 requirements delivered.
+
+Next finalize exactLN09a deterministic completed-boundary disturbance prerequisite
+from ignored ln09a-contract-draft.md +2narrowprobes +rootdecisions, then LN09b acceptance
+harness/examples/docs. No9a sourceauthority/branch/worker yet. Draft proposesfixed
+boundary2 end-of-tick manager changes beforeatomiccommit/nextfeedback, avoiding a
+feedbackequality bypass. No playerAPI; realmodel acceptance stillnotcomplete.
+
+OwnedOllamaPID288304 STOPPED/reaped0, session88701closed. Nativeinstalled Qwen3-4B
+Q4_K_M usedCUDA24/37layers (verifiedlog), noinstall/download/configchange. Preliminary
+baseline5035c02b05bd45daaa73e5493010d834 tick1nooffers/noactions; exactcoldchild
+a2eb3b98e2cf453fb807fbde167330e1 tick2/5offerseach/1accepted/1rejected/1workorder;
+offlinereplay29902c5cef134611a1314d2213ed8cc7 withproviderunavailable matches2complete
+world/event/driver/feedback checkpoints, sourcebytesunchanged. All3normalattempts
+retained in ln09-baseline-preflight; sessions41302/99913/73254closed. No ownedbackground
+program remains. Keepchecking5hourusage, stopwithheadroom before10%; noresetused.
+
 Do not redispatch completed LN08d implementation/review/gates. Original LN07/LN08
 remain incomplete until public serve acceptance; real installed Ollama is LN09.
 Keep checking five-hour allowance and checkpoint before remaining approaches10%.

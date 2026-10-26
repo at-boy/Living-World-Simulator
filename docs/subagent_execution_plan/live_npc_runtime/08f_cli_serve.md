@@ -1,6 +1,7 @@
 # LN08f — Public local operator serving
 
-Status: authorized for implementation after reviewed LN08e integrationb26ddf3.
+Status: complete, independently reviewed and task/merged validated. Delivery362c383
+integrated by the feature merge containing this task.
 Base b26ddf3: task/merged2173tests,10existing skips,39examples and acceptancePASS.
 Goal: launch recorded or real-provider worlds from the public CLI, paused by default,
 and keep the authenticated browser controls/archives available during their lifetime.
@@ -30,14 +31,13 @@ capability -> root exactcontract amendment before expanding scope/code.
 Add public serve command, help describes local paused world/browser/archive control.
 Exactly one target: --preset founders --driver ollama --model MODEL; --founders
 success|stall|failure; --resume-attempt UUID; --fork-attempt UUID. No positional
-scenario, --proposal-tape, --checkpoint-only, --replay-attempt or raw database target.
+scenario, --proposal-tape, --replay-attempt or raw database target.
 Checkpoint only on resume/fork. Flags archive-root/database(compatibilitymirror),
 save-every, max-ticks|continuous, base-url, timeout-seconds, max-output-tokens,
 max-requests, model/driver same existing types/meaning. Add --start-running false
 bydefault, --admin-token-file PATH and --port default8000 permitting0..65535 forserve
 only. Keep inspect port1..65535 and all old run/inspect parser/hooks/output unchanged.
-Provide absent namespace fields scenario=None,proposal_tape=None,checkpoint_only=False,
-replay_attempt=None so shared adapter receives its validated shape. Serve always
+Provide absent namespace fields scenario=None,proposal_tape=None,replay_attempt=None so shared adapter receives its validated shape. Serve always
 returns archived=True from validate_archived_options, including recorded founders.
 Keep existing target/provider validation shared; reject ignored flags before effects.
 Freshrecorded rejects all provider flags. Resume/fork uses _requested config equality
@@ -187,3 +187,34 @@ limitations/rootgatespending; no successfuloutputdumps. Do notcommit. Independen
 highreview before root task/merged make, separateexamples, canonical26/newCLI7/wheel11
 and publicserveacceptance. Preserveallbranches/worktrees/ownerlocalplanedit. Original
 LN07/LN08 mayclose onlyafter publicserveacceptance; installedOllama remainsLN09.
+
+## Recorded partial-tape amendment — root decision before parser correction
+
+Allow serve --checkpoint-only ONLY with a fresh --founders recorded target, default
+False. Livepreset/resume/fork with flag reject before effects (source finalization
+configuration remains inherited/fork cannot change it). Existing factory already
+persists finalize_proposals=notcheckpoint_only, so no producer changes required.
+Match established run semantics: a bounded partial taped run needs this explicitflag
+so unused future tape entries remain available for restart, rather than full tape
+finalization. Default full outcomes/finalization stay unchanged. Do not suppress or
+reinterpret unused_entries failure when the flag is absent; no controller/composition
+change. Document partialrun command and why its unfinished tape is intentional.
+TDD parserfresh acceptance/rejectedignoredtargets; actualpublicserve start-running
+success --max-ticks1 --checkpoint-only =>completed/tick1 at the tick budget,
+HTTPremainsusable; attempt_finished.outcome stays None per existing controller
+convention (do not invent a terminal success or stored tick_limit outcome),
+falsefinalization inconfig, exactcoldrestart/inheritedcursor coverage. Keep fullsuccess
+completion test. Report rootcomparison: legacy run max1 withoutflag exits2unused_entries,
+withflag exits0; root2normalattempts retained in ln08f-finite-tape-probe. This resolves
+operator access to existing behavior, not an underlying producer algorithm change.
+
+## Review correction1 — explicit final failure priority
+
+Priority is: any cleanup/joinfailure=>5service_failed; then an existing
+ServeCLIError5 from control/server/unexpected adapter failure; then final controller
+FAILED mappedruntimeerror; then prior startupfailure; credential cleanup4 only if
+otherwise0. Final mirror/archive status may replace apparent success, never an
+already established serving5. Preserve specific service_failed versus server_failed.
+Add combined controlfailure+finalFAILED/mirror_failed and serverdeath+finalFAILED/
+mirror_failed regressions plus preserve mirror-after-success4 and cleanup-overrides5.
+No changes beyond serving.py, its tests and ownreport for this correction.

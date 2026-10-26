@@ -204,8 +204,8 @@ for invalid identity/revision, unknown attempts or absent checkpoints/worlds;
 inaccessible catalog storage or failed exact reconstruction. The source never
 creates missing storage or changes source files, timestamps or directory entries.
 These are Python producer interfaces only. Authenticated operator routes,
-controls, browser prefix wiring and CLI serve lifecycle remain later LN08 stages;
-this change exposes no new HTTP route or NPC context.
+controls and browser prefix wiring use the privileged adapter below. Source reads
+remain fixed and do not expose NPC context.
 
 ## Authenticated local runtime operator application
 
@@ -216,7 +216,8 @@ The optional controller must be the service's current controller. Passing `None`
 allows an archive-only or not-yet-ready application. App shutdown joins the service
 and its provider resources; closing a browser or requesting a view does not stop it.
 The existing `create_app` application and its public inspection URLs are unchanged.
-The packaged `/runtime` browser page uses this application. CLI serving remains a later task.
+The packaged `/runtime` browser page uses this application. The public `serve`
+command below owns its local HTTP lifetime.
 
 Create `AdminSession.issue(origin="http://127.0.0.1:8000")` for the actual listening
 origin. Configured origins are credential-free loopback HTTP(S), canonicalized to
@@ -298,3 +299,72 @@ latest 50 typed entries and total journal size. Archive-only and no-world attemp
 remain inspectable without fabricated checkpoints. History selects a fixed complete
 checkpoint and hides live mutation controls. All archive activity is authenticated
 GET-only. The existing service/API/child protocols and NPC boundary are unchanged.
+
+
+## Public local serving
+
+Install the optional `living-world-simulator[server]` extra, then launch:
+
+```console
+living-world serve --founders success --admin-token-file /existing/private/session-token --port 0
+living-world serve --preset founders --driver ollama --model MODEL --admin-token-file /existing/private/session-token
+living-world serve --resume-attempt UUID --admin-token-file /existing/private/session-token
+living-world serve --fork-attempt UUID --checkpoint 1 --admin-token-file /existing/private/session-token
+```
+
+The server binds only `127.0.0.1`; `--port 0` selects an available port. Open the
+printed `runtime_url` and enter the token from the selected file into the local
+page. The file contains the token plus a newline, is exclusively created with
+permissions `0600`, and requires existing parent directories. Existing files and
+symlink components are rejected. Keep the destination outside the archive catalog
+and any `--database` compatibility mirror; ancestors of either are also rejected.
+The command removes its file on exit only while the original identity, ownership,
+permissions, link count and contents still match. Modified or replaced files are
+preserved. The final identity check followed by unlink is best effort against a
+concurrent process running as the same user; it is not an atomic inode unlink.
+
+Without `--admin-token-file`, both output streams must be interactive terminals;
+the token then appears once on local stderr. Redirecting either stream requires
+the explicit file. A supplied file suppresses terminal token output. Never put
+the token in a URL or process argument. The CSRF nonce remains in memory and the
+existing authenticated response header. Neither credential belongs in archives,
+configuration, logs or browser storage.
+
+HTTP readiness precedes world launch, so a slow provider preflight can show
+`live: null` while saved archives remain available. The printed URL indicates HTTP
+readiness; an attempt announcement indicates allocation. Only durable runtime
+status indicates world readiness. Fresh worlds start paused at their initial
+checkpoint. `--start-running` opts into automatic progression. Finite completion,
+Stop, provider error pause and failed setup leave the browser/catalog available
+until SIGINT/SIGTERM or the injected stop control. Provider error pause keeps the
+existing explicit Retry action; browser refresh, reads and Disconnect never Stop.
+
+For an intentional partial recorded tape use, for example:
+
+```console
+living-world serve --founders success --max-ticks 1 --checkpoint-only --start-running --admin-token-file /existing/private/session-token
+```
+
+`--checkpoint-only` is accepted only for a fresh recorded `--founders` target. It
+retains unfinished tape entries for restart and persists `finalize_proposals=false`;
+resume/fork inherit their source configuration. Without this flag, full tape
+finalization retains its existing unused-entry validation. It is not a way to
+change a live provider's behavior.
+
+Serving uses separate non-daemon HTTP and launch threads; RuntimeService remains
+the only world mutation/lease owner. The main thread owns signal handling and
+cooperative shutdown. It first joins the service while HTTP is available, then
+requests HTTP shutdown and separately joins HTTP (12 seconds) and launch (6
+seconds). Cleanup failure is an error, and an uncooperative surviving non-daemon
+thread can keep the process alive; there is no forced termination guarantee.
+Final archive/mirror failure overrides apparently successful world completion.
+All normal attempts, including setup failures, are retained.
+
+Serving accepts the existing target/provider/budget flags, plus the credentials,
+port and initial-running options described above. It has no arbitrary scenario,
+proposal tape, replay, host, reload, workers, remote binding or HTTP world-launch
+option. `--database` remains a compatibility mirror. Credential failures use
+`credential_file_failed` (exit 4); optional server absence uses `server_unavailable`
+(exit 2); HTTP failures use `server_failed` (exit 5), and cleanup/control failures
+use `service_failed` (exit 5). Existing runtime failures retain their closed error
+mapping. `run` and read-only `inspect` retain their existing behavior.

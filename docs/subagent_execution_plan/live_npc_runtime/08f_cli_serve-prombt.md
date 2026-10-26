@@ -22,3 +22,14 @@ Root performs whitespace/boundary/review/fullgates/integration. Write exact ownr
 08f_cli_serve-report.md with RED/GREEN, changedpaths, commands/result/counts/warnings,
 lifecycle/security evidence, limitations and rootgatespending. No successful output
 dumps. Return concise status/testsummary/concerns; do not commit or expand scope.
+
+Root amendment before correction: permit --checkpoint-only for fresh recorded
+serve only, preserving existing producer finalization/unused_entries validation.
+Read final task section; no new producer change or silent suppression.
+
+Budget clarification: partial recorded completion stores outcome=None, not a
+fabricated terminal tick_limit; preserve engine convention. Request budget may stop
+before any full tick if remaining requests cannot complete all actor slots.
+
+Review correction1: final mirror/runtime failure must not overwrite an existing
+ServeCLIError5; exact failure priority and combined regressions are in task finalsection.

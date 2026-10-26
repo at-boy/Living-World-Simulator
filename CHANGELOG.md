@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Integrate local operator serving after repeated full/browser, recorded, restart,
+  source-and-wheel serving checks; preserve all task branches and archives.
+
+- Add reviewed public local serving with paused startup, secure session delivery,
+  browser controls/archives, exact restart and truthful shutdown failures.
+
 - Define public local serving with paused startup, protected browser controls,
   secure session delivery and service-owned shutdown/restart behavior.
 

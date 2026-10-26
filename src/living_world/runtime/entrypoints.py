@@ -110,7 +110,9 @@ def validate_archived_options(
             reject()
         target = a.attempt
     else:
-        archived = any((a.preset, a.resume_attempt, a.fork_attempt, a.replay_attempt))
+        archived = a.command == "serve" or any(
+            (a.preset, a.resume_attempt, a.fork_attempt, a.replay_attempt)
+        )
         if (
             sum(
                 bool(v)
@@ -127,8 +129,17 @@ def validate_archived_options(
         ):
             reject()
         target = a.resume_attempt or a.fork_attempt or a.replay_attempt
+        if a.command == "serve":
+            if a.founders and _provided(a, _PROVIDER_FLAGS):
+                reject()
+            if a.checkpoint is not None and not (a.resume_attempt or a.fork_attempt):
+                reject()
+            if a.checkpoint_only and not a.founders:
+                reject()
         if archived:
-            if a.proposal_tape is not None or a.checkpoint_only:
+            if a.proposal_tape is not None or (
+                a.checkpoint_only and a.command != "serve"
+            ):
                 reject()
             if a.preset and (
                 a.driver != "ollama" or not a.model or a.checkpoint is not None
@@ -547,42 +558,17 @@ def run_archived(
             announce(error.ref)
         if watcher_failed.is_set():
             failure = RuntimeCLIError(5, "service_failed", ref)
-        elif isinstance(error, RuntimeCLIError):
-            failure = error
-        elif isinstance(error, RuntimeStartupError):
-            if error.code == "cancelled" and stop_seen.is_set():
-                print("stop_reason=operator_stop", file=sys.stderr)
-                return None
-            failure = RuntimeCLIError(_exit(error.code), error.code, ref)
+        elif (
+            isinstance(error, RuntimeStartupError)
+            and error.code == "cancelled"
+            and stop_seen.is_set()
+        ):
+            print("stop_reason=operator_stop", file=sys.stderr)
+            return None
         else:
-            failure = RuntimeCLIError(
-                4 if isinstance(error, (ArchiveError, OSError)) else 5,
-                (
-                    "archive_failed"
-                    if isinstance(error, (ArchiveError, OSError))
-                    else "service_failed"
-                ),
-                ref,
-            )
+            failure = normalize_archived_failure(error, ref)
         if ref is None:
-            try:
-                failed = LegacyArchiveSession(
-                    catalog,
-                    AttemptConfig(
-                        "recorded",
-                        "uninitialized",
-                        0,
-                        __version__,
-                        {"launch_source": "cli", "driver_format": 1},
-                    ),
-                )
-                announce(failed.ref)
-                with failed:
-                    failed.fail("initialization_failed")
-            except Exception as fallback:  # noqa: BLE001 - metadata persistence failure
-                if isinstance(fallback, ArchiveReservationError):
-                    announce(fallback.ref)
-                raise RuntimeCLIError(4, "archive_failed", ref) from None
+            retain_failed_initialization(catalog, on_reserved=announce)
         raise failure from None
     finally:
         done.set()
@@ -597,3 +583,44 @@ def run_archived(
             cleanup_failed = cleanup_failed or watcher.is_alive()
         if cleanup_failed or watcher_failed.is_set():
             raise RuntimeCLIError(5, "service_failed", ref) from None
+
+
+def normalize_archived_failure(
+    error: Exception, ref: AttemptRef | None
+) -> RuntimeCLIError:
+    """Translate runtime failures without IO or leaking underlying diagnostics."""
+    if isinstance(error, RuntimeCLIError):
+        return error
+    if isinstance(error, RuntimeStartupError):
+        return RuntimeCLIError(_exit(error.code), error.code, ref)
+    if isinstance(error, (ArchiveError, OSError)):
+        return RuntimeCLIError(4, "archive_failed", ref)
+    return RuntimeCLIError(5, "service_failed", ref)
+
+
+def retain_failed_initialization(
+    catalog: RunCatalog, *, on_reserved: Callable[[AttemptRef], None]
+) -> AttemptRef:
+    """Retain the existing failed initialization identity without recursive repair."""
+    ref: AttemptRef | None = None
+    try:
+        failed = LegacyArchiveSession(
+            catalog,
+            AttemptConfig(
+                "recorded",
+                "uninitialized",
+                0,
+                __version__,
+                {"launch_source": "cli", "driver_format": 1},
+            ),
+        )
+        ref = failed.ref
+        on_reserved(ref)
+        with failed:
+            failed.fail("initialization_failed")
+        return ref
+    except Exception as error:  # noqa: BLE001 - closed metadata persistence boundary
+        if isinstance(error, ArchiveReservationError):
+            ref = error.ref
+            on_reserved(ref)
+        raise RuntimeCLIError(4, "archive_failed", ref) from None

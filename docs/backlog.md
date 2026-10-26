@@ -42,8 +42,11 @@ exactarchive/CLI and wheel11resources PASS. Shared prepared-launch producer foll
 by public CLIserve and installed-Ollama acceptance remain upcoming. LN08e shared
 prepared-launch task is independently reviewed and task-validated2173/10/39examples/
 exactarchive+wheelchecks; delivery8651a53 integrated after repeatedmerged2173/10/
-39examples/archive/CLI/wheel11 PASS. LN08f publicCLIserve contract is now authorized;
-real installed-Ollama/end-to-end acceptance remains LN09.
+39examples/archive/CLI/wheel11 PASS. LN08f publicCLIserve independently reviewed after
+onecorrectedP2 and taskvalidated2230/10/39examples plus source/wheelserve8retained
+attempts. Delivery362c383 integrated after repeatedmerged2230/10/39examples/archive/CLI/
+source-and-wheelserve PASS. OriginalLN07/LN08 delivered. LN09 needs a bounded deterministic
+disturbance/journal/replay producer prerequisite before full realmodelacceptance.
 legacy generic/taped/raw-database CLI and injected engine/state-reference hooks must
 remain compatible. Add an explicit archive observer to the existing runner, not a
 second copied loop. New live entrypoints retain RunController ownership. LN07 must

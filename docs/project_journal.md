@@ -1,5 +1,39 @@
 # Living World Simulator – Project Journal
 
+## LN08f feature integration — October26,2026
+
+Delivery362c383 integrated cleanly after repeated2230/10existing skips/340.50s,
+actualChrome/39examples/separateexamples/whitespace/exactcanonical26/CLI7/sourceServe4/
+wheel11+actualServe4 PASS. Source exactreviewed delivery,41normalattempts retained.
+OriginalLN07/LN08 publicCLI/browser/operator/archive requirements delivered; no main/
+release refs moved, all taskbranches/checkouts and owneredit preserved. LN09 needs
+bounded deterministic disturbance/journal/replay prerequisite, then fullacceptance.
+OwnedtemporaryOllama PID288304 gracefullystopped and reaped0. Realcoldchild a2eb3b98e2cf453fb807fbde167330e1
+replayed withproviderunavailable into29902c5cef134611a1314d2213ed8cc7;2completepoints
+world/events/driver/feedbackcursor exact, sourcebytes unchanged. This supplements
+preliminaryrealmodel evidence; no disturbance or fullhandoff completion claimed.
+
+## LN08f reviewed task delivery — October26,2026
+
+Publicserve implements owner-approved local operator lifecycle. Independent review
+closed oneP2 failureprecedence in round1. Focused176 beforefix, correctedserve56;
+rootmake2230/10existing skips/343.98s, actualChrome/39examples, separateexamples/
+whitespace/exactcanonical26/CLI7/sourcepublicserve4 and wheel11+actualserve4 PASS.
+41normalacceptancearchives retained includingexpectedfailures; credentials cleaned,
+no sourcearchive rewrites. Existingpartialtapevalidation preserved with explicit
+freshrecorded --checkpoint-only. Featureintegration/repeatedgates remain pending.
+
+## Preliminary real-Ollama evidence — October26,2026
+
+Ownednative Ollama with installed Qwen3-4B Q4_K_M, no downloads/configuration changes.
+Baseline5035c02b05bd45daaa73e5493010d834 completedtick1/2actualresponses but0offers/
+0actions during initialization. Exactcoldchilda2eb3b98e2cf453fb807fbde167330e1 reached
+tick2,2actualresponses/5offerseach,1acceptedworldaction/1rejectedproposal/1workorder.
+Initialchildworld/driver/feedbackcursors exact; parentbytes unchanged. This is partial
+LN09 proof only: controlleddisturbances/fullreplay/realbrowseracceptance stillpending.
+Read-only probes identifiedmissing deterministicdisturbance producer/journal/replay;
+rootdraft prerequisite decisions are ignoredworkspace only, no implementation yet.
+
 ## LN08f CLIserve contract — October26,2026
 
 LN08e integrationb26ddf3 passed repeated2173/10/39examples/browser/archive/CLI/wheel

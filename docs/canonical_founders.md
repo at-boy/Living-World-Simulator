@@ -25,6 +25,34 @@ canonical scenario paths require `--proposal-tape`; aliases supply their own tap
 Scenario identity fingerprints include the complete fixed policy and definition
 contents; meaningful rule changes require a versioned preset.
 
+Launch a paused recorded world with authenticated browser controls and retained
+archives:
+
+```console
+living-world serve --founders success --admin-token-file /existing/private/session-token --port 0
+```
+
+Open the printed local `runtime_url` and enter the token from that file. Step,
+Pause, Resume and Stop use the existing runtime owner; saved checkpoints stay
+fixed while a live world advances. Completed/stopped/failed worlds remain
+inspectable until the serving process receives SIGINT or SIGTERM. Closing the
+page or Disconnect does not Stop the world. Use `--start-running` to opt into
+automatic progression. For an intentionally unfinished success tape at tick 1:
+
+```console
+living-world serve --founders success --max-ticks 1 --checkpoint-only --start-running --admin-token-file /existing/private/session-token
+```
+
+`--checkpoint-only` is only for a fresh recorded target; it retains future tape
+entries and is inherited by resumes/forks. Omitting it retains existing full tape
+finalization and unused-entry validation. Serve an archived source with
+`--resume-attempt UUID` or `--fork-attempt UUID`, optionally `--checkpoint N`.
+A real-provider launch uses `--preset founders --driver ollama --model MODEL`;
+it also starts paused and requires a separately available provider/model. These
+recorded and fake-provider tests do not certify an installed model. Credential
+custody, local binding, readiness and cleanup are described in the
+[HTTP serving guide](http_inspection_api.md#public-local-serving).
+
 Inspect an existing snapshot without advancing it:
 
 ```console
