@@ -11,8 +11,8 @@ task/merged2373/10existing skips,39examples and exact recorded/restart/source-an
 checks.
 LN09c delivery76911a3 sealed trace storage is independently reviewed and task/merged
 validated2469/10existing skips, actualChrome/39examples and exact compatibility gates.
-Next: exact9d seven-path HTTP/durable broker producer contract is ready for worker;
-then9e runtime archive wiring
+LN09d capture producer is reviewed/task-validated2526/10existing skips; integration
+pending. Next9e runtime archive wiring
 and sealed reuse/replay,9f admin/offlineanalysis/export; then real BOTHprovider acceptance.
 No complete backend/trace acceptance claim yet.
 

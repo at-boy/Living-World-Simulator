@@ -1,3 +1,17 @@
+# LN09d reviewed/task-validated — integration pending, October27,2026
+
+Task .worktrees/live-npc-ln09d / codex/live-npc-ln09d-inference-capture is frozen,
+reviewed and root task-validated. Exact task/prombt/report 09d_inference_capture*.
+Astrafullreview found2P2, originalworker fixround1 and scopedre-review addressedboth,
+NO SUBSTANTIVE FINDINGS. Root2526/10existing skips454.12s, actualChrome/39examples/
+separateexamples/exactcanonical26readonly/CLI7/sourceServe4/wheel11+Serve4PASS.
+ReviewedsourceSHA720a35b26006ce29d556e1a8f49670a23c87824ec1ccbadfcf769c98667af29f.
+41normalattemptsretained. Taskcommit/push then nofffeature integration/repeatedgates next.
+No consumers wired: next9e archive driver/sealedreuse/replay,9f offline/adminanalysis/
+export, originalrealBOTHprovideracceptance/Python3.11/wholebranchreview. Read ignored
+09e-runtime-wiring-root-notes.md for pending rootcontract decisions; no9e taskexistsyet.
+Usage16%remaining: finishsafecheckpoint thenPAUSE before10, noreset/automaticresume.
+
 # Continuation brief — LN09d capture contract ready, October27,2026
 
 ## Current state

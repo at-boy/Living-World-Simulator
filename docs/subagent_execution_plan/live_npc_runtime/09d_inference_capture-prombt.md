@@ -19,3 +19,8 @@ Keep interfaces compatible with no-super injected brokers; real production bound
 must reject accepted results without complete verified body evidence. Exact bytes sent
 must be original prepared bytes, not newly encoded child payload. Preserve unknown/
 partial observations and unacknowledged/corrupt spool; do not add a late archivewriter.
+
+Root ack ruling before correction: acknowledge_trace adds optional keyword result.
+Real inherited-start jobs require cached/reaped settlement; providedresult mustmatch.
+Only overridden-start no-real-worker fakes may use explicit result as settlement evidence.
+Missing both rejects safely. Later consumer passes result after successfularchiveimport.
