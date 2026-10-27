@@ -906,3 +906,13 @@ new calls or timings. Legacy omitted traces stay omitted. Unimported crash spool
 private uncommitted forensic evidence; resume never silently recovers their proposals.
 Standalone/manual clients are outside automatic archive tracing. Raw bodies, source
 paths, backend metadata and timing evidence remain engine-only.
+
+The engine-only trace analysis reader checks bounded local journal trace metadata
+and verifies only explicitly selected retained body bytes. Its
+`trace_metadata_checked` and `selected_body_verified` results never certify world,
+checkpoint, command, lifecycle, reservation, parent-lineage, or unselected body
+integrity. It supports product rollback-journal archives, rejects WAL headers or
+sidecars before opening SQLite, opens one read-only snapshot per operation, and
+exposes exact opaque
+bytes only after checking the selected prefix reference, length and SHA256, and
+never supplies trace metadata or bodies to NPC cognition or action authority.

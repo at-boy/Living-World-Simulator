@@ -3,7 +3,7 @@
 > For agentic workers: use superpowers:subagent-driven-development, one bounded worker,
 > independent spec/quality review, then root task and merged validation.
 
-Status: AUTHORIZED prerequisite implementation, not started.
+Status: IMPLEMENTED and independently reviewed after fixround1; root task validation passed; feature integration pending.
 Goal: inspect saved per-call metadata and verified selected bytes without loading a
 world/model or all inference BLOBs. This is the domain prerequisite for approved
 admin/offline analysis; it exposes no network route by itself.
@@ -102,6 +102,27 @@ Do not add a full-validity flag. Concrete DTO validation may use internal helper
 Validate AttemptRef and fixed nested identity layout with validate_ref. Recheck safe_path
 for directory/database (regular independent non-symlink archive.sqlite3) before each
 open; never accept arbitrary relative filenames. Missing path must not create a file.
+Root review ruling (fixround1): normal product archives use rollback journals
+(AttemptArchive.create explicitly sets journal_mode=DELETE). SQLite WAL readers can
+write coordination sidecars even with mode=ro/query_only. This domain reader supports
+rollback-journal archives only. BEFORE sqlite3.connect, read at most100 bytes of the
+regular database header: require SQLite magic and read/write version bytes18/19 both1;
+reject WAL/unsupported versions and any existing -wal/-shm sidecars without opening
+SQLite, creating/removing sidecars, changing permissions or using immutable=1. Fixed
+error: `Trace analysis requires rollback-journal archives.` This restriction applies
+to externally converted WAL archives; no source migration/copy or new VFS is added.
+A concurrent mode switch by an external writer is outside supported operation; the
+normal runtime never changes mode. Recheck header/path before each operation.
+The concurrent writer regression must use the supported rollback mode: an ordinary
+writer may prepare an append while the read snapshot is held, its commit waits for
+the shared read lock, then a fresh reader sees that append. No WAL support claim.
+Metadata and journal PK declarations must actually enforce rowid integer identities;
+malformed PRIMARY KEY DESC or other non-rowid tables reject. Also check storage types
+using scalar-only SQL BEFORE returning raw metadata id or MAX(sequence), so unexpected
+large identity values cannot be materialized before limits. No unbounded raw identity
+SELECT on malformed tables. Cover metadata and journal descending-PK16MiB BLOB fixtures
+with max_row_bytes64, Python peak below8MiB and query/connection guards.
+
 Use SQLite URI mode=ro, query_only=ON, no immutable=1, explicit BEGIN, bounded busy
 wait (timeout1 second), rollback/close on every exit. Each call is one coherent snapshot;
 no long-lived connection, lease or write. Fixed safe ArchiveFormatError on SQLite errors.
@@ -146,31 +167,33 @@ AttemptArchive validation must still reject that same corruption.
 
 ## Required TDD and coverage
 
-- [ ] RED named reader imports/behavior absent; implement only after meaningful RED.
-- [ ] Real format2 archive fixtures: metadata page exact model/backend/timing/actor/tick/
+- [x] RED named reader imports/behavior absent; implement only after meaningful RED.
+- [x] Real format2 archive fixtures: metadata page exact model/backend/timing/actor/tick/
   error/action/reuse source, multiple calls, stable paging limit1 and immutable DTOs.
-- [ ] Exact prefix hashes vs existing full reader: empty, gapped sequences, full journal,
+- [x] Exact prefix hashes vs existing full reader: empty, gapped sequences, full journal,
   pending then appended response/action, and tampered old prefix. Later append must not
   upgrade captured page or authorize later body; altered prefix rejects on next call.
-- [ ] Request/response BLOBs, b'', invalid UTF8/JSON, HTTP errors and incomplete/unavailable
+- [x] Request/response BLOBs, b'', invalid UTF8/JSON, HTTP errors and incomplete/unavailable
   retain exact distinction; legacy format1 remains untraced, no schema write/migration.
-- [ ] Selected same-length corruption, missing/wrong-type/length/conflicting bodies,
+- [x] Selected same-length corruption, missing/wrong-type/length/conflicting bodies,
   traced response without request, request cap+1 breach, duplicate/unknown settlements
   and malformed metadata/journal schemas/types reject. Legacy unsupported traces reject.
-- [ ] No-checkpoint failed/partial attempt can list valid local traces. Corrupt world/
+- [x] No-checkpoint failed/partial attempt can list valid local traces. Corrupt world/
   command/lifecycle or unselected BLOB does not imply certified world validity; include
   a fixture demonstrating analysis passes narrowly while existing full reader rejects.
-- [ ] Bounded memory: unrelated16MiB zeroblob plus tiny valid calls, metadata/selected
+- [x] Bounded memory: unrelated16MiB zeroblob plus tiny valid calls, metadata/selected
   small read Python peak stays below8MiB after imports/fixture setup (tracemalloc scoped
   to reader calls). Full-reader methods monkeypatched to raise prove they are unused.
   Query tracing/fixtures prove no metadata operation fetches raw unselected body bytes.
-- [ ] Custom small row/count/total/body limits fail explicitly before large payload/body
+- [x] Custom small row/count/total/body limits fail explicitly before large payload/body
   materialization; boundary/limit bool, invalid digest, unknown sequence and unsafe paths
   (database/directory symlink, hardlink, traversal) reject. Missing DB creates nothing.
-- [ ] All success/failure reads preserve recursive source bytes AND file mtimes, including
+- [x] All success/failure reads preserve recursive source bytes AND file mtimes, including
   lock/reservation/retained inputs; no lease acquisition/provider/model/world loading.
-  Real concurrent writer test proves one coherent snapshot / later append support.
-- [ ] Focused new suite + tests/test_inference_trace_storage.py,
+  Real rollback-mode concurrent writer test proves one coherent snapshot / later append
+  support; WAL with absent/existing sidecars rejects before SQLite open on both page/body
+  paths, with recursive bytes/mtimes unchanged.
+- [x] Focused new suite + tests/test_inference_trace_storage.py,
   tests/test_run_archive_store.py and tests/test_run_archive_catalog.py, scoped Ruff/Black,
   whitespace. Write truthful RED/GREEN/counts/scope/limits report, freeze for rootreview.
 

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add reviewed bounded read-only trace pages and verified exact-body access, with
+  stable journal prefixes, explicit integrity scope and source-preserving storage guards.
+
 - Define bounded read-only trace metadata and selected-body verification as the first
   prerequisite for authenticated offline analysis, preserving full runtime validation.
 

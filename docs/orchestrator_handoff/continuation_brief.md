@@ -1,24 +1,32 @@
-# Continuation brief — LN09f1 bounded analysis reader next
+# Continuation brief — LN09f1 task validated, integration next
 
 ## Current state and next task
 
-Owner resumed with fresh100%five-hour allowance, noresetused. Verified0fc88f9/ownerpatch/
-reviewedsource exact. Completed9e/nativeprobes remaindone. Root exact9f1 task/prombt ready:
-bounded read-only domain traceanalysis only, fourworkerpaths, nofullarchivevalidation
-weakening/world/model/lease/network/API/UI/export. Next isolatedworker thenreview/gates.
-Later protectedoffline/backend/export andUI tasks remain; originalrealacceptance and
-llamaarguments issue stayopen. No currentlyactiveworker/server/merge.
+Featureaf7b4af oncodex/live-npc-runtime, ownerplanedit preserved. Active taskcheckout
+.worktrees/live-npc-ln09f1 /codex/live-npc-ln09f1-trace-reader BASEaf7b4af. Exact09f1
+contract/prombt amended byroot beforefix. Fourworkerpaths frozen; originalastra review
+found2P1 WALsidecarwrites/oversizedDESC-PKidentityprefetch. Rootrollback-only ruling
+matchesnormalstoreDELETE; originalworkerfixround1 andoriginalscoped spec/qualityreview
+PASS,2addressed/0open. Focused94PASS; named388PASS beforecorrection. No activeworkers.
+Rootfullmake73219 exited0:2641passed/10existing skips480.14s, actualChrome/39examples.
+Separateexamples39/whitespace/reviewedsource equality PASS. Do not rerun completedhelpers:
+matrix25528/CLI46456/Serve54313/wheel83424/native-reader6398 all exited0. Rootchecker
+PASS exactcanonical26readonly/priorhashes/CLI7/Serve4/wheel11+Serve4,41normalattempts.
+Native-readerchecks9savedsources/30localcalls includingreused PASSexactbytes/SHA/length/
+pages/recursivebytes+mtimes unchanged. No newinference/world. ReviewedsourceSHA
+dbee511dbeb5b5c7902d3fe10d3bf608a9e1e85feed8764116369f695be8b610.
+NEXT taskcommit/push, thenfeature noffintegration/repeatedgates. No implementationcommit/merge.
+FeaturehasTWOroot-owned amendedtask/prombt duplicates: backup/verify BEFORE restoring
+ONLYthose forintegration. Neverrestore ownerplanedit. Allbranches/worktrees preserved.
 
-Feature codex/live-npc-runtime, .worktrees/live-npc-runtime. LN09e delivery62ea35c on
-preserved/pushed codex/live-npc-ln09e-archive-inference / .worktrees/live-npc-ln09e.
-Task+merged root gates passed2547tests/10existing deliberate skips479.81s/478.25s,
-actualChrome/39examples, separateexamples39, exactcanonical26/read-only unchanged/prior
-payloadhashes/CLI7/sourceServe4/wheel11+actualServe4.41normalattempts retained per tree.
-Independent astrareview1 oneP2 missingresponse replay regression; originalworker test-only
-fixround1 +original scoped spec/quality rereview PASS,1addressed/0open. Focused21PASS,
-six in-memory mutant REDs. Reviewedsource18fc232fb2bfec70272a8faa2c46144ed9479527fd46b94b5c2e3c300548bd35
-unchanged. No activeworker/reviewer/modelserver. Featureintegration90ef1e2 pushed.
-DO NOT redispatch implementation/review/gates. Exact09e task/prombt/report compressedhistory.
+LN09e delivery62ea35c/integration90ef1e2 andnativeevidence0fc88f9 completed/pushed,
+2547/10existing skips task+merged allcompatibilitygates PASS. Do notredispatchthem.
+9f1 domainreader isnot authenticatedAPI/UI/export. Narrowintegrity tags nevercertify
+world/checkpoint/lineage/unselectedbody validity. Externallyconverted WAL is rejected
+beforeSQLiteconnect toavoid sourcewrites; no immutable/migration/copy/permissionshack.
+Normalrollbackwriterconcurrency tested. Later9f domainforensic/export, authenticated
+API/offlineCLI, UI exactcontracts stillneeded; rootnotes trace-analysis-next-contract-notes.md
+andtrace-export-seams.md retained. Llamaargumentcompatibility andfullLN09acceptance remain.
 
 New archived live cognition for BOTHproviders saves atomic exactrequest/BLOB before
 network and responseevidence/outcome beforestaging, ackafterimport; sealedtracecopy and
@@ -36,13 +44,6 @@ exactIDs/limits. Not fullLN09acceptance. Any proposalcontract change needs isola
 TDD/review and explicit oldrequest/fingerprint/replay compatibility, no globaldescription
 change breakingrecordedtapes. No exactfixcontractyet.
 
-NEXT exact09f1_trace_analysis_reader task/prombt is ready for isolatedimplementation.
-After that, root exact remaining LN09f contracts for protectedoffline/backend/export/UI.
-Probe notes trace-analysis-root-notes.md andtrace-reader-seams.md retained; 9f1 is the first implementation
-contract. Existingarchive readers loadALLBLOBs; boundedanalysis needs separate explicit
-metadata/selectedbody verification withoutweakening runtimefullvalidation. Also resolve
-llama realworldaction gate beforefinalacceptance. OriginalfullLN09 harness/disturbances/
-controls/browser/coldrestart/offlinereplay/installedPython3.11/finalwholebranchreview remains.
 
 ## Completed producer interfaces and evidence
 
