@@ -1,6 +1,6 @@
 # LN09d — Exact-byte HTTP and durable broker capture
 
-Status: AUTHORIZED implementation pending. LN09c integratedc2d2f87 after all gates.
+Status: COMPLETE — delivery2781dd3 reviewed and task/merged validated.
 Spec: approved live runtime plus owner exact per-call request/backend/response/timing
 requirement. Root October27 split: storage9c, transport/broker capture9d, runtime archive
 wiring/reuse9e, admin/offline analysis/export9f, then original full BOTHprovider acceptance.
@@ -133,7 +133,7 @@ Killed worker with no final observation leaves that phase duration null. No runt
 
 Preserve start(job_id, config, decision_input) signature. Add
 `bind_trace(job_id: str, prepared: PreparedInference, *, spool_root: Path) -> None`
-and `acknowledge_trace(job_id: str) -> None`. Binding initializes independent capture
+and `acknowledge_trace(job_id: str, *, result: BrokerResult | None = None) -> None`. Binding initializes independent capture
 state even when injected subclass skipped super().__init__. Reject rebinding, overlap,
 unsafe job/path; reject prepared/config/context mismatch at start before network
 (including kind/model/pin/URL/timeout/response cap and exact payload). Binding creates its own private spool after caller's
@@ -168,7 +168,12 @@ Parent merges dispatch_started_at/settled_at UTC and broker_seconds monotonic in
 through reaping. Owned process starts only after binding, worker/runtime ownership exact.
 close caches cancelled result accessible by poll(job); cached settlement remains idempotent.
 ack is only valid after settlement and removes ONLY fully validated imported own job
-spool; caller promises archive import already succeeded. Ack before settlement rejects.
+spool; caller promises archive import already succeeded. For real-bound jobs whose inherited start ran, ack requires actual cached settlement
+and reaped process; supplied result must equal cached settlement and cannot authorize
+early deletion. For injected no-super brokers whose overridden start never created a
+real worker, an explicit matching job result supplies caller settlement evidence. No
+cached or supplied result means reject; later archive consumer always passes result.
+Ack before settlement rejects.
 Corrupt/unimported spools remain retained. No autoack in poll/close. Keep existing error
 codes and process ownership semantics; never kill unrelated PID after restart.
 

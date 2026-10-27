@@ -817,13 +817,23 @@ Required identity, mandate and action vocabulary remain present. Optional feedba
 is pruned by `FoundersFeedback` within its fixed eight-perception/eight-memory caps.
 
 Only provider configuration, serialized NPC-readable context/action vocabulary and
-an owned result path enter a fresh spawned process. Actor/entity IDs, handlers,
+owned result/capture paths and, for optional bound capture, exact prepared request
+bytes with closed engine-only metadata enter a fresh spawned process. Actor/entity IDs, handlers,
 engine state, fingerprints and journal identities remain in the parent. HTTP uses a
 credential-free loopback origin, disables proxy lookup and redirects, bounds raw
 response reads, and reports fixed failure codes plus optional complete-byte hashes.
-Raw invalid responses and reasoning are never persisted. Parent validation checks
-every returned prose field against the current information boundary before recording
-a validated response.
+An optionally bound broker retains owner-authorized, privileged bounded raw response
+bytes in a private durable spool, including invalid responses and reasoning. This
+capture sends the same filtered payload and adds no NPC information. Unknown body
+bytes remain unavailable; partial hashes identify only the observed prefix, and an
+observed empty body is distinct from no observation. HTTP timestamps describe client
+observations; monotonic intervals include capture overhead and do not identify server
+token generation time. The parent reaps its owned worker before harvesting evidence,
+and retains the spool until explicit caller acknowledgement after successful import.
+Raw output and trace metadata stay engine-only and never become NPC knowledge.
+Public archived-runtime wiring and admin views remain follow-on work. Parent
+validation checks every returned prose field against the current information boundary
+before recording a validated response.
 
 Inference produces proposals only. A private proposal-phase system revalidates
 staged decisions, fetches fresh offers and dispatches through `NPCActionResolver`

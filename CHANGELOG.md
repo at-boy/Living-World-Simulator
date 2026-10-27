@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Integrate reviewed exact-byte HTTP and durable broker capture after repeated full,
+  browser, recorded, restart and packaged serving validation; preserve task branches.
+
+- Add reviewed exact-byte HTTP and durable broker capture, including partial/error
+  evidence, safe cancellation, crash durability and explicit acknowledgement.
+
 - Define exact-byte HTTP and durable broker capture with bounded partial/error
   evidence, scoped timing and explicit archive acknowledgement; wiring follows.
 

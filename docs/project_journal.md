@@ -1841,3 +1841,19 @@ fail closed on capture corruption, preserve old unbound/injected broker interfac
 Runtime archive wiring/reuse/replay is separate9e, admin/offlineanalysis/export9f. No new
 SQLite writer, source recovery upgrade, server launcher, main or tag action. Ready for
 isolated TDD worker; no capture code yet.
+
+
+## 2026-10-27 — LN09d capture task validated
+
+Independent astra review plus bounded correction/re-review resolved two P2 ack/directory
+sync gaps. Root make2526/10existing skips454.12s, Chrome/39examples/separateexamples,
+exactcanonical26readonly/CLI7/Serve4/wheel11+Serve4 PASS. Reviewedsource exact. Task
+readyforintegration; runtimearchive wiring9e/admin9f/realBOTHprovider acceptance remain.
+
+
+## 2026-10-27 — LN09d integration validation complete after resume
+
+Pending merged check finished2526/10existing skips450.51s; separateexamples and prior
+canonical26/readonly/CLI7/Serve4/wheel11+Serve4 gates passed. Reviewedsource and ownerpatch
+unchanged. Delivery2781dd3 preserved/pushed; finalizingfeatureintegration. Captureproducer
+only: archive wiring9e, admin/offlineanalysis9f and realBOTHprovider acceptance remain.

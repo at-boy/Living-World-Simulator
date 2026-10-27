@@ -1,110 +1,96 @@
-# Continuation brief — LN09d capture contract ready, October27,2026
+# Continuation brief — LN09d complete, archive wiring next
 
-## Current state
+## Current state and next task
 
-Feature codex/live-npc-runtime in .worktrees/live-npc-runtime integrates reviewed
-LN09b deliverybb907a0 (taskbranch .worktrees/live-npc-ln09b /
-codex/live-npc-ln09b-llama-runtime committed/pushed and preserved). Root task/merged
-make each2373/10existing skips, actualChrome/39examples/separateexamples/whitespace/
-exactcanonical26readonly/CLI7/sourceServe4/wheel11+actualServe4PASS; task427.57s,
-merged428.71s. Reviewedsource unchanged,41normalattempts retained per gate tree.
-Fresh independent solhigh review SPEC/QUALITYPASS NO SUBSTANTIVE FINDINGS; package
-d5ebb4ce4e7754d2942c80b84d762505b6472aea8ff210ba635592d68b0e7048. Final96focused/
-62central/scoped9PythonstylePASS; prior285extendedbeforefinalhardening noted in report.
-LN09a deliveryee11870 integrated6321306, likewise fully reviewed/validated. Alltask
-branches/worktrees, archives and protected owner edit preserved. Do NOT redispatch
-completed9a/9b workers/review/gates. No active worker/reviewer/modelserver remains.
+Feature codex/live-npc-runtime lives in .worktrees/live-npc-runtime. LN09d delivery
+2781dd3 is reviewed and task/merged validated; task branch codex/live-npc-ln09d-inference-capture
+and .worktrees/live-npc-ln09d are pushed/preserved. Root finalizes noff merge after this
+record. Independent astra fullreview found2P2 (prestart ack bypass, directory-entry sync);
+original worker fixround1 and scoped originalreview addressedboth, no substantive findings.
+Task/merged make2526/10existing deliberate skips454.12s/450.51s, actualChrome/39examples,
+separateexamples/exactcanonical26+read-only latestcompletepoints/CLI7/sourceServe4/
+wheel11resources+actualServe4 PASS.41normalattempts retained per gate tree. Reviewedsource
+SHA720a35b26006ce29d556e1a8f49670a23c87824ec1ccbadfcf769c98667af29f unchanged.
+DO NOT redispatch completed worker/reviewer/gates. No active worker/reviewer/modelserver.
 
-LN09c delivery76911a3 is reviewed and task/merged validated, preserved taskbranch
-codex/live-npc-ln09c-trace-storage/.worktrees/live-npc-ln09c. Independent SPEC/QUALITYPASS
-NO SUBSTANTIVE FINDINGS; worker387focused/96new/sixPythonstylePASS. Roottask/merged
-make2469/10existing skips429.60s/429.44s, actualChrome/39examples/separateexamples/
-exactcanonical26+readonly latestcompletepoints/CLI7/sourceServe4/wheel11+actualServe4PASS.
-41normalattempts retainedpergatetree, reviewedsourceexact and ownerpatchunchanged.
+NEXT: root finalize exact LN09e task/prombt BEFORE implementation. Read ignored
+09e-runtime-wiring-root-notes.md and necessary current driver/replay/broker seams.
+Wire prepared exact request+BLOB atomic journal before dispatch; response observation/
+BLOB+outcome atomic journal before staging; acknowledgement only after successful import.
+Captureproducer alone is NOT automatic archived runtime tracing. Format1 directlive
+inference must reject unsupportedtracecapability; normalresume to newformat2 child stays
+usable. Keep old source configs/fingerprints/world/cursors/recorded behavior exact.
+Copy authenticated request/response traces+BLOBs from exact sealed source prefixes during
+reuse/replay; copied timing belongs sourcecall, no newHTTP. No later ancestor upgrade.
 
-LN09c integrationc2d2f87 is pushed. NEXT exact9d_inference_capture task/prombt
-committed contract, then isolatedworker/review/fulltask+mergedgates. It is
-producerONLY: preparedsamewirebytes, incremental bounded response/error/prefix capture,
-durable self-contained fsynced private spool, reaping-beforeharvest and explicitack.
-Then exact9e archive wiring/sealedsourcecopy/replay,9f admin/offlineanalysis/export,
-original realBOTHprovider fullacceptance/compatibility/wholebranchreview. Do not claim
-complete tracecapture from currentstorage. Normalresume leaseschildonly, sourceREADONLY/
-sealed: no hidden lateimport fromsource spool intochild. Root draft keeps hardcrash
-unimported evidence distinctly forensic, not proposalreuse; see trace-capture-root-decisions.md
-and 09d-capture-contract-draft.md (older unsplitdraft, ready9dproducer supersedes scope).
-GPU/model/backendprofiles remainfuture. No main/tagactions. Preserveeverytaskbranch and
-owneredit. Currentfivehour guard stopwithheadroombefore10, noreset/automaticresume.
+Normalresume leases CHILD only, source readonly/sealed. Hardcrash unimported private
+spools remain distinct forensic evidence, never silently imported into captured child
+or used as recovered proposals. Missing/unpublished bytes remain unknown. No new late
+writer, source migration or crossrestart PIDkills. LN09f later must provide authenticated
+readonly/offline admin analysis and portable export (attempt+lineage+forensic evidence),
+without starting a newworld/model. Then original full LN09 BOTH realprovider acceptance,
+manualharness/examples/docs, pause/coldrestart/offlinereplay, installedPython3.11 and
+final wholebranchreview. No9e contract/implementation exists at this checkpoint.
 
-LN09a root amendment resolves impossible end-boundary canonical work interruption with
-format2 work schedule: typed one-step request/result inside existing atomic work phase,
-ordinary eligibility/readiness then block before charge/progress, skip only selected
-order, retry nexttick. Format1 resource/oldwork and absent hashes unchanged. No schema/
-cursor/playerAPI change. Root reviewed fulltask scope12workerpaths + task/prompts,
-independent SPEC/QUALITY NO SUBSTANTIVE FINDINGS;352focused/10Pythonstyle PASS.
-Root task make2311/10existing skips384.50s, actualChrome/39examples; exactcanonical26
-readonly/CLI7/sourceServe4/wheel11+actualServe4 PASS (41normalattempts retained).
-Separate examples, whitespace and source equality finalized in task report.
+## Completed producer interfaces and evidence
 
-## Remaining owner-authorized scope
+LN09c delivery76911a3/integrationc2d2f87 adds format2 newarchives, immutable content-addressed
+opaque inference BLOBs, optional closed request_trace/response_trace metadata in existing
+journal records, same journal-boundary algorithm and prefix-restricted BLOB reads. Format1
+ordinary read/write remains usable without migration; trace-bearing writes reject. Task/
+merged2469/10existing skips and full compatibility gates passed. All branches preserved.
+LN09d adds PreparedInference/InferenceObservation/prepare_inference/settle_observation,
+Urllib post_bytes observer, durable private bounded self-contained fsynced spool,
+DecisionBroker.bind_trace and acknowledge_trace(job,*,result=None). Bound spawned worker
+receives primitive bytes+metadataJSON, validates rebuilt payload then sends ORIGINALbytes.
+Success/error/invalid/empty/oversize max+1/partial/truncated/timeout evidence retained.
+Reap beforeharvest; real success needs complete matching2xx evidence. Ack realjobs requires
+cached/reaped settlement, injected overridden-start fakes can supply result. Corrupt or
+unimported spools retained; no ack before caller archiveimport. FivePythonstyle/57capture
+plus20existing correction tests passed; full root gates above. Exact task/prombt/report
+09c_inference_trace_storage* and09d_inference_capture* are compressed reviewed history.
 
-Owner explicitly requires BOTH Ollama and llama.cpp persistent-runtime verification.
-LN09b implements shared broker/preflight/CLI in legacy live modeollama with provider.kind,
-provider_document preserves oldhashes, llama GGUFsha256+matching /props alias/path identity
-uses actuallocalfile not dummy /api/tags. No seconddriver/controller. Backend code is
-reviewed and integrated after task/merged validation; rawtrace tasks precede real acceptance.
-LN09c storage is complete as above. Execute exact9d producer contract; follow-on9e
-archive wiring/reuse and9f admin analysis/export need exact contracts before their code.
-Originalfull9 manualharness/examples/docs/BOTHprovideractualbaseline+disturbances/
-pausecoldrestart/offlinereplay/Python3.11installed gates/finalwholebranchreview follow.
+Earlier LN09b deliverybb907a0/integrationed61354 shares legacy live archive mode ollama
+with provider.kind ollama/llama_cpp, no second controller. Ollama defaults/fingerprints
+unchanged; llama pins actual local GGUF SHA256 and matching /props alias/path, not dummy
+/api/tags digest. No product server/GPU launcher. LN09a deliveryee11870/integration6321306
+adds deterministic replayable disturbances, including format2 one-step work interruption
+inside existing work phase before charge/progress. Their reports remain authoritative.
 
-Owner explicitly requests exact per-call request bytes/backend/model/response/timings
-retained with saves/logs, including invalid/failure responses, for later analysis. This
-supersedes prior raw invalid-response nonretention. Keep operator-only, never NPC/unsafe
-HTML; retain bounded prefixes with explicit incomplete/unknown status on oversize/crash,
-never fabricate full bytes or times. Read-only architecture notes and pending decisions
-in inference-trace-root-notes.md. Storage is complete; capture/wiring/admin are pending.
-GPU/model/backend profiles/context-memory limits are FUTURE backlog only.
+## Owner requirements and environment
 
-## Real backend evidence and environment
+Owner explicitly requires exact per-call body/backend/model/response/timing retention,
+including invalid responses, superseding old raw-invalid nonretention. Data privileged,
+neverNPC/unsafeHTML; bounded incomplete/unknown evidence, no fabricatedbytes/times.
+Ollama /api/generate and llama /v1/chat/completions must both work in persistentworlds.
+Native llama /home/at-boy/Projects/codex/llama.cpp/build/bin/llama-server, model
+/home/at-boy/Projects/codex/llm-models/gguf/Qwen3.5-4B-Q4_K_M.gguf. Normal acceptance AMD
+Vulkan0 perowner; old NVIDIA insufficient for intendedconfig. Prior AMD4.15s/dual8kctx7.74s
+standalone probes valid, BOTH ownedservers stopped, logs llama-native-preflight. These
+are NOT persistent-world acceptance. User permits modeldownloads in gguf dir ifneeded;
+none needed/downloaded. Future GPU/model/backend/context-memory profiles BACKLOG ONLY.
+Earlier realOllama preflight logs ln09-baseline-preflight retain3attempts with coldchild
+and exact offline2point replay; model hf.co/Qwen/Qwen3-4B-GGUF:Q4_K_M pinned
+3c4f22130d403283bb961721f2c4f83e4409afcbb7a7cd992f425c62b9304e35. No active servers.
 
-Existing /home/at-boy/Projects/codex/llama.cpp/build/bin/llama-server0.7.0-dev/build11741
-commit1b29621ba, model /home/at-boy/Projects/codex/llm-models/gguf/Qwen3.5-4B-Q4_K_M.gguf.
-Owner permits model downloads to that gguf directory if needed; none needed/downloaded.
-Normal llama acceptance must use AMD Vulkan0 per owner; old NVIDIA insufficient for
-intended configuration. Native standalone cognition smoke AMD4.15s and bounded8192ctx
-dualGPU1:1split7.74s valid; verbose dual log verifies AMD+GTX1060 buffers/33of33layers.
-These are NOT persistent-world acceptance. Both ownedservers stopped/reaped0; logs
-in ignored llama-native-preflight. No active provider/container program remains.
+## Recovery and ownership
 
-Earlier realOllama preflight ln09-baseline-preflight retains3attempts:5035c02b05bd45daaa73e5493010d834
-tick1/2responses/0offers; coldchilda2eb3b98e2cf453fb807fbde167330e1 tick2/1acceptedwork;
-offlinereplay29902c5cef134611a1314d2213ed8cc7 withproviderunavailable matches2complete
-world/events/cursors, sourcebytes unchanged. Originalmodel hf.co/Qwen/Qwen3-4B-GGUF:Q4_K_M
-digest3c4f22130d403283bb961721f2c4f83e4409afcbb7a7cd992f425c62b9304e35.
-
-## Recovery, ownership and validation
-
-Ignored .superpowers/sdd/2026-10-19-live-npc-runtime/progress.md is plan recovery ledger;
-reviewpackages, reports, task/merged helperoutputs retained there. Helpers:
-recorded_matrix.py canonical26; archived_cli_acceptance.py7; served_cli_acceptance.py4;
-wheel_serving_check.py wrapping wheel_runtime_check.py11resources+4serve. Use unique
-outputs, no completed-task redispatch. Separateexamples onlyAFTERmake closes.
-
-Owner-local masterplan edit ONLYfeature docs/superpowers/plans/2026-10-19-live-npc-runtime.md
-(accidental observasmall, clearly specified tasksble) MUST NEVER be staged/restored/fixed.
+Ignored .superpowers/sdd/2026-10-19-live-npc-runtime/progress.md is recoveryledger; packages,
+reports, helperoutputs and rootnotes retained. Helpers recorded_matrix.py26,
+archived_cli_acceptance.py7, served_cli_acceptance.py4, wheel_serving_check.py11+4;
+check_gate_results.py verifies results/readonly files. Uniqueoutputdirs, separateexamples
+AFTERmake exits. Existing VENV .worktrees/task24/.venv Python3.13.5; support>=3.11.
+make needs escalation for actualChrome/localfixtures. SSHnetwork workaround
+GIT_SSH_COMMAND='ssh -F /dev/null -o BatchMode=yes'.
+Owner-local masterplan edit docs/superpowers/plans/2026-10-19-live-npc-runtime.md
+(observasmall, clearly specified tasksble) MUST NOT be staged/restored/fixed.
 DiffSHA294b20313ae2de248301fa20bbb4f9c312d51efa4851a434466f98a588dd93e6.
-Feature root continuation/task/prombt duplicates must be backed up/compared before
-restoring exact duplicated paths for integration; never restore ownerplan.
-
-Protected refs last liveverifiedunchanged: main d8ea51797b5ca3bfefa37cd5f7bafc95cbee5899;
-milestone/v0.6 6bf4c63637584584a8dfce009d2d1d79987be570; v0.6.0rc1 tag
-1040fd2e3e4068d3f7dba77be37179299273aa41 peeled092715c11ed00b98255ae611fcef1bcfb8f1de9d.
-No main/tag action authorized now. Owner approved feature integrations/pushes. Managers
-mutate/systems behave/eventsimmutable; RuntimeService solewriter; LLMfiltered proposals
-through gateway; world goals/stages authority preserved. Futureplayer chaos no playerAPI.
-
-Python /home/at-boy/Projects/codex/Living-World-Simulator/.worktrees/task24/.venv/bin/python
-3.13.5, support>=3.11. make requires actualChrome escalation; source equality afterward.
-Git network GIT_SSH_COMMAND='ssh -F /dev/null -o BatchMode=yes'.
-Deferred minor8d: desktoparchive Parent/Lifecycleheader midwordwrap, finalwholebranch
-review musttriage. Stop with headroom BEFORE10%five-hourremaining; noreset/automaticresume.
+Root duplicate task/prombt edits must be backedup/verified before restoring exact
+root-owned duplicates for integration. Preserve every branch/worktree/archive.
+Protected refs unchanged: main d8ea51797b5ca3bfefa37cd5f7bafc95cbee5899;
+milestone/v0.6 6bf4c63637584584a8dfce009d2d1d79987be570; tag1040fd2e3e4068d3f7dba77be37179299273aa41
+peeled092715c11ed00b98255ae611fcef1bcfb8f1de9d. NO main/milestone/tag action now.
+Owner authorizes task featureintegration/push. Managers mutate/systems behave/events
+immutable; RuntimeService solewriter; filteredLLM proposals throughgateways; simulation
+owns truth/goals/stages. Deferred8d desktopParent/Lifecycle headerwrap finalreviewtriage.
+Keepfive-hourusage headroom BEFORE10%remaining; no resets orautomaticresume afterpause.
