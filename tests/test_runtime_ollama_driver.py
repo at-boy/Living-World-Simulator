@@ -633,14 +633,18 @@ def test_pending_restart_is_uncertain_without_resend_then_retry_reuses_earlier_a
         assert pending.poll() == "waiting"  # first validated; second pending at crash
         # Simulate process loss: no preparation.close(), preserving the pending row.
         broker.close()
-        cold = OllamaTickDriver(driver.config, driver.feedback, broker)
+        # A restarted owner has a fresh broker; the old unimported trace stays forensic.
+        restarted = ImmediateBroker()
+        cold = OllamaTickDriver(driver.config, driver.feedback, restarted)
         recovered = cold.prepare(live.restore(base.snapshot), base, archive)
         assert ready(recovered) == "provider_error"
         assert recovered.error_code == "uncertain"
         assert len(broker.calls) == 2
         recovered.close()
         advance(cold, live, archive, base)
-        assert len(broker.calls) == 3
+        assert len(broker.calls) + len(restarted.calls) == 3
+        assert len(restarted.calls) == 1
+        assert list((archive.database_path.parent / "inference-spool").iterdir())
         assert (
             sum(
                 e.kind == "response_failed" and e.payload["code"] == "uncertain"

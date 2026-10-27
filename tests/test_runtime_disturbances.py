@@ -7,6 +7,7 @@ import pytest
 
 from living_world.archives import ArchiveFormatError, AttemptConfig, JournalEntry
 from living_world.archives.model import BoundaryDisturbance, parse_boundary_disturbance
+from living_world.runtime.broker import DecisionBroker
 from living_world.runtime.disturbances import apply_boundary_disturbance
 
 
@@ -363,7 +364,7 @@ def test_work_blockage_releases_reservation_and_uses_manager_order(tmp_path):
         lease.release()
 
 
-class ShelterBroker:
+class ShelterBroker(DecisionBroker):
     """Fake inference proposes an ordinary canonical modest shelter offer."""
 
     def __init__(self):

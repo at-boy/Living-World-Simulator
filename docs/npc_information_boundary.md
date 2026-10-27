@@ -831,7 +831,10 @@ observations; monotonic intervals include capture overhead and do not identify s
 token generation time. The parent reaps its owned worker before harvesting evidence,
 and retains the spool until explicit caller acknowledgement after successful import.
 Raw output and trace metadata stay engine-only and never become NPC knowledge.
-Public archived-runtime wiring and admin views remain follow-on work. Parent
+Archived live runtime automatically commits exact request bytes before dispatch and
+raw response observations before staging a validated proposal. Both provider backends
+use the same owner-controlled archive transactions; successful import precedes spool
+acknowledgement. Admin views remain follow-on work. Parent
 validation checks every returned prose field against the current information boundary
 before recording a validated response.
 
@@ -896,5 +899,10 @@ memories, inference prose or the chat body. This verifies local file bytes plus
 server-reported alias/path, not resident GPU memory. No model is copied into the
 archive. Offline replay uses retained safe decisions and exact source config;
 it does not need the GGUF file or server. Simulation managers remain authoritative
-for state, completion and progression. Privileged raw inference traces remain a
-separate required task; this provider change does not add or claim those traces.
+for state, completion and progression. Archived live calls retain privileged exact
+request and observed response bytes, including invalid outputs, in format-two archives.
+Sealed live reuse and offline replay copy authenticated trace fields and BLOBs without
+new calls or timings. Legacy omitted traces stay omitted. Unimported crash spools remain
+private uncommitted forensic evidence; resume never silently recovers their proposals.
+Standalone/manual clients are outside automatic archive tracing. Raw bodies, source
+paths, backend metadata and timing evidence remain engine-only.

@@ -1,6 +1,6 @@
 # LN09e — Automatic archived inference and sealed trace reuse
 
-Status: AUTHORIZED implementation pending. Producer9d integrated176ce62, fully validated.
+Status: IMPLEMENTED and independently reviewed after one test-only correction; root task and feature integration validation passed. Producer9d integrated176ce62, fully validated.
 Spec: owner-approved live runtime plus explicit exact per-call backend/model/request/
 response/timing retention; invalid raw retention authorized. Existing execution method:
 bounded worker, independent review, root task/merged gates, preserved branches/pushes.
@@ -167,29 +167,29 @@ and distinguish already journaled evidence. No admin API/frontend/export in this
 
 ## Required RED/GREEN and meaningful tests
 
-- [ ] RED actual spawned fakeHTTP tests for BOTH endpoints prove server-received body
+- [x] RED actual spawned fakeHTTP tests for BOTH endpoints prove server-received body
   equals request_trace BLOB; read-only server handler observes request archive transaction
   already committed before receivingHTTP. Responses/status/timings persist after reopen.
-- [ ] RED request-storagefailure prevents network/process/bind; response-storagefailure
+- [x] RED request-storagefailure prevents network/process/bind; response-storagefailure
   after captured result prevents staging/worldrevision/actionoutcome and retains spool.
-- [ ] Implement helper and live ordering, error/close paths with parent timestamps; tests
+- [x] Implement helper and live ordering, error/close paths with parent timestamps; tests
   success, invalidJSON/UTF8/envelope/unsafeprose, HTTPerror, empty, oversizeprefix, timeout,
   cancellation and stop after partial/complete capture, cached/injectedfake compatibility.
-- [ ] Test ackfailure after successfulimport preserves complete canonicalevidence, fixed
+- [x] Test ackfailure after successfulimport preserves complete canonicalevidence, fixed
   warning contains no rawsecret; repeatedclose doesnot duplicate responses. Importfailure
   cleanup still clears detached hooks without fabricating committed effects.
-- [ ] Test genuine legacydirect rejection beforefeedback/net and normal legacy->newchild
+- [x] Test genuine legacydirect rejection beforefeedback/net and normal legacy->newchild
   trace capture, untraced legacy source reuse/replay without historical body fabrication.
-- [ ] Implement prefix-authenticated tracecopy and capturedreplay blobs; test exactbody/
+- [x] Implement prefix-authenticated tracecopy and capturedreplay blobs; test exactbody/
   metadata/timing equality, nestedreuse, pending-request prefix excludes laterresponse,
   prefix-boundary tamper/missingblob rejects atomically, child localread after sourcegone,
   offline replay without server/GGUF and unchanged complete worlds/events/cursors.
-- [ ] Test hardcrash published unimportedspool is retained and NOT silently consumed by
+- [x] Test hardcrash published unimportedspool is retained and NOT silently consumed by
   childreuse/replay; explicit unknown response state, no sourcebyte changes.
-- [ ] Run newfocused plus existing driver/replay/disturbance/broker/storage/restart suites,
+- [x] Run newfocused plus existing driver/replay/disturbance/broker/storage/restart suites,
   scoped Ruff/Black and whitespace. Update only ShelterBroker inheritance/import in its
   existing fixture file. No weakening assertions to accept missing actualcall evidence.
-- [ ] Write report RED/GREEN commands/results/counts/warnings/scope/limits, freeze.
+- [x] Write report RED/GREEN commands/results/counts/warnings/scope/limits, freeze.
 
 Use existing .worktrees/task24/.venv, PYTHONPATH=src. Focused new file then
  tests/test_runtime_ollama_driver.py tests/test_runtime_journal_replay.py

@@ -28,6 +28,7 @@ from living_world.repositories.world_snapshot import (
 )
 from living_world.simulation.simulation_engine import SimulationEngine
 
+from .archive_inference import capture_trace_blobs, trace_fields
 from .broker import client_for, decision_document, encoded_body, provider_config
 from .contracts import DriverCommit
 from .disturbances import (
@@ -75,6 +76,12 @@ class _CapturedSource:
             self.records = archive.journal_records(
                 through_sequence=self.boundary.sequence
             )
+            self.blobs = {
+                blob.sha256: blob
+                for blob in capture_trace_blobs(
+                    archive, self.boundary, tuple(r.entry for r in self.records)
+                )
+            }
             self.ref = archive.ref
             self.hashes = load_retained_inputs(archive.ref).hashes
         if any(
@@ -218,6 +225,7 @@ class JournalReplayDriver:
         }
         staged = []
         imports = []
+        blobs = {}
         client = client_for(self._source.provider)
         for item in items:
             action = next(
@@ -260,6 +268,7 @@ class JournalReplayDriver:
                     canonical(response.payload["decision"]), item.options
                 ),
             )
+            traces = trace_fields(started, response)
             local = next(
                 (
                     r.entry
@@ -279,6 +288,16 @@ class JournalReplayDriver:
                 ),
                 None,
             )
+            if local is not None and any(
+                canonical(local.payload.get(key)) != canonical(traces.get(key))
+                for key in (
+                    "request_trace",
+                    "response_trace",
+                    "content_digest",
+                    "elapsed_seconds",
+                )
+            ):
+                raise ArchiveFormatError("Replay local inference trace mismatch.")
             local_id = local.payload["request_id"] if local else uuid4().hex
             if local is None:
                 imports.append(
@@ -286,6 +305,7 @@ class JournalReplayDriver:
                         "response_reused",
                         {
                             **request,
+                            **traces,
                             "request_id": local_id,
                             "decision": decision_document(decision),
                             "source": {
@@ -296,9 +316,17 @@ class JournalReplayDriver:
                         },
                     )
                 )
+                for key in ("request_trace", "response_trace"):
+                    trace = traces.get(key)
+                    if trace is not None and trace["body_digest"] is not None:
+                        sha = trace["body_digest"]
+                        blobs[sha] = self._source.blobs[sha]
             staged.append(_Staged(item, local_id, decision))
         if imports:
-            archive.record(tuple(imports))
+            archive.record(
+                tuple(imports),
+                inference_blobs=tuple(blobs[key] for key in sorted(blobs)),
+            )
         return _ReplayPreparation(
             candidate,
             base,

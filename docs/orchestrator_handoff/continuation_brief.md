@@ -1,36 +1,32 @@
-# Continuation brief — LN09d complete, archive wiring next
+# Continuation brief — LN09e complete, analysis and real-provider acceptance remain
 
 ## Current state and next task
 
-Feature codex/live-npc-runtime lives in .worktrees/live-npc-runtime. LN09d delivery
-2781dd3 is reviewed and task/merged validated; task branch codex/live-npc-ln09d-inference-capture
-and .worktrees/live-npc-ln09d are pushed/preserved. Integrated176ce62/pushed. Independent astra fullreview found2P2 (prestart ack bypass, directory-entry sync);
-original worker fixround1 and scoped originalreview addressedboth, no substantive findings.
-Task/merged make2526/10existing deliberate skips454.12s/450.51s, actualChrome/39examples,
-separateexamples/exactcanonical26+read-only latestcompletepoints/CLI7/sourceServe4/
-wheel11resources+actualServe4 PASS.41normalattempts retained per gate tree. Reviewedsource
-SHA720a35b26006ce29d556e1a8f49670a23c87824ec1ccbadfcf769c98667af29f unchanged.
-DO NOT redispatch completed worker/reviewer/gates. No active worker/reviewer/modelserver.
+Feature codex/live-npc-runtime, .worktrees/live-npc-runtime. LN09e delivery62ea35c on
+preserved/pushed codex/live-npc-ln09e-archive-inference / .worktrees/live-npc-ln09e.
+Task+merged root gates passed2547tests/10existing deliberate skips479.81s/478.25s,
+actualChrome/39examples, separateexamples39, exactcanonical26/read-only unchanged/prior
+payloadhashes/CLI7/sourceServe4/wheel11+actualServe4.41normalattempts retained per tree.
+Independent astrareview1 oneP2 missingresponse replay regression; originalworker test-only
+fixround1 +original scoped spec/quality rereview PASS,1addressed/0open. Focused21PASS,
+six in-memory mutant REDs. Reviewedsource18fc232fb2bfec70272a8faa2c46144ed9479527fd46b94b5c2e3c300548bd35
+unchanged. No activeworker/reviewer/modelserver. Root finalizing nofffeaturemerge/push.
+DO NOT redispatch implementation/review/gates. Exact09e task/prombt/report compressedhistory.
 
-NEXT: exact authorized 09e_archive_inference task/prombt is ready for isolatedworker,
-then independentreview/rootfullgates. Tenfilecontract resolves producer/driver/replay
-interfaces and safeerror/close/legacy/sourceprefix ordering.
-Wire prepared exact request+BLOB atomic journal before dispatch; response observation/
-BLOB+outcome atomic journal before staging; acknowledgement only after successful import.
-Captureproducer alone is NOT automatic archived runtime tracing. Format1 directlive
-inference must reject unsupportedtracecapability; normalresume to newformat2 child stays
-usable. Keep old source configs/fingerprints/world/cursors/recorded behavior exact.
-Copy authenticated request/response traces+BLOBs from exact sealed source prefixes during
-reuse/replay; copied timing belongs sourcecall, no newHTTP. No later ancestor upgrade.
+New archived live cognition for BOTHproviders saves atomic exactrequest/BLOB before
+network and responseevidence/outcome beforestaging, ackafterimport; sealedtracecopy and
+eagerofflinereplay retain originalbytes/times, legacyomissions stayomitted. Hardcrash
+unimported source spools remain separate uncommitted forensic, never recoveredproposals.
 
-Normalresume leases CHILD only, source readonly/sealed. Hardcrash unimported private
-spools remain distinct forensic evidence, never silently imported into captured child
-or used as recovered proposals. Missing/unpublished bytes remain unknown. No new late
-writer, source migration or crossrestart PIDkills. LN09f later must provide authenticated
-readonly/offline admin analysis and portable export (attempt+lineage+forensic evidence),
-without starting a newworld/model. Then original full LN09 BOTH realprovider acceptance,
-manualharness/examples/docs, pause/coldrestart/offlinereplay, installedPython3.11 and
-final wholebranchreview. LN09e contract exists; implementation notyetstarted.
+NEXT: real nativeprovider archived probes may provide retaineddatasets using ignored
+native_trace_probe.py (not yet run, not finalLN09acceptance). Native ports werefree;
+normal llama AMDVulkan0 asowner requested. Keep ownedPID/starttime/argv/logs and stop
+onlyowned servers. Then root exact LN09f contracts for authenticated readonly/offline
+analysis/export/UI (probe notes trace-analysis-root-notes.md andtrace-reader-seams.md;
+no implementationcontract yet). Existing archive readers load ALLBLOBs; boundedanalysis
+needs separate explicit metadata/selectedbody verification without weakening runtimefull
+validation. OriginalfullLN09 BOTHprovider harness/disturbances/controls/browser/coldrestart/
+offlinereplay/installedPython3.11/finalwholebranchreview remains. No finalacceptanceclaim.
 
 ## Completed producer interfaces and evidence
 
