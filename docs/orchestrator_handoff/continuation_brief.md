@@ -1,4 +1,4 @@
-# Continuation brief — LN09c trace storage contract ready, October27,2026
+# Continuation brief — LN09c complete, exact capture producer next, October27,2026
 
 ## Current state
 
@@ -15,13 +15,25 @@ LN09a deliveryee11870 integrated6321306, likewise fully reviewed/validated. Allt
 branches/worktrees, archives and protected owner edit preserved. Do NOT redispatch
 completed9a/9b workers/review/gates. No active worker/reviewer/modelserver remains.
 
-NEXT: implement exact LN09c trace-storage task/prombt in isolated task worktree,
-independent review then root task/merged gates. Contract defines format2 new archives,
-immutable content-addressed BLOBs and closed optional journal trace metadata, prefix-bound
-reads and unchanged legacy format1 operations with no migration. It is storage ONLY.
-Follow with exact capture/recovery/reuse contract, admin/offline analysis/export, then
-real BOTHprovider fullacceptance/compatibility/wholebranch review. Capture is not yet
-implemented. GPU/model/backend profiles remain future backlog only. No main/tag actions.
+LN09c delivery76911a3 is reviewed and task/merged validated, preserved taskbranch
+codex/live-npc-ln09c-trace-storage/.worktrees/live-npc-ln09c. Independent SPEC/QUALITYPASS
+NO SUBSTANTIVE FINDINGS; worker387focused/96new/sixPythonstylePASS. Roottask/merged
+make2469/10existing skips429.60s/429.44s, actualChrome/39examples/separateexamples/
+exactcanonical26+readonly latestcompletepoints/CLI7/sourceServe4/wheel11+actualServe4PASS.
+41normalattempts retainedpergatetree, reviewedsourceexact and ownerpatchunchanged.
+
+NEXT root activate exact9d transport/durablebroker capture contract from ignored
+09d_inference_capture-ready.md, then isolatedworker/review/fulltask+mergedgates. It is
+producerONLY: preparedsamewirebytes, incremental bounded response/error/prefix capture,
+durable self-contained fsynced private spool, reaping-beforeharvest and explicitack.
+Then exact9e archive wiring/sealedsourcecopy/replay,9f admin/offlineanalysis/export,
+original realBOTHprovider fullacceptance/compatibility/wholebranchreview. Do not claim
+complete tracecapture from currentstorage. Normalresume leaseschildonly, sourceREADONLY/
+sealed: no hidden lateimport fromsource spool intochild. Root draft keeps hardcrash
+unimported evidence distinctly forensic, not proposalreuse; see trace-capture-root-decisions.md
+and 09d-capture-contract-draft.md (older unsplitdraft, ready9dproducer supersedes scope).
+GPU/model/backendprofiles remainfuture. No main/tagactions. Preserveeverytaskbranch and
+owneredit. Currentfivehour guard stopwithheadroombefore10, noreset/automaticresume.
 
 LN09a root amendment resolves impossible end-boundary canonical work interruption with
 format2 work schedule: typed one-step request/result inside existing atomic work phase,
@@ -40,9 +52,8 @@ LN09b implements shared broker/preflight/CLI in legacy live modeollama with prov
 provider_document preserves oldhashes, llama GGUFsha256+matching /props alias/path identity
 uses actuallocalfile not dummy /api/tags. No seconddriver/controller. Backend code is
 reviewed and integrated after task/merged validation; rawtrace tasks precede real acceptance.
-Next read inference-trace-root-notes.md for narrow investigation evidence and unresolved
-rootdecisions. Draft a decision-complete bounded trace-storage/capture task +savedprombt
-before code; admin readonly analysis/inspection/export may need separate boundedtask.
+LN09c storage is complete as above. Activate ready9d producer contract; follow-on9e
+archive wiring/reuse and9f admin analysis/export need exact contracts before their code.
 Originalfull9 manualharness/examples/docs/BOTHprovideractualbaseline+disturbances/
 pausecoldrestart/offlinereplay/Python3.11installed gates/finalwholebranchreview follow.
 
@@ -51,7 +62,7 @@ retained with saves/logs, including invalid/failure responses, for later analysi
 supersedes prior raw invalid-response nonretention. Keep operator-only, never NPC/unsafe
 HTML; retain bounded prefixes with explicit incomplete/unknown status on oversize/crash,
 never fabricate full bytes or times. Read-only architecture notes and pending decisions
-in inference-trace-root-notes.md. This is required scope, not already implemented.
+in inference-trace-root-notes.md. Storage is complete; capture/wiring/admin are pending.
 GPU/model/backend profiles/context-memory limits are FUTURE backlog only.
 
 ## Real backend evidence and environment

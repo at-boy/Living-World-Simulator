@@ -1,6 +1,6 @@
 # LN09c — Sealed privileged inference trace storage
 
-Status: AUTHORIZED, not implemented. Root architecture ruling October27,2026.
+Status: COMPLETE — delivery76911a3 reviewed and task/merged validated. October27,2026.
 Spec: owner-approved live runtime plus explicit exact per-call request/backend/response/
 timing retention requirement (October26), superseding old invalid-response nonretention.
 Execution: existing approved bounded worker, independent review, root task/merged gates.
@@ -27,12 +27,13 @@ privileged engine/operator data, never NPC knowledge or ordinary inspector/world
 No new dependencies. Existing format-one behavior remains usable and byte-preserving on
 read. Preserve all task branches/worktrees and owner-local master-plan edit.
 
-Exactly six worker paths:
+Exactly seven worker paths:
 - NEW src/living_world/archives/inference.py
 - src/living_world/archives/model.py
 - src/living_world/archives/store.py
 - src/living_world/archives/__init__.py
 - NEW tests/test_inference_trace_storage.py
+- tests/test_run_archive_store.py (only update injected future-format fixture from 2 to 3)
 - docs/subagent_execution_plan/live_npc_runtime/09c_inference_trace_storage-report.md
 
 Root owns this task, matching saved prompt, CHANGELOG.md, docs/project_journal.md,
@@ -81,7 +82,7 @@ Request trace exact keys:
 - model: nonempty string
 - model_digest: nonempty string or null (actual configured pin, not fabricated)
 - method: POST
-- url: credential-free loopback HTTP endpoint; /api/chat for ollama,
+- url: credential-free loopback HTTP endpoint; /api/generate for ollama,
   /v1/chat/completions for llama_cpp; no query/fragment/params
 - headers: exactly {Content-Type: application/json}; these are application-declared
   headers, not a claim to capture TCP/framing or automatically generated HTTP headers

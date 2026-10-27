@@ -558,14 +558,38 @@ class JournalEntry:
             if self.kind not in schemas:
                 raise ArchiveFormatError("Unknown journal kind.")
             optional = {
-                "response_failed": {"content_digest"},
-                "response_validated": {"content_digest", "elapsed_seconds"},
-                "response_reused": {"content_digest", "elapsed_seconds"},
+                "request_started": {"request_trace"},
+                "response_failed": {"content_digest", "response_trace"},
+                "response_validated": {
+                    "content_digest",
+                    "elapsed_seconds",
+                    "response_trace",
+                },
+                "response_reused": {
+                    "content_digest",
+                    "elapsed_seconds",
+                    "request_trace",
+                    "response_trace",
+                },
                 "control_requested": {"admitted_state_version"},
             }
             p = document(
                 self.payload, schemas[self.kind], optional.get(self.kind, set())
             )
+            # Local import keeps the shared format helpers independent of trace models.
+            from living_world.archives.inference import (
+                validate_request_trace,
+                validate_response_trace,
+            )
+
+            if "request_trace" in p:
+                validate_request_trace(p["request_trace"])
+            if "response_trace" in p:
+                validate_response_trace(p["response_trace"])
+                if self.kind == "response_reused" and "request_trace" not in p:
+                    raise ArchiveFormatError(
+                        "Reused response trace requires request trace."
+                    )
             for key in ("request_id", "actor_label", "reason"):
                 if key in p:
                     text(p[key])

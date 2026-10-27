@@ -1807,3 +1807,25 @@ publication and prefix-restricted reads. Format-one ordinary reads/writes remain
 without migration or fabricated historical traces. No implementation yet. Real BOTH
 provider persistent-world acceptance follows capture and admin work. GPU profiles remain
 future scope. Owner edit and all existing branches/checkpoints preserved.
+
+
+## 2026-10-27 — LN09c storage reviewed and task-validated
+
+Bounded seven-path worker completed 387 focused tests (96 new) and scoped style.
+Independent spec/quality review found no substantive issues. Root task make passed
+2469 tests/10 existing skips, actual Chrome/39 examples, separate examples, exact
+canonical26/read-only archive reopening, CLI7/sourceServe4/wheel11+actualServe4 checks.
+Prior payload hashes and reviewed source remained exact. 41 normal attempts retained.
+Task delivery is ready for feature integration and repeated merged checks. Exact HTTP
+capture/recovery/reuse and admin analysis/export remain required follow-on work; neither
+is claimed by storage. No provider process or main/tag action.
+
+
+## 2026-10-27 — LN09c storage integration validated
+
+Delivery76911a3 preserved/pushed; repeated feature gates passed2469/10 existing skips,
+429.44s, actualChrome/39examples, separateexamples, exactcanonical26/read-only files,
+CLI7/sourceServe4/wheel11+actualServe4. Reviewedsource and ownerpatch exact. No main/tag
+change or realprovider call. Root splits remaining trace producer9d, archive wiring/reuse9e
+and admin/offlineanalysis/export9f for bounded reviews, then BOTHprovider acceptance.
+Source hardcrash spools cannot silently upgrade sealed child evidence; no new latewriter.

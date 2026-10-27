@@ -312,7 +312,7 @@ def test_reading_corruption_and_future_format_never_repairs(tmp_path: Path) -> N
     archive.close()
     with sqlite3.connect(tmp_path / "archive.sqlite3") as connection:
         connection.execute(
-            "UPDATE archive_meta SET payload=json_set(payload,'$.format',2)"
+            "UPDATE archive_meta SET payload=json_set(payload,'$.format',3)"
         )
     before = (tmp_path / "archive.sqlite3").read_bytes()
     with pytest.raises(ArchiveFormatError):
