@@ -1,4 +1,4 @@
-# Continuation brief — LN09c complete, exact capture producer next, October27,2026
+# Continuation brief — LN09d capture contract ready, October27,2026
 
 ## Current state
 
@@ -22,8 +22,8 @@ make2469/10existing skips429.60s/429.44s, actualChrome/39examples/separateexampl
 exactcanonical26+readonly latestcompletepoints/CLI7/sourceServe4/wheel11+actualServe4PASS.
 41normalattempts retainedpergatetree, reviewedsourceexact and ownerpatchunchanged.
 
-NEXT root activate exact9d transport/durablebroker capture contract from ignored
-09d_inference_capture-ready.md, then isolatedworker/review/fulltask+mergedgates. It is
+LN09c integrationc2d2f87 is pushed. NEXT exact9d_inference_capture task/prombt
+committed contract, then isolatedworker/review/fulltask+mergedgates. It is
 producerONLY: preparedsamewirebytes, incremental bounded response/error/prefix capture,
 durable self-contained fsynced private spool, reaping-beforeharvest and explicitack.
 Then exact9e archive wiring/sealedsourcecopy/replay,9f admin/offlineanalysis/export,
@@ -52,7 +52,7 @@ LN09b implements shared broker/preflight/CLI in legacy live modeollama with prov
 provider_document preserves oldhashes, llama GGUFsha256+matching /props alias/path identity
 uses actuallocalfile not dummy /api/tags. No seconddriver/controller. Backend code is
 reviewed and integrated after task/merged validation; rawtrace tasks precede real acceptance.
-LN09c storage is complete as above. Activate ready9d producer contract; follow-on9e
+LN09c storage is complete as above. Execute exact9d producer contract; follow-on9e
 archive wiring/reuse and9f admin analysis/export need exact contracts before their code.
 Originalfull9 manualharness/examples/docs/BOTHprovideractualbaseline+disturbances/
 pausecoldrestart/offlinereplay/Python3.11installed gates/finalwholebranchreview follow.

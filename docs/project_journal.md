@@ -1829,3 +1829,15 @@ CLI7/sourceServe4/wheel11+actualServe4. Reviewedsource and ownerpatch exact. No 
 change or realprovider call. Root splits remaining trace producer9d, archive wiring/reuse9e
 and admin/offlineanalysis/export9f for bounded reviews, then BOTHprovider acceptance.
 Source hardcrash spools cannot silently upgrade sealed child evidence; no new latewriter.
+
+
+## 2026-10-27 — LN09d capture producer contract
+
+LN09c delivery76911a3 integratedc2d2f87 and pushed after repeated full validation.
+Root activates exact seven-path HTTP/durable broker producer contract. Prepared bytes
+remain identical on wire; incremental body/error/prefix evidence and scoped UTC/monotonic
+timings publish to private atomic fsynced spool. Reap before harvest, retain until ack,
+fail closed on capture corruption, preserve old unbound/injected broker interfaces.
+Runtime archive wiring/reuse/replay is separate9e, admin/offlineanalysis/export9f. No new
+SQLite writer, source recovery upgrade, server launcher, main or tag action. Ready for
+isolated TDD worker; no capture code yet.

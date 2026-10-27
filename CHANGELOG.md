@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Define exact-byte HTTP and durable broker capture with bounded partial/error
+  evidence, scoped timing and explicit archive acknowledgement; wiring follows.
+
 - Integrate reviewed exact-byte trace storage after repeated full, browser, recorded,
   restart and packaged serving checks; preserve branches, archives and owner edits.
 
