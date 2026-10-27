@@ -1924,3 +1924,49 @@ No source migration, writer, lease, network or auth route in reader task. Existi
 approved execution workflow authorizes bounded prerequisite implementation; root
 retains architectural choices and full gates. llama argument-contract acceptance issue
 stays open; no proposal coercion. Next isolatedworker/review/roottask+merged gates.
+
+
+## 2026-10-27 — LN09f1 reader reviewed and task-validated
+
+Independent astra review found two P1s (WALsidecar source writes, oversized DESC-PK
+identity prefetch); root explicitly restricts analysis to product rollbackjournals,
+and originalworker fixround1/originalscopedreview resolved both,0open. Focused94PASS;
+root make2641passed/10existing deliberate skips480.14s, actualChrome/39examples and
+separateexamples39 PASS. Exactcanonical26/read-only unchanged/priorhashes/CLI7/sourceServe4/
+wheel11+Serve4 PASS,41normalattempts retained. Readerchecks9savednativeattempts/30local
+calls includingreused preserve exactbytes/pages and sourcebytes+mtimes. Reviewedsource
+dbee511d... unchanged. Readyforfeatureintegration/repeatedgates; API/UI/export notyetbuilt.
+
+
+## 2026-10-27 — LN09f1 schema corrections and usage checkpoint
+
+Root found16MiB schema-name prefetch after prior task delivery e2a5e6f. Originalworker
+fixround2 removed raw schema transfers; scoped reviewer found table-name shadowing
+could still return16MiB wr bytes. Root verified and amended exact task/prombt before
+originalworker round3. Explicit PRAGMA invocation/intrinsic scalar flags, six shadow
+regressions and previous giant-name/type cases now pass; focused104/reviewer14 PASS,
+independent spec+quality PASS, cumulative3addressed/0open. Source7eeb0344... frozen.
+Old uncommitted featuremerge aborted safely after old gate completion; owneredit and
+all branches preserved. Earlier fullgates remain historical, not final approval.
+Fresh taskgates session10879 in progress; taskdelivery/checkpoint then usagepause
+planned before integration. Next protectedAPI/inertofflineapp draft remains inactive.
+
+
+Root final corrected-task validation: `make VENV=<task24venv>` PASS2651tests/10existing
+deliberate skips481.84s, actualChrome/39examples; separate `make examples`39PASS;
+`git diff --check`PASS. Existing helpers recorded_matrix.py26/read-only unchanged/
+priorhashesexact, archived_cli_acceptance.py7, served_cli_acceptance.py4,
+wheel_serving_check.py11resources+actualServe4, check_gate_results.py41normalattempts
+allPASS. trace_reader_native_check.py9savedarchives/30localcalls includingreusedPASS
+exactbytes/SHA/length/stablepages and recursive sourcebytes+mtimes unchanged. No new
+inference/world for native-reader check. Prefixln09f1-fix3-task; gate session10879
+exited0, allchildjobs0. Reviewedsource7eeb0344e913514b49b596dcc532ab5bbfcff7cc0bdd4cd77f335d7c4d716989 unchanged.
+Originalastra scoped fixround3 spec+qualityPASS, cumulative3addressed/0open.
+Earlier task/abortedmerged2641counts belong to older source and are superseded.
+Corrected taskdelivery checkpoint only; featureintegration/repeatedgates pending.
+Pause before usage10%threshold; no newtask or integration until ownerresume.
+
+Correctedtask delivery9c65f3b pushed/preserved. Feature receives this documentation-only
+usagecheckpoint; source remainsaf7b4af and implementation NOT integrated.18%remaining.
+Next merge must reconcile root handoff/common docs with task delivery, retain current
+checkpoint truth and owneredit, then repeat reviewedsource/current-tree gates.
