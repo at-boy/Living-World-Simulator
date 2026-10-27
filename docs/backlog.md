@@ -12,8 +12,9 @@ checks.
 LN09c delivery76911a3 sealed trace storage is independently reviewed and task/merged
 validated2469/10existing skips, actualChrome/39examples and exact compatibility gates.
 LN09d delivery2781dd3 capture producer is reviewed/task+merged validated2526/10existing
-skips, Chrome/39examples and exact compatibility gates. Next9e runtime archive wiring
-and sealed reuse/replay,9f admin/offlineanalysis/export; then real BOTHprovider acceptance.
+skips, Chrome/39examples and exact compatibility gates. Exact ten-file LN09e archive
+wiring contract is ready for worker, including sealed trace reuse/replay. Next9f admin/
+offlineanalysis/export; then real BOTHprovider acceptance.
 No complete backend/trace acceptance claim yet.
 
 ## Additional owner requirements — October26,2026

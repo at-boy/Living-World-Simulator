@@ -4,8 +4,7 @@
 
 Feature codex/live-npc-runtime lives in .worktrees/live-npc-runtime. LN09d delivery
 2781dd3 is reviewed and task/merged validated; task branch codex/live-npc-ln09d-inference-capture
-and .worktrees/live-npc-ln09d are pushed/preserved. Root finalizes noff merge after this
-record. Independent astra fullreview found2P2 (prestart ack bypass, directory-entry sync);
+and .worktrees/live-npc-ln09d are pushed/preserved. Integrated176ce62/pushed. Independent astra fullreview found2P2 (prestart ack bypass, directory-entry sync);
 original worker fixround1 and scoped originalreview addressedboth, no substantive findings.
 Task/merged make2526/10existing deliberate skips454.12s/450.51s, actualChrome/39examples,
 separateexamples/exactcanonical26+read-only latestcompletepoints/CLI7/sourceServe4/
@@ -13,8 +12,9 @@ wheel11resources+actualServe4 PASS.41normalattempts retained per gate tree. Revi
 SHA720a35b26006ce29d556e1a8f49670a23c87824ec1ccbadfcf769c98667af29f unchanged.
 DO NOT redispatch completed worker/reviewer/gates. No active worker/reviewer/modelserver.
 
-NEXT: root finalize exact LN09e task/prombt BEFORE implementation. Read ignored
-09e-runtime-wiring-root-notes.md and necessary current driver/replay/broker seams.
+NEXT: exact authorized 09e_archive_inference task/prombt is ready for isolatedworker,
+then independentreview/rootfullgates. Tenfilecontract resolves producer/driver/replay
+interfaces and safeerror/close/legacy/sourceprefix ordering.
 Wire prepared exact request+BLOB atomic journal before dispatch; response observation/
 BLOB+outcome atomic journal before staging; acknowledgement only after successful import.
 Captureproducer alone is NOT automatic archived runtime tracing. Format1 directlive
@@ -30,7 +30,7 @@ writer, source migration or crossrestart PIDkills. LN09f later must provide auth
 readonly/offline admin analysis and portable export (attempt+lineage+forensic evidence),
 without starting a newworld/model. Then original full LN09 BOTH realprovider acceptance,
 manualharness/examples/docs, pause/coldrestart/offlinereplay, installedPython3.11 and
-final wholebranchreview. No9e contract/implementation exists at this checkpoint.
+final wholebranchreview. LN09e contract exists; implementation notyetstarted.
 
 ## Completed producer interfaces and evidence
 

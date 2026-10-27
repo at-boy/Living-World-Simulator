@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Define automatic exact request/response archive wiring and sealed trace reuse,
+  preserving simulation authority and original timing during offline replay.
+
 - Integrate reviewed exact-byte HTTP and durable broker capture after repeated full,
   browser, recorded, restart and packaged serving validation; preserve task branches.
 

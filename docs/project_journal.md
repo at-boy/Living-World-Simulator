@@ -1857,3 +1857,12 @@ Pending merged check finished2526/10existing skips450.51s; separateexamples and 
 canonical26/readonly/CLI7/Serve4/wheel11+Serve4 gates passed. Reviewedsource and ownerpatch
 unchanged. Delivery2781dd3 preserved/pushed; finalizingfeatureintegration. Captureproducer
 only: archive wiring9e, admin/offlineanalysis9f and realBOTHprovider acceptance remain.
+
+
+## 2026-10-27 — LN09e archive trace composition contract
+
+LN09d integrated176ce62/pushed after repeated2526/10 gates. Root exactten-file task
+wires preparedrequest beforedispatch and observation/outcome beforestaging, ack after
+import. Reuse/replay copy sealedprefix metadata/BLOBs withoutfreshcalltimings; legacy
+unavailable traces remainunavailable. No newwriter/controller or hardcrashsourceupgrade.
+ShelterBroker fixture must inherit declaredDecisionBroker API. Admin/export9f follows.
