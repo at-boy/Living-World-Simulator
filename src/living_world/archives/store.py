@@ -13,6 +13,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Self
 
+from living_world.archives.inference import InferenceBlob
 from living_world.archives.model import (
     STATES,
     ArchiveError,
@@ -27,6 +28,7 @@ from living_world.archives.model import (
     JournalEntry,
     JournalRecord,
     canonical,
+    digest,
     document,
     envelope,
     frozen_map,
@@ -46,6 +48,7 @@ from living_world.repositories.world_snapshot import (
 from living_world.state.world_state import WorldState
 
 _SCHEMA = """
+CREATE TABLE inference_blobs(sha256 TEXT PRIMARY KEY, body BLOB NOT NULL);
 CREATE TABLE archive_meta(id INTEGER PRIMARY KEY CHECK(id=1), payload TEXT NOT NULL);
 CREATE TABLE world_snapshots(id INTEGER PRIMARY KEY CHECK(id=1), schema_version INTEGER NOT NULL, payload TEXT NOT NULL);
 CREATE TABLE checkpoints(revision INTEGER PRIMARY KEY CHECK(revision>=0), schema_version INTEGER NOT NULL, payload TEXT NOT NULL, digest TEXT NOT NULL, driver_cursor TEXT NOT NULL, feedback_cursor TEXT NOT NULL, operation TEXT NOT NULL, fingerprint TEXT NOT NULL UNIQUE);
@@ -132,7 +135,7 @@ class AttemptArchive:
                     (
                         canonical(
                             {
-                                "format": 1,
+                                "format": 2,
                                 "lineage_id": ref.lineage_id,
                                 "attempt_id": ref.attempt_id,
                                 "config": {
@@ -174,6 +177,10 @@ class AttemptArchive:
     @property
     def ref(self) -> AttemptRef:
         return self._ref
+
+    @property
+    def format_version(self) -> int:
+        return self._format_version
 
     @property
     def config(self) -> AttemptConfig:
@@ -243,13 +250,14 @@ class AttemptArchive:
             {"format", "lineage_id", "attempt_id", "config", "parent", "created_at"},
             {"parent_journal"},
         )
-        if type(meta["format"]) is not int or meta["format"] != 1:
+        if type(meta["format"]) is not int or meta["format"] not in (1, 2):
             raise ArchiveFormatError("Unsupported archive format.")
         if (
             meta["lineage_id"] != self.ref.lineage_id
             or meta["attempt_id"] != self.ref.attempt_id
         ):
             raise ArchiveFormatError("Archive identity mismatch.")
+        self._format_version = meta["format"]
         self._config = AttemptConfig(
             **document(
                 meta["config"],
@@ -454,6 +462,7 @@ class AttemptArchive:
         elif worlds:
             raise ArchiveFormatError("World without checkpoint.")
         rows = self._journal(connection)
+        self._validate_inference(connection, rows)
         if any(
             revision is not None and revision >= len(result)
             for _, _, revision, _ in rows
@@ -770,8 +779,10 @@ class AttemptArchive:
             )
         return tuple(sequences)
 
-    def append(self, entry: JournalEntry) -> int:
-        return self.record((entry,))[0]
+    def append(
+        self, entry: JournalEntry, *, inference_blobs: tuple[InferenceBlob, ...] = ()
+    ) -> int:
+        return self.record((entry,), inference_blobs=inference_blobs)[0]
 
     def record(
         self,
@@ -779,6 +790,7 @@ class AttemptArchive:
         *,
         lifecycle: str | None = None,
         reason: str | None = None,
+        inference_blobs: tuple[InferenceBlob, ...] = (),
     ) -> tuple[int, ...]:
         self._validate_entries(entries)
         if lifecycle is not None:
@@ -787,11 +799,126 @@ class AttemptArchive:
             raise ArchiveFormatError("Lifecycle reason requires state.")
         with self._connect(write=True) as connection:
             self._validate(connection)
+            self._store_inference(connection, inference_blobs)
             sequences = self._record(connection, entries, revision=None)
             if lifecycle is not None:
                 self._insert_lifecycle(connection, lifecycle, reason)
             self._validate(connection)
             return sequences
+
+    @staticmethod
+    def _trace_references(entries: tuple[JournalEntry, ...]) -> dict[str, int]:
+        references: dict[str, int] = {}
+        for entry in entries:
+            for key in ("request_trace", "response_trace"):
+                trace = entry.payload.get(key)
+                if trace is None or trace["body_digest"] is None:
+                    continue
+                sha, length = trace["body_digest"], trace["body_length"]
+                if sha in references and references[sha] != length:
+                    raise ArchiveFormatError("Conflicting inference body lengths.")
+                references[sha] = length
+        return references
+
+    def _validate_inference(
+        self,
+        connection: sqlite3.Connection,
+        rows: tuple[tuple[int, JournalEntry, int | None, int | None], ...],
+    ) -> None:
+        entries = tuple(entry for _, entry, _, _ in rows)
+        traced = any(
+            "request_trace" in entry.payload or "response_trace" in entry.payload
+            for entry in entries
+        )
+        if self.format_version == 1:
+            if traced:
+                raise ArchiveFormatError("Inference traces require archive format two.")
+            return
+        schema = connection.execute("PRAGMA table_info(inference_blobs)").fetchall()
+        if [(row[1], row[2].upper(), row[3], row[5]) for row in schema] != [
+            ("sha256", "TEXT", 0, 1),
+            ("body", "BLOB", 1, 0),
+        ]:
+            raise ArchiveFormatError("Missing or malformed inference BLOB table.")
+        references = self._trace_references(entries)
+        bodies: dict[str, InferenceBlob] = {}
+        for sha, body in connection.execute("SELECT sha256,body FROM inference_blobs"):
+            digest(sha)
+            value = InferenceBlob(body)
+            if value.sha256 != sha or sha in bodies:
+                raise ArchiveFormatError("Inference BLOB hash mismatch.")
+            bodies[sha] = value
+        if bodies.keys() != references.keys() or any(
+            bodies[sha].byte_length != length for sha, length in references.items()
+        ):
+            raise ArchiveFormatError(
+                "Missing, unbound or length-mismatched inference BLOB."
+            )
+        requests: dict[str, Mapping[str, object] | None] = {}
+        for entry in entries:
+            p = entry.payload
+            if entry.kind in ("request_started", "response_reused"):
+                requests[p["request_id"]] = p.get("request_trace")
+            if "response_trace" in p:
+                request = requests.get(p["request_id"])
+                if request is None:
+                    raise ArchiveFormatError("Response trace requires request trace.")
+                length = p["response_trace"]["body_length"]
+                if length is not None and length > request["max_response_bytes"] + 1:
+                    raise ArchiveFormatError(
+                        "Observed response exceeds request limit plus one."
+                    )
+
+    def _store_inference(
+        self, connection: sqlite3.Connection, values: tuple[InferenceBlob, ...]
+    ) -> None:
+        if not isinstance(values, tuple) or any(
+            not isinstance(value, InferenceBlob) for value in values
+        ):
+            raise ArchiveFormatError("Expected tuple of InferenceBlob values.")
+        if values and self.format_version != 2:
+            raise ArchiveFormatError("Inference BLOBs require archive format two.")
+        for value in values:
+            old = connection.execute(
+                "SELECT body FROM inference_blobs WHERE sha256=?", (value.sha256,)
+            ).fetchone()
+            if old is not None:
+                if type(old[0]) is not bytes or old[0] != value.body:
+                    raise ArchiveFormatError("Divergent inference BLOB identity.")
+            else:
+                connection.execute(
+                    "INSERT INTO inference_blobs(sha256,body) VALUES(?,?)",
+                    (value.sha256, value.body),
+                )
+
+    def inference_blobs(
+        self, digests: tuple[str, ...], *, through_sequence: int | None = None
+    ) -> tuple[InferenceBlob, ...]:
+        """Read only bytes bound by metadata in this exact sealed prefix."""
+        if not isinstance(digests, tuple):
+            raise ArchiveFormatError("Expected tuple of unique inference digests.")
+        for sha in digests:
+            digest(sha)
+        if len(set(digests)) != len(digests):
+            raise ArchiveFormatError("Duplicate inference digest.")
+        with self._connect() as connection:
+            self._validate(connection)
+            records = self._prefix(self._journal(connection), through_sequence)
+            references = self._trace_references(
+                tuple(record.entry for record in records)
+            )
+            if any(sha not in references for sha in digests):
+                raise ArchiveFormatError(
+                    "Inference body unavailable in selected prefix."
+                )
+            return tuple(
+                InferenceBlob(
+                    connection.execute(
+                        "SELECT body FROM inference_blobs WHERE sha256=?", (sha,)
+                    ).fetchone()[0]
+                )
+                for sha in digests
+            )
 
     def entries(self) -> tuple[JournalEntry, ...]:
         with self._connect() as connection:

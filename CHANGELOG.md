@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add reviewed sealed exact-byte inference storage with atomic body/reference saves,
+  preserved legacy archives and immutable fork horizons; provider capture follows.
+
 - Define sealed privileged request/response trace storage with exact body bytes,
   bounded completeness metadata and preserved legacy archives; capture follows.
 

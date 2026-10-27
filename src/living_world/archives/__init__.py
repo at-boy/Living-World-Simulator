@@ -10,6 +10,7 @@ from living_world.archives.catalog import (
     AttemptSummary,
     RunCatalog,
 )
+from living_world.archives.inference import InferenceBlob
 from living_world.archives.lease import AttemptLease
 from living_world.archives.mirror import ArchiveMirrorError, write_checkpoint_mirror
 from living_world.archives.model import (
@@ -43,6 +44,7 @@ __all__ = [
     "CommandEnvelope",
     "CommandReceipt",
     "ForkPoint",
+    "InferenceBlob",
     "JournalBoundary",
     "JournalEntry",
     "JournalRecord",

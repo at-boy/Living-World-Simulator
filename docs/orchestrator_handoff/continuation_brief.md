@@ -1,4 +1,4 @@
-# Continuation brief — LN09c trace storage contract ready, October27,2026
+# Continuation brief — LN09c reviewed/task-validated, integration pending, October27,2026
 
 ## Current state
 
@@ -15,13 +15,21 @@ LN09a deliveryee11870 integrated6321306, likewise fully reviewed/validated. Allt
 branches/worktrees, archives and protected owner edit preserved. Do NOT redispatch
 completed9a/9b workers/review/gates. No active worker/reviewer/modelserver remains.
 
-NEXT: implement exact LN09c trace-storage task/prombt in isolated task worktree,
-independent review then root task/merged gates. Contract defines format2 new archives,
-immutable content-addressed BLOBs and closed optional journal trace metadata, prefix-bound
-reads and unchanged legacy format1 operations with no migration. It is storage ONLY.
-Follow with exact capture/recovery/reuse contract, admin/offline analysis/export, then
-real BOTHprovider fullacceptance/compatibility/wholebranch review. Capture is not yet
-implemented. GPU/model/backend profiles remain future backlog only. No main/tag actions.
+LN09c seven-path storage delivery independently reviewed SPEC/QUALITYPASS, NO
+SUBSTANTIVE FINDINGS; worker387focused/96new, sixPythonstylePASS. Root task make2469/
+10existing skips429.60s, actualChrome/39examples/separateexamples/exactcanonical26+
+readonly latestcompletepoints/CLI7/sourceServe4/wheel11+actualServe4PASS. Reviewed
+sourceexact;41normalattempts retained. Taskcommit/integration/repeatedmerged gates next.
+No capture/admin code or real-provider acceptance claim. Contracts/prompt amendments
+correct existingOllama endpoint/api/generate and old unsupportedformat fixture2->3.
+
+AFTER storage integration: finalize exact capture/recovery/reuse contract from ignored
+trace-capture-root-decisions.md and 09d-capture-contract-draft.md. Normalresume leases
+childonly, sourcesreadonlysealed: never silently import later/unpublished source spool
+into captured childhorizon. Root draft preserves unimported forensic evidence separately,
+no new latewriter/proposal reuse. Then admin/offline analysis/export and original real
+BOTHprovider fullacceptance/compatibility/wholebranch review. GPU profiles futureonly.
+No main/tag actions. Preserve owneredit and every taskbranch/worktree.
 
 LN09a root amendment resolves impossible end-boundary canonical work interruption with
 format2 work schedule: typed one-step request/result inside existing atomic work phase,
