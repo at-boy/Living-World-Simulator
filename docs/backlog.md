@@ -17,7 +17,12 @@ and sealed trace reuse/replay is independently reviewed and task-validated2547/1
 skips,39examples and exact compatibility gates; repeated feature gates passed the same
 counts with unchanged reviewed source. Taskbranch62ea35c preserved/pushed.
 Then9f admin/offlineanalysis/export and real BOTHprovider acceptance.
-No complete backend/trace acceptance claim yet.
+Postintegration90ef1e2 native diagnostic:20realcalls/9archives across bothproviders,
+exacttrace/coldrestart/offlinereplay PASS; Ollama1acceptedwork, llama12nonnullworkproposals
+rejected for nonemptyarguments. Keep gatewaystrict. Before finalacceptance, isolate
+prompt/offer/argument-contract compatibility and preserve existing archive fingerprints/
+replay semantics; no fixcontract/code yet. See current native probe report.
+No complete backend/trace behavioral acceptance claim yet.
 
 ## Additional owner requirements — October26,2026
 

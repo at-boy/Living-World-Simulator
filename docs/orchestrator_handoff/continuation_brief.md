@@ -1,6 +1,12 @@
-# Continuation brief — LN09e complete, analysis and real-provider acceptance remain
+# Continuation brief — usage pause after LN09e and native trace probes
 
 ## Current state and next task
+
+USAGE PAUSE: owner asked to stop with headroom before five-hour remaining drops below10%.
+Last checked17% remaining; checkpoint now, no reset used or automaticresume. All task/
+merged gates and nativeprobes finished; no activeprocess/agent or merge inprogress.
+After ownerresume: verify usage/Git/ownerpatch; do not rerun completed9e/nativeprobes.
+
 
 Feature codex/live-npc-runtime, .worktrees/live-npc-runtime. LN09e delivery62ea35c on
 preserved/pushed codex/live-npc-ln09e-archive-inference / .worktrees/live-npc-ln09e.
@@ -10,7 +16,7 @@ payloadhashes/CLI7/sourceServe4/wheel11+actualServe4.41normalattempts retained p
 Independent astrareview1 oneP2 missingresponse replay regression; originalworker test-only
 fixround1 +original scoped spec/quality rereview PASS,1addressed/0open. Focused21PASS,
 six in-memory mutant REDs. Reviewedsource18fc232fb2bfec70272a8faa2c46144ed9479527fd46b94b5c2e3c300548bd35
-unchanged. No activeworker/reviewer/modelserver. Root finalizing nofffeaturemerge/push.
+unchanged. No activeworker/reviewer/modelserver. Featureintegration90ef1e2 pushed.
 DO NOT redispatch implementation/review/gates. Exact09e task/prombt/report compressedhistory.
 
 New archived live cognition for BOTHproviders saves atomic exactrequest/BLOB before
@@ -18,15 +24,23 @@ network and responseevidence/outcome beforestaging, ackafterimport; sealedtracec
 eagerofflinereplay retain originalbytes/times, legacyomissions stayomitted. Hardcrash
 unimported source spools remain separate uncommitted forensic, never recoveredproposals.
 
-NEXT: real nativeprovider archived probes may provide retaineddatasets using ignored
-native_trace_probe.py (not yet run, not finalLN09acceptance). Native ports werefree;
-normal llama AMDVulkan0 asowner requested. Keep ownedPID/starttime/argv/logs and stop
-onlyowned servers. Then root exact LN09f contracts for authenticated readonly/offline
-analysis/export/UI (probe notes trace-analysis-root-notes.md andtrace-reader-seams.md;
-no implementationcontract yet). Existing archive readers load ALLBLOBs; boundedanalysis
-needs separate explicit metadata/selectedbody verification without weakening runtimefull
-validation. OriginalfullLN09 BOTHprovider harness/disturbances/controls/browser/coldrestart/
-offlinereplay/installedPython3.11/finalwholebranchreview remains. No finalacceptanceclaim.
+Native probes COMPLETE, do not rerun: ignorednative_trace_probe.py outputs ln09e-native-
+llama (4calls), ollama(4calls), llama-3ticks(12calls). Twentyrealcalls/ninearchives, both
+backendexactbytes/status/timing, coldinitialworld/cursors and provider-offline replay
+PASS; sourcefiles unchanged. Allownedservers exited0/PIDsabsent/portsfree. Ollama1accepted
+work; llama12nonnullproposals rejected because nonemptyarguments (duplicatedtargetlabel).
+Longerunchanged6tickworld reproduced; gatewaycorrectlyrejects. NO outputcoercion/fix.
+Committed report docs/orchestrator_handoff/live_npc_native_trace_probe_2026_10_27.md has
+exactIDs/limits. Not fullLN09acceptance. Any proposalcontract change needs isolatedtask,
+TDD/review and explicit oldrequest/fingerprint/replay compatibility, no globaldescription
+change breakingrecordedtapes. No exactfixcontractyet.
+
+NEXT root exact LN09f contracts for authenticated readonly/offline analysis/export/UI.
+Probe notes trace-analysis-root-notes.md andtrace-reader-seams.md retained; no implementation
+contract yet. Existingarchive readers loadALLBLOBs; boundedanalysis needs separate explicit
+metadata/selectedbody verification withoutweakening runtimefullvalidation. Also resolve
+llama realworldaction gate beforefinalacceptance. OriginalfullLN09 harness/disturbances/
+controls/browser/coldrestart/offlinereplay/installedPython3.11/finalwholebranchreview remains.
 
 ## Completed producer interfaces and evidence
 

@@ -1887,3 +1887,25 @@ unchanged/CLI7/sourceServe4/wheel11+actualServe4 PASS. All41normalattempts retai
 validation tree. Reviewedsource18fc232f... and ownerpatch unchanged. Remote main/milestone/
 tag unchanged. Finalizingfeaturemerge; admin/offlineanalysis/export and full BOTHprovider
 acceptance remain. No modelserver launched during these gates.
+
+
+## 2026-10-27 — Native both-provider archive probes
+
+LN09e integrated90ef1e2/pushed after repeated2547/10existing skips and all compatibility
+gates. Native real Ollama4calls and llama4+12calls: exact body/status/timing archives,
+fresh-process initialworld/cursors and provider-offline replay PASS,9attempts retained.
+Ollama1acceptedwork; llama12nonnullproposals all rejected for nonemptyarguments, as the
+authoritative gateway requires. No output coercion or production changes. Behavioral
+llama acceptance remains open; sharedprompt/schema/offer compatibility needs isolated
+contract/review before any change. Both ownedservers stopped/exited0, portsfree. See
+orchestrator_handoff/live_npc_native_trace_probe_2026_10_27.md. Admin9f and fullLN09 remain.
+
+
+## 2026-10-27 — Usage checkpoint after native trace evidence
+
+Pause with17%five-hour remaining before next larger implementation task. All9e/task/
+merged gates and nativeprobes finished; no activeagent/server/merge. Source/tests/config
+unchanged since validated90ef1e2; evidence/handoff-only commit needs no repeated suite.
+Whitespace/source/ownerpatch checks pass. Preserve owneredit and alltaskbranches/worktrees.
+Next exact9f analysis/export/UI contracts and separate llama argument-contract acceptance
+issue remain. Ownerresume required; no reset or automaticresume.

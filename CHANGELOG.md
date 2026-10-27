@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Record native Ollama and llama.cpp trace/restart/offline-replay probes, retaining
+  all attempts and the unresolved llama.cpp work-proposal acceptance issue.
+
 - Integrate reviewed automatic inference archives and sealed replay after repeated
   full, browser, recorded, restart and packaged-serving validation.
 
