@@ -1,23 +1,50 @@
-# Continuation brief — LN09f1 task validated, integration next
+# Continuation brief — LN09f1 corrected task validated, usage pause
 
 ## Current state and next task
 
-Featureaf7b4af oncodex/live-npc-runtime, ownerplanedit preserved. Active taskcheckout
-.worktrees/live-npc-ln09f1 /codex/live-npc-ln09f1-trace-reader BASEaf7b4af. Exact09f1
-contract/prombt amended byroot beforefix. Fourworkerpaths frozen; originalastra review
-found2P1 WALsidecarwrites/oversizedDESC-PKidentityprefetch. Rootrollback-only ruling
-matchesnormalstoreDELETE; originalworkerfixround1 andoriginalscoped spec/qualityreview
-PASS,2addressed/0open. Focused94PASS; named388PASS beforecorrection. No activeworkers.
-Rootfullmake73219 exited0:2641passed/10existing skips480.14s, actualChrome/39examples.
-Separateexamples39/whitespace/reviewedsource equality PASS. Do not rerun completedhelpers:
-matrix25528/CLI46456/Serve54313/wheel83424/native-reader6398 all exited0. Rootchecker
-PASS exactcanonical26readonly/priorhashes/CLI7/Serve4/wheel11+Serve4,41normalattempts.
-Native-readerchecks9savedsources/30localcalls includingreused PASSexactbytes/SHA/length/
-pages/recursivebytes+mtimes unchanged. No newinference/world. ReviewedsourceSHA
-dbee511dbeb5b5c7902d3fe10d3bf608a9e1e85feed8764116369f695be8b610.
-NEXT taskcommit/push, thenfeature noffintegration/repeatedgates. No implementationcommit/merge.
-FeaturehasTWOroot-owned amendedtask/prombt duplicates: backup/verify BEFORE restoring
-ONLYthose forintegration. Neverrestore ownerplanedit. Allbranches/worktrees preserved.
+Feature af7b4af on codex/live-npc-runtime; only owner master-plan edit remains there.
+Task checkout .worktrees/live-npc-ln09f1 / codex/live-npc-ln09f1-trace-reader,
+Correction delivery follows historical HEAD e2a5e6f. Exact task/prombt amended before each fix.
+Initial independent review found two P1s: WAL sidecar source writes and oversized
+DESC-PK identity prefetch. Fixround1 resolved both. Root then reproduced unbounded
+schema-name/type prefetch (R3); fixround2 scalar queries left a shadow-table bypass.
+Original worker fixround3 explicitly invokes PRAGMA functions and returns intrinsic
+scalar flags; original independent astra spec/quality review PASS, cumulative three
+findings addressed, zero open. Focused104PASS, reviewer targeted14PASS.
+Four allowed worker paths preserved; full runtime validator/schema/writers unchanged.
+
+Current reviewed source/tests/pyproject SHA256:
+7eeb0344e913514b49b596dcc532ab5bbfcff7cc0bdd4cd77f335d7c4d716989.
+Fresh task gates session10879 COMPLETE, prefix ln09f1-fix3-task:
+make2651passed/10existing deliberate skips481.84s, actualChrome/39examples;
+separateexamples39, whitespace and reviewedsource equality PASS. Exactcanonical26/
+read-only unchanged/priorhashes/CLI7/sourceServe4/wheel11+actualServe4 PASS,
+41normalattempts retained. Reader9savednativearchives/30localcalls includingreused
+PASS exactbodySHA/length/stablepages and recursive sourcebytes+mtimes unchanged.
+No new inference/world in native reader checks. All gate subprocesses exited0.
+Earlier task2641/10 480.14s and aborted merged2641/10 479.27s belong to PRIOR source;
+those are historical, superseded for final approval. Old pending merge safely
+aborted; feature remains af7b4af, no merge in progress, owner bytes/patch unchanged.
+Task delivery e2a5e6f is preserved historical commit; correction delivery follows it.
+
+USAGE PAUSE: save corrected task delivery on preserved task branch, then stop with
+headroom (last19%five-hour remaining), no resets/automaticresume. No active agents,
+model servers or fullgates. Featureintegration NOT complete. NEXT after ownerresume/
+currentusage+Gitcheck: merge latest task into feature with no-ff/no-commit, repeat
+full current-tree gates, then integrationcommit/push. Do not rerun completed task
+gates if reviewed source remains exact. Preserve all branches/worktrees/archive data.
+Root helper run_reader_gates.py retains commands/exits/sourcehash in unique prefix
+*-gate-status.json. Use fresh ln09f1-fix3-merged prefix for future repeatedgates.
+
+LN09f1 is domain reader ONLY, not authenticated API/UI/export. Narrow integrity tags
+never certify world/checkpoint/lineage/unselected body validity. Normal product
+rollback journals supported; externally converted WAL rejected before SQLite connect.
+No immutable/migration/copy/permission workaround. Python allocation budgets cover
+schema/metadata/body transfer; not SQLite native parsing memory or constant-time scans.
+Next LN09f2 draft W/09f2_trace_api-draft.md is NOT active: bounded catalog discovery,
+shared authenticated API and inert offline factory, then CLI/UI and forensic/portable
+export. W denotes ignored .superpowers/sdd/2026-10-19-live-npc-runtime in FEATURE.
+Llama argument compatibility and full LN09 acceptance remain incomplete.
 
 LN09e delivery62ea35c/integration90ef1e2 andnativeevidence0fc88f9 completed/pushed,
 2547/10existing skips task+merged allcompatibilitygates PASS. Do notredispatchthem.
@@ -98,8 +125,8 @@ GIT_SSH_COMMAND='ssh -F /dev/null -o BatchMode=yes'.
 Owner-local masterplan edit docs/superpowers/plans/2026-10-19-live-npc-runtime.md
 (observasmall, clearly specified tasksble) MUST NOT be staged/restored/fixed.
 DiffSHA294b20313ae2de248301fa20bbb4f9c312d51efa4851a434466f98a588dd93e6.
-Root duplicate task/prombt edits must be backedup/verified before restoring exact
-root-owned duplicates for integration. Preserve every branch/worktree/archive.
+Old root duplicate task/prombt edits were backed up and restored before the aborted
+merge; feature now has no duplicates. Preserve every branch/worktree/archive.
 Protected refs unchanged: main d8ea51797b5ca3bfefa37cd5f7bafc95cbee5899;
 milestone/v0.6 6bf4c63637584584a8dfce009d2d1d79987be570; tag1040fd2e3e4068d3f7dba77be37179299273aa41
 peeled092715c11ed00b98255ae611fcef1bcfb8f1de9d. NO main/milestone/tag action now.

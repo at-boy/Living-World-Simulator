@@ -179,26 +179,44 @@ _SCHEMAS = {
 }
 
 
-def _schema(connection: sqlite3.Connection, name: str) -> None:
-    tables = connection.execute("PRAGMA table_list").fetchall()
-    if not any(
-        row[0] == "main" and row[1] == name and row[2] == "table" for row in tables
-    ):
+def _schema(connection: sqlite3.Connection, name: str, limits: TraceReadLimits) -> None:
+    # Return only scalars: even unrelated schema names and selected malformed
+    # names/types may be enormous. Never enumerate their raw text into Python.
+    # Parentheses force function invocation: archive-owned names must fail closed.
+    # All selected expressions remain counts, predicate flags or byte lengths.
+    count, ordinary, without_rowid = connection.execute(
+        "SELECT count(*),coalesce(max(type='table'),0),coalesce(max(wr!=0),0) "
+        "FROM pragma_table_list() WHERE schema='main' AND name=?",
+        (name,),
+    ).fetchone()
+    if count != 1 or ordinary != 1:
         raise ArchiveFormatError("Missing or malformed trace analysis table.")
-    rows = connection.execute(f"PRAGMA main.table_xinfo({name})").fetchall()
-    if [(row[1], row[2].upper(), row[3], row[5]) for row in rows] != _SCHEMAS[
-        name
-    ] or any(row[6] != 0 for row in rows):
+    count, largest = connection.execute(
+        "SELECT count(*),coalesce(max(length(CAST(name AS BLOB)) + "
+        "length(CAST(type AS BLOB))),0) FROM pragma_table_xinfo(?, 'main')",
+        (name,),
+    ).fetchone()
+    expected = _SCHEMAS[name]
+    if count != len(expected):
         raise ArchiveFormatError("Missing or malformed trace analysis schema.")
-    # A true INTEGER PRIMARY KEY aliases rowid and has no separate PK
-    # index. PRIMARY KEY DESC is SQLite's exception, and WITHOUT ROWID
-    # also does not enforce the required scalar rowid identity.
+    if largest > limits.max_row_bytes:
+        raise TraceAnalysisLimitError()
+    for cid, (column, declared_type, notnull, pk) in enumerate(expected):
+        matches = connection.execute(
+            "SELECT count(*) FROM pragma_table_xinfo(?, 'main') WHERE cid=? "
+            'AND name=? AND upper(type)=? AND "notnull"=? AND pk=? AND hidden=0',
+            (name, cid, column, declared_type, notnull, pk),
+        ).fetchone()[0]
+        if matches != 1:
+            raise ArchiveFormatError("Missing or malformed trace analysis schema.")
+    # True INTEGER PRIMARY KEY aliases rowid and has no separate PK index.
+    # The scalar predicate preserves DESC-PK detection without fetching names.
     if name in ("archive_meta", "journal") and (
-        any(row[1] == name and row[4] != 0 for row in tables)
-        or any(
-            row[3] == "pk"
-            for row in connection.execute(f"PRAGMA main.index_list({name})")
-        )
+        without_rowid != 0
+        or connection.execute(
+            "SELECT EXISTS(SELECT 1 FROM pragma_index_list(?, 'main') WHERE origin='pk')",
+            (name,),
+        ).fetchone()[0]
     ):
         raise ArchiveFormatError("Missing or malformed trace analysis schema.")
 
@@ -206,8 +224,8 @@ def _schema(connection: sqlite3.Connection, name: str) -> None:
 def _metadata(
     connection: sqlite3.Connection, ref: AttemptRef, limits: TraceReadLimits
 ) -> int:
-    _schema(connection, "archive_meta")
-    _schema(connection, "journal")
+    _schema(connection, "archive_meta", limits)
+    _schema(connection, "journal", limits)
     rows = connection.execute(
         "SELECT typeof(id),id=1,typeof(payload),length(CAST(payload AS BLOB)) FROM archive_meta"
     ).fetchmany(2)
@@ -251,7 +269,7 @@ def _metadata(
     if parsed.utcoffset() != UTC.utcoffset(parsed):
         raise ArchiveFormatError("Expected UTC timestamp.")
     if version == 2:
-        _schema(connection, "inference_blobs")
+        _schema(connection, "inference_blobs", limits)
     return version
 
 

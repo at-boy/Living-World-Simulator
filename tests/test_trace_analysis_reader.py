@@ -871,3 +871,148 @@ def test_descending_pk_oversized_identity_never_materialized(
         for statement in statements
     )
     assert snapshot(tmp_path) == before
+
+
+@pytest.mark.parametrize("schema_object", ["table", "index"])
+def test_unrelated_giant_schema_names_do_not_amplify_python_memory(
+    tmp_path, monkeypatch, schema_object
+):
+    api = reader()
+    archive = create(tmp_path)
+    start(archive)
+    giant_name = "unrelated_" + "x" * 16777216
+    connection = sqlite3.connect(archive.database_path)
+    try:
+        if schema_object == "table":
+            connection.execute(f'CREATE TABLE "{giant_name}"(value TEXT)')
+        else:
+            connection.execute(f'CREATE INDEX "{giant_name}" ON archive_meta(payload)')
+        connection.commit()
+    finally:
+        connection.close()
+    del giant_name
+    original = sqlite3.connect
+    statements = []
+
+    def traced(*args, **kwargs):
+        connection = original(*args, **kwargs)
+        connection.set_trace_callback(statements.append)
+        return connection
+
+    monkeypatch.setattr(sqlite3, "connect", traced)
+    before = snapshot(tmp_path)
+    tracemalloc.start()
+    try:
+        page = api.read_trace_page(archive.ref)
+        _, peak = tracemalloc.get_traced_memory()
+    finally:
+        tracemalloc.stop()
+    assert page.calls[0].request_id == "req"
+    assert peak < 8 * 1024 * 1024
+    assert not any(
+        statement.upper().startswith(("PRAGMA TABLE_LIST", "PRAGMA MAIN.INDEX_LIST"))
+        for statement in statements
+    )
+    assert snapshot(tmp_path) == before
+
+
+@pytest.mark.parametrize("field", ["column_name", "declared_type"])
+def test_selected_giant_schema_metadata_rejects_without_raw_fetch(
+    tmp_path, monkeypatch, field
+):
+    api = reader()
+    archive = create(tmp_path)
+    start(archive)
+    giant_value = "x" * 16777216
+    connection = sqlite3.connect(archive.database_path)
+    try:
+        connection.execute("DROP TABLE inference_blobs")
+        if field == "column_name":
+            connection.execute(
+                f'CREATE TABLE inference_blobs(sha256 TEXT PRIMARY KEY,"{giant_value}" BLOB NOT NULL)'
+            )
+        else:
+            connection.execute(
+                f'CREATE TABLE inference_blobs(sha256 TEXT PRIMARY KEY,body "{giant_value}" NOT NULL)'
+            )
+        connection.commit()
+    finally:
+        connection.close()
+    del giant_value
+    original = sqlite3.connect
+    statements = []
+
+    def traced(*args, **kwargs):
+        connection = original(*args, **kwargs)
+        connection.set_trace_callback(statements.append)
+        return connection
+
+    monkeypatch.setattr(sqlite3, "connect", traced)
+    before = snapshot(tmp_path)
+    tracemalloc.start()
+    try:
+        with pytest.raises(ArchiveFormatError):
+            api.read_trace_page(archive.ref)
+        _, peak = tracemalloc.get_traced_memory()
+    finally:
+        tracemalloc.stop()
+    assert peak < 8 * 1024 * 1024
+    assert not any(
+        statement.upper().startswith("PRAGMA MAIN.TABLE_XINFO")
+        for statement in statements
+    )
+    assert snapshot(tmp_path) == before
+
+
+@pytest.mark.parametrize(
+    "name", ["pragma_table_list", "pragma_table_xinfo", "pragma_index_list"]
+)
+@pytest.mark.parametrize("kind", ["table", "view"])
+def test_shadowed_schema_functions_reject_without_giant_scalar_prefetch(
+    tmp_path, name, kind
+):
+    api = reader()
+    archive = create(tmp_path)
+    start(archive)
+    seal = api.read_trace_page(archive.ref).boundary
+    connection = sqlite3.connect(archive.database_path)
+    try:
+        if kind == "table":
+            connection.execute(
+                f'CREATE TABLE "{name}"(schema TEXT,name TEXT,type TEXT,wr BLOB)'
+            )
+            connection.execute(
+                f"INSERT INTO \"{name}\" VALUES('main','archive_meta','table',zeroblob(16777216))"
+            )
+        else:
+            connection.execute("CREATE TABLE schema_shadow_payload(wr BLOB)")
+            connection.execute(
+                "INSERT INTO schema_shadow_payload VALUES(zeroblob(16777216))"
+            )
+            connection.execute(
+                f"CREATE VIEW \"{name}\" AS SELECT 'main' AS schema,'archive_meta' AS name,'table' AS type,wr FROM schema_shadow_payload"
+            )
+        connection.commit()
+    finally:
+        connection.close()
+    before = snapshot(tmp_path)
+    for operation in (
+        lambda: api.read_trace_page(
+            archive.ref, limits=api.TraceReadLimits(max_row_bytes=64)
+        ),
+        lambda: api.read_trace_body(
+            archive.ref,
+            InferenceBlob(b"{}").sha256,
+            boundary=seal,
+            limits=api.TraceReadLimits(max_row_bytes=64),
+        ),
+    ):
+        tracemalloc.start()
+        try:
+            with pytest.raises(ArchiveFormatError):
+                operation()
+            _, peak = tracemalloc.get_traced_memory()
+        finally:
+            tracemalloc.stop()
+        assert peak < 8 * 1024 * 1024
+        assert snapshot(tmp_path) == before

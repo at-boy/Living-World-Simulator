@@ -23,3 +23,15 @@ four workerpaths; no broader schema/world changes. Root report contains exactfin
 Root task disposition: independentreview/fixround1/re-review PASS2addressed/0open.
 Fulltask make2641/10existing skips480.14s and allrequiredcompatibility/nativearchive
 checks PASS; reviewedsource unchanged. Featureintegration/repeatedgates pending.
+
+Fixround2 R3: root reproduced16MiB unrelated schema-name prefetch. Read full exact
+rootfinding ln09f1-root-schema-finding.md. Narrow/scalar schema metadata queries and
+pre-materialization caps; preserve prior94cases/rowid guards. Samefourpaths. Earlier
+fullgates belong prior source and do not certify this correction; root will repeat.
+
+Root correction round3: schema queries must explicitly invoke genuine table-valued
+PRAGMA functions; archive tables/views shadowing PRAGMA names must fail closed before
+unknown bytes are transferred. Every returned schema expression must be intrinsically
+scalar (counts/predicate flags/lengths), including malformed shadowing fixtures. Add
+regression proving 16MiB BLOB wr under pragma_table_list cannot prefetch into Python,
+normal archives and round2 giant-name/rowid tests remain supported. Same four paths.

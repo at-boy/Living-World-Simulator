@@ -182,3 +182,117 @@ reader checks. Fulltask make73219 exited0:2641passed/10existing deliberate skips
 and39examples. Separateexamples39 and git diff --check PASS. Reviewedsource unchanged.
 Featureintegration/repeatedgates remain pending.
 Reviewed source/tests/pyproject SHAdbee511dbeb5b5c7902d3fe10d3bf608a9e1e85feed8764116369f695be8b610.
+
+## Fixround 2 — R3 schema-introspection prefetch corrected
+
+Read the complete root finding and amended task/prompt before correction. Root's
+additional P1 finding was reproduced: raw PRAGMA schema enumeration materialized
+unrelated table/index names and selected malformed column names/types into Python
+outside the payload prefetch budgets. The earlier memory checks covered bodies,
+journal payloads and identity columns but did not establish bounded schema
+introspection. Their general memory claim is superseded by this added coverage.
+
+Schema validation now uses table-valued PRAGMAs with parameter-bound fixed table
+names and returns only scalar counts, flags and byte lengths. It never returns
+unknown schema names, declared types, index names or unrelated names to Python.
+The selected table must be one ordinary main-schema table. Selected column counts
+must match the closed schema; each column's name-plus-declared-type byte length
+must fit max_row_bytes before exact cid/name/type/not-null/PK/hidden predicates
+are checked within SQLite. The rowid requirement remains: WITHOUT ROWID and a
+separate PK index (including inline DESC-PK) reject via scalar flags/existence
+queries without materializing index names. No change to archive format, writers,
+world validation or the rollback-only source-preservation boundary.
+
+Validation used the same task24 venv and PYTHONPATH as above:
+
+- RED: `pytest -q tests/test_trace_analysis_reader.py -k 'giant_schema'
+  --tb=short` — four failed, 94 deselected. Measured Python peaks were
+  16788998 bytes (unrelated table name), 16783632 (unrelated index name),
+  16789914 (selected column name), and 33565104 (selected declared type).
+  All fixture metadata strings were 16MiB, created and released before
+  tracemalloc started.
+- First correction run of `-k 'giant_schema or descending_pk' --tb=short` —
+  eight failed at import due to a SQL string quoting SyntaxError. Corrected
+  the literal; no test or contract workaround.
+- Targeted GREEN: `pytest -q tests/test_trace_analysis_reader.py -k
+  'giant_schema or descending_pk' --tb=short` — eight passed, 90 deselected.
+- Final focused GREEN: `pytest -q tests/test_trace_analysis_reader.py --tb=short`
+  — 98 passed, no warnings. All previous 94 cases remain green. New tests
+  assert successful narrow page analysis despite unrelated giant table/index
+  names, rejection of giant selected column-name/type metadata, Python peaks
+  below8MiB for each, no raw schema PRAGMA enumeration and recursive source
+  bytes/mtimes unchanged.
+- Scoped `ruff check src/living_world/archives/trace_analysis.py
+  tests/test_trace_analysis_reader.py` — passed.
+- Scoped `black --check src/living_world/archives/trace_analysis.py
+  tests/test_trace_analysis_reader.py` — passed, two files unchanged after
+  formatting.
+- Four-file whitespace scan — passed (trailing whitespace, conflict markers,
+  final newlines); root retains Git whitespace validation.
+
+Only the existing allowed source, test and report paths needed correction; the
+single engine-only boundary paragraph remains unchanged from fixround1. No new
+paths, VCS/index actions, full gates, subagents, provider/model/network activity or
+other checkout edits. Correction frozen for scoped independent re-review. Prior
+full validation belongs to prior source bytes; root owns repeat gates and later
+integration/completion.
+
+## Fixround 3 — R3 schema-function shadowing corrected
+
+Read the amended task/prompt, root's verbatim finding and the complete fixround2
+independent review. R3 remained open: bare `FROM pragma_table_list` could bind to
+an archive-owned table/view, and the former raw `max(wr)` could return a giant
+BLOB into Python before rejection. Fixround2 addressed the original schema-name
+fixtures but its broad scalar-transfer claim was incomplete for these shadows.
+
+The query now explicitly invokes `pragma_table_list()`; all PRAGMA table-valued
+functions in schema validation are explicit invocations. Archive-owned tables or
+views shadowing these names fail closed through the fixed SQLite read error.
+The without-rowid result is also intrinsically scalar, `max(wr!=0)`, rather than
+returning unknown `wr` data. Every schema result remains a count, predicate flag
+or byte length. Real product archives, giant unrelated schema names, selected
+schema limits and the true-rowid/DESC-PK checks remain supported unchanged.
+
+Validation used the same task24 venv and PYTHONPATH as above:
+
+- RED: `pytest -q tests/test_trace_analysis_reader.py -k shadowed_schema
+  --tb=short` — two failed, four passed, 98 deselected. Both table and view
+  shadows of `pragma_table_list` reproduced the prefetch bypass with Python
+  peaks 16783785 and 16783601 bytes. Shadow fixtures use a SQLite 16MiB zeroblob;
+  all fixture construction and source snapshots occur before tracemalloc.
+- Targeted GREEN: `pytest -q tests/test_trace_analysis_reader.py -k
+  'shadowed_schema or giant_schema or descending_pk' --tb=short` — 14 passed,
+  90 deselected. New cases cover table and view shadows of all three used
+  function names (`pragma_table_list`, `pragma_table_xinfo`,
+  `pragma_index_list`), both page/body calls at max_row_bytes64, safe rejection,
+  Python peaks below8MiB, and unchanged recursive source bytes/mtimes.
+- Final focused GREEN: `pytest -q tests/test_trace_analysis_reader.py --tb=short`
+  — 104 passed, no warnings. All prior 98 cases remain green.
+- Scoped `ruff check src/living_world/archives/trace_analysis.py
+  tests/test_trace_analysis_reader.py` — passed.
+- Scoped `black --check src/living_world/archives/trace_analysis.py
+  tests/test_trace_analysis_reader.py` — passed, two files unchanged after
+  formatting.
+- Four-file whitespace scan — passed (trailing whitespace, conflict markers,
+  final newlines); root retains authoritative Git whitespace validation.
+
+Only the allowed source, test and report paths changed for this correction.
+The boundary paragraph remains unchanged from fixround1. No scope expansion,
+VCS/index actions, full gates, subagents, network/model/provider activity, or other
+checkout edits. This correction is frozen for scoped independent re-review;
+root owns finding closure, repeat full validation and integration/completion.
+
+
+Root final corrected-task validation: `make VENV=<task24venv>` PASS2651tests/10existing
+deliberate skips481.84s, actualChrome/39examples; separate `make examples`39PASS;
+`git diff --check`PASS. Existing helpers recorded_matrix.py26/read-only unchanged/
+priorhashesexact, archived_cli_acceptance.py7, served_cli_acceptance.py4,
+wheel_serving_check.py11resources+actualServe4, check_gate_results.py41normalattempts
+allPASS. trace_reader_native_check.py9savedarchives/30localcalls includingreusedPASS
+exactbytes/SHA/length/stablepages and recursive sourcebytes+mtimes unchanged. No new
+inference/world for native-reader check. Prefixln09f1-fix3-task; gate session10879
+exited0, allchildjobs0. Reviewedsource7eeb0344e913514b49b596dcc532ab5bbfcff7cc0bdd4cd77f335d7c4d716989 unchanged.
+Originalastra scoped fixround3 spec+qualityPASS, cumulative3addressed/0open.
+Earlier task/abortedmerged2641counts belong to older source and are superseded.
+Corrected taskdelivery checkpoint only; featureintegration/repeatedgates pending.
+Pause before usage10%threshold; no newtask or integration until ownerresume.

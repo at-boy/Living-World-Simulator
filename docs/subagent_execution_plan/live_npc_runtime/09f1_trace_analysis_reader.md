@@ -3,7 +3,7 @@
 > For agentic workers: use superpowers:subagent-driven-development, one bounded worker,
 > independent spec/quality review, then root task and merged validation.
 
-Status: IMPLEMENTED and independently reviewed after fixround1; root task validation passed; feature integration pending.
+Status: IMPLEMENTED and independently reviewed after fixround3; three findings addressed, zero open. Fresh root task gates PASS2651/10existing skips, allcompatibility/nativearchive checks. Featureintegration/repeated gates pending at usagepause; earlier validation applies to prior source only.
 Goal: inspect saved per-call metadata and verified selected bytes without loading a
 world/model or all inference BLOBs. This is the domain prerequisite for approved
 admin/offline analysis; it exposes no network route by itself.
@@ -116,6 +116,15 @@ normal runtime never changes mode. Recheck header/path before each operation.
 The concurrent writer regression must use the supported rollback mode: an ordinary
 writer may prepare an append while the read snapshot is held, its commit waits for
 the shared read lock, then a fresh reader sees that append. No WAL support claim.
+Root additional finding R3 (fixround2): schema introspection itself must not fetch
+unrelated or oversized SQLite metadata into Python. An unrelated16MiB table name was
+materialized by unfiltered PRAGMA table_list.fetchall. Use narrow fixed-name/scalar
+schema queries; check selected column counts/shapes and name/type byte bounds before
+fetching strings. No raw unrelated table/index-name enumeration. Preserve rowid/DESC-PK
+checks. Unrelated16MiB table/index names must keep Python peak below8MiB while normal
+analysis succeeds; malformed selected giant column-name/type cases reject before raw
+materialization with bounded peak. No new writer or full-store change.
+
 Metadata and journal PK declarations must actually enforce rowid integer identities;
 malformed PRIMARY KEY DESC or other non-rowid tables reject. Also check storage types
 using scalar-only SQL BEFORE returning raw metadata id or MAX(sequence), so unexpected
@@ -201,3 +210,10 @@ Root later runs make, separateexamples, whitespace, exactcanonical26readonly/CLI
 sourceServe4/wheel11+Serve4 after independent review and repeats after featureintegration.
 Only root commits/pushes/integrates focused preserved taskbranch; no main/milestone/tag.
 No admin API, CLI, UI, export, forensic spool, provider or proposal-contract change here.
+
+Root correction round3: schema queries must explicitly invoke genuine table-valued
+PRAGMA functions; archive tables/views shadowing PRAGMA names must fail closed before
+unknown bytes are transferred. Every returned schema expression must be intrinsically
+scalar (counts/predicate flags/lengths), including malformed shadowing fixtures. Add
+regression proving 16MiB BLOB wr under pragma_table_list cannot prefetch into Python,
+normal archives and round2 giant-name/rowid tests remain supported. Same four paths.
