@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Automatically archive exact live inference requests and observed responses before
+  dispatch/effects, preserving sealed source bytes and original timings during replay.
+
 - Define automatic exact request/response archive wiring and sealed trace reuse,
   preserving simulation authority and original timing during offline replay.
 

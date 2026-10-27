@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import time
 from collections.abc import Mapping
 from dataclasses import asdict, dataclass
 from typing import Literal, cast
@@ -39,7 +40,16 @@ from living_world.scenarios.scenario import YAMLScenarioLoader
 from living_world.simulation.simulation_engine import SimulationEngine
 from living_world.state.world_state import WorldState
 
+from .archive_inference import (
+    acknowledge_recorded,
+    capture_trace_blobs,
+    observation_for_result,
+    record_request,
+    record_response,
+    trace_fields,
+)
 from .broker import (
+    BrokerResult,
     DecisionBroker,
     ProviderConfig,
     client_for,
@@ -55,6 +65,12 @@ from .disturbances import (
     prepare_boundary_disturbance,
 )
 from .feedback import DecisionInput, FoundersFeedback, _inside
+from .inference_trace import (
+    PreparedInference,
+    empty_response_trace,
+    prepare_inference,
+    utc_now,
+)
 
 
 def _hash(value: object) -> str:
@@ -314,6 +330,10 @@ class OllamaTickDriver:
     def prepare(
         self, candidate: SimulationEngine, base: Checkpoint, archive: AttemptArchive
     ) -> _LivePreparation:
+        if archive.format_version != 2:
+            raise ArchiveFormatError(
+                "Exact inference traces require archive format two; resume into a new attempt."
+            )
         if archive.checkpoint() != base:
             raise ArchiveFormatError("Stale complete checkpoint.")
         self.validate_checkpoint(candidate, base, archive)
@@ -354,16 +374,24 @@ class _LivePreparation:
         )
         self.items, self.fingerprint, self.binding = items, fingerprint, binding
         self.staged: list[_Staged] = []
-        self.active: tuple[DecisionInput, str, Mapping[str, object]] | None = None
+        self.active: (
+            tuple[
+                DecisionInput, str, Mapping[str, object], PreparedInference, str, float
+            ]
+            | None
+        ) = None
         self.paused, self.closed = False, False
         self.system: _ProposalSystem | None = None
         self._aborted = False
         self._boundary: PreparedBoundaryDisturbance | None = None
 
-    def _request(self, item: DecisionInput) -> dict[str, object]:
-        payload = client_for(self.driver.config).build_payload(
-            item.context, item.options
+    def _request(
+        self, item: DecisionInput, prepared: PreparedInference | None = None
+    ) -> dict[str, object]:
+        prepared = prepared or prepare_inference(
+            self.driver.config, item.context, item.options
         )
+        payload = json.loads(prepared.body)
         return {
             "base_revision": self.base.revision,
             "source_tick": decode_world(self.base.snapshot).tick,
@@ -476,6 +504,13 @@ class _LivePreparation:
                                         {
                                             "request_id": started.payload["request_id"],
                                             "code": "uncertain",
+                                            **(
+                                                {
+                                                    "response_trace": empty_response_trace()
+                                                }
+                                                if "request_trace" in started.payload
+                                                else {}
+                                            ),
                                         },
                                     )
                                 )
@@ -501,10 +536,12 @@ class _LivePreparation:
                                 "boundary": asdict(seal),
                             },
                         }
-                        for key in ("content_digest", "elapsed_seconds"):
-                            if key in response.payload:
-                                reused[key] = response.payload[key]
-                        self.archive.append(JournalEntry("response_reused", reused))
+                        reused.update(trace_fields(started, response))
+                        blobs = capture_trace_blobs(source, seal, (started, response))
+                        self.archive.record(
+                            (JournalEntry("response_reused", reused),),
+                            inference_blobs=blobs,
+                        )
                     return _Staged(item, request_id, decision)
                 parent = _parent(source, base, seen)
                 if parent is None:
@@ -523,39 +560,37 @@ class _LivePreparation:
         if self.error_code is not None:
             return "provider_error"
         if self.active is not None:
-            item, job, request = self.active
+            item, job, request, _, dispatch_at, dispatch_clock = self.active
             result = self.driver.broker.poll(job)
             if result is None:
                 return "waiting"
-            self.active = None
             code = result.error_code
             decision = result.decision
             if decision is not None:
                 try:
                     decision = _validated(self.candidate, item, decision)
                 except Exception:  # noqa: BLE001
-                    code = "unsafe_response"
-            metadata: dict[str, object] = {"request_id": job}
-            if result.response_digest is not None:
-                metadata["content_digest"] = result.response_digest
+                    code, decision = "unsafe_response", None
+            observation = observation_for_result(
+                result,
+                dispatch_started_at=dispatch_at,
+                broker_seconds=time.monotonic() - dispatch_clock,
+            )
+            record_response(
+                self.archive,
+                job,
+                result,
+                observation,
+                decision=decision,
+                error_code=code,
+            )
+            acknowledge_recorded(self.driver.broker, job, result)
+            self.active = None
             if code is not None:
-                self.archive.append(
-                    JournalEntry("response_failed", {**metadata, "code": code})
-                )
                 self.driver._retry.add(self._retry_key(request))
                 self.error_code = code
                 return "provider_error"
             assert decision is not None
-            self.archive.append(
-                JournalEntry(
-                    "response_validated",
-                    {
-                        **metadata,
-                        "decision": decision_document(decision),
-                        "elapsed_seconds": result.elapsed_seconds,
-                    },
-                )
-            )
             self.staged.append(_Staged(item, job, decision))
         if self.paused:
             return "paused"
@@ -563,7 +598,8 @@ class _LivePreparation:
             self.activity = None
             return "ready"
         item = self.items[len(self.staged)]
-        request = self._request(item)
+        prepared = prepare_inference(self.driver.config, item.context, item.options)
+        request = self._request(item, prepared)
         reused = self._reuse(item, request)
         if self.error_code is not None:
             return "provider_error"
@@ -578,20 +614,39 @@ class _LivePreparation:
             self.error_code = "request_budget_exhausted"
             return "provider_error"
         job = uuid4().hex
-        self.archive.append(
-            JournalEntry("request_started", {**request, "request_id": job})
-        )
-        self.active = item, job, request
+        record_request(self.archive, {**request, "request_id": job}, prepared)
+        dispatch_at, dispatch_clock = utc_now(), time.monotonic()
+        self.active = item, job, request, prepared, dispatch_at, dispatch_clock
         self.activity = "awaiting_model"
         try:
+            self.driver.broker.bind_trace(
+                job,
+                prepared,
+                spool_root=self.archive.database_path.parent / "inference-spool",
+            )
             self.driver.broker.start(job, self.driver.config, item)
         except Exception:  # noqa: BLE001
-            self.active = None
-            self.archive.append(
-                JournalEntry(
-                    "response_failed", {"request_id": job, "code": "worker_failed"}
-                )
+            self.driver.broker.close()
+            try:
+                result = self.driver.broker.poll(job)
+            except Exception:  # noqa: BLE001
+                result = None
+            result = result or BrokerResult(job, None, "worker_failed", None, 0.0)
+            observation = observation_for_result(
+                result,
+                dispatch_started_at=dispatch_at,
+                broker_seconds=time.monotonic() - dispatch_clock,
             )
+            record_response(
+                self.archive,
+                job,
+                result,
+                observation,
+                decision=None,
+                error_code="worker_failed",
+            )
+            acknowledge_recorded(self.driver.broker, job, result)
+            self.active = None
             self.driver._retry.add(self._retry_key(request))
             self.error_code = "worker_failed"
             return "provider_error"
@@ -638,36 +693,51 @@ class _LivePreparation:
         if self.closed:
             return
         self.closed = True
-        self.candidate.configure_work_interruption(None)
-        self._boundary = None
-        self.driver.broker.close()
-        if self.active is not None:
-            _, job, request = self.active
-            self.archive.append(
-                JournalEntry(
-                    "response_failed", {"request_id": job, "code": "cancelled"}
+        try:
+            self.driver.broker.close()
+            if self.active is not None:
+                _, job, request, _, dispatch_at, dispatch_clock = self.active
+                try:
+                    result = self.driver.broker.poll(job)
+                except Exception:  # noqa: BLE001
+                    result = None
+                result = result or BrokerResult(job, None, "cancelled", None, 0.0)
+                observation = observation_for_result(
+                    result,
+                    dispatch_started_at=dispatch_at,
+                    broker_seconds=time.monotonic() - dispatch_clock,
                 )
-            )
-            self.driver._retry.add(self._retry_key(request))
-            self.active = None
-        # The durable checkpoint, not finish_tick(), proves successful ownership.
-        latest = self.archive.checkpoint()
-        committed = (
-            latest.revision > self.base.revision
-            and decode_world(latest.snapshot).tick
-            == decode_world(self.base.snapshot).tick + 1
-        )
-        if not committed and not self._aborted:
-            self.archive.append(
-                JournalEntry(
-                    "candidate_aborted",
-                    {
-                        "base_revision": self.base.revision,
-                        "reason": "preparation_discarded",
-                    },
+                record_response(
+                    self.archive,
+                    job,
+                    result,
+                    observation,
+                    decision=None,
+                    error_code="cancelled",
                 )
+                acknowledge_recorded(self.driver.broker, job, result)
+                self.driver._retry.add(self._retry_key(request))
+                self.active = None
+            latest = self.archive.checkpoint()
+            committed = (
+                latest.revision > self.base.revision
+                and decode_world(latest.snapshot).tick
+                == decode_world(self.base.snapshot).tick + 1
             )
-            self._aborted = True
-        self.candidate.configure_proposal_system(None)
-        self.staged.clear()
-        self.system = None
+            if not committed and not self._aborted:
+                self.archive.append(
+                    JournalEntry(
+                        "candidate_aborted",
+                        {
+                            "base_revision": self.base.revision,
+                            "reason": "preparation_discarded",
+                        },
+                    )
+                )
+                self._aborted = True
+        finally:
+            self.candidate.configure_work_interruption(None)
+            self._boundary = None
+            self.candidate.configure_proposal_system(None)
+            self.staged.clear()
+            self.system = None

@@ -1866,3 +1866,14 @@ wires preparedrequest beforedispatch and observation/outcome beforestaging, ack 
 import. Reuse/replay copy sealedprefix metadata/BLOBs withoutfreshcalltimings; legacy
 unavailable traces remainunavailable. No newwriter/controller or hardcrashsourceupgrade.
 ShelterBroker fixture must inherit declaredDecisionBroker API. Admin/export9f follows.
+
+
+## 2026-10-27 — LN09e automatic archive wiring task validated
+
+Independent review found one P2 missing response-body/timing offline replay regression;
+original worker test-only fixround1 and original scoped re-review resolved it. Focused21
+passed; six in-memory mutants correctly failed. Root make2547passed/10existing skips
+479.81s, actualChrome/39examples; separateexamples39, exactcanonical26/read-only unchanged,
+CLI7/sourceServe4/wheel11+Serve4 PASS. Reviewedsource18fc232f... unchanged. All41normal
+attempts retained. Ready for featureintegration/repeatedgates. Admin/offlineanalysis/export
+and original BOTHrealprovider acceptance remain; no main/tag or modelserver actions.

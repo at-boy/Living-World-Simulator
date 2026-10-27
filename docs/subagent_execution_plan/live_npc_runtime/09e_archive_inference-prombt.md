@@ -17,3 +17,7 @@ Write exact own -report.md with RED/GREEN commands/counts/results, limits and co
 then freeze; return concise status/testsummary/paths/concerns. Root handles independent
 review. Caller ack only AFTER atomic archive response import; cleanup failure logs fixed
 warning and retains evidence. Preserve every owner edit/branch/archive.
+
+Root disposition: independent review plus scoped correction/re-review passed; full task
+make2547/10existing skips479.81s and required compatibility gates passed. Feature
+integration/repeated gates pending; no admin/realprovider acceptance claim.

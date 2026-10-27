@@ -277,3 +277,21 @@ normal preflight; switching provider requires an explicit model and, for llama.c
 an explicit model file. A provider/model/file change clears a stale digest pin and
 prevents old response reuse. Offline replay needs neither server nor GGUF file.
 No server, model download, GPU selection or driver installation is managed here.
+
+
+### Automatic archived inference traces
+
+New archived live-runtime cognition calls for Ollama and llama.cpp commit the exact
+prepared request body before HTTP dispatch and the observed response bytes/status/
+timing before staging a proposal. Invalid, unsafe and incomplete output is retained
+as privileged evidence, including an empty observed body; unavailable bytes remain
+explicitly unavailable. Successful atomic import precedes private spool cleanup.
+These traces never enter NPC contexts or ordinary player-facing text. Standalone
+manual clients and preflight discovery GETs are outside this automatic tracing flow.
+
+Direct live dispatch into a legacy format-one attempt is rejected; normal catalog
+resume/fork creates a format-two child. Sealed reuse and offline replay copy exact
+authenticated source traces and referenced bodies, preserving original timings.
+Legacy untraced calls remain untraced. Replay needs neither the server nor GGUF file.
+An unimported hard-crash spool stays private uncommitted forensic evidence and is
+never silently recovered as a proposal. Admin analysis/export is separate future work.

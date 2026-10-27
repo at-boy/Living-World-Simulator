@@ -1,36 +1,31 @@
-# Continuation brief — LN09d complete, archive wiring next
+# Continuation brief — LN09e reviewed, task validated, integration next
 
 ## Current state and next task
 
-Feature codex/live-npc-runtime lives in .worktrees/live-npc-runtime. LN09d delivery
-2781dd3 is reviewed and task/merged validated; task branch codex/live-npc-ln09d-inference-capture
-and .worktrees/live-npc-ln09d are pushed/preserved. Integrated176ce62/pushed. Independent astra fullreview found2P2 (prestart ack bypass, directory-entry sync);
-original worker fixround1 and scoped originalreview addressedboth, no substantive findings.
-Task/merged make2526/10existing deliberate skips454.12s/450.51s, actualChrome/39examples,
-separateexamples/exactcanonical26+read-only latestcompletepoints/CLI7/sourceServe4/
-wheel11resources+actualServe4 PASS.41normalattempts retained per gate tree. Reviewedsource
-SHA720a35b26006ce29d556e1a8f49670a23c87824ec1ccbadfcf769c98667af29f unchanged.
-DO NOT redispatch completed worker/reviewer/gates. No active worker/reviewer/modelserver.
+Feature codex/live-npc-runtime HEAD3486f78, .worktrees/live-npc-runtime. Owner-local
+masterplan edit preserved; no main/tag changes. LN09d delivery2781dd3/integration176ce62
+complete/pushed; do not redispatch it or its gates.
 
-NEXT: exact authorized 09e_archive_inference task/prombt is ready for isolatedworker,
-then independentreview/rootfullgates. Tenfilecontract resolves producer/driver/replay
-interfaces and safeerror/close/legacy/sourceprefix ordering.
-Wire prepared exact request+BLOB atomic journal before dispatch; response observation/
-BLOB+outcome atomic journal before staging; acknowledgement only after successful import.
-Captureproducer alone is NOT automatic archived runtime tracing. Format1 directlive
-inference must reject unsupportedtracecapability; normalresume to newformat2 child stays
-usable. Keep old source configs/fingerprints/world/cursors/recorded behavior exact.
-Copy authenticated request/response traces+BLOBs from exact sealed source prefixes during
-reuse/replay; copied timing belongs sourcecall, no newHTTP. No later ancestor upgrade.
+Active LN09e .worktrees/live-npc-ln09e /codex/live-npc-ln09e-archive-inference BASE3486f78.
+Exact09e task/prombt; worker report frozen. Independent astrareview1 found oneP2 missing
+response-body/timing replay regression. Originalworker test-only fixround1: focused21PASS,
+six in-memory mutation REDs; originalreviewer scoped spec/quality PASS,1addressed/0open.
+No production defect found. Review packages/reports in ignored root workspace.
+Reviewed source/tests/pyproject SHA18fc232fb2bfec70272a8faa2c46144ed9479527fd46b94b5c2e3c300548bd35.
+Root fulltask make78557 exited0:2547passed/10existing skips479.81s, actualChrome/39examples.
+Separateexamples39, whitespace and reviewedsourceequality passed; do not repeat taskgates.
+Task helpers matrix16111/CLI82440/Serve4399/wheel39294 exited0; rootcheckerPASS exact
+canonical26/read-only unchanged/CLI7/Serve4/wheel11+Serve4,41normalattempts retained.
+NEXT: focused taskcommit/push, feature noffintegration and repeated merged gates.
+No implementationcommit or merge yet. No modelserver active.
 
-Normalresume leases CHILD only, source readonly/sealed. Hardcrash unimported private
-spools remain distinct forensic evidence, never silently imported into captured child
-or used as recovered proposals. Missing/unpublished bytes remain unknown. No new late
-writer, source migration or crossrestart PIDkills. LN09f later must provide authenticated
-readonly/offline admin analysis and portable export (attempt+lineage+forensic evidence),
-without starting a newworld/model. Then original full LN09 BOTH realprovider acceptance,
-manualharness/examples/docs, pause/coldrestart/offlinereplay, installedPython3.11 and
-final wholebranchreview. LN09e contract exists; implementation notyetstarted.
+LN09e wires atomic requesttrace/BLOB beforedispatch and responseevidence/outcome before
+staging; ackafterimport; sealedtracecopy and eageroffline replay, legacyomissions retained.
+No source-spool recovery: hardcrash unimported evidence stays uncommitted forensic.
+Admin/offline analysis/export remains LN09f (rootprobe trace-analysis-root-notes.md has
+concrete auth/reader/export gaps; no exactimplementationcontract yet). Then originalfull
+LN09 BOTH realprovider persistentworld acceptance/harness/browser/coldrestart/offlinereplay/
+installedPython3.11/finalwholebranchreview. Do notclaim realprovider acceptance fromfakeHTTP.
 
 ## Completed producer interfaces and evidence
 
