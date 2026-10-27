@@ -17,6 +17,9 @@ and sealed trace reuse/replay is independently reviewed and task-validated2547/1
 skips,39examples and exact compatibility gates; repeated feature gates passed the same
 counts with unchanged reviewed source. Taskbranch62ea35c preserved/pushed.
 Then9f admin/offlineanalysis/export and real BOTHprovider acceptance.
+LN09f1 bounded read-only trace reader contract is ready for isolated implementation;
+no API/UI/export yet. Full runtime validation remains unchanged; analysis exposes its
+narrow metadata/selected-body integrity scope and explicit resource limits.
 Postintegration90ef1e2 native diagnostic:20realcalls/9archives across bothproviders,
 exacttrace/coldrestart/offlinereplay PASS; Ollama1acceptedwork, llama12nonnullworkproposals
 rejected for nonemptyarguments. Keep gatewaystrict. Before finalacceptance, isolate

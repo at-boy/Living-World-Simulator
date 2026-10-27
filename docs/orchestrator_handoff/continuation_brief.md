@@ -1,12 +1,13 @@
-# Continuation brief — usage pause after LN09e and native trace probes
+# Continuation brief — LN09f1 bounded analysis reader next
 
 ## Current state and next task
 
-USAGE PAUSE: owner asked to stop with headroom before five-hour remaining drops below10%.
-Last checked17% remaining; checkpoint now, no reset used or automaticresume. All task/
-merged gates and nativeprobes finished; no activeprocess/agent or merge inprogress.
-After ownerresume: verify usage/Git/ownerpatch; do not rerun completed9e/nativeprobes.
-
+Owner resumed with fresh100%five-hour allowance, noresetused. Verified0fc88f9/ownerpatch/
+reviewedsource exact. Completed9e/nativeprobes remaindone. Root exact9f1 task/prombt ready:
+bounded read-only domain traceanalysis only, fourworkerpaths, nofullarchivevalidation
+weakening/world/model/lease/network/API/UI/export. Next isolatedworker thenreview/gates.
+Later protectedoffline/backend/export andUI tasks remain; originalrealacceptance and
+llamaarguments issue stayopen. No currentlyactiveworker/server/merge.
 
 Feature codex/live-npc-runtime, .worktrees/live-npc-runtime. LN09e delivery62ea35c on
 preserved/pushed codex/live-npc-ln09e-archive-inference / .worktrees/live-npc-ln09e.
@@ -35,9 +36,10 @@ exactIDs/limits. Not fullLN09acceptance. Any proposalcontract change needs isola
 TDD/review and explicit oldrequest/fingerprint/replay compatibility, no globaldescription
 change breakingrecordedtapes. No exactfixcontractyet.
 
-NEXT root exact LN09f contracts for authenticated readonly/offline analysis/export/UI.
-Probe notes trace-analysis-root-notes.md andtrace-reader-seams.md retained; no implementation
-contract yet. Existingarchive readers loadALLBLOBs; boundedanalysis needs separate explicit
+NEXT exact09f1_trace_analysis_reader task/prombt is ready for isolatedimplementation.
+After that, root exact remaining LN09f contracts for protectedoffline/backend/export/UI.
+Probe notes trace-analysis-root-notes.md andtrace-reader-seams.md retained; 9f1 is the first implementation
+contract. Existingarchive readers loadALLBLOBs; boundedanalysis needs separate explicit
 metadata/selectedbody verification withoutweakening runtimefullvalidation. Also resolve
 llama realworldaction gate beforefinalacceptance. OriginalfullLN09 harness/disturbances/
 controls/browser/coldrestart/offlinereplay/installedPython3.11/finalwholebranchreview remains.

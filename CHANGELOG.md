@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Define bounded read-only trace metadata and selected-body verification as the first
+  prerequisite for authenticated offline analysis, preserving full runtime validation.
+
 - Record native Ollama and llama.cpp trace/restart/offline-replay probes, retaining
   all attempts and the unresolved llama.cpp work-proposal acceptance issue.
 

@@ -1909,3 +1909,18 @@ unchanged since validated90ef1e2; evidence/handoff-only commit needs no repeated
 Whitespace/source/ownerpatch checks pass. Preserve owneredit and alltaskbranches/worktrees.
 Next exact9f analysis/export/UI contracts and separate llama argument-contract acceptance
 issue remain. Ownerresume required; no reset or automaticresume.
+
+
+## 2026-10-27 — Resume and LN09f1 reader contract
+
+Owner resumed; five-hour allowance fresh100%, no reset used. Verified feature0fc88f9,
+reviewed source18fc232f... and ownerpatch unchanged. Completed9e/probes not redispatched.
+Root splits analysis into bounded read-only domain reader, protected offline/backend/
+export composition, then UI. Exact four-path9f1 contract uses independent read-only
+SQLite snapshots and existing pure validators without loading worlds/allBLOBs. Explicit
+trace_metadata_checked vs selected_body_verified scope avoids false full-validity claims.
+Defaults100000rows/64MiBmetadata/2MiBrow/8MiBselectedbody; budget failures explicit.
+No source migration, writer, lease, network or auth route in reader task. Existing
+approved execution workflow authorizes bounded prerequisite implementation; root
+retains architectural choices and full gates. llama argument-contract acceptance issue
+stays open; no proposal coercion. Next isolatedworker/review/roottask+merged gates.
