@@ -9,8 +9,9 @@ Original full real-provider acceptance is still incomplete.
 LN09b deliverybb907a0 shared llama.cpp backend is reviewed and integrated after repeated
 task/merged2373/10existing skips,39examples and exact recorded/restart/source-and-wheel
 checks.
-After integration, exact privileged inference traces and offline/admin analysis need
-bounded contracts before implementation, followed by real BOTHprovider acceptance.
+LN09c sealed trace-storage contract is now defined; capture/recovery/reuse and
+offline/admin analysis/export follow with separate bounded contracts, then real
+BOTHprovider acceptance.
 No complete backend/trace acceptance claim yet.
 
 ## Additional owner requirements — October26,2026

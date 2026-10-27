@@ -1795,3 +1795,15 @@ Current-plan ignored evidence contains reviewpackage plus tar/SHA/stageddiff/rep
 backup. All childagents completed/stopped; no6areviewer dispatched. Resume at fresh
 6areview only after ownerresume and currentusage/Git/hash check. No provider capability
 claimed; LN06b remains unstarted and candidate notes are not an implementation contract.
+
+
+## 2026-10-27 — LN09c exact trace storage contract
+
+Owner resumed with renewed allowance. Root splits required trace work into independently
+reviewable storage, capture/recovery/reuse, and admin/offline analysis/export contracts.
+LN09c defines format-two new archives, content-addressed immutable opaque BLOBs,
+closed optional metadata sealed inside existing journal records, atomic sole-owner
+publication and prefix-restricted reads. Format-one ordinary reads/writes remain usable
+without migration or fabricated historical traces. No implementation yet. Real BOTH
+provider persistent-world acceptance follows capture and admin work. GPU profiles remain
+future scope. Owner edit and all existing branches/checkpoints preserved.

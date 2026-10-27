@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Define sealed privileged request/response trace storage with exact body bytes,
+  bounded completeness metadata and preserved legacy archives; capture follows.
+
 - Integrate shared llama.cpp runtime support after repeated full/browser, recorded,
   restart and source-and-wheel serving validation; preserve branches and archives.
 
