@@ -1,4 +1,4 @@
-# Continuation brief — LN09f1 integrated, protected API next
+# Continuation brief — LN09f1 integrated, LN09f2 active
 
 ## Current state and next task
 
@@ -20,10 +20,11 @@ Taskprefixln09f1-fix3-task; mergedprefixln09f1-fix3-merged/session62383 COMPLETE
 Source/tests/pyproject SHA7eeb0344e913514b49b596dcc532ab5bbfcff7cc0bdd4cd77f335d7c4d716989 unchanged.
 Older2641gates are superseded historical evidence; do not redispatch completed tasks.
 
-Next LN09f2 draft W/09f2_trace_api-draft.md and matching savedpromptdraft are prepared,
-selfreviewed and not yet active: bounded catalog discovery, shared authenticated API
-and inert offline FastAPI factory. Activate exacttask/prombt before isolatedworker.
-Then protected offlineCLI/browserUI and forensic/portableexport contracts stillneeded.
+LN09f1 integration03bced6 pushed. LN09f2 exacttask/prombt now active in
+ docs/subagent_execution_plan/live_npc_runtime/09f2_trace_api*.md: bounded catalog,
+shared protectedAPI and inertofflinefactory. Sevenworkerpaths, rootarchitecture/
+fullgates/VCS; onefreshworker+independentreviewer. Next create isolatedtaskbranch.
+OfflineCLI/browserUI and forensic/portableexport contracts remain laterrequirements.
 Llama argument-contract compatibility and full LN09 acceptance remain incomplete.
 No implementation of those later requirements is claimed by the domainreader.
 

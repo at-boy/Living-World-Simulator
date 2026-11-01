@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Define protected trace-analysis APIs and an inert offline app using bounded catalog
+  discovery and the reviewed reader, with exact downloads and safe previews.
+
 - Integrate the reviewed trace reader after repeated full, browser, restart, packaged
   serving and saved native-archive checks; preserve task branches and source files.
 
