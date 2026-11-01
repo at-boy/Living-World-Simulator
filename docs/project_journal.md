@@ -2124,3 +2124,31 @@ Exact fourteen-path contract and saved prompt define stable paging, memory-only
 credentials, stale-response/download defenses, original timings and exact opaque bodies,
 actual Chrome/source-and-wheel acceptance. Existing owner edit preserved. No product
 change or new model calls at activation; implementation/review/gates follow.
+
+
+## 2026-11-01 — LN09f4 reviewed browser delivery
+
+Shared public static shell mounts separately from unchanged protected evidence APIs
+in live/offline apps. Actual saved backend/model identity, calls, original timings,
+pending/legacy/incomplete/reused states and exact binary downloads remain privileged.
+Memory-only token and generation/selection guards cover stale responses/downloads.
+Independent spec/quality review found one P2 requestbody DTO nullability issue; original
+worker RED4/GREEN12 realChrome corrections and scoped re-review addressed it, zero open.
+Earlier153pass/1harnessassertion followed by10targetedpasses is reported truthfully;
+current root fulltask validation is active, not yet a completion claim.
+
+
+## Root task validation
+
+Independent spec/quality review PASS after one P2 corrected in original-worker
+round1;1addressed/0open. `make VENV=<task24venv>` PASS2815tests/10existing deliberate
+skips669.49s, actualChrome and39examples. Separate `make examples`39PASS;
+`git diff --check`PASS. Exactcanonical26/priorhash/read-only, CLI7/sourceServe4,
+installedwheel14resources+Serve4/41normalattempts and savednative9archives30localcalls
+allPASS. Actualinstalledwheel offlineAPI8 plusChrome login/preview/exactnativebody
+download/sourcebytes+mtimes unchanged/no newattempt PASS; screenshot visually checked.
+Installedwheel analyzeCLI16requests/twoprocesses/realSIGINT+SIGTERM0/custodycleanup/
+sourceunchanged PASS. No newmodelcalls. Alljobs0 prefixln09f4-task/session1205.
+Reviewedsourceaddf3358ab37769b5a002d69ede8fa513f88c7688db7fbe567e020d9b57616d8/300files unchanged.
+Taskdelivery ready; featureintegration and repeatedfullgates remainpending. Root
+retains completion. No worldselection/export or fullLN09/nativegrammar claim.

@@ -7,7 +7,9 @@ an inert standalone FastAPI app with `create_analysis_app(catalog, auth=auth)` f
 attempt allocation. The supported `living-world analyze` command serves this app on IPv4 loopback.
 Use the existing loopback authentication and Origin policy. Raw evidence is privileged operator data, never NPC knowledge.
 
-All routes are GET-only and require `Authorization: Bearer <session token>`.
+The public static shell `/analysis` and its two fixed assets contain no private
+evidence or credentials. All evidence routes below are GET-only and require
+`Authorization: Bearer <session token>`.
 If supplied, Origin must match the session Origin. Responses include
 `Cache-Control: no-store`; the standalone app exposes no docs/OpenAPI endpoints.
 There is no CORS policy granting other sites access.
@@ -54,7 +56,7 @@ additionally verifies the selected exact body. These labels do not certify a
 complete world, lifecycle consistency, parent ancestry or model behavior. A
 corrupt unrelated body is outside selected-body hash verification. Concurrent
 filesystem changes can invalidate a request; this is not a sealed catalog
-snapshot. Browser trace UI and portable/forensic export remain separate work.
+snapshot. Portable/forensic export remains separate work.
 
 Run saved-trace analysis with the server extra installed:
 
@@ -66,7 +68,8 @@ living-world analyze --archive-root /path/to/runs --port 8000 \
 The default archive root is the existing RunCatalog state location; port 8000 is
 the default and port 0 selects an ephemeral port. The command binds only
 `127.0.0.1` and announces `analysis_url=http://127.0.0.1:PORT/analysis/status`
-after HTTP startup. This is an authenticated JSON endpoint, not a browser UI.
+after HTTP startup, then `analysis_browser_url=http://127.0.0.1:PORT/analysis`.
+The original status URL remains an authenticated JSON endpoint.
 Send the token as a Bearer authorization header, never in a URL. SIGINT and
 SIGTERM stop the owned HTTP service. No world, runtime owner, attempt reservation,
 provider preflight, model call or source repair occurs. An absent catalog remains
@@ -86,3 +89,41 @@ or `service_failed`. The first primary failure is preserved. Otherwise HTTP,
 thread or socket cleanup failures take exit 5, and credential cleanup alone takes
 exit 4. Shutdown requests exit and waits up to 12 seconds for the HTTP thread;
 an uncooperative live Python thread cannot be forcibly terminated.
+
+
+Open `/analysis` in either the live operator or offline analyzer to use **Saved
+LLM Calls**. The runtime page also links there without transferring credentials.
+Enter the administrator token and Connect. The password field clears immediately;
+the credential stays in page memory only. Disconnect, authorization rejection and
+pagehide clear private state. Re-enter the token on another page or after leaving.
+The page identifies live/offline mode and read-only access; it never starts a
+simulation or model call.
+
+Refresh attempts restarts a current catalog listing; More attempts uses the exact
+paired cursor. Missing or invalid reservation rows remain visible. Valid archive
+identities with a database can be selected independently of reservation syntax;
+rows with invalid identities or no database have disabled selection. Select a call
+to inspect its saved backend (`request_trace.provider_kind`), model and opaque
+model identity, request/response metadata, timing and source mapping. Archive mode
+is not an inference backend. Null fields display `unavailable`; known zero timings
+remain zero. Pending calls, legacy/unavailable bodies, incomplete captured prefixes
+and complete saved bodies have distinct labels. Reused calls explicitly identify
+original reused evidence/timing rather than a new latency measurement.
+
+Calls retain their first journal boundary across More calls and all body reads,
+even if the archive grows. Refresh calls discards call selection and previews and
+captures a new prefix. There is no polling. Each request times out after ten
+seconds; changing selection, refreshing or disconnecting aborts obsolete reads.
+Session and selection guards also discard late completions. Fixed error messages
+distinguish unavailable/not-found (404), changed/invalid (409), and too-large (413).
+Malformed DTOs fail closed and dynamic data is rendered only as text.
+
+Preview request/response explicitly fetch a bounded **UTF-8 preview**, displaying
+byte length, preview byte length, truncation, replacement and integrity labels.
+This decoded preview is not exact binary evidence. Download request/response saves
+opaque original bytes as `inference-<validated body digest>.bin`; incomplete saved
+prefixes and observed empty bodies are downloadable. Missing bodies remain
+unavailable. No parsing, reserialization, inferred full response, generation rate,
+export or historical world inspection is provided. Browser controls use only the
+existing bounded API and do not broaden its integrity guarantees. Tokens are never
+put into URLs, browser storage, cookies, links or logs.

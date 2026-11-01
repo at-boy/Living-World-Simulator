@@ -141,7 +141,11 @@ def child(tmp_path):
         assert select.select([process.stdout], [], [], 8)[0], "readiness timeout"
         line = process.stdout.readline().strip()
         assert line.startswith("analysis_url="), line
-        yield process, line.split("=", 1)[1].removesuffix("/analysis/status")
+        base = line.split("=", 1)[1].removesuffix("/analysis/status")
+        assert (
+            process.stdout.readline().strip() == f"analysis_browser_url={base}/analysis"
+        )
+        yield process, base
     finally:
         if process.poll() is None:
             process.send_signal(signal.SIGTERM)

@@ -32,6 +32,9 @@ def test_public_runtime_resources_and_packaging(tmp_path: Path) -> None:
             "static/runtime.html",
             "static/runtime.css",
             "static/runtime.js",
+            "static/analysis.html",
+            "static/analysis.css",
+            "static/analysis.js",
         ]
         assert len(data["living_world.founders"]) == 5
     finally:

@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Saved LLM Calls</title><link rel="stylesheet" href="/analysis/assets/analysis.css"><script defer src="/analysis/assets/analysis.js"></script></head>
+<body><main><h1>Saved LLM Calls</h1>
+<p>Read-only saved administrator evidence. World validation is not performed.</p>
+<form id="login"><label for="token">Administrator token</label><input id="token" type="password" autocomplete="off" spellcheck="false" required><button>Connect</button></form>
+<button id="disconnect" hidden>Disconnect</button><p id="notice" role="status" aria-live="polite">Connect to browse saved evidence.</p>
+<div id="session" hidden><p id="mode"></p>
+<section><h2>Saved attempts</h2><button id="refresh-attempts">Refresh attempts</button> <button id="more-attempts" disabled>More attempts</button><p id="attempt-status" role="status"></p><div class="overflow"><table><thead><tr><th>Attempt</th><th>Lineage</th><th>Reservation metadata</th><th>Archive mode / scenario</th><th>Reserved</th><th>Database</th></tr></thead><tbody id="attempts"></tbody></table></div></section>
+<section id="call-panel" hidden><h2>Saved calls</h2><p id="selected-attempt"></p><button id="refresh-calls">Refresh calls</button> <button id="more-calls" disabled>More calls</button><pre id="boundary"></pre><div class="overflow"><table><thead><tr><th>Call / request</th><th>Actor</th><th>Tick</th><th>Response kind</th><th>Outcome / error</th><th>Elapsed seconds</th><th>Actual backend</th><th>Model</th></tr></thead><tbody id="calls"></tbody></table></div></section>
+<section id="detail-panel" hidden><h2>Call details</h2><pre id="details"></pre>
+<p>Previews decode at most 65,536 bytes as UTF-8 text. Downloads preserve exact saved opaque bytes.</p>
+<button id="preview-request" disabled>Preview request</button> <button id="download-request" disabled>Download request</button>
+<button id="preview-response" disabled>Preview response</button> <button id="download-response" disabled>Download response</button>
+<p id="preview-meta" role="status"></p><pre id="preview" aria-label="UTF-8 preview"></pre>
+</section></div></main></body></html>

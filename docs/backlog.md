@@ -28,7 +28,7 @@ one serialization/row-isolation correction;161focusedPASS. Fresh root task2691/1
 featureintegration/repeated gates now PASS2691/10existing skips/allchecks. OfflineCLI LN09f3 implementation independently reviewed with114focusedPASS; fresh
 task gates PASS2736/10existing skips/allcompatibility/native/newwheelAPI+CLI; feature
 integration/repeatedgates now PASS2736/10existing skips/allchecks. Browser
-traceUI LN09f4 exactcontract/prombt now active; combined offline historicalworld inspection and forensic/portableexport remain.
+traceUI LN09f4 independently reviewed after one requestbody DTO correction; root fulltask gates PASS2815/10existing skips/allchecks, featureintegration pending; combined offline historicalworld inspection and forensic/portableexport remain.
 Postintegration90ef1e2 native diagnostic:20realcalls/9archives across bothproviders,
 exacttrace/coldrestart/offlinereplay PASS; Ollama1acceptedwork, llama12nonnullworkproposals
 rejected for nonemptyarguments. Keep gatewaystrict. Before finalacceptance, isolate
