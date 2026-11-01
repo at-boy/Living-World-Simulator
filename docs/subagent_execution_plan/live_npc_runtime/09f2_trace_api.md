@@ -3,7 +3,7 @@
 > Use superpowers:subagent-driven-development: one bounded worker, independent
 > spec/quality review, root task + repeated feature validation.
 
-Status: ACTIVE authorized prerequisite task after reviewed LN09f1 integration03bced6.
+Status: IMPLEMENTED and independently reviewed after R1 fixround2, one finding addressed/zero open; fresh root task validation PASS2691/10existing skips/allcompatibility/newwheelAPI checks. Featureintegration/repeatedgates pending.
 Root approved-design execution continues using one worker and independent review.
 Goal: make saved exact call evidence available through the same protected API in
 live operator and an inert offline FastAPI app. CLI/browser UI and export follow.
@@ -154,25 +154,25 @@ No POST/PUT/DELETE route, CLI, static UI, forensic spool, export or new provider
 
 ## Tests / RED-GREEN / validation
 
-- [ ] RED missing catalog/factory/routes; implement only after meaningful RED.
-- [ ] Bounded real catalog: pagination/order/newinsert refresh/missing root, no writes,
+- [x] RED missing catalog/factory/routes; implement only after meaningful RED.
+- [x] Bounded real catalog: pagination/order/newinsert refresh/missing root, no writes,
   malformed/missing/oversized reservation header rows, duplicate IDs, unsafe paths/
   symlink/hardlink/traversal, custom node/header budgets. No full-reader calls, model
   path opens, preflight or leases. Reject stale malformed cursor types/bools.
-- [ ] API ASGI +actual owned uvicorn loopback: mode live/offline, real traced and
+- [x] API ASGI +actual owned uvicorn loopback: mode live/offline, real traced and
   legacy/failed-no-checkpoint archives, auth BEFORE mocked FS/body/spool spies, missing/
   wrong token401 and hostile Origin403. No-store on every error/response; no CORS.
-- [ ] Exact trace fields/body bytes/status/durations, stable prefix page chain during
+- [x] Exact trace fields/body bytes/status/durations, stable prefix page chain during
   append, excluded later body/tampered seal rejection, selected corruption/missing
   body409, limits413, unsupportedWAL409 without source changes, unrelated corruptbody
   narrow integrity only. Existing normal operator routes/assets remain unchanged.
-- [ ] Unsafe text, invalidUTF8/JSON, empty/partial/HTTPerror bodies: exact attachment
+- [x] Unsafe text, invalidUTF8/JSON, empty/partial/HTTPerror bodies: exact attachment
   bytes+safe fixed filename/nosniff, preview cap/replacement/truncation including split
   UTF8 prefix, no rawexception/body/token in errors. Legacy/pending states stay unknown.
-- [ ] Offline factory cannot construct RuntimeService/RunController, reserve, load a
+- [x] Offline factory cannot construct RuntimeService/RunController, reserve, load a
   world/model, call providers, acquire lease or mutate source. Missing root/DB creates
   nothing. Recursive source bytes/mtimes unchanged on success/failure.
-- [ ] Focused new suites plus tests/test_runtime_operator_api.py,
+- [x] Focused new suites plus tests/test_runtime_operator_api.py,
   tests/test_trace_analysis_reader.py and scoped Ruff/Black/whitespace. Own report
   commands/results/counts/warnings/scope/limits; freeze for independent review.
 
@@ -180,3 +180,25 @@ Root runs fullmake/separateexamples/exactcanonical26readonly/CLI7/sourceServe4/
 wheel11+Serve4 and actual installed-wheel newAPI smoke afterreview, repeats aftermerge.
 Root commits/pushes/preserves taskbranch; no main/milestone/tag. UI/offlineCLI and
 forensic/portable export remain necessary later requirements, not claimed here.
+
+## Root R1 correction contract — guarded JSON serialization
+
+JSON-escaped lone surrogate code units may pass existing pure text validators but
+cannot safely render as UTF-8 API text. A selected reservation with an unencodable
+projected string must be metadata_state invalid (descriptive fields None), leaving
+other page rows usable. Keep exact valid Unicode and all opaque stored body bytes.
+Do not amend the shared reader or legacy domain validators. API projection and full
+JSON response construction/encoding must occur INSIDE the shared adapter's guarded
+error boundary, returning an explicit response so framework serialization cannot
+fail afterward. Serialization failures for trace/other projected data return the
+fixed409 trace_unavailable with Cache-Control:no-store on both live and offline
+mounts; no traceback/privatevalue leaks. Use actual escaped headers and actual ASGI
+serialization regressions, including another valid row, trace projection failure,
+valid nonASCII text and unchanged exact body downloads/sourcebytes+mtimes. Same7paths.
+
+Root R1 round2 clarification: EVERY projected reservation string must be UTF-8
+encodable within per-row validation, including reserved_at. datetime.fromisoformat
+accepts any single Unicode date/time separator, including a lone surrogate; parsing
+as UTC does not establish encodability. Cover escaped-surrogate timestamps in actual
+catalog and ASGI invalid-row/valid-row coexistence tests, and preserve valid encodable
+Unicode separators. Correct prior report's timestamp assumption. Same7paths.

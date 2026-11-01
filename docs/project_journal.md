@@ -2005,3 +2005,33 @@ designapproval needed. Selfreview/preflight table in planledger reconciles catal
 reader/auth interfaces, budget-error precedence, narrower integrity and inactive
 runtime ownership. No source/dependency/schema change at this planning step. Preserve
 owner masterplanedit; next isolated standard worker, independent reviewer, fullgates.
+
+
+## 2026-11-01 — LN09f2 protected API reviewed
+
+Sevenpath worker delivered bounded reservationcatalog/sharedprotectedrouter/inert
+offlinefactory. Independent review found oneP2: malformedUnicode metadata caused
+frameworkserialization500 withoutno-store. Root reproduced. Originalworker fixround1
+guarded fullJSONprojection/encoding; scopedreview found remaining timestamp-surrogate
+row-isolation gap. Root reproduced/clarifiedcontract; originalworker round2 uniformly
+validates projectedstrings and preserves validUnicode. Scoped spec+qualityPASS,
+1addressed/0open; focused161/stylePASS. No reader/domain/sourceformat changes.
+Fresh roottaskgates session84686 prefixln09f2-task with installed-wheel API smoke
+in progress; reviewedsource03bfd2034a3da7b8a8636279fb820fc848c7a0c4868e4c19adac44a1da0e8adc.
+No APIintegration/fulltask success claimed before results.
+
+
+## Root corrected-task validation
+
+Independent originalreviewer R1round2 spec+qualityPASS,1addressed/0open; focused161.
+Root `make VENV=<task24venv>` PASS2691tests/10existing deliberate skips481.69s,
+actualChrome/39examples; separate `make examples`39PASS; `git diff --check`PASS.
+Existing exactcanonical26/read-only bytes unchanged/priorhashes, CLI7/sourceServe4/
+wheel11resources+actualServe4/41normalattempts PASS. Savednative reader9archives/
+30localcalls includingreused PASS exactbodySHA/length/stablepages/sourcebytes+mtimes.
+New actualinstalledwheel offlinefactory smoke8requests PASS401/403/status/catalog/
+traces/exactbody/preview/POST405/no-store/sourceunchanged/no newattempt. No modelcalls.
+Prefixln09f2-task/session84686 and alljobs exited0. Source/tests/pyproject
+SHA03bfd2034a3da7b8a8636279fb820fc848c7a0c4868e4c19adac44a1da0e8adc unchanged.
+Taskdelivery ready; featureintegration/repeatedgates remain pending. No UI/CLI/export
+or fullbackend behavioral acceptance claimed. Root owns final integration.
