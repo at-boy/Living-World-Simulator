@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development or superpowers:executing-plans task-by-task. Steps use checkbox syntax.
 
-**Status:** ACTIVE root-authorized bounded prerequisite after LN09f4 integrationd156743; no implementation yet.
+**Status:** COMPLETE; delivery79b7220 preserved/pushed, independentreview/task+merged2872/10/allchecks and boundednativeboth-provider probesPASS.
 **Goal:** Offer both real backends an explicit empty-arguments contract for current founding actions, preserving legacy requests/replay and strict execution authority.
 **Architecture:** Opt-in canonical provider request selection flows through the existing config/client factory, payload capture and source-selected replay seams. Only selected system instructions and response-schema arguments change; no domain/serializer/parser/gateway/driver/archive version changes.
 **Tech Stack:** Python>=3.11, strict hints, current clients/broker/CLI/archive tests; no dependencies.
@@ -18,7 +18,7 @@ Root considered provider request selector, driverformat2/composition policy, and
 
 Engine truth/perception/cognitive records/memory/retrieval and filtered NPCContext unchanged. Current action triples/target labels unchanged. Transformation changes only selected system instructions and output arguments schema; no new world facts/IDs/config selector enter NPC-visible context. Requests remain NPC-readable context and qualitative offered vocabulary. Output remains inference/proposal, never execution or goal/stage truth. Target stays target_label; arguments stays an untrusted mapping passed intact to existing gateway. Backend configuration, request-contract selector, exact traces, source hashes/reuse and timing remain engine/admin evidence. Legacy contexts/bytes and source-selected replay retain original transformation.
 
-## Exact worker boundary (11 paths)
+## Exact worker boundary (12 paths)
 
 1. src/living_world/cognition/local_llm_cognition_format.py — new selector/helper only; original constants/serializer/parser unchanged
 2. src/living_world/cognition/ollama_cognition_client.py — optional keyword and selected instance format only
@@ -31,6 +31,8 @@ Engine truth/perception/cognitive records/memory/retrieval and filtered NPCConte
 9. NEW tests/test_runtime_request_contract.py
 10. docs/operator_runbook.md — opt-in usage/compatibility/limits only
 11. docs/subagent_execution_plan/live_npc_runtime/09g_request_contract-report.md
+
+12. tests/test_runtime_llama_cpp.py — only canonical provider fixture in test_llama_provider_dispatch_and_archive_grammar: use provider_document(config) instead of asdict(config); preserve archive grammar assertions.
 
 Root owns task/prombt/common docs/evidence/fullgates/VCS/native probes. Worker no otherfiles/subagents/index/commits/fullmake/examples/models/servers/downloads/dependencies/othercheckouts. Unit owned fixtures/subprocesses for fake broker tests only, cleanup finally. Missing seam requires root ruling/amended task+prombt before expansion.
 
@@ -54,11 +56,11 @@ No launch/replay/driver/trace/storageformat changes: source-selected provider co
 
 ## Review focus and one task TDD cycle
 
-- [ ] RED missing selector/flag/helper/new payload schema before product changes. Capture deterministic legacy payload-byte SHA256/providerdoc/effective+input hashes from baseline before edits; expected constants must not be generated from new implementation.
-- [ ] Both provider clients legacy/default/explicitlegacy exact baseline bytes and unchanged shared constants; selected schema emptyargs/prompt without generic argument example; two clients don't mutate each other; unknown/null/bool reject; generic arbitrary-string argument parsing remains intact and domain gateway rejects nonemptyargs unchanged.
-- [ ] Config canonical omission/new persistence/type/scenario restrictions, raw explicitlegacy rejection, exact legacy fingerprints/new fingerprint difference; actual CLI help/run/serve parse and recorded/inspect/analyze/replay rejection; no ignored selector.
-- [ ] Fake transport/broker actual prepared body+stored trace uses new schema and filtered context, no hidden/raw data; accepted ordinary work proposal with {} executes, nonempty remains rejected without stripping. No new real provider calls by worker.
-- [ ] Actual archived deterministic fakeprovider run: new-selector fresh -> coldrestart -> sealed offline replay with provider unavailable and exact checkpoint/cursors; replay descendants use sealed source selector despite current defaults. Explicit old-to-new/new-to-old forks have changed fingerprints/new payloads and no incompatible parent reuse; source bytes+mtimes unchanged. Same-selector sealed reuse remains valid. Default old replay/hash/payload regressions unchanged.
-- [ ] Focused new tests plus existing cognition client/format, runtime_llama_cpp/journal_replay/cli, inference_trace_storage, work_action_gateway/external_dispatch tests. VENV=.worktrees/task24/.venv PYTHONPATH=src; scoped Ruff/Black/whitespace. Report commands/results/counts/warnings/allowedpaths/limits and freeze for independentreview.
+- [x] RED missing selector/flag/helper/new payload schema before product changes. Capture deterministic legacy payload-byte SHA256/providerdoc/effective+input hashes from baseline before edits; expected constants must not be generated from new implementation.
+- [x] Both provider clients legacy/default/explicitlegacy exact baseline bytes and unchanged shared constants; selected schema emptyargs/prompt without generic argument example; two clients don't mutate each other; unknown/null/bool reject; generic arbitrary-string argument parsing remains intact and domain gateway rejects nonemptyargs unchanged.
+- [x] Config canonical omission/new persistence/type/scenario restrictions, raw explicitlegacy rejection, exact legacy fingerprints/new fingerprint difference; actual CLI help/run/serve parse and recorded/inspect/analyze/replay rejection; no ignored selector.
+- [x] Fake transport/broker actual prepared body+stored trace uses new schema and filtered context, no hidden/raw data; accepted ordinary work proposal with {} executes, nonempty remains rejected without stripping. No new real provider calls by worker.
+- [x] Actual archived deterministic fakeprovider run: new-selector fresh -> coldrestart -> sealed offline replay with provider unavailable and exact checkpoint/cursors; replay descendants use sealed source selector despite current defaults. Explicit old-to-new/new-to-old forks have changed fingerprints/new payloads and no incompatible parent reuse; source bytes+mtimes unchanged. Same-selector sealed reuse remains valid. Default old replay/hash/payload regressions unchanged.
+- [x] Focused new tests plus existing cognition client/format, runtime_llama_cpp/journal_replay/cli, inference_trace_storage, work_action_gateway/external_dispatch tests. VENV=.worktrees/task24/.venv PYTHONPATH=src; scoped Ruff/Black/whitespace. Report commands/results/counts/warnings/allowedpaths/limits and freeze for independentreview.
 
 Root afterreview: required fulltask+repeatedmerged make/examples/diffcheck/canonical26/CLI7/Serve4/wheel14+Serve4/native9archive30calls/API8+actualwheelChrome/CLI16+signals. Native root probe of both providers follows only with allowance headroom; all normal attempts retained automatically, exact new requests/responses/timings and provider-offline replay verified. Actual accepted work required for compatibility evidence; null/stall/failure recorded truthfully. No fullLN09acceptance claim from prompt/schema/unit code alone. Preserve branches/ownerpatch; no main/milestone/tag. Pause before owner10% floor, no reset.

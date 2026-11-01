@@ -5,7 +5,9 @@ import math
 from living_world.cognition.local_llm_cognition_format import (
     RESPONSE_SCHEMA,
     SYSTEM_INSTRUCTIONS,
+    RequestContract,
     parse_decision_response,
+    request_contract_format,
     serialize_decision_request,
 )
 from living_world.cognition.npc_cognition_client import (
@@ -38,7 +40,12 @@ class OllamaCognitionClient:
         max_output_tokens: int = 512,
         temperature: float = 0.0,
         seed: int | None = None,
+        request_contract: RequestContract = "legacy_v1",
     ) -> None:
+        instructions, schema = request_contract_format(request_contract)
+        if request_contract != "legacy_v1":
+            self.SYSTEM_INSTRUCTIONS = instructions
+            self.RESPONSE_SCHEMA = schema
         if not isinstance(model, str):
             raise TypeError("Ollama model must be a string.")
         if not model.strip():

@@ -1,6 +1,5 @@
 """Shared llama runtime identity, transport and public configuration regressions."""
 
-from dataclasses import asdict
 from pathlib import Path
 
 import pytest
@@ -19,7 +18,9 @@ def test_llama_provider_dispatch_and_archive_grammar(tmp_path: Path) -> None:
         model_digest="a" * 64,
     )
     assert client_for(config).provider_name == "llama.cpp"
-    archived = AttemptConfig("ollama", "test", 7, "rev", {"provider": asdict(config)})
+    archived = AttemptConfig(
+        "ollama", "test", 7, "rev", {"provider": provider_document(config)}
+    )
     assert archived.mode == "ollama"
 
 

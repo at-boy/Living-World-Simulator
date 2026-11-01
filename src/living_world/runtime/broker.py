@@ -21,7 +21,9 @@ from living_world.archives import AttemptConfig
 from living_world.archives.model import actions, canonical, validate_request
 from living_world.cognition.llama_cpp_cognition_client import LlamaCppCognitionClient
 from living_world.cognition.local_llm_cognition_format import (
+    RequestContract,
     parse_decision_response,
+    request_contract_format,
     serialize_decision_request,
 )
 from living_world.cognition.npc_cognition_client import (
@@ -86,8 +88,10 @@ class ProviderConfig:
     model_digest: str | None = None
     kind: Literal["ollama", "llama_cpp"] = "ollama"
     model_file: str | None = None
+    request_contract: RequestContract = "legacy_v1"
 
     def __post_init__(self) -> None:
+        request_contract_format(self.request_contract)
         if self.kind not in ("ollama", "llama_cpp"):
             raise ValueError("Unknown provider kind.")
         if self.kind == "ollama" and self.model_file is not None:
@@ -122,6 +126,8 @@ class ProviderConfig:
 def provider_document(config: ProviderConfig) -> dict[str, object]:
     """Canonical provider metadata preserving historical Ollama fingerprints."""
     values = asdict(config)
+    if config.request_contract == "legacy_v1":
+        del values["request_contract"]
     if config.kind == "ollama":
         del values["kind"]
         del values["model_file"]
@@ -149,6 +155,11 @@ def provider_config(config: AttemptConfig) -> ProviderConfig:
     if type(maximum) is not int or maximum <= 0:
         raise ValueError("Request budget must be positive.")
     values = dict(cast(Mapping[str, object], config.settings.get("provider", {})))
+    if "request_contract" in values and (
+        values["request_contract"] != "founders_empty_arguments_v1"
+        or config.scenario_key != "canonical_founders_v1"
+    ):
+        raise ValueError("Request contract requires canonical live founders.")
     values.setdefault("seed", config.seed)
     return ProviderConfig(**values)  # type: ignore[arg-type]
 
@@ -167,6 +178,7 @@ def client_for(
         temperature=config.temperature,
         seed=config.seed,
         transport=transport,
+        request_contract=config.request_contract,
     )
 
 

@@ -2179,3 +2179,42 @@ carry explicit provider request selector without new driver/archive/trace format
 Canonical legacy absence avoids setup raw-key comparison mismatch; CLI explicit
 legacy normalizes at ingress, raw explicitlegacy provider key rejects. Exact eleven
 path task/prombt precede code. No new modelcall or codechange at activation.
+
+
+## Root task validation
+
+Independent spec+qualityPASS/NO SUBSTANTIVE FINDINGS, including canonicalprovider
+serialization check. `make VENV=<task24venv>`PASS2872tests/10existing deliberate skips
+718.03s, actualChrome/39examples; separateexamples39/whitespacePASS. Exactcanonical26/
+priorhash/read-only/CLI7/sourceServe4/wheel14+Serve4/41normalattempts/native-reader
+9archives30localcalls/installedwheelAPI8+actualChrome exactdownload/CLI16+twoactual
+signals/custodycleanup/sourcebytes+mtimesunchanged allPASS. Alljobs0 prefixln09g-task/
+session85924. Reviewedsourceac9987f39532b33e97ffc8425d52fb563e0a3f4bb852f7ee90b831b211d9306f/302files unchanged.
+Taskdelivery ready; nativecompatibility probes and featureintegration/repeatedgates
+stillpending. No fullLN09acceptance claim. Ownerpatch/branches/worktrees retained.
+
+
+## Root native compatibility probes
+
+On committed delivery79b7220/sourceac9987f...302files, both native probes PASS:
+8realcalls/6archives/4offlinecheckpointcomparisons, oneacceptedordinaryaction per
+backend; allnonnullargs{}, exactselectedschema/bodydigest/length/backend/model/
+HTTP200/timings/coldinitialworld+cursors/offlineworld+events+cursors+responseevidence
+/sourcebytes+mtimes unchanged. Bothownedservers+sixCLIprocesses exited0/portsfree.
+AMD Vulkan0 used for llama; no downloads/driverchange/otherprocessstop. Fullnative
+report: docs/orchestrator_handoff/live_npc_request_contract_probe_2026_11_01.md.
+This resolves the observed argument-contract failure in bounded diagnostics, not
+fullLN09acceptance. Repeatedfeaturegates98486 currentlyactive; no sourcechanges.
+
+
+## Root integration complete — November1
+
+Delivery79b7220 cleanly integrated after5a3b041. IndependentreviewPASS/no findings.
+Repeatedmake2872passed/10existing skips720.22s; actualChrome/39examples, separate
+examples39 and whitespacePASS. Allcanonical26/priorhash/read-only/CLI7/Serve4/wheel14+
+Serve4/native9archives30calls/API8+Chrome/CLI16+SIGINT+SIGTERM/custody/sourcepreservation
+gatesPASS, alljobs0 session98486. Sourceac9987f39532b33e97ffc8425d52fb563e0a3f4bb852f7ee90b831b211d9306f/302files unchanged.
+Newnative8calls/6archives/4replaypoints/acceptedactioneach and bothnewnative
+installedwheelChrome preview/exactdownload/sourceunchanged PASS. LN09g COMPLETE.
+Pause now13%remaining, no newtask/no reset. Owneredit/branches/release refs preserved.
+FulloriginalLN09acceptance, combinedworldanalysis/export remain.

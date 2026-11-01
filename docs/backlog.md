@@ -33,7 +33,7 @@ Postintegration90ef1e2 native diagnostic:20realcalls/9archives across bothprovid
 exacttrace/coldrestart/offlinereplay PASS; Ollama1acceptedwork, llama12nonnullworkproposals
 rejected for nonemptyarguments. Keep gatewaystrict. Before finalacceptance, isolate
 prompt/offer/argument-contract compatibility and preserve existing archive fingerprints/
-replay semantics; LN09g exact versioned opt-in contract/prombt now active; no fixcode/native acceptance yet. See current native probe report.
+replay semantics; LN09g implementation independently reviewed and taskvalidated2872/10existing skips/allchecks; native both-provider probes PASS8realcalls/6archives/4replaypoints/oneacceptedaction each; featureintegration/repeatedgates PASS2872/10existing skips/allchecks. See current native probe report.
 No complete backend/trace behavioral acceptance claim yet.
 
 ## Additional owner requirements — October26,2026

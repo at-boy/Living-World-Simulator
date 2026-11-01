@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Integrate the versioned request contract after real Ollama and AMD llama.cpp actions, exact cold restart/replay and repeated full validation.
+
+- Add the reviewed opt-in founding-action request contract for both providers with unchanged legacy bytes, strict gateways and sealed replay.
+
 - Define an opt-in versioned founding-action request contract for both local providers, preserving legacy payloads and sealed replay.
 
 - Integrate the saved-call browser after repeated full, installed-package browser, restart and archive-preservation validation.

@@ -43,6 +43,7 @@ from .service import RuntimeService
 
 _PROVIDER_FLAGS = (
     "driver",
+    "request_contract",
     "model",
     "model_file",
     "base_url",
@@ -104,6 +105,8 @@ def validate_archived_options(
 
     if not hasattr(a, "model_file"):
         a.model_file = None
+    if not hasattr(a, "request_contract"):
+        a.request_contract = None
     if a.command == "inspect":
         archived = a.attempt is not None
         if sum(bool(v) for v in (a.scenario, a.founders, a.attempt)) != 1:
@@ -175,6 +178,7 @@ def validate_archived_options(
                     "base_url",
                     "timeout_seconds",
                     "max_output_tokens",
+                    "request_contract",
                 ),
             ):
                 ProviderConfig(
@@ -185,6 +189,7 @@ def validate_archived_options(
                             "base_url",
                             "timeout_seconds",
                             "max_output_tokens",
+                            "request_contract",
                         )
                         if getattr(a, k) is not None
                     },
@@ -288,6 +293,11 @@ def _requested(a: argparse.Namespace, catalog: RunCatalog) -> AttemptConfig:
         )
         if switched or not same_model or provider.get("model_file") != old.model_file:
             provider.pop("model_digest", None)
+        selector = getattr(a, "request_contract", None)
+        if selector == "legacy_v1":
+            provider.pop("request_contract", None)
+        elif selector is not None:
+            provider["request_contract"] = selector
         settings["provider"] = provider
     try:
         candidate = replace(original, settings=settings)
@@ -371,6 +381,8 @@ def prepare_archived_launch(
     a = argparse.Namespace(**vars(arguments))
     if not hasattr(a, "model_file"):
         a.model_file = None
+    if not hasattr(a, "request_contract"):
+        a.request_contract = None
     if disturbance is not None and (a.founders or a.replay_attempt):
         raise RuntimeCLIError(2, "invalid_configuration")
     config = None
@@ -433,6 +445,10 @@ def prepare_archived_launch(
                         "save_every": save_every,
                     },
                 }
+                if a.request_contract not in (None, "legacy_v1"):
+                    cast(dict[str, object], settings["provider"])[
+                        "request_contract"
+                    ] = a.request_contract
                 if a.driver == "llama.cpp":
                     provider = cast(dict[str, object], settings["provider"])
                     provider.update({"kind": "llama_cpp", "model_file": a.model_file})

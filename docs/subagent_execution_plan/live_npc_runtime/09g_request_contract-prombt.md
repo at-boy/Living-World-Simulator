@@ -1,6 +1,6 @@
 # Saved worker prompt — LN09g versioned founding-action contract
 
-Read AGENTS.md then exact09g_request_contract.md FIRST for eleven allowedpaths,
+Read AGENTS.md then exact09g_request_contract.md FIRST for twelve allowedpaths,
 interfaces/values/canonical representations and test requirements. Existing approved
 live-runtime execution authorizes this bounded compatibility fix; root owns all
 architecture/scope/VCS/common docs/fullgates/native acceptance. No milestone/continuation/
@@ -15,3 +15,5 @@ permitted with finally cleanup. No realmodel/native servers/downloads/dependenci
 subagents/Git/index/commits/fullmake/examples/othercheckout edits. Report missing
 seam before scope expansion. Append exact ownreport commands/counts/warnings and
 limits, freeze for independentreview; return compact status/testsummary/concerns.
+
+Root boundary amendment: existing test_runtime_llama_cpp.py only named raw-asdict fixture becomes canonical provider_document, preserving assertions; no other existingtest edits.
