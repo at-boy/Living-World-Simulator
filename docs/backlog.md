@@ -340,3 +340,10 @@ blockers, not deferredfuturefeatures; full audit coverage/gates remainpending.
 Task24a isolated existing-defect correction begins from7d75b20; Task24metadata
 checkpoint preserved. Both audit findings and remaining wholeauditcoverage still
 block release readiness until reviewed current validation.
+
+
+November1 usage checkpoint: reader03bced6, protectedAPIf6a0493 and offlineCLI b823f2f
+are integrated and validated. Next exact contracts must address browser trace views,
+combined inert historical-world inspection, forensic/portable export and the isolated
+versioned llama argument contract plus final both-backend acceptance. No later task
+is active at pause; preserved source archives and old replay fingerprints remain binding.

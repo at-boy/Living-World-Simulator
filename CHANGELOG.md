@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Save the validated reader/API/offline-command handoff and remaining browser,
+  export and model-contract work before the usage pause.
+
 - Integrate the offline analysis command after repeated full, browser, restart and
   installed-package HTTP/signal checks, preserving source archives and task branches.
 

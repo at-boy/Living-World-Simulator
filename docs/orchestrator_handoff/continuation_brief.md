@@ -1,88 +1,123 @@
-# Continuation brief — LN09f3 complete; usage checkpoint
+# Continuation brief — November 1 usage pause
 
-## Current state and authorized next task
+## Current state
 
-Owner resumed November1; continuous approved live-runtime execution remains authorized.
-Featurecodex/live-npc-runtime integrates taskac09081 after contracted344e9; finalmerge
-commit follows. Taskcheckout .worktrees/live-npc-ln09f2 /codex/live-npc-ln09f2-trace-api
-clean/pushed/preserved. Only owner-local masterplan edit remains outside focusedwork.
-Current reviewed source/tests/pyproject SHA256:
-03bfd2034a3da7b8a8636279fb820fc848c7a0c4868e4c19adac44a1da0e8adc (292files).
+The owner resumed approved live-NPC-runtime execution. This session completed and
+pushed three task integrations on `codex/live-npc-runtime`:
 
-LN09f2 COMPLETE: bounded shallow catalog, shared protectedtraceAPI/liveoperatormount,
-inertofflineFastAPI factory, exactbodyattachments and safe UTF8 previews. OneP2review
-finding requiredtwo originalworker correctionrounds: escaped-surrogate headertext
-could escape frameworkJSONserialization; timestampseparators needed sameperrow check.
-Originalscopedreview spec+qualityPASS,1addressed/0open;161focused/stylePASS. ValidUnicode
-and rawbodybytes preserved; malformedprojectedheaderstrings invalidateonlytheirrow.
-JSONprojection/fullresponseencoding insideguardedadapter; safe409/no-store bothmounts.
-Root taskmake2691/10existing skips481.69s; merged2691/10 479.15s. Each actualChrome/
-39examples/separate39/exactcanonical26read-only/priorhashes/CLI7/sourceServe4/wheel11+
-actualServe4/41normalattempts/native-reader9archives30calls PASS. New installedwheel
-actualofflineAPI8request smoke PASS/sourcebytes+mtimesunchanged/no newattempt. Taskprefix
-ln09f2-task/session84686 and mergedprefixln09f2-merged/session14852 alljobs exited0.
-See exact09f2task/prombt/report for reviewedimplementation; do notredispatch it.
+| Task | Delivery | Feature integration | State |
+| --- | --- | --- | --- |
+| LN09f1 bounded trace reader | 9c65f3b | 03bced6 | Complete |
+| LN09f2 protected trace API / offline factory | ac09081 | f6a0493 | Complete |
+| LN09f3 offline analyze command | 78d7a56 | b823f2f | Complete |
 
-LN09f1 delivery9c65f3b integrated03bced6 COMPLETE aftertask/merged2651/10existing skips,
-allcompatibility/nativechecks. Separate readonlyreader preserves fullruntimevalidator;
-rollbackjournals only (reject WALbeforeSQLite), scalar genuinePRAGMA schemaqueries,
-selectedbodyhash verification, stableprefixpaging and explicitfinitebudgets. Narrow
-integrity NEVER certifiesworld/checkpoints/parentseals/unselectedbodycontent. No source
-migration/immutable/copy/permission workaround. Reviewed09f1report is canonicalhistory.
+All task branches and worktrees are preserved and clean. The active feature
+worktree is `.worktrees/live-npc-runtime`; the primary checkout remains on main.
+The final handoff-only checkpoint follows b823f2f. No merge is pending.
+Only the owner edit listed below remains uncommitted. Do not redispatch completed
+implementation or repeat completed gates without a change or concrete concern.
 
-LN09f2 integrationf6a0493 pushed. LN09f3 task78d7a56 complete and preserved/pushed;
-featureintegrationcommit follows after repeated2736/10existing skips482.99s andallchecks.
-Root task2736/10 485.37s; both have actualChrome/39examples/separate39/exactcanonical26/
-CLI7/sourceServe4/wheel11+Serve4/native9archives30calls/APIwheel8/CLIwheel16requests,
-realSIGINT+SIGTERM0/sourceunchanged/no newattempt PASS. Source/tests/pyproject
-51e885acc211fec3de69ef5aaf6e9456ed7ab7d1eb8870d11a9598d5719e93ba/295files unchanged.
-Independentreview spec+qualityPASS/no findings,114focused/no warnings. Exact custody
-ASTs preserved after publicclassrename; oldrun_served lifecycleunchanged.
-Prefixesln09f3-task/session7042 andln09f3-merged/session99190 COMPLETE/alljobs0.
-No activeworkers/reviewers/modelservers/gates; no mergeclaimbeforefinalcommit/push.
-Usagepause next aftercheckpoint (last25%remaining), no resets/automaticresume.
-Newcommand serves authenticatedJSONstatus/API, not yet browsertraceUI. Nextrootmust
-activate exactUI/combinedhistoricalinspection contracts from savedrootseams beforecode;
-no task9f4 is active. Existing9f1/9f2/9f3 mustnotbe redispatched orrevalidatedwithoutchange.
-Later browsertraceUI, explicit historicalworldinspection in inertanalysisinstance,
-and forensic/portableexport remain unfinished. Existing inspect--attempt/liveoperator
-historicalworldviews alreadywork; do not confuse narrowtracevalidity withworldvalidity.
+Current reviewed source/tests/pyproject SHA256 (295 files):
+`51e885acc211fec3de69ef5aaf6e9456ed7ab7d1eb8870d11a9598d5719e93ba`.
 
-## Real-provider evidence and remaining behavior
+## Completed behavior and validation
 
-LN09e delivery62ea35c integrated90ef1e2 automaticexacttracewiring/reuse/replay COMPLETE;
-nativeevidence0fc88f9/report live_npc_native_trace_probe_2026_10_27.md retained.
-20actualcalls/9archives/8comparedreplaypoints across Ollama+llama: exactrequest/response/
-status/timing, coldinitialworld/cursors and provideroffline replay PASS. Ollama1accepted
-work; llama12nonnullproposals rejected for nonemptyarguments (duplicatedtargetlabel).
-Gateway correctlyrejects; no outputcoercion orfix. Nativeprobesare NOT fullLN09acceptance.
-No newmodelcalls thisresume. All previouslyowned native servers stopped; do not stop
-unrelated userprocesses. GGUF/model/backend/context/GPUprofiles remainbacklog only.
+The reader provides stable sealed-prefix call pages and verified selected body
+bytes without loading worlds or all BLOBs. It supports normal rollback journals;
+WAL/SHM and unsafe paths reject before SQLite opens. Genuine scalar PRAGMA queries
+avoid oversized/shadowed schema transfers. Full runtime validation is unchanged.
+Integrity labels cover local trace metadata and selected bytes, never complete
+worlds, checkpoints, parent seals or unselected body content.
 
-W/llama-argument-compatibility-seams.md narrowinvestigation is proposalONLY: explicit
-persisted requestcontractselector via client_for versus driver_format evolution;
-oldbytes/hashes/source-selectedreplay mustremainexact. Root has NOT selected/activated
-fix. Existing driver_format onlysupports1 inprovider_config. No globalsharedprompt/
-schema/actiondescription changes breakingoldarchives. Realbothbackendacceptance later.
+The same authenticated router mounts in the live operator and an inert offline
+FastAPI factory. Bounded shallow catalog discovery retains invalid/missing rows.
+Malformed projected Unicode invalidates only its row; full JSON response encoding
+is inside sanitized error handling. Exact binary downloads, bounded text previews,
+Origin checks and no-store apply. No routes expose raw traces to ordinary inspection
+or NPC contexts. LN09f2 had one P2 resolved in two original-worker/reviewer rounds.
 
-## Recovery, ownership and environment
+`living-world analyze --archive-root PATH --admin-token-file PATH --port 0` serves
+this read-only API on loopback without a simulation owner, world, preflight, lease,
+provider or new attempt. It currently announces an authenticated JSON status URL;
+there is no new trace browser page yet. Existing run/serve/inspect behavior remains.
+Credential custody was extracted exactly, with legacy aliases; independent AST
+comparison confirmed equivalence and unchanged run_served lifecycle.
+See [usage](../trace_analysis.md) and the reviewed
+[LN09f3 report](../subagent_execution_plan/live_npc_runtime/09f3_offline_analysis_cli-report.md).
 
-W=.superpowers/sdd/2026-10-19-live-npc-runtime in FEATURE. progress.md is recoveryledger;
-reviewpackages/snapshots/sourcehashes/helperoutputs retained. run_reader_gates.py
---analysis-api executes make, compatibilityhelpers, savednative-reader, installedwheel
-API smoke, separateexamples AFTERmake, whitespace and sourceequality. Uniqueoutputprefixes.
-Existing .worktrees/task24/.venv Python3.13.5; support>=3.11. Fullmake requires escalation
-for actualChrome/loopback fixtures. GIT_SSH_COMMAND='ssh -F /dev/null -o BatchMode=yes'.
+Final task make: 2,736 passed / 10 existing deliberate skips, 485.37 seconds.
+Final merged make: 2,736 passed / 10 existing deliberate skips, 482.99 seconds.
+Both include actual Chrome and 39 examples; separate examples39 and whitespace pass.
+Both exact canonical26/read-only/prior-hash, CLI7, sourceServe4, wheel11+Serve4,
+41 normal attempts and saved-native reader9archives/30localcalls checks pass.
+Both installed-wheel offline API8requests and analyze CLI16requests/two processes,
+real SIGINT/SIGTERM exit0, credential removal and unchanged source bytes/mtimes pass.
+No new model calls. Reviewed source remained identical. All gate jobs exited0.
+LN09f3 review: spec PASS, quality PASS, no findings; focused114, no warnings.
+Earlier LN09f2 task/merged2691 and LN09f1 task/merged2651 gates also passed.
 
-Owneredit docs/superpowers/plans/2026-10-19-live-npc-runtime.md
-(observasmall, clearly specified tasksble) MUST NOT be staged/restored/fixed.
-DiffSHA294b20313ae2de248301fa20bbb4f9c312d51efa4851a434466f98a588dd93e6.
-Preserve allbranches/worktrees/archives. Managersmutate/systemsbehave/eventsimmutable;
-RuntimeService soleworldwriter; LLMfilteredproposals usegateway; simulationownstruth.
-NeverNPC rawstate/IDs/hiddenrecords/privilegedtracebodies. Existing unauthinspect gains
-no rawtrace routes. Newanalysis isprivileged/read-only/no owner/preflight/modelcalls.
-Protectedmain d8ea51797b5ca3bfefa37cd5f7bafc95cbee5899;
+Evidence is in W (defined below): `ln09f3-task-*` / session7042 and
+`ln09f3-merged-*` / session99190. These sessions are complete. Reviewed task reports,
+merge commits and this brief are compressed history; do not reconstruct old tasks.
+
+## Remaining goals and next resume
+
+Pause now with about22% of the five-hour allowance remaining, leaving review and
+validation headroom before the owner's10% floor. No reset was used. Resume only
+on the owner's request; no automatic continuation. No task9f4 is active.
+
+Next root checks current usage/Git/owner patch, then writes exact task and saved
+prompt before new implementation. Remaining work:
+
+1. Browser trace UI shared by live/offline analysis: calls, backend/model, exact
+   request/response previews/downloads, original timings, pending/legacy/incomplete/
+   reused distinctions, stable paging and safe text rendering. W/trace-analysis-browser-seams.md
+   contains concrete field names and browser/package test requirements.
+2. Explicit historical world inspection inside the inert analysis instance, using
+   existing RevisionSource/inspection routes. Existing inspect--attempt and live
+   historical views already work. Never load or certify worlds as a trace-list side effect.
+3. Forensic/portable export, including truthful incomplete-attempt evidence and sealed
+   ancestry. W/trace-export-seams.md and trace-analysis-next-contract-notes.md retain
+   earlier investigations. No export implementation or final contract is active.
+4. Isolated versioned llama.cpp argument-contract fix and full both-provider acceptance.
+   W/llama-argument-compatibility-seams.md proposes provider-selector vs driver-format
+   alternatives; root has not selected or activated one. Preserve old request bytes,
+   fingerprints and sealed source-selected replay. Never coerce output or weaken gateways.
+
+## Native evidence and authority
+
+LN09e delivery62ea35c / integration90ef1e2 and native evidence0fc88f9 remain complete.
+The [native probe report](live_npc_native_trace_probe_2026_10_27.md) records20 actual
+calls,9 archives and8 compared replay points across Ollama and llama.cpp. Exact
+traces, cold initial world/cursors and provider-offline replay passed. Ollama had
+one accepted work proposal; all12 non-null llama proposals had nonempty arguments
+and were correctly rejected. These diagnostics are not full LN09 acceptance.
+No new native calls this session; previous owned model servers were stopped.
+Future GPU/model/backend/context profiles remain backlog only.
+
+Managers mutate, systems own behavior, events are immutable. RuntimeService is the
+sole world writer; filtered LLM outputs remain proposals through action gateways.
+Simulation owns truth, goals and stages. Raw state/IDs/hidden cognition and privileged
+trace bodies never enter NPC context. Offline analysis has no runtime owner.
+
+## Recovery and preserved work
+
+W = `.superpowers/sdd/2026-10-19-live-npc-runtime` in the feature worktree.
+`progress.md` is the recovery ledger; reviews, snapshots, hashes, native archives,
+helper outputs and `2026-11-01-final-checkpoint.json` are retained there.
+`run_reader_gates.py --analysis-api --analysis-cli` runs current root gates with
+unique output prefixes; separate examples run only after make exits.
+Use `.worktrees/task24/.venv` (Python3.13.5), support Python>=3.11. Actual Chrome/
+loopback gates require escalation. SSH workaround:
+`GIT_SSH_COMMAND='ssh -F /dev/null -o BatchMode=yes'`.
+
+Never stage, restore or fix the owner edit in
+`docs/superpowers/plans/2026-10-19-live-npc-runtime.md`
+(`observasmall, clearly specified tasksble`). Patch SHA256:
+`294b20313ae2de248301fa20bbb4f9c312d51efa4851a434466f98a588dd93e6`.
+All branches, worktrees and archives remain preserved. No main/milestone/tag work
+is authorized now. Remote refs verified unchanged at checkpoint:
+main d8ea51797b5ca3bfefa37cd5f7bafc95cbee5899;
 milestone/v0.6 6bf4c63637584584a8dfce009d2d1d79987be570;
-tag1040fd2e3e4068d3f7dba77be37179299273aa41 peeled092715c11ed00b98255ae611fcef1bcfb8f1de9d.
-No main/milestone/tag action authorizednow. Ownerauthorizes taskintegration/featurepush.
-Stop withheadroom BEFOREfive-hour remaining10%; no resets orautomaticresumeafterpause.
+v0.6.0rc1 tag1040fd2e3e4068d3f7dba77be37179299273aa41,
+peeled092715c11ed00b98255ae611fcef1bcfb8f1de9d.
