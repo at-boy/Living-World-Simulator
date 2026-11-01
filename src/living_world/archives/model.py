@@ -292,10 +292,19 @@ class AttemptConfig:
                     "model_digest",
                     "kind",
                     "model_file",
+                    "request_contract",
                 },
             )
             for key, value in provider.items():
-                if key == "kind":
+                if key == "request_contract":
+                    if (
+                        not isinstance(value, str)
+                        or value != "founders_empty_arguments_v1"
+                        or self.mode != "ollama"
+                        or self.scenario_key != "canonical_founders_v1"
+                    ):
+                        raise ArchiveFormatError("Noncanonical request contract.")
+                elif key == "kind":
                     if value not in ("ollama", "llama_cpp"):
                         raise ArchiveFormatError("Unknown provider kind.")
                 elif key == "model_file":

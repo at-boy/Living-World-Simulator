@@ -90,6 +90,9 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--driver", choices=["ollama", "llama.cpp"])
     run.add_argument("--model")
     run.add_argument("--model-file")
+    run.add_argument(
+        "--request-contract", choices=["legacy_v1", "founders_empty_arguments_v1"]
+    )
     for option in ("resume-attempt", "fork-attempt", "replay-attempt"):
         run.add_argument("--" + option)
     run.add_argument("--checkpoint", type=_non_negative_integer)
@@ -126,6 +129,9 @@ def build_parser() -> argparse.ArgumentParser:
     serve.add_argument("--driver", choices=["ollama", "llama.cpp"])
     serve.add_argument("--model")
     serve.add_argument("--model-file")
+    serve.add_argument(
+        "--request-contract", choices=["legacy_v1", "founders_empty_arguments_v1"]
+    )
     for option in ("resume-attempt", "fork-attempt"):
         serve.add_argument("--" + option)
     serve.add_argument("--archive-root", type=Path)

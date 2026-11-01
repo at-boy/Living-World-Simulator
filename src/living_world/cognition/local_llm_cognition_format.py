@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 from collections.abc import Mapping
+from copy import deepcopy
+from typing import Literal, cast
 
 from living_world.cognition.npc_cognition_client import (
     ActionOption,
@@ -77,6 +79,37 @@ RESPONSE_SCHEMA: dict[str, object] = {
     "required": ["spoken_text", "action_request"],
     "additionalProperties": False,
 }
+
+
+RequestContract = Literal["legacy_v1", "founders_empty_arguments_v1"]
+
+
+def request_contract_format(request_contract: str) -> tuple[str, dict[str, object]]:
+    """Select request constraints without changing untrusted response parsing."""
+    if not isinstance(request_contract, str):
+        raise TypeError("Request contract must be a string.")
+    if request_contract == "legacy_v1":
+        return SYSTEM_INSTRUCTIONS, RESPONSE_SCHEMA
+    if request_contract != "founders_empty_arguments_v1":
+        raise ValueError("Unknown request contract.")
+    schema = deepcopy(RESPONSE_SCHEMA)
+    properties = cast(dict[str, object], schema["properties"])
+    action = cast(dict[str, object], properties["action_request"])
+    fields = cast(dict[str, object], action["properties"])
+    fields["arguments"] = {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": False,
+    }
+    instructions = SYSTEM_INSTRUCTIONS.replace(
+        '"arguments": {"<argument name>": "<string value>"}', '"arguments": {}'
+    )
+    instructions += """
+
+Every offered action in this request accepts no named arguments.
+When proposing an action, arguments must be exactly {}. Put the chosen target
+only in target_label; never duplicate it in arguments."""
+    return instructions, schema
 
 
 def serialize_decision_request(

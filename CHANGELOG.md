@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add the reviewed opt-in founding-action request contract for both providers with unchanged legacy bytes, strict gateways and sealed replay.
+
 - Define an opt-in versioned founding-action request contract for both local providers, preserving legacy payloads and sealed replay.
 
 - Integrate the saved-call browser after repeated full, installed-package browser, restart and archive-preservation validation.
