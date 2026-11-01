@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Define the shared saved-call browser task, preserving protected evidence APIs and offline ownership boundaries.
+
 - Save the validated reader/API/offline-command handoff and remaining browser,
   export and model-contract work before the usage pause.
 

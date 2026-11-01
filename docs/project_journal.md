@@ -2114,3 +2114,13 @@ Pause at about22%five-hour remaining before the larger browser task; no reset or
 automaticresume. Browser/historical analysis, forensic/portableexport and versioned
 llama argument-contract/full acceptance remain. No task9f4 active. Current brief
 replaces detailed task discussion as recovery context; ignored evidence is retained.
+
+
+## 2026-11-01 — LN09f4 browser contract
+
+Owner resumed with99%five-hour remaining. Root read-only harness investigation supports
+separate public packaged shell/assets alongside unchanged authenticated evidence routes.
+Exact fourteen-path contract and saved prompt define stable paging, memory-only
+credentials, stale-response/download defenses, original timings and exact opaque bodies,
+actual Chrome/source-and-wheel acceptance. Existing owner edit preserved. No product
+change or new model calls at activation; implementation/review/gates follow.
