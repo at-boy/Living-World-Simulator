@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add a reviewed offline `analyze` command with shared credential-file custody,
+  loopback authentication, clean signal handling and no simulation owner.
+
 - Define a protected offline analysis command that reuses audited token-file custody
   and serves saved evidence without constructing a simulation owner.
 

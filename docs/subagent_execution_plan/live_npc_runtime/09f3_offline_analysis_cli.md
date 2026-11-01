@@ -1,6 +1,6 @@
 # LN09f3 — Offline protected analysis CLI
 
-Status: ACTIVE authorized prerequisite after reviewed LN09f2 integrationf6a0493. Use one bounded worker,
+Status: IMPLEMENTED/frozen and independently reviewed spec+qualityPASS/no substantivefindings; fresh root task gates PASS2736/10existing skips/allcompatibility/native/API-and-CLI-wheel checks. Featureintegration/repeatedgates pending. Use one bounded worker,
 independent spec/quality review and root task/merged gates. Goal: launch the inert
 saved-trace app through a supported loopback command while preserving existing run,
 serve and inspect behavior. Browser page and exports are subsequent tasks.
@@ -102,23 +102,23 @@ Never finalize an attempt or allocate a failed simulation for analysis-start fai
 
 ## Test cycle / acceptance
 
-- [ ] RED parser/analyzer/sharedpublic interfaces absent; meaningful failurefirst.
-- [ ] Parser actualconsole help/invalidports/unknownsimulationflags rejected; nonTTY
+- [x] RED parser/analyzer/sharedpublic interfaces absent; meaningful failurefirst.
+- [x] Parser actualconsole help/invalidports/unknownsimulationflags rejected; nonTTY
   missingtoken2 beforebind/no rootcreation; no enginefactory call; restoredhandlers.
-- [ ] Shared extraction keeps existing test_runtime_serve custody/lifecycle coverage
+- [x] Shared extraction keeps existing test_runtime_serve custody/lifecycle coverage
   passing. New tests directly cover publicclass aliasidentity and protectedcatalogroot,
   missingparent/existing/symlink/hardlink/overlap rejection and modified/replacedtoken
   preservation. Injection failures use owned fixtures, no realuser paths.
-- [ ] Actual childprocess/loopback over temp traced/legacy/no-checkpoint+failed headers:
+- [x] Actual childprocess/loopback over temp traced/legacy/no-checkpoint+failed headers:
   auth401, Origin403, offline status, discovery/pages/exactbody/no-store/POST405;
   oneSIGINT and oneSIGTERM terminate0, sourcebytes+mtimes/catalogIDs unchanged,
   no newattempt/lock/provider/model/world and no token/traceback in capturedlogs.
-- [ ] Missingcatalogroot startup/read/shutdown leaves it absent. Adapter spies forbid
+- [x] Missingcatalogroot startup/read/shutdown leaves it absent. Adapter spies forbid
   RuntimeService/RunController/preflight/reservation/lease/fullreader construction.
-- [ ] Fixed bind/serverimport/startup/HTTPthread/start/join/control/credentialwrite/
+- [x] Fixed bind/serverimport/startup/HTTPthread/start/join/control/credentialwrite/
   credentialcleanup failures; alwayscleanup/sanitizedcodes. Only actualpassed cleanup
   is claimed. Selected malformed source remains APIrowinvalid/fixederror, no programcrash.
-- [ ] Focused test_trace_analysis_cli +test_runtime_serve +test_trace_analysis_api,
+- [x] Focused test_trace_analysis_cli +test_runtime_serve +test_trace_analysis_api,
   scoped Ruff/Black/whitespace; own report commands/counts/warnings/boundaries thenfreeze.
 
 Focused commands use task24venv with PYTHONPATH=src: `python -m pytest -q

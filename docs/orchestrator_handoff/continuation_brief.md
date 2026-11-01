@@ -30,13 +30,19 @@ selectedbodyhash verification, stableprefixpaging and explicitfinitebudgets. Nar
 integrity NEVER certifiesworld/checkpoints/parentseals/unselectedbodycontent. No source
 migration/immutable/copy/permission workaround. Reviewed09f1report is canonicalhistory.
 
-LN09f2 integrationf6a0493 committed/pushed. LN09f3 exact task/prombt ACTIVE in
- docs/subagent_execution_plan/live_npc_runtime/09f3_offline_analysis_cli*.md,
-sevenworkerpaths: supportedanalyze command +shared auditedtokenfilecustody, no owner.
-Next create isolated .worktrees/live-npc-ln09f3 taskbranch from thiscontractcommit,
-onefreshworker+independentreviewer. Root retainsarchitecture/fullgates/VCS. W/helper
-analysis_cli_wheel_check.py is prepared/compiled ONLY until newcommand exists.
-New task+merged validation includes actualinstalledwheel CLI16requests/twosignals.
+LN09f2 integrationf6a0493 pushed. LN09f3 contractBASE5ef4741, taskcheckout
+.worktrees/live-npc-ln09f3 /codex/live-npc-ln09f3-analysis-cli has frozen7path
+implementation, freshindependentreview spec+qualityPASS/no findings,114focusedPASS.
+Originalworker/reviewer done; rootfresh taskgates session7042 prefixln09f3-task
+--analysis-api --analysis-cli COMPLETE2736/10existing skips485.37s, actualChrome/39examples/separate39/allcompatibility/
+native/newwheelAPI8request+CLI16request/twosignal checks PASS. Alljobs0; evidencein
+*-gate-status.json.
+Reviewed TASK source51e885acc211fec3de69ef5aaf6e9456ed7ab7d1eb8870d11a9598d5719e93ba/295files;
+featurebaseline remains03bfd203... untilmerge. NEXT commit/push,
+noff/nocommitfeaturemerge, repeatgates thencommit/push. Do not redispatch implementation.
+New installedwheelCLI smoke16requests/realSIGINT+SIGTERM/sourceunchanged/no newattempt
+PASS afterwheelbuild inrootgates. No commandline browserUI supplied yet, statusJSONonly.
+Currentusageheadroomlast38%; finish9f3ifpossible thencheckpoint beforelargeUItask.
 Later browsertraceUI, explicit historicalworldinspection in inertanalysisinstance,
 and forensic/portableexport remain unfinished. Existing inspect--attempt/liveoperator
 historicalworldviews alreadywork; do not confuse narrowtracevalidity withworldvalidity.
