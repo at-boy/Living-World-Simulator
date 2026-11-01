@@ -19,6 +19,7 @@ from living_world.api.auth import AdminSession
 from living_world.api.inspection import WorldInspector
 from living_world.api.inspection_routes import create_inspection_router
 from living_world.api.revision_source import RevisionSource, RevisionSourceError
+from living_world.api.trace_analysis import create_trace_analysis_router
 from living_world.archives import AttemptConfig
 from living_world.archives.catalog import (
     SETUP_CODES,
@@ -399,4 +400,5 @@ def create_operator_app(
     app.include_router(
         create_inspection_router(resolve), prefix="/live/checkpoints/{revision}"
     )
+    app.include_router(create_trace_analysis_router(catalog, auth=auth, mode="live"))
     return app

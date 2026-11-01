@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Integrate protected saved-call APIs and the runtime-free offline factory after
+  repeated full, browser, restart and actual installed-package API validation.
+
+- Add reviewed authenticated trace pages, exact body downloads, safe previews and an
+  offline app factory, with bounded catalog discovery and guarded JSON errors.
+
 - Define protected trace-analysis APIs and an inert offline app using bounded catalog
   discovery and the reviewed reader, with exact downloads and safe previews.
 
