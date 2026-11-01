@@ -25,8 +25,8 @@ supported; external WAL rejected before SQLite to preserve source. Schema inspec
 is bounded against oversized and shadowed metadata. No API/UI/export yet; full runtime
 validation unchanged. Protected API/offline factory LN09f2 implementation is independently reviewed after
 one serialization/row-isolation correction;161focusedPASS. Fresh root task2691/10existing skips/allcompatibility/native/newwheelAPI gates PASS;
-featureintegration/repeated gates now PASS2691/10existing skips/allchecks. OfflineCLI, browser
-traceUI and forensic/portableexport are subsequent requirements.
+featureintegration/repeated gates now PASS2691/10existing skips/allchecks. OfflineCLI LN09f3 exact contract is active; implementation/review/gates pending. Browser
+traceUI, combined offline historicalworld inspection and forensic/portableexport remain.
 Postintegration90ef1e2 native diagnostic:20realcalls/9archives across bothproviders,
 exacttrace/coldrestart/offlinereplay PASS; Ollama1acceptedwork, llama12nonnullworkproposals
 rejected for nonemptyarguments. Keep gatewaystrict. Before finalacceptance, isolate

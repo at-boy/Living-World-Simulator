@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Define a protected offline analysis command that reuses audited token-file custody
+  and serves saved evidence without constructing a simulation owner.
+
 - Integrate protected saved-call APIs and the runtime-free offline factory after
   repeated full, browser, restart and actual installed-package API validation.
 

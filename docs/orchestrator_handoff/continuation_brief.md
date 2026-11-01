@@ -1,4 +1,4 @@
-# Continuation brief — LN09f2 integrated; offline launch command next
+# Continuation brief — LN09f3 offline command active
 
 ## Current state and authorized next task
 
@@ -30,11 +30,13 @@ selectedbodyhash verification, stableprefixpaging and explicitfinitebudgets. Nar
 integrity NEVER certifiesworld/checkpoints/parentseals/unselectedbodycontent. No source
 migration/immutable/copy/permission workaround. Reviewed09f1report is canonicalhistory.
 
-NEXT: after9f2mergecommit/push activate exact9f3task/prombt from W/09f3_offline_analysis_cli-draft.md
-and matchingpromptdraft. Selfreview/preflighttableinledger; oneisolatedworker and
-independentreviewer. Supported analyze command +shared auditedtokenfilecustody,
-no runtimeowner; no UIclaim. W/analysis_cli_wheel_check.py prepared/compiled ONLY,
-notrun beforecommand exists. New fulltask/merged gates needed for newsource.
+LN09f2 integrationf6a0493 committed/pushed. LN09f3 exact task/prombt ACTIVE in
+ docs/subagent_execution_plan/live_npc_runtime/09f3_offline_analysis_cli*.md,
+sevenworkerpaths: supportedanalyze command +shared auditedtokenfilecustody, no owner.
+Next create isolated .worktrees/live-npc-ln09f3 taskbranch from thiscontractcommit,
+onefreshworker+independentreviewer. Root retainsarchitecture/fullgates/VCS. W/helper
+analysis_cli_wheel_check.py is prepared/compiled ONLY until newcommand exists.
+New task+merged validation includes actualinstalledwheel CLI16requests/twosignals.
 Later browsertraceUI, explicit historicalworldinspection in inertanalysisinstance,
 and forensic/portableexport remain unfinished. Existing inspect--attempt/liveoperator
 historicalworldviews alreadywork; do not confuse narrowtracevalidity withworldvalidity.

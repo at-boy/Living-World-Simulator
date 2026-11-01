@@ -2049,3 +2049,14 @@ sourcebytes+mtimes unchanged/no newattempt. Prefixln09f2-merged/session14852 all
 Reviewedsource03bfd2034a3da7b8a8636279fb820fc848c7a0c4868e4c19adac44a1da0e8adc unchanged,292files.
 Task COMPLETE, readyforfeaturemergecommit/push. Ownerpatchpreserved; alltaskbranches/
 worktrees retained. No main/milestone/tag change; no CLI/UI/export/fullLN09claim.
+
+
+## 2026-11-01 — LN09f3 offline-command contract
+
+LN09f2 integrationf6a0493 pushed after task+merged2691/10/allchecks. Root activates
+selfreviewed sevenpath9f3task/prombt from preparedCLI contract. Existing approved
+offlineanalysis requirement covers supportedanalyze command; no repeatedapproval.
+Preserve recorded/run/serve/inspect behavior, exactsharedcredential custody aliases,
+no runtimeowner/newattempt/provider/world. Parser bypasses legacy archivedvalidator
+for newcommand, bothsignals clean up ownedHTTP/token. Exactnewapp/statusendpoint,
+fixederrorprecedence and test/installedwheel gates incontract. No productcode yet.
