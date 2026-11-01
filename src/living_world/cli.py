@@ -10,6 +10,7 @@ from pathlib import Path
 from types import FrameType
 
 from living_world import __version__
+from living_world.api.analysis_serving import run_analysis
 from living_world.archives import (
     ArchiveError,
     ArchiveReservationError,
@@ -142,6 +143,12 @@ def build_parser() -> argparse.ArgumentParser:
     serve.add_argument("--start-running", action="store_true")
     serve.add_argument("--admin-token-file", type=Path)
     serve.add_argument("--port", type=_serve_port, default=8000)
+    analyze = subcommands.add_parser(
+        "analyze", help="Serve saved call evidence read-only without running a world."
+    )
+    analyze.add_argument("--archive-root", type=Path)
+    analyze.add_argument("--admin-token-file", type=Path)
+    analyze.add_argument("--port", type=_serve_port, default=8000)
     return parser
 
 
@@ -153,7 +160,11 @@ def main(
 ) -> int:
     parser = build_parser()
     arguments = parser.parse_args(argv)
-    archived = validate_archived_options(arguments, parser)
+    archived = (
+        False
+        if arguments.command == "analyze"
+        else validate_archived_options(arguments, parser)
+    )
     if archived and engine_factory is not SimulationEngine:
         return _error(
             INVALID_CONFIGURATION,
@@ -169,11 +180,13 @@ def main(
         if isinstance(control, SignalStopControl):
             for signum in (
                 (signal.SIGINT, signal.SIGTERM)
-                if arguments.command == "serve"
+                if arguments.command in {"serve", "analyze"}
                 else (signal.SIGINT,)
             ):
                 previous_handlers[signum] = signal.signal(signum, control.handle_signal)
         try:
+            if arguments.command == "analyze":
+                return run_analysis(arguments, control)
             if arguments.command == "serve":
                 return run_served(arguments, control)
             if archived and arguments.command == "inspect":

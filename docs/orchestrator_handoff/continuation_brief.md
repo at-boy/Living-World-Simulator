@@ -1,4 +1,4 @@
-# Continuation brief — LN09f3 offline command active
+# Continuation brief — LN09f3 complete; usage checkpoint
 
 ## Current state and authorized next task
 
@@ -30,13 +30,20 @@ selectedbodyhash verification, stableprefixpaging and explicitfinitebudgets. Nar
 integrity NEVER certifiesworld/checkpoints/parentseals/unselectedbodycontent. No source
 migration/immutable/copy/permission workaround. Reviewed09f1report is canonicalhistory.
 
-LN09f2 integrationf6a0493 committed/pushed. LN09f3 exact task/prombt ACTIVE in
- docs/subagent_execution_plan/live_npc_runtime/09f3_offline_analysis_cli*.md,
-sevenworkerpaths: supportedanalyze command +shared auditedtokenfilecustody, no owner.
-Next create isolated .worktrees/live-npc-ln09f3 taskbranch from thiscontractcommit,
-onefreshworker+independentreviewer. Root retainsarchitecture/fullgates/VCS. W/helper
-analysis_cli_wheel_check.py is prepared/compiled ONLY until newcommand exists.
-New task+merged validation includes actualinstalledwheel CLI16requests/twosignals.
+LN09f2 integrationf6a0493 pushed. LN09f3 task78d7a56 complete and preserved/pushed;
+featureintegrationcommit follows after repeated2736/10existing skips482.99s andallchecks.
+Root task2736/10 485.37s; both have actualChrome/39examples/separate39/exactcanonical26/
+CLI7/sourceServe4/wheel11+Serve4/native9archives30calls/APIwheel8/CLIwheel16requests,
+realSIGINT+SIGTERM0/sourceunchanged/no newattempt PASS. Source/tests/pyproject
+51e885acc211fec3de69ef5aaf6e9456ed7ab7d1eb8870d11a9598d5719e93ba/295files unchanged.
+Independentreview spec+qualityPASS/no findings,114focused/no warnings. Exact custody
+ASTs preserved after publicclassrename; oldrun_served lifecycleunchanged.
+Prefixesln09f3-task/session7042 andln09f3-merged/session99190 COMPLETE/alljobs0.
+No activeworkers/reviewers/modelservers/gates; no mergeclaimbeforefinalcommit/push.
+Usagepause next aftercheckpoint (last25%remaining), no resets/automaticresume.
+Newcommand serves authenticatedJSONstatus/API, not yet browsertraceUI. Nextrootmust
+activate exactUI/combinedhistoricalinspection contracts from savedrootseams beforecode;
+no task9f4 is active. Existing9f1/9f2/9f3 mustnotbe redispatched orrevalidatedwithoutchange.
 Later browsertraceUI, explicit historicalworldinspection in inertanalysisinstance,
 and forensic/portableexport remain unfinished. Existing inspect--attempt/liveoperator
 historicalworldviews alreadywork; do not confuse narrowtracevalidity withworldvalidity.

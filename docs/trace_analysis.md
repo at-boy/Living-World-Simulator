@@ -4,9 +4,8 @@ The existing privileged operator app mounts `/analysis`. Python callers can buil
 an inert standalone FastAPI app with `create_analysis_app(catalog, auth=auth)` from
 `living_world.api.trace_analysis`, passing a `RunCatalog` and the existing
 `AdminSession`. This factory owns no runtime, controller, model, provider, lease or
-attempt allocation. Serving/binding that app is the caller's responsibility; no
-new CLI or browser UI is supplied here. Use the existing loopback authentication
-and Origin policy. Raw evidence is privileged operator data, never NPC knowledge.
+attempt allocation. The supported `living-world analyze` command serves this app on IPv4 loopback.
+Use the existing loopback authentication and Origin policy. Raw evidence is privileged operator data, never NPC knowledge.
 
 All routes are GET-only and require `Authorization: Bearer <session token>`.
 If supplied, Origin must match the session Origin. Responses include
@@ -55,5 +54,35 @@ additionally verifies the selected exact body. These labels do not certify a
 complete world, lifecycle consistency, parent ancestry or model behavior. A
 corrupt unrelated body is outside selected-body hash verification. Concurrent
 filesystem changes can invalidate a request; this is not a sealed catalog
-snapshot. Offline CLI, browser trace UI and portable/forensic export remain
-separate work.
+snapshot. Browser trace UI and portable/forensic export remain separate work.
+
+Run saved-trace analysis with the server extra installed:
+
+```sh
+living-world analyze --archive-root /path/to/runs --port 8000 \
+  --admin-token-file /private/existing-directory/analysis-token
+```
+
+The default archive root is the existing RunCatalog state location; port 8000 is
+the default and port 0 selects an ephemeral port. The command binds only
+`127.0.0.1` and announces `analysis_url=http://127.0.0.1:PORT/analysis/status`
+after HTTP startup. This is an authenticated JSON endpoint, not a browser UI.
+Send the token as a Bearer authorization header, never in a URL. SIGINT and
+SIGTERM stop the owned HTTP service. No world, runtime owner, attempt reservation,
+provider preflight, model call or source repair occurs. An absent catalog remains
+absent through startup, reads and shutdown. Unsafe roots are rejected.
+
+The token file must be a new file in an existing safe directory outside the
+catalog and its ancestors. Existing files, links and source overlap are refused.
+The exclusive file has mode 0600 and is removed on shutdown only when its
+identity, permissions and bytes remain owned and unchanged. Modified, replaced
+or hardlinked files are preserved. Same-UID check/unlink races remain best effort.
+Without a token file, both stdout and stderr must be terminals; the token is then
+printed to stderr only. File mode never prints the token or source/token paths.
+
+Startup errors are fixed and sanitized: exit 2 `invalid_configuration` or
+`server_unavailable`, exit 4 `credential_file_failed`, and exit 5 `server_failed`
+or `service_failed`. The first primary failure is preserved. Otherwise HTTP,
+thread or socket cleanup failures take exit 5, and credential cleanup alone takes
+exit 4. Shutdown requests exit and waits up to 12 seconds for the HTTP thread;
+an uncooperative live Python thread cannot be forcibly terminated.

@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Integrate the offline analysis command after repeated full, browser, restart and
+  installed-package HTTP/signal checks, preserving source archives and task branches.
+
+- Add a reviewed offline `analyze` command with shared credential-file custody,
+  loopback authentication, clean signal handling and no simulation owner.
+
 - Define a protected offline analysis command that reuses audited token-file custody
   and serves saved evidence without constructing a simulation owner.
 
