@@ -116,6 +116,7 @@ def run_analysis(arguments: argparse.Namespace, control: StopControl) -> int:
                 stopping = True
             else:
                 print(f"analysis_url={origin}/analysis/status", flush=True)
+                print(f"analysis_browser_url={origin}/analysis", flush=True)
         while not stopping:
             if stopped():
                 stopping = True

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Integrate the saved-call browser after repeated full, installed-package browser, restart and archive-preservation validation.
+
+- Add a shared saved-LLM-call browser for live and offline administration, with exact body downloads, safe previews, stable paging and original inference timings.
+
 - Define the shared saved-call browser task, preserving protected evidence APIs and offline ownership boundaries.
 
 - Save the validated reader/API/offline-command handoff and remaining browser,
