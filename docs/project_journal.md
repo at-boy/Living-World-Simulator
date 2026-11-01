@@ -2167,3 +2167,15 @@ No newmodelcalls. Prefixln09f4-merged/session46718 alljobs0; reviewedsource
 addf3358ab37769b5a002d69ede8fa513f88c7688db7fbe567e020d9b57616d8/300files unchanged.
 Task COMPLETE, readyforfeaturemergecommit/push. Ownerpatch294b203... and allbranches/
 worktrees/archives preserved. No main/milestone/tag or fullLN09/nativegrammar claim.
+
+
+## 2026-11-01 — LN09g compatibility prerequisite contract
+
+LN09f4 delivery7d3f793 integratedd156743/pushed after repeated2815/10existing
+skips/allchecks. Root prioritizes known llama argument compatibility next to address
+the owner's both-provider functional requirement before remaining world/export work.
+Independent wiring investigation confirms config/factory/hash/source-replay seams
+carry explicit provider request selector without new driver/archive/trace format.
+Canonical legacy absence avoids setup raw-key comparison mismatch; CLI explicit
+legacy normalizes at ingress, raw explicitlegacy provider key rejects. Exact eleven
+path task/prombt precede code. No new modelcall or codechange at activation.
