@@ -1,51 +1,41 @@
-# Continuation brief — LN09f1 corrected task validated, usage pause
+# Continuation brief — LN09f1 integrated, protected API next
 
 ## Current state and next task
 
-Feature source remains af7b4af on codex/live-npc-runtime; this handoff-only checkpoint
-extends it. Only owner master-plan edit remains uncommitted there.
-Task checkout .worktrees/live-npc-ln09f1 / codex/live-npc-ln09f1-trace-reader,
-Corrected delivery9c65f3b committed/pushed; taskcheckout clean. Exact task/prombt amended before each fix.
-Initial independent review found two P1s: WAL sidecar source writes and oversized
-DESC-PK identity prefetch. Fixround1 resolved both. Root then reproduced unbounded
-schema-name/type prefetch (R3); fixround2 scalar queries left a shadow-table bypass.
-Original worker fixround3 explicitly invokes PRAGMA functions and returns intrinsic
-scalar flags; original independent astra spec/quality review PASS, cumulative three
-findings addressed, zero open. Focused104PASS, reviewer targeted14PASS.
-Four allowed worker paths preserved; full runtime validator/schema/writers unchanged.
+Owner resumed November1 with fresh99%five-hour allowance. Featurecodex/live-npc-runtime
+integrates reviewed task9c65f3b after featurecheckpoint33bf640; finalmergecommit follows.
+Taskbranch codex/live-npc-ln09f1-trace-reader and checkout .worktrees/live-npc-ln09f1
+preserved, clean/pushed. Only owner masterplan edit remains outside focused stagedwork.
 
-Current reviewed source/tests/pyproject SHA256:
-7eeb0344e913514b49b596dcc532ab5bbfcff7cc0bdd4cd77f335d7c4d716989.
-Fresh task gates session10879 COMPLETE, prefix ln09f1-fix3-task:
-make2651passed/10existing deliberate skips481.84s, actualChrome/39examples;
-separateexamples39, whitespace and reviewedsource equality PASS. Exactcanonical26/
-read-only unchanged/priorhashes/CLI7/sourceServe4/wheel11+actualServe4 PASS,
-41normalattempts retained. Reader9savednativearchives/30localcalls includingreused
-PASS exactbodySHA/length/stablepages and recursive sourcebytes+mtimes unchanged.
-No new inference/world in native reader checks. All gate subprocesses exited0.
-Earlier task2641/10 480.14s and aborted merged2641/10 479.27s belong to PRIOR source;
-those are historical, superseded for final approval. Old pending merge safely
-aborted; feature source remains af7b4af, no merge in progress, owner bytes/patch unchanged.
-Task delivery e2a5e6f is preserved historical commit; correction delivery follows it.
+LN09f1 COMPLETE: separate read-only trace pages/selected-body access. Originalindependent
+review/fixloop resolved three findings: WALsidecar sourcewrites, DESC-PK oversized
+identity prefetch, schema metadata/shadowobject prefetch. Originalworker round3 and
+scopedoriginalreview spec+qualityPASS,3addressed/0open;104focused/reviewer14PASS.
+Root taskmake2651/10existing skips481.84s; repeatedmergedmake2651/10 476.73s.
+Each has actualChrome/39examples, separateexamples39, exactcanonical26/read-only/
+priorhashes/CLI7/sourceServe4/wheel11+actualServe4/41normalattempts PASS. Savednative
+reader9archives/30localcalls includingreused PASS exactbodySHA/length/stablepages and
+recursive sourcebytes+mtimes unchanged. No newnative modelcalls. Alljobs exited0.
+Taskprefixln09f1-fix3-task; mergedprefixln09f1-fix3-merged/session62383 COMPLETE.
+Source/tests/pyproject SHA7eeb0344e913514b49b596dcc532ab5bbfcff7cc0bdd4cd77f335d7c4d716989 unchanged.
+Older2641gates are superseded historical evidence; do not redispatch completed tasks.
 
-USAGE PAUSE: corrected taskdelivery9c65f3b pushed/preserved; stop with headroom
-(last18%five-hour remaining), no resets/automaticresume. No active agents,
-model servers or fullgates. Featureintegration NOT complete. NEXT after ownerresume/
-currentusage+Gitcheck: merge latest task into feature with no-ff/no-commit, repeat
-full current-tree gates, then integrationcommit/push. Do not rerun completed task
-gates if reviewed source remains exact. Preserve all branches/worktrees/archive data.
-Root helper run_reader_gates.py retains commands/exits/sourcehash in unique prefix
-*-gate-status.json. Use fresh ln09f1-fix3-merged prefix for future repeatedgates.
+Next LN09f2 draft W/09f2_trace_api-draft.md and matching savedpromptdraft are prepared,
+selfreviewed and not yet active: bounded catalog discovery, shared authenticated API
+and inert offline FastAPI factory. Activate exacttask/prombt before isolatedworker.
+Then protected offlineCLI/browserUI and forensic/portableexport contracts stillneeded.
+Llama argument-contract compatibility and full LN09 acceptance remain incomplete.
+No implementation of those later requirements is claimed by the domainreader.
 
-LN09f1 is domain reader ONLY, not authenticated API/UI/export. Narrow integrity tags
-never certify world/checkpoint/lineage/unselected body validity. Normal product
-rollback journals supported; externally converted WAL rejected before SQLite connect.
-No immutable/migration/copy/permission workaround. Python allocation budgets cover
-schema/metadata/body transfer; not SQLite native parsing memory or constant-time scans.
-Next LN09f2 draft W/09f2_trace_api-draft.md is NOT active: bounded catalog discovery,
-shared authenticated API and inert offline factory, then CLI/UI and forensic/portable
-export. W denotes ignored .superpowers/sdd/2026-10-19-live-npc-runtime in FEATURE.
-Llama argument compatibility and full LN09 acceptance remain incomplete.
+Reader narrowintegrity verifies local prefixmetadata/referencedlengths and selected
+body bytes ONLY, neverworld/checkpoints/parentseals/unselectedbodycontent. Normal
+rollbackjournals supported; externalWAL rejected beforeSQLite toavoid sourcewrites.
+No migration/immutable/copy/permission workaround. Python transferbudget is not a
+SQLite native-parsing-memory or constant-time-pagination guarantee. Fullstore unchanged.
+
+W=.superpowers/sdd/2026-10-19-live-npc-runtime in FEATURE. Progressledger, reviewpackages,
+sourcehash/evidence and run_reader_gates.py preserved. Rootretains architecture/integration/
+finalvalidation. No main/milestone/tag action. Preserve everybranch/worktree/owneredit.
 
 LN09e delivery62ea35c/integration90ef1e2 andnativeevidence0fc88f9 completed/pushed,
 2547/10existing skips task+merged allcompatibilitygates PASS. Do notredispatchthem.

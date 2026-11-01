@@ -19,8 +19,8 @@ counts with unchanged reviewed source. Taskbranch62ea35c preserved/pushed.
 Then9f admin/offlineanalysis/export and real BOTHprovider acceptance.
 LN09f1 final reader correction is independently reviewed: three findings addressed,
 zero open,104focusedPASS. Fresh task2651/10existing skips/39examples and allcompatibility/
-nativearchive gates PASS. Earlier2641/10 counts belong to prior source. Featureintegration
-and repeated gates remain pending at usagepause. Product rollback journals
+nativearchive gates PASS. Earlier2641/10 counts belong to prior source. Featureintegration and repeated gates now PASS2651/10existing skips,39examples and
+allcompatibility/nativearchive checks (November1). Product rollback journals
 supported; external WAL rejected before SQLite to preserve source. Schema inspection
 is bounded against oversized and shadowed metadata. No API/UI/export yet; full runtime
 validation unchanged. Protected API/offline factory draft is not active implementation.

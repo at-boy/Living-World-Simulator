@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Integrate the reviewed trace reader after repeated full, browser, restart, packaged
+  serving and saved native-archive checks; preserve task branches and source files.
+
 - Harden trace analysis against oversized and shadowed schema metadata while
   preserving rollback archives, exact body verification and read-only source files.
 
