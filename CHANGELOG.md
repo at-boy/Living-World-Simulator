@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Define offline saved-world inspection alongside existing saved-call analysis, with explicit checkpoint selection and detached read-only views.
+
+
 - Integrate shared read-only archive safety after independent review and repeated full archive, browser and package validation.
 
 

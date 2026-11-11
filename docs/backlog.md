@@ -1,5 +1,8 @@
 
 
+LN09f5b offline historical-world viewer active after9f5a integration694eb00. Export/full both-provider behavioral acceptance remain pending; no final runtime acceptance claim.
+
+
 LN09f5a integrated after repeated2895/10existing skips/allchecks; shared per-connection read-only rollback guard complete. Next combined offline historical-world inspection; export and full both-provider behavioral acceptance remain.
 
 

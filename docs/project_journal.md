@@ -1,5 +1,10 @@
 # Living World Simulator – Project Journal
 
+## LN09f5b contract — November11,2026
+
+Activate selected-only historical inspection under approved live-runtime execution after9f5a integration694eb00. Ten worker paths; separate source/router, existing parent assets and shared inspector protocol. No owner probing/runtime construction/new schemas; exact source baseline0ef4c55c304 remains fully validated, so no redundant baseline suite. Root owns task/integration gates and installed-wheel actualChrome proof.
+
+
 ## LN09f5a integration — November11,2026
 
 Reviewed delivery f17dad9 integrated cleanly after6e5f96b. Independent review spec+quality PASS, no substantive findings. Repeated root `make` 2895 passed, 10 skipped in 678.57s (0:11:18); actualChrome/39examples, separateexamples39, whitespace and allcanonical26/priorhash/CLI7/Serve4/wheel14+Serve4/native9archives30calls/API8+actualChrome/CLI16+SIGINT/SIGTERM/custody/sourcepreservation checks PASS. Alljobs0 session87439/prefixln09f5a-merged. Reviewed304files/source0ef4c55c unchanged. Task COMPLETE. No new model calls or full runtime acceptance claim.
