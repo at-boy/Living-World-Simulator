@@ -42,8 +42,21 @@ with a default 10,000 entry budget. Only selected page headers are read, bounded
 to 1 MiB each. No recursion through attempt contents, world/checkpoint loading,
 provider preflight, owner lock probing, source repair or cache/index creation is
 performed. Symlinks and non-independent files fail closed. The trace reader has
-its own finite journal/body budgets and supports rollback-journal SQLite only;
-WAL/SHM sources are rejected to avoid coordination-file writes.
+its own finite journal/body budgets. The trace reader and full-store
+`AttemptArchive.open(..., read_only=True)` share a read-only SQLite precheck on
+every connection: only existing regular non-symlink files with a complete SQLite
+header declaring rollback read/write versions are accepted. External WAL-mode
+databases are rejected even without sidecars; existing or dangling WAL/SHM
+sidecars are also rejected before SQLite opens. Ordinary rollback `-journal`
+files remain supported, including an active product writer transaction. Full-store
+standalone references and hardlinks retain their existing support; trace analysis
+retains its stricter catalog/path checks.
+
+The precheck preserves source bytes and modification times for rejected sources;
+source access times are outside this claim. It is not a snapshot protected against
+hostile filesystem races and does not bound native SQLite parser memory. No
+migration, recovery or conversion is performed. Product rollback writers and
+the full store's default writable access retain their existing behavior.
 
 Errors use fixed codes: 400 `invalid_query`, 401 `unauthorized`, 403 `forbidden`,
 404 `not_found` for invalid/unknown/duplicate/unsafe attempt identity,

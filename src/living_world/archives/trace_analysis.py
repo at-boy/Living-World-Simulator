@@ -33,6 +33,7 @@ from living_world.archives.model import (
     text,
     validate_offered,
 )
+from living_world.archives.sqlite_readonly import require_rollback_database
 
 ResponseKind = Literal["response_validated", "response_failed", "response_reused"]
 
@@ -124,25 +125,7 @@ def _snapshot(ref: AttemptRef) -> Iterator[sqlite3.Connection]:
         if not directory.is_dir():
             raise ArchiveFormatError("Missing archive directory.")
         path = safe_path(directory / "archive.sqlite3", regular=True)
-        # WAL mode=ro can still create coordination files. Product archives use
-        # rollback journals; reject externally converted sources before SQLite.
-        with path.open("rb") as handle:
-            header = handle.read(100)
-        if (
-            len(header) != 100
-            or header[:16] != b"SQLite format 3\x00"
-            or header[18:20] != b"\x01\x01"
-            or any(
-                sidecar.exists() or sidecar.is_symlink()
-                for sidecar in (
-                    directory / "archive.sqlite3-wal",
-                    directory / "archive.sqlite3-shm",
-                )
-            )
-        ):
-            raise ArchiveFormatError(
-                "Trace analysis requires rollback-journal archives."
-            )
+        require_rollback_database(path)
         connection = sqlite3.connect(path.as_uri() + "?mode=ro", uri=True, timeout=1)
         connection.execute("PRAGMA query_only=ON")
         connection.execute("BEGIN")

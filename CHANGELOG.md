@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add reviewed shared read-only archive guards, rejecting external WAL and unsafe sources before SQLite opens while retaining product rollback writers.
+
+
 - Define the shared read-only archive safety prerequisite for offline historical-world inspection.
 
 

@@ -1112,10 +1112,11 @@ def test_fork_point_uses_one_snapshot_during_source_append(
     commit(archive)
     archive.append(request_entry())
     expected = archive.journal_boundary()
-    # WAL enables a real concurrent writer while the reader keeps its snapshot.
+    # Writable WAL handles support a concurrent writer during the snapshot;
+    # read-only archive access supports rollback journals only.
     with sqlite3.connect(archive.database_path) as connection:
         connection.execute("PRAGMA journal_mode=WAL")
-    reader = AttemptArchive.open(archive.ref, read_only=True)
+    reader = AttemptArchive.open(archive.ref)
     original = reader._validate
 
     def validate_then_append(connection: sqlite3.Connection) -> tuple[Checkpoint, ...]:
