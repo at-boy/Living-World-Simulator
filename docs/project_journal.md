@@ -1,5 +1,15 @@
 # Living World Simulator – Project Journal
 
+## LN09f5b integration — November11,2026
+
+Reviewed delivery9de8996 integrated cleanly afterc0a6c84. Independent spec+quality PASS/no substantive findings. Repeated rootmake2932passed/10existing deliberate skips701.78s; actualChrome/39examples, separateexamples39, whitespace and allcanonical26/priorhash/CLI7/Serve4/wheel14+Serve4/native9archives30calls/API8+Chrome/CLI16+SIGINT/SIGTERM/custody/sourcepreservation PASS. Added packaged historicalHTTP9+actualChrome nativeOllama revision0/tick1 and revision1/tick2 proof PASS, sourceinventory unchanged/no newattempt/no credentialpersistence. Alljobs0 session89860/prefixln09f5b-merged; reviewed308files/sourcec6d9bad1 unchanged. Task COMPLETE. No newmodelcall or fullnativebehavior acceptance claim.
+
+
+## LN09f5b delivery — November11,2026
+
+Independent review spec+quality PASS/NO SUBSTANTIVE FINDINGS. Root task gates70192/prefixln09f5b-task alljobs0: `make VENV=<task24venv>`2932passed/10existing deliberate skips701.62s, actualChrome/39examples; separateexamples39 and whitespacePASS. Canonical26/priorhashes/CLI7/sourceServe4/wheel14+Serve4/native-reader9archives30calls/installedwheelAPI8+Chrome exactdownload/CLI16+actualSIGINT/SIGTERM/custody/sourcepreservation allPASS. New installed-wheel historical HTTP9+actualChrome opened revision0/tick1 and revision1/tick2 of retained nativeOllamachild; exactlabels/sourcebytes+mtimes/inventory/no newattempt/no credentialpersistence PASS. Root visually inspected screenshot: savedcalls and embeddedhistoricalinspector readable, no layout defect found. Source308files/c6d9bad1a98a077b84487695c219302c9458f34de408df18e812b85e7231bd45 unchanged. Featureintegration/repeatedgates pending; no newmodelcall or fullruntimeacceptance claim.
+
+
 ## LN09f5b contract — November11,2026
 
 Activate selected-only historical inspection under approved live-runtime execution after9f5a integration694eb00. Ten worker paths; separate source/router, existing parent assets and shared inspector protocol. No owner probing/runtime construction/new schemas; exact source baseline0ef4c55c304 remains fully validated, so no redundant baseline suite. Root owns task/integration gates and installed-wheel actualChrome proof.

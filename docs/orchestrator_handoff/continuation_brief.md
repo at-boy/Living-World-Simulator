@@ -1,6 +1,6 @@
 # Continuation brief — November11 active execution
 
-Owner resumed approved live-runtime execution November11. LN09f5a read-only safety prerequisite COMPLETE after independent review/task+merged full gates. No active process remains from those gates. Feature checkout .worktrees/live-npc-runtime, branch codex/live-npc-runtime. Primary checkout has owner-untracked .serena/ and docs/research/, preserved. Never main/milestone/tag work under current authorization. Five-hour remaining floor10%; check quota and leave headroom.
+Owner resumed approved live-runtime execution November11. LN09f5a read-only safety and LN09f5b offline historical-world inspection COMPLETE after independent review/task+merged full gates. No active process remains from those gates. Next trace-evidence export is drafted but not yet activated. Feature checkout .worktrees/live-npc-runtime, branch codex/live-npc-runtime. Primary checkout has owner-untracked .serena/ and docs/research/, preserved. Never main/milestone/tag work under current authorization. Five-hour remaining floor10%; check quota and leave headroom.
 
 ## Completed checkpoints
 
@@ -33,9 +33,7 @@ NOT fulloriginalLN09acceptance. Earlier20nativecalls/9archives preserved.
 
 Existing approved execution continues without redundant approval, with root-owned
 architecture/contracts/VCS, bounded workers, independent review and root task+
-mergedgates. LN09f5a complete (deliveryf17dad9, featuremerge follows); allfullgates2895/10existing skips/39examples and compatibility/installedpackage/browser checks PASS; reviewed304files/source0ef4c55c6e1cdda4158012490de4272efbfb26b0c1a1f407861d745fed1543fa. Shared require_rollback_database guard checks every read-only fullstore/trace connection, productrollbackwriters retained, externalWAL rejected. Next activate exactLN09f5b from rootdraft, then remaining: combined inert historical-world
-inspection; forensic/portableexport; fullboth-provider baseline/disturbances/changed
-feedback/browsercontrols/installedPython3.11 acceptance and finalwholebranchreview.
+mergedgates. LN09f5a complete (deliveryf17dad9, featuremerge follows); allfullgates2895/10existing skips/39examples and compatibility/installedpackage/browser checks PASS; reviewed304files/source0ef4c55c6e1cdda4158012490de4272efbfb26b0c1a1f407861d745fed1543fa. Shared require_rollback_database guard checks every read-only fullstore/trace connection, productrollbackwriters retained, externalWAL rejected. LN09f5b complete (delivery9de8996; featuremerge follows), repeated2932/10existing skips/39examples/allchecks and packaged historicalHTTP9+actualChrome two nativecheckpoint proof PASS. Source308files/c6d9bad1a98a077b84487695c219302c9458f34de408df18e812b85e7231bd45 unchanged. Offline /analysis now permits explicit selected checkpoint inspection, new selected-only source/cache8, immutablehistoricalframes and unchanged trace/live/ordinaryinspection. Cached detachedviews deliberately survive later sourcechanges and are labeled. Next exactLN09f6a evidenceexport draft; portableworld closure/uncommittedforensics/fullboth-provider baseline/disturbances/changedfeedback/browsercontrols/installedPython3.11 acceptance and finalwholebranchreview remain.
 W/ln09f5-inspection-seams.md and ln09f5a-contract-draft.md describe world/read-only
 rollback concerns; draft is NOTactive. W/trace-export-seams.md retains exportseams.
 Future GPU/model/backend placementprofiles remain backlogonly.

@@ -11,6 +11,7 @@
   const boundaryOK = v => obj(v) && uint(v.sequence) && digest(v.digest);
   const show = v => v === null || v === undefined ? "unavailable" : typeof v === "object" ? JSON.stringify(v, null, 2) : String(v);
   let token = "", generation = 0, attemptsVersion = 0, callsVersion = 0, bodyVersion = 0;
+  let offline = false, worldVersion = 0, frame = null, frameReady = false;
   let attempt = null, selected = null, boundary = null, attemptCursor = null, callCursor = null;
   const pending = new Set(), urls = new Set();
   const stale = Symbol("stale");
@@ -23,6 +24,47 @@
   const revoke = () => { for (const url of urls) URL.revokeObjectURL(url); urls.clear(); };
   function abort(scope) {
     for (const job of pending) if (!scope || job.scope === scope) job.controller.abort();
+  }
+  function clearWorld() {
+    worldVersion++; abort("world");
+    if (frame) {
+      frame.contentWindow?.postMessage({type: "living-world-inspector-clear"}, window.origin);
+      frame.remove();
+    }
+    frame = null; frameReady = false;
+    $("world-preview").replaceChildren(); $("world-status").textContent = "";
+  }
+  window.addEventListener("message", event => {
+    if (!token || !offline || !frame || frameReady || event.origin !== window.origin ||
+        event.source !== frame.contentWindow || !obj(event.data) || Object.keys(event.data).length !== 1 ||
+        event.data.type !== "living-world-inspector-ready") return;
+    frameReady = true;
+    frame.contentWindow.postMessage({type: "living-world-inspector-connect", token}, window.origin);
+  });
+  async function inspectWorld() {
+    clearWorld();
+    if (!offline || !attempt || !token) return;
+    const raw = $("world-revision").value;
+    if (!/^[0-9]{1,20}$/.test(raw) || !uint(Number(raw))) {
+      $("world-status").textContent = "Enter a valid nonnegative checkpoint revision.";
+      return;
+    }
+    const revision = Number(raw), session = generation, version = worldVersion, id = attempt;
+    const valid = () => session === generation && version === worldVersion && id === attempt && !!token && offline;
+    $("world-status").textContent = "Loading saved checkpoint…";
+    try {
+      const html = await read("/archives/" + id + "/checkpoints/" + revision + "/inspector", "world", valid, "html");
+      if (!valid()) return;
+      const next = document.createElement("iframe"); next.title = "Saved World Inspector";
+      frame = next; frameReady = false;
+      $("world-preview").replaceChildren(next); next.srcdoc = html;
+      $("world-status").textContent = "Detached historical checkpoint · revision " + revision + ". Cached views are not revalidated against later file changes.";
+    } catch (error) {
+      if (error !== stale && valid()) {
+        clearWorld();
+        $("world-status").textContent = "Saved world checkpoint unavailable. Check the revision or choose another attempt.";
+      }
+    }
   }
   function clearBody() {
     bodyVersion++; abort("body"); revoke();
@@ -38,7 +80,7 @@
     $("calls").replaceChildren(); $("boundary").textContent = ""; $("more-calls").disabled = true;
   }
   function disconnect(message = "Disconnected.") {
-    generation++; attemptsVersion++; abort(); token = ""; attempt = null; attemptCursor = null;
+    generation++; attemptsVersion++; abort(); clearWorld(); offline = false; $("world-section").hidden = true; token = ""; attempt = null; attemptCursor = null;
     clearCalls(); $("attempts").replaceChildren(); $("attempt-status").textContent = "";
     $("selected-attempt").textContent = ""; $("mode").textContent = "";
     $("token").value = ""; $("session").hidden = true; $("call-panel").hidden = true;
@@ -47,7 +89,7 @@
   }
   // A guard belongs to a specific session AND operation. It is checked after
   // every asynchronous boundary, including before interpreting HTTP rejection.
-  async function read(path, scope, valid, binary = false) {
+  async function read(path, scope, valid, format = false) {
     if (!valid()) throw stale;
     const controller = new AbortController(), job = {controller, scope};
     pending.add(job);
@@ -64,7 +106,7 @@
         throw stale;
       }
       if (!response.ok) throw new Error(messages[response.status] || "Saved evidence could not be read.");
-      const value = binary ? await response.blob() : await response.json();
+      const value = format === "html" ? await response.text() : format ? await response.blob() : await response.json();
       if (!valid()) throw stale;
       return value;
     } catch (error) {
@@ -122,7 +164,7 @@
       if (attemptCursor === null) return;
       query += "&after_lineage_id=" + attemptCursor.lineage_id + "&after_attempt_id=" + attemptCursor.attempt_id;
     } else {
-      attempt = null; $("call-panel").hidden = true; $("selected-attempt").textContent = "";
+      clearWorld(); $("world-section").hidden = true; attempt = null; $("call-panel").hidden = true; $("selected-attempt").textContent = "";
       clearCalls(); $("attempts").replaceChildren(); attemptCursor = null;
     }
     $("more-attempts").disabled = true;
@@ -144,7 +186,7 @@
   }
   function selectAttempt(id) {
     if (!uuid(id) || !token) return;
-    attempt = id; clearCalls(); $("call-panel").hidden = false;
+    clearWorld(); $("world-section").hidden = !offline; attempt = id; clearCalls(); $("call-panel").hidden = false;
     $("selected-attempt").textContent = id; calls();
   }
   const boundaryQuery = b => "through_sequence=" + b.sequence + "&journal_digest=" + b.digest;
@@ -239,6 +281,7 @@
       const status = await read("/analysis/status", "login", valid);
       if (!valid()) return;
       if (!obj(status) || status.access !== "read_only" || !["live", "offline"].includes(status.mode)) malformed();
+      offline = status.mode === "offline";
       $("login").hidden = true; $("disconnect").hidden = false; $("session").hidden = false;
       $("mode").textContent = status.mode + " · read-only · saved evidence only";
       notice("Connected."); attempts();
@@ -247,11 +290,13 @@
   $("disconnect").addEventListener("click", () => disconnect());
   $("refresh-attempts").addEventListener("click", () => attempts());
   $("more-attempts").addEventListener("click", () => attempts(true));
-  $("refresh-calls").addEventListener("click", () => calls());
+  $("refresh-calls").addEventListener("click", () => { clearWorld(); calls(); });
   $("more-calls").addEventListener("click", () => calls(true));
   for (const side of ["request", "response"]) {
     $("preview-" + side).addEventListener("click", () => body(side, false));
     $("download-" + side).addEventListener("click", () => body(side, true));
   }
+  $("inspect-world").addEventListener("click", inspectWorld);
+  $("world-revision").addEventListener("input", clearWorld);
   window.addEventListener("pagehide", () => disconnect());
 })();

@@ -11,6 +11,7 @@ from fastapi import APIRouter, Depends, FastAPI, HTTPException, Request, Respons
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import RequestResponseEndpoint
 
+from living_world.api.analysis_inspection import create_analysis_inspection_router
 from living_world.api.auth import AdminSession
 from living_world.api.trace_browser import create_trace_browser_router
 from living_world.archives.catalog import RunCatalog
@@ -243,6 +244,7 @@ def create_analysis_app(catalog: RunCatalog, *, auth: AdminSession) -> FastAPI:
         response.headers["Cache-Control"] = "no-store"
         return response
 
+    app.include_router(create_analysis_inspection_router(catalog, auth=auth))
     app.include_router(create_trace_browser_router())
     app.include_router(create_trace_analysis_router(catalog, auth=auth, mode="offline"))
     return app

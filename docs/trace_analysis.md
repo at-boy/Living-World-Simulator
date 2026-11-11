@@ -14,7 +14,10 @@ If supplied, Origin must match the session Origin. Responses include
 `Cache-Control: no-store`; the standalone app exposes no docs/OpenAPI endpoints.
 There is no CORS policy granting other sites access.
 
-- `/analysis/status` reports live/offline mode, read-only access and capabilities.
+- `/analysis/status` reports live/offline mode, read-only access and call-evidence
+  capabilities. Its unchanged `world_validation: not_performed` describes the
+  `/analysis` call-evidence path, not explicit historical inspection in the
+  separate `/archives` namespace below.
 - `/analysis/attempts` lists shallow identities and reservation syntax status.
   `limit` defaults to 50 (maximum 100); use both `after_lineage_id` and
   `after_attempt_id` from `next_after` for another page. `listing: current` means
@@ -84,8 +87,10 @@ the default and port 0 selects an ephemeral port. The command binds only
 after HTTP startup, then `analysis_browser_url=http://127.0.0.1:PORT/analysis`.
 The original status URL remains an authenticated JSON endpoint.
 Send the token as a Bearer authorization header, never in a URL. SIGINT and
-SIGTERM stop the owned HTTP service. No world, runtime owner, attempt reservation,
-provider preflight, model call or source repair occurs. An absent catalog remains
+SIGTERM stop the owned HTTP service. Startup and trace browsing load no world.
+Only explicit historical checkpoint inspection reconstructs a detached world;
+no runtime owner, attempt reservation, provider preflight, model call or source
+repair occurs. An absent catalog remains
 absent through startup, reads and shutdown. Unsafe roots are rejected.
 
 The token file must be a new file in an existing safe directory outside the
@@ -137,6 +142,54 @@ This decoded preview is not exact binary evidence. Download request/response sav
 opaque original bytes as `inference-<validated body digest>.bin`; incomplete saved
 prefixes and observed empty bodies are downloadable. Missing bodies remain
 unavailable. No parsing, reserialization, inferred full response, generation rate,
-export or historical world inspection is provided. Browser controls use only the
-existing bounded API and do not broaden its integrity guarantees. Tokens are never
+or export is provided by the trace controls. Trace controls use only the bounded
+call-evidence API and do not broaden its integrity guarantees. Tokens are never
 put into URLs, browser storage, cookies, links or logs.
+
+
+In the offline analyzer, select an attempt and use **Saved world checkpoint**.
+Enter a nonnegative **Checkpoint revision** (default 0), then select **Inspect
+checkpoint**. Login, listing attempts and selecting calls never reconstruct a
+world. There is no latest-checkpoint discovery, checkpoint listing, polling or
+simulation control. The live Saved LLM Calls page hides this offline entry point;
+the existing operator inspector remains available through its ordinary UI.
+
+The explicit historical namespace supports authenticated GET
+`/archives/{attempt_id}/checkpoints/{revision}/inspector` and the existing
+`/world`, `/world/tick`, entity, event, cognitive and other inspector panel
+suffixes under the same checkpoint prefix. Only fixed `inspector.css` and
+`inspector.js` assets are public under `/inspector/assets/`. Authentication and
+Origin checks precede selection/storage reads. IDs must be canonical UUID4 hex;
+revision strings contain 1–20 ASCII decimal digits with value no greater than
+9007199254740991. Leading zeros canonicalize to the same checkpoint. Invalid,
+unknown, duplicate or unsafe identities and absent/unpublished/out-of-range worlds
+return 404 `not_found`. Selected invalid archives, retained inputs or failed
+reconstruction return sanitized 409 `archive_invalid` without source paths.
+Other attempts and saved call/body evidence remain independently usable.
+
+A cache miss resolves only the selected identity, validates its complete
+publication through the existing read-only archive/loader path and reconstructs
+that exact checkpoint. It does not enumerate full archive summaries or probe
+ownership locks. This is stronger selected-world validation than trace metadata
+inspection, but does not certify model behavior or imply ownership of a live
+simulation. The same read-only SQLite guard and source-integrity limits above
+apply: bytes and modification times remain unchanged; access times and hostile
+filesystem races are outside that guarantee.
+
+Each offline app serializes reconstruction and retains an eight-entry least
+recently used cache of detached historical inspectors. Every panel uses the same
+exact cached checkpoint. Failed misses neither insert nor evict valid views.
+Previously loaded views deliberately survive later source changes without
+revalidation until evicted or the app restarts. Opening the same revision is not
+a fresh source-integrity check, and restarting is necessary to discard all cached
+views immediately.
+
+The parent fetches protected inspector HTML and embeds it in a same-origin frame
+with an immutable historical prefix. Credentials remain in closure memory and
+cross to the current frame only after its exact ready-message handshake; they
+are never interpolated into HTML, URLs or storage. Changing attempt or revision,
+refreshing calls/attempts, disconnecting, login/authentication failure and leaving
+the page clear the frame. Obsolete HTML, ready messages and old authorization
+rejections cannot restore it or clear a newer session. Failed world selection
+clears its previous frame and shows a fixed error while preserving the selected
+call and body preview.
