@@ -1,5 +1,10 @@
 # Living World Simulator – Project Journal
 
+## LN09f5a contract — November11,2026
+
+Activate the bounded shared rollback-database guard prerequisite under approved live-runtime execution. Seven worker paths, independent review and root task/integration gates; source unchanged from reviewed ac9987f (302 files), so existing complete baseline is retained. No model or world acceptance claim.
+
+
 ## LN09b feature integration — October26,2026
 
 Reviewed deliverybb907a0 integrated cleanly after task2373/10existing skips427.57s

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Define the shared read-only archive safety prerequisite for offline historical-world inspection.
+
+
 - Integrate the versioned request contract after real Ollama and AMD llama.cpp actions, exact cold restart/replay and repeated full validation.
 
 - Add the reviewed opt-in founding-action request contract for both providers with unchanged legacy bytes, strict gateways and sealed replay.

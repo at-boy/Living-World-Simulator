@@ -1,4 +1,7 @@
 
+
+LN09f5a read-only archive guard is active as a prerequisite to combined offline historical-world inspection. Historical inspection, export and full both-provider acceptance remain pending.
+
 # Living World Simulator Backlog
 
 LN09a deterministic disturbances are independently reviewed and task-validated2311/10,
