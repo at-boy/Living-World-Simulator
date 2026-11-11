@@ -205,6 +205,10 @@ connect. Select an attempt to browse saved LLM calls or explicitly inspect a sav
 world checkpoint. This does not advance the simulation. See the
 [saved-trace analysis guide](docs/trace_analysis.md) for details.
 
+For bounded headless experiments with either backend, disturbances and exact
+restart/replay commands, see the [live experiment guide](docs/live_npc_runtime.md).
+For a model-free demonstration, run `PYTHONPATH=src python examples/040_live_npc_runtime.py`.
+
 ## Development
 
 Before committing changes, run:

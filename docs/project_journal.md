@@ -1,5 +1,20 @@
 # Living World Simulator – Project Journal
 
+## LN09h delivery — November12,2026
+
+Bounded manual helper/040/40acceptancecases/guide independently reviewed; two
+small contract gaps fixed and scoped re-review clean. Rootmake 3029/10
+existing skips/759.95s,40examples/separateexamples/whitespace and all13jobs
+PASS on frozen358source48215a24. Initialfullgate onepreexisting0.5secpreflight
+timeout preserved; isolated3cases+quietfullrerun PASS without sourcechanges.
+ActualcurrentwheelPython3.11 import/console/canonical26/Serve4/new040/export4 PASS
+(copyfallback warning only). Real48call sixcase matrix: bothbaseline/resource
+PASS, bothwork interruption UNMET becausemodelchose3laborjobwith2founders.
+Exactcoldworld/cursors/offlinereplay/sourcepreservation allPASS, plusbothactual
+Chromecontrols/coldchild8realcalls/nineinstalledsavedbrowsercases. Allownedmodels
+stopped. Rootnative report independently factchecked; no fullreadinessclaim.
+Featureintegration/repeatedgates pending.
+
 ## LN09f6a contract — November11,2026
 
 Activate bounded single-attempt trace evidence export after9f5b integration58c3611. Root chose canonical JSONL+opaque bodies in private deterministic ZIP over copying live databases or creating a new catalog. Six workerpaths, closed errors/exclusive publication, independent review and full task/integration gates plus both-native saved-trace package proof. Reviewed baselinec6d9bad1/308 unchanged and fully validated; no redundant baseline suite. Portable worldclosure and uncommitted spools are separate pending scope.

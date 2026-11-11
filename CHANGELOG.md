@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add the reviewed bounded native experiment helper, model-free example040 and operator guide, with both-provider restart/browser/replay evidence and explicitly unmet work-interruption gates.
+
 - Define the original live-runtime acceptance harness: bounded real-provider experiments, a model-free example and truthful restart/replay documentation.
 
 - Integrate exact saved-trace ZIP export after independent review and repeated full/package/browser validation, including installed Python 3.11 checks.
