@@ -1,5 +1,10 @@
 # Living World Simulator – Project Journal
 
+## LN09f6a contract — November11,2026
+
+Activate bounded single-attempt trace evidence export after9f5b integration58c3611. Root chose canonical JSONL+opaque bodies in private deterministic ZIP over copying live databases or creating a new catalog. Six workerpaths, closed errors/exclusive publication, independent review and full task/integration gates plus both-native saved-trace package proof. Reviewed baselinec6d9bad1/308 unchanged and fully validated; no redundant baseline suite. Portable worldclosure and uncommitted spools are separate pending scope.
+
+
 ## LN09f5b integration — November11,2026
 
 Reviewed delivery9de8996 integrated cleanly afterc0a6c84. Independent spec+quality PASS/no substantive findings. Repeated rootmake2932passed/10existing deliberate skips701.78s; actualChrome/39examples, separateexamples39, whitespace and allcanonical26/priorhash/CLI7/Serve4/wheel14+Serve4/native9archives30calls/API8+Chrome/CLI16+SIGINT/SIGTERM/custody/sourcepreservation PASS. Added packaged historicalHTTP9+actualChrome nativeOllama revision0/tick1 and revision1/tick2 proof PASS, sourceinventory unchanged/no newattempt/no credentialpersistence. Alljobs0 session89860/prefixln09f5b-merged; reviewed308files/sourcec6d9bad1 unchanged. Task COMPLETE. No newmodelcall or fullnativebehavior acceptance claim.

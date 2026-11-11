@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Define a private saved-call evidence ZIP export with exact metadata/bodies, finite limits, cancellation and exclusive output publication.
+
+
 - Integrate offline saved-world inspection after repeated full and packaged-browser validation with unchanged source archives.
 
 
