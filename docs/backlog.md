@@ -372,3 +372,7 @@ is active at pause; preserved source archives and old replay fingerprints remain
 Live-branch first-run README documented (November 11): install, both providers,
 browser controls, restart and offline analysis. This documentation does not close
 exporter correction review/full gates or broader both-provider acceptance.
+
+LN09f6a traceZIP reviewed and taskvalidated2989/10existing skips/all13gates and actualinstalledPython3.11 compatibility; featureintegration/repeatedgates pending. Portableworld closure/uncommittedforensics, fullboth-provider behavioral acceptance and finalwholebranchreview remain.
+
+LN09f6a exacttraceZIP COMPLETE after task+merged2989/10existing skips/all13checks and installedPython3.11 package proof. Next original native acceptance harness and six real-provider baseline/disturbance/control/restart/replay cases; portableworld closure/uncommittedforensics and finalwholebranchreview still pending.

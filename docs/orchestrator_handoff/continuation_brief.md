@@ -1,58 +1,78 @@
 # Continuation brief — November11 active execution
 
-Owner resumed approved live-runtime execution November11. LN09f5a read-only safety and LN09f5b offline historical-world inspection COMPLETE after independent review/task+merged full gates. No active process remains from those gates. Next trace-evidence export is drafted but not yet activated. Feature checkout .worktrees/live-npc-runtime, branch codex/live-npc-runtime. Primary checkout has owner-untracked .serena/ and docs/research/, preserved. Never main/milestone/tag work under current authorization. Five-hour remaining floor10%; check quota and leave headroom.
+Owner resumed approved live-runtime execution; quota reset November11. Feature
+checkout `.worktrees/live-npc-runtime`, branch `codex/live-npc-runtime`. Primary
+main checkout has owner-untracked `.serena/` and `docs/research/`, preserved.
+Never main/milestone/tag work under current authorization. Stop BEFORE five-hour
+remaining drops below10%, leaving headroom. Do not consume reset credits.
 
-## Completed checkpoints
+## Current completion
 
-- LN09f4 browser: delivery7d3f793/integrationd156743, preserved/pushed. Shared public
-  static shell plus unchanged authenticated evidence API, exact downloads/previews,
-  timings/backend/model/pending/legacy/incomplete/reused labels, safe paging/text/
-  stale-response guards. Task+merged2815/10existing skips/allchecksPASS.
-- LN09g requestcontract: delivery79b7220, featuremerge follows contract5a3b041.
-  IndependentreviewPASS/no findings. Task2872/10 718.03s, merged2872/10 720.22s;
-  actualChrome/39examples, separateexamples39, whitespace/allcompatibility checksPASS.
-  Canonical26/priorhash/read-only/CLI7/Serve4/wheel14+Serve4/native-reader9archives30calls/
-  installedwheelAPI8+Chrome/CLI16+actualSIGINT/SIGTERM/custody/sourcepreservationPASS.
-  Sessions85924task/98486merged COMPLETE, alljobs0. Source302files unchanged:
-  ac9987f39532b33e97ffc8425d52fb563e0a3f4bb852f7ee90b831b211d9306f.
+- LN09g requestcontract delivery79b7220/integrationcf0cfbb: explicit founders-only
+  founders_empty_arguments_v1, legacy omission unchanged. Historical November1
+  bounded native probes8realcalls/6archives/4replaypoints, one ordinary accepted
+  action each backend, exact metadata/bodies/timings/coldworld/cursors/replay.
+  Servers and owned processes stopped. NOT full original native acceptance.
+- LN09f5a shared read-only safety deliveryf17dad9/integration694eb00 complete.
+  Every readonly SQLite connection checks regular nonsymlink rollback header and
+  no WAL/SHM; product rollbackwriters retained. Repeated2895/10existing skips.
+- LN09f5b offline historical-world inspection delivery9de8996/integration58c3611
+  complete, repeated2932/10existing skips/allchecks, actual packaged Chrome two
+  saved native checkpoint proof. Selected-only resolver/cache8; detached cached
+  views deliberately survive later source changes and disclose that behavior.
+- README first-run guide597c57f committed/pushed by explicit owner approval.
+- LN09f6a exacttraceZIP delivery14b98c7 (taskbranch pushed/preserved), featuremerge
+  follows597c57f. Independent astra review P2 parserredaction fixed; fresh sol/high
+  scoped re-review PASS/no findings. Taskmake2989/10existing skips709.17s; merged
+  make2989/10existing skips706.90s, actualChrome/39examples and separateexamples/
+  whitespace PASS. All13 root compatibility/package/browser/export jobs PASS.
+  Exact canonical26/priorhashes, CLI7/Serve4/wheel14+Serve4, native-reader9archives
+  30calls, API8+Chrome, CLI16+signals, historicalHTTP9+Chrome2checkpoints, exact
+  ZIPCLI4 on native-saved Ollama/llama calls; source inventory unchanged.
+  Reviewed311files sourcea9695bb3f3a01c542598268359e33b0d9aaf3382acd90f2c8e6637c342dc8603.
+  Root sessions80576task/55698merged COMPLETE. InstalledPython3.11.2 actualwheel
+  import/console/canonicalmatrix/Serve4/exactexport4 passed (session54945). Missing
+  ensurepip/pip in311 environment avoided using existing uv offline localwheel;
+  no systeminstall/download. ZIP is local trace evidence, NOT portableworld/
+  ancestorclosure/uncommittedspool or fullnative acceptance.
 
-New opt-in `--request-contract founders_empty_arguments_v1`, canonicalfounders only.
-Legacy default/bytes/fingerprints/source-selected sealedreplay unchanged. No argument
-coercion/parser/gateway/domain/formatversion changes. Exacttask/prombt/reviewedreport
-09g_request_contract* govern completed scope; do not redispatch.
+Exact reviewed task reports are compressed canonical history; do not redispatch
+completed tasks. Native probe report live_npc_request_contract_probe_2026_11_01.md
+and preserved W artifacts hold detailed evidence. No model server running now.
 
-Native probes on committed79b7220:8realcalls/6archives/4offlinecheckpointcomparisons;
-both Ollama and AMD Vulkan0 llama.cpp executed one ordinary action. Allnonnullargs{},
-exact requests/responses/backend/model/timings/coldworld+cursors/offlinereplay evidence
-and sourcebytes+mtimes unchanged. Bothservers+6CLIprocesses exited0,portsfree. Both
-newnative archives also passed actualinstalledwheelChrome preview/exactdownload.
-See live_npc_request_contract_probe_2026_11_01.md. This is bounded compatibility,
-NOT fulloriginalLN09acceptance. Earlier20nativecalls/9archives preserved.
+## Next and boundaries
 
-## Current / remaining
-
-Existing approved execution continues without redundant approval, with root-owned
-architecture/contracts/VCS, bounded workers, independent review and root task+
-mergedgates. LN09f5a complete (deliveryf17dad9, featuremerge follows); allfullgates2895/10existing skips/39examples and compatibility/installedpackage/browser checks PASS; reviewed304files/source0ef4c55c6e1cdda4158012490de4272efbfb26b0c1a1f407861d745fed1543fa. Shared require_rollback_database guard checks every read-only fullstore/trace connection, productrollbackwriters retained, externalWAL rejected. LN09f5b complete (delivery9de8996; featuremerge follows), repeated2932/10existing skips/39examples/allchecks and packaged historicalHTTP9+actualChrome two nativecheckpoint proof PASS. Source308files/c6d9bad1a98a077b84487695c219302c9458f34de408df18e812b85e7231bd45 unchanged. Offline /analysis now permits explicit selected checkpoint inspection, new selected-only source/cache8, immutablehistoricalframes and unchanged trace/live/ordinaryinspection. Cached detachedviews deliberately survive later sourcechanges and are labeled. Next exactLN09f6a evidenceexport draft; portableworld closure/uncommittedforensics/fullboth-provider baseline/disturbances/changedfeedback/browsercontrols/installedPython3.11 acceptance and finalwholebranchreview remain.
-W/ln09f5-inspection-seams.md and ln09f5a-contract-draft.md describe world/read-only
-rollback concerns; draft is NOTactive. W/trace-export-seams.md retains exportseams.
-Future GPU/model/backend placementprofiles remain backlogonly.
+Root has NOTACTIVE draft `W/09h-native-harness-contract-draft.md`: original LN09
+model-free example040, bounded opt-in native disturbance/restart/replay helper,
+focused acceptance tests/guide, no production changes. Public seams investigated
+in W/native-acceptance-seams-2026-11-11.md. Root settles/commits exact task/prombt
+and preflight before worker dispatch; do not implement from draft. Ruling:
+prioritize original both-provider acceptance over more export transport because
+owner explicitly requires both backends/usable simulation. Portableworld closure,
+uncommittedforensics, full six-case native baseline/disturbance/control/restart/
+replay acceptance and final wholebranch review remain unfinished. No scope dropped.
+Owner reaffirms native model servers may be started for tests but MUST stop after
+use/failure; track owned PID/startidentity and stop only owned processes.
 
 RuntimeService solewriter; managers mutate/systems behavior/eventsimmutable. NPC
-contexts stayfiltered; no rawWorldState/internalIDs/hiddencognition/admintraces.
-LLMoutput remains untrusted through strictgateway; simulation owns truth/goals/stages.
+contexts remain filtered; no rawWorldState/internalIDs/hiddencognition/admintraces.
+LLMoutput remains untrusted ordinarygateway; engine owns truth/goals/stages.
 
-## Recovery
+## Recovery and preservation
 
-W=feature .superpowers/sdd/2026-10-19-live-npc-runtime; progress.md, reviews, hashes,
-all gate logs/nativearchives/processmetadata retained. run_reader_gates.py
---analysis-api --analysis-cli, unique prefixes, task24venv Python3.13.5; support>=3.11.
-SSH GIT_SSH_COMMAND='ssh -F /dev/null -o BatchMode=yes'. Preserve allworktrees/branches.
+W=feature `.superpowers/sdd/2026-10-19-live-npc-runtime`; progress.md and all reviews,
+sourcehashes/gatelogs/nativearchives/processmetadata preserved. Task24venv Python
+3.13.5 is validation runtime; installed311 venv at W/ln09f6a-python311. Gate helper
+run_export_gates.py --analysis-api --analysis-cli uses unique prefixes. Future040
+requires40example accounting and freeze including examples, not onlysrc/tests.
+SSH: GIT_SSH_COMMAND='ssh -F /dev/null -o BatchMode=yes'. Preserve all taskbranches/
+worktrees. Sourcecached views are not later sourcecertification.
 
 NEVER stage/restore/fix owner edit docs/superpowers/plans/2026-10-19-live-npc-runtime.md
-(`observasmall, clearly specified tasksble`), patchSHA:
+(`observasmall, clearly specified tasksble`), patchSHA
 294b20313ae2de248301fa20bbb4f9c312d51efa4851a434466f98a588dd93e6.
-Protectedrefs verified unchanged: main d8ea51797b5ca3bfefa37cd5f7bafc95cbee5899;
+Protected remote refs freshly verified November11:
+main d8ea51797b5ca3bfefa37cd5f7bafc95cbee5899;
 milestone/v0.6 6bf4c63637584584a8dfce009d2d1d79987be570;
-v0.6.0rc1 tag1040fd2e3e4068d3f7dba77be37179299273aa41,
+tagv0.6.0rc1 1040fd2e3e4068d3f7dba77be37179299273aa41,
 peeled092715c11ed00b98255ae611fcef1bcfb8f1de9d.

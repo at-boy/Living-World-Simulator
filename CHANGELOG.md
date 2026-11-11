@@ -2,7 +2,11 @@
 
 ## Unreleased
 
+- Integrate exact saved-trace ZIP export after independent review and repeated full/package/browser validation, including installed Python 3.11 checks.
+
 - Document exact live-branch installation, Ollama/AMD llama.cpp launch, browser controls, restart and offline analysis in the README.
+
+- Add reviewed bounded saved-trace ZIP export with exact metadata/bodies, deterministic verified output and safe exclusive publication.
 
 - Define a private saved-call evidence ZIP export with exact metadata/bodies, finite limits, cancellation and exclusive output publication.
 
