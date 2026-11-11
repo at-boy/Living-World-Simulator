@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add reviewed offline checkpoint inspection alongside saved calls, with exact detached views, protected frame credentials and stale-selection guards.
+
+
 - Define offline saved-world inspection alongside existing saved-call analysis, with explicit checkpoint selection and detached read-only views.
 
 
