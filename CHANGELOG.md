@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add reviewed bounded saved-trace ZIP export with exact metadata/bodies, deterministic verified output and safe exclusive publication.
+
 - Define a private saved-call evidence ZIP export with exact metadata/bodies, finite limits, cancellation and exclusive output publication.
 
 

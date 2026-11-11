@@ -17,6 +17,11 @@ from living_world.archives import (
     AttemptConfig,
     RunCatalog,
 )
+from living_world.archives.trace_export import (
+    TraceExportError,
+    TraceExportLimits,
+    export_trace_bundle,
+)
 from living_world.definitions.yaml_loader import YAMLWorldDefinitionLoader
 from living_world.founders import (
     FoundersConfigurationError,
@@ -76,8 +81,30 @@ class SignalStopControl:
         self.request_stop()
 
 
+class _CommandArgumentParser(argparse.ArgumentParser):
+    """Keep saved-evidence argument diagnostics inside its closed error contract."""
+
+    export_command: bool = False
+    _export_selected: bool = False
+
+    def parse_known_args(
+        self,
+        args: Sequence[str] | None = None,
+        namespace: argparse.Namespace | None = None,
+    ) -> tuple[argparse.Namespace, list[str]]:
+        self._export_selected = False
+        parsed, remaining = super().parse_known_args(args, namespace)
+        self._export_selected = getattr(parsed, "command", None) == "export-traces"
+        return parsed, remaining
+
+    def error(self, message: str) -> None:
+        if self.export_command or self._export_selected:
+            raise TraceExportError("export_invalid")
+        super().error(message)
+
+
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="living-world")
+    parser = _CommandArgumentParser(prog="living-world")
     subcommands = parser.add_subparsers(dest="command", required=True)
     run = subcommands.add_parser("run", help="Run or resume a world scenario.")
     run.add_argument("scenario", type=Path, nargs="?")
@@ -155,6 +182,15 @@ def build_parser() -> argparse.ArgumentParser:
     analyze.add_argument("--archive-root", type=Path)
     analyze.add_argument("--admin-token-file", type=Path)
     analyze.add_argument("--port", type=_serve_port, default=8000)
+    export = subcommands.add_parser(
+        "export-traces", help="Export saved trace evidence to a private ZIP."
+    )
+    export.export_command = True
+    export.add_argument("--archive-root", type=Path)
+    export.add_argument("--attempt-id", required=True)
+    export.add_argument("--output", type=Path, required=True)
+    export.add_argument("--max-calls", type=int, default=1000)
+    export.add_argument("--max-output-bytes", type=int, default=134217728)
     return parser
 
 
@@ -165,10 +201,13 @@ def main(
     engine_factory: Callable[[SQLiteRepository], SimulationEngine] = SimulationEngine,
 ) -> int:
     parser = build_parser()
-    arguments = parser.parse_args(argv)
+    try:
+        arguments = parser.parse_args(argv)
+    except TraceExportError as exc:
+        return _error(exc.exit_code, exc)
     archived = (
         False
-        if arguments.command == "analyze"
+        if arguments.command in {"analyze", "export-traces"}
         else validate_archived_options(arguments, parser)
     )
     if archived and engine_factory is not SimulationEngine:
@@ -186,11 +225,31 @@ def main(
         if isinstance(control, SignalStopControl):
             for signum in (
                 (signal.SIGINT, signal.SIGTERM)
-                if arguments.command in {"serve", "analyze"}
+                if arguments.command in {"serve", "analyze", "export-traces"}
                 else (signal.SIGINT,)
             ):
                 previous_handlers[signum] = signal.signal(signum, control.handle_signal)
         try:
+            if arguments.command == "export-traces":
+                try:
+                    catalog = RunCatalog(
+                        arguments.archive_root or RunCatalog.default_root()
+                    )
+                except (ArchiveError, OSError, ValueError, TypeError):
+                    raise TraceExportError("trace_unavailable") from None
+                result_export = export_trace_bundle(
+                    catalog,
+                    arguments.attempt_id,
+                    arguments.output,
+                    limits=TraceExportLimits(
+                        arguments.max_calls, arguments.max_output_bytes
+                    ),
+                    stop_requested=control.stop_requested,
+                )
+                print(
+                    f"trace_export=complete calls={result_export.call_count} bodies={result_export.body_count}"
+                )
+                return 0
             if arguments.command == "analyze":
                 return run_analysis(arguments, control)
             if arguments.command == "serve":
@@ -210,6 +269,8 @@ def main(
             )
             if result is None:
                 return 0
+        except TraceExportError as exc:
+            return _error(exc.exit_code, exc)
         except ServeCLIError as exc:
             return _error(exc.exit_code, exc)
         except RuntimeCLIError as exc:

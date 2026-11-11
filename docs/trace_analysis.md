@@ -193,3 +193,66 @@ the page clear the frame. Obsolete HTML, ready messages and old authorization
 rejections cannot restore it or clear a newer session. Failed world selection
 clears its previous frame and shows a fixed error while preserving the selected
 call and body preview.
+
+## Saved evidence ZIP
+
+Export one saved attempt without opening a world, starting a provider or acquiring
+an attempt lease:
+
+```console
+living-world export-traces --archive-root /path/to/runs --attempt-id UUID4HEX --output /path/to/evidence.zip
+```
+
+`--archive-root` defaults to the ordinary local catalog. The output parent must
+already exist. The destination must be new, outside the source catalog and free
+of symlinks or `..` traversal. Existing files, directories and links are never
+overwritten. The ZIP is private (0600), staged in its destination directory,
+verified, synchronized and published exclusively. No HTTP export route exists.
+
+Members are `calls.jsonl`, sorted `bodies/<sha256>.bin`, then `manifest.json`.
+Calls use canonical JSON in request order and retain every saved call field,
+including backend/model metadata, timestamps, zero and missing timings, reuse
+provenance, pending responses and incomplete body states. Bodies are deduplicated
+by their actual body digest and retain exact opaque bytes, including invalid
+UTF-8, NUL and observed empty bodies. Unavailable or legacy evidence stays absent.
+Nothing is parsed, redacted, repaired or synthesized from model output.
+
+The canonical manifest format is `living-world-trace-evidence-v1`. It records
+lineage/attempt identity, archive format, the captured journal sequence/digest,
+call/body counts, and sorted member names, byte lengths and SHA256 hashes.
+`manifest.json` does not hash itself. Fixed ZIP timestamps, permissions and stored
+compression make repeated exports of the same prefix byte-identical. ZIP CRCs
+and every member length/hash are independently checked before publication.
+
+Integrity scope is `local_trace_prefix_and_selected_bodies`. All pages and body
+reads use the first authenticated journal boundary, which is checked again
+before publication. Later ordinary appends are supported. This is not a global
+multi-file or hostile-race-proof snapshot. Source bytes and modification times
+remain unchanged; access times are outside this guarantee. The omitted list is
+`world_validation`, `ancestor_closure`, `uncommitted_spool`, `model_weights`,
+`session_credentials`: no world closure, uncommitted response spool, model weight
+files or current administrator credentials/session state are added. Archived
+model metadata and opaque evidence bytes remain exact. This ZIP is not a
+portable reopenable world catalog or proof of real-provider acceptance.
+
+`--max-calls` defaults to 1000 (range 1–10000); `--max-output-bytes` defaults to
+134217728 (range 1024–1073741824). Existing reader budgets still apply. Declared
+body sizes are checked against the remaining output budget before loading bytes;
+chunks, entries and the completed ZIP are checked too. Temporary ZIP headers and
+the bounded central directory may exceed the configured output cap during
+failure cleanup; no oversized final file is published.
+
+SIGINT and SIGTERM request cooperative cancellation between pages, bodies and
+chunks and before publication. Success exits 0 with
+`trace_export=complete calls=N bodies=N`. Closed errors contain no paths, body
+content or underlying diagnostics: `export_invalid` (2) covers invalid arguments
+or output preflight; `trace_unavailable` (4) covers missing, unsafe or corrupt
+selected sources; `export_limit_exceeded` (4) covers reader/export budgets;
+`export_cancelled` (130) covers cancellation; `export_failed` (4) covers output
+I/O, verification or exclusive-publication races. Before publication, failures
+leave no final file and attempt cleanup of owned temporary files. If cleanup is
+refused, the command reports failure and may leave the private temporary file.
+After successful publication, directory-sync or cleanup failures report
+`export_published_uncertain` (4) and preserve the complete published ZIP: crash
+durability or temporary cleanup is uncertain. Foreign replacement files are
+preserved, and existing final destinations are never removed.
