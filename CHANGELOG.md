@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Define the original live-runtime acceptance harness: bounded real-provider experiments, a model-free example and truthful restart/replay documentation.
+
 - Integrate exact saved-trace ZIP export after independent review and repeated full/package/browser validation, including installed Python 3.11 checks.
 
 - Document exact live-branch installation, Ollama/AMD llama.cpp launch, browser controls, restart and offline analysis in the README.

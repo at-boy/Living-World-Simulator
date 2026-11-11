@@ -376,3 +376,5 @@ exporter correction review/full gates or broader both-provider acceptance.
 LN09f6a traceZIP reviewed and taskvalidated2989/10existing skips/all13gates and actualinstalledPython3.11 compatibility; featureintegration/repeatedgates pending. Portableworld closure/uncommittedforensics, fullboth-provider behavioral acceptance and finalwholebranchreview remain.
 
 LN09f6a exacttraceZIP COMPLETE after task+merged2989/10existing skips/all13checks and installedPython3.11 package proof. Next original native acceptance harness and six real-provider baseline/disturbance/control/restart/replay cases; portableworld closure/uncommittedforensics and finalwholebranchreview still pending.
+
+LN09h bounded native experiment harness/model-free040/focusedacceptance/guide task active after exporter9b88122. Real both-provider baseline/disturbance/browsercontrol/coldrestart/offlinereplay acceptance remains root-owned and pending; portableworld/forensics/finalreview remain.

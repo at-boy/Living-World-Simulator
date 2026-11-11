@@ -2272,3 +2272,7 @@ Independent astra review P2 parser leakage corrected; fresh scoped sol review PA
 ## LN09f6a integration complete — November11
 
 Delivery14b98c7 integrated afterREADME597c57f; common-doc conflicts retained both records, no source changes. Repeatedmake2989/10existing skips706.90s/Chrome/39examples, separateexamples/whitespace and all13compatibility/package/native-saved export jobs PASS. Sourcea9695bb3/311 unchanged, prefixln09f6a-merged/session55698 completed. InstalledPython3.11 import/console/canonical/serve/export checks also PASS. No new inference/full native acceptance claim. Prioritize approved original both-provider acceptance harness next; portableworld/forensics and finalreview remain. Owner edits/branches/release refs preserved.
+
+## LN09h contract activation — November11
+
+Exporter integration9b88122 pushed, all repeated2989/10existing skips/all13gates passed. Original native acceptance prioritized over more export transport to match owner both-provider goal. Root defines five-path no-production-change helper/example040/test/guide/report task; public factory/service controls, fixed summary/exit semantics, finitecaps/cooperative cleanup, syntheticfixture explicitly not native acceptance. Sourcebaseline unchanged fromvalidateda9695bb3. Worker and later independentreview/fulltask+mergedgates required. Native models/servers and final acceptance remain root-owned; portable/forensics remainpending.

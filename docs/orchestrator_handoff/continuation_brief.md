@@ -42,11 +42,10 @@ and preserved W artifacts hold detailed evidence. No model server running now.
 
 ## Next and boundaries
 
-Root has NOTACTIVE draft `W/09h-native-harness-contract-draft.md`: original LN09
+LN09h exact task/prombt `09h_native_acceptance_harness*` is active after9b88122: original LN09
 model-free example040, bounded opt-in native disturbance/restart/replay helper,
 focused acceptance tests/guide, no production changes. Public seams investigated
-in W/native-acceptance-seams-2026-11-11.md. Root settles/commits exact task/prombt
-and preflight before worker dispatch; do not implement from draft. Ruling:
+in W/native-acceptance-seams-2026-11-11.md. Root committed exact task/prombt and preflight before worker dispatch; the W draft is historical, not authority. Ruling:
 prioritize original both-provider acceptance over more export transport because
 owner explicitly requires both backends/usable simulation. Portableworld closure,
 uncommittedforensics, full six-case native baseline/disturbance/control/restart/
