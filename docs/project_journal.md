@@ -2253,3 +2253,14 @@ Newnative8calls/6archives/4replaypoints/acceptedactioneach and bothnewnative
 installedwheelChrome preview/exactdownload/sourceunchanged PASS. LN09g COMPLETE.
 Pause now13%remaining, no newtask/no reset. Owneredit/branches/release refs preserved.
 FulloriginalLN09acceptance, combinedworldanalysis/export remain.
+
+## Live-branch first-run README — November 11, 2026
+
+Owner requested and authorized committing/pushing a precise first-run guide on
+`codex/live-npc-runtime`. README now covers branch checkout and server-extra
+installation, both tested backend configurations, founders request contract,
+private token/archive paths, browser controls, durable restart/fork and offline
+analysis. Four CLI examples parse; archived option validation passes with a valid
+example attempt ID; local links and whitespace checked. Documentation only: no
+model server launched, runtime code changed or full-suite result claimed. Exporter
+correction review/full gates remain pending; unrelated local edits preserved.

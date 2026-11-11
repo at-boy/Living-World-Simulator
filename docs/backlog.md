@@ -368,3 +368,7 @@ are integrated and validated. Next exact contracts must address browser trace vi
 combined inert historical-world inspection, forensic/portable export and the isolated
 versioned llama argument contract plus final both-backend acceptance. No later task
 is active at pause; preserved source archives and old replay fingerprints remain binding.
+
+Live-branch first-run README documented (November 11): install, both providers,
+browser controls, restart and offline analysis. This documentation does not close
+exporter correction review/full gates or broader both-provider acceptance.

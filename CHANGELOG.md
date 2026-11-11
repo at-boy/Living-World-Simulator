@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Document exact live-branch installation, Ollama/AMD llama.cpp launch, browser controls, restart and offline analysis in the README.
+
 - Define a private saved-call evidence ZIP export with exact metadata/bodies, finite limits, cancellation and exclusive output publication.
 
 
