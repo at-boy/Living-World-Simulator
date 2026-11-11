@@ -1,11 +1,8 @@
-# Continuation brief — November1 usage pause
+# Continuation brief — November11 active execution
 
-Pause at13%five-hour remaining; no reset, no automaticresume. Check currentusage/Git
-before continuing. No active task, merge, server or gate remains after checkpoint.
-Primarycheckout stays cleanmain; feature `.worktrees/live-npc-runtime` on
-`codex/live-npc-runtime`. Never main/milestone/tag work under currentauthorization.
+Owner resumed approved live-runtime execution November11. LN09f5a read-only safety prerequisite COMPLETE after independent review/task+merged full gates. No active process remains from those gates. Feature checkout .worktrees/live-npc-runtime, branch codex/live-npc-runtime. Primary checkout has owner-untracked .serena/ and docs/research/, preserved. Never main/milestone/tag work under current authorization. Five-hour remaining floor10%; check quota and leave headroom.
 
-## Completed this resume
+## Completed checkpoints
 
 - LN09f4 browser: delivery7d3f793/integrationd156743, preserved/pushed. Shared public
   static shell plus unchanged authenticated evidence API, exact downloads/previews,
@@ -32,11 +29,11 @@ newnative archives also passed actualinstalledwheelChrome preview/exactdownload.
 See live_npc_request_contract_probe_2026_11_01.md. This is bounded compatibility,
 NOT fulloriginalLN09acceptance. Earlier20nativecalls/9archives preserved.
 
-## Remaining / next resume
+## Current / remaining
 
 Existing approved execution continues without redundant approval, with root-owned
 architecture/contracts/VCS, bounded workers, independent review and root task+
-mergedgates. No nexttask activated. Remaining: combined inert historical-world
+mergedgates. LN09f5a complete (deliveryf17dad9, featuremerge follows); allfullgates2895/10existing skips/39examples and compatibility/installedpackage/browser checks PASS; reviewed304files/source0ef4c55c6e1cdda4158012490de4272efbfb26b0c1a1f407861d745fed1543fa. Shared require_rollback_database guard checks every read-only fullstore/trace connection, productrollbackwriters retained, externalWAL rejected. Next activate exactLN09f5b from rootdraft, then remaining: combined inert historical-world
 inspection; forensic/portableexport; fullboth-provider baseline/disturbances/changed
 feedback/browsercontrols/installedPython3.11 acceptance and finalwholebranchreview.
 W/ln09f5-inspection-seams.md and ln09f5a-contract-draft.md describe world/read-only

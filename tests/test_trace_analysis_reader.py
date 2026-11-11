@@ -816,7 +816,7 @@ def test_unsupported_journal_modes_reject_before_sqlite_open(
     ):
         with pytest.raises(
             ArchiveFormatError,
-            match=r"^Trace analysis requires rollback-journal archives\.$",
+            match=r"^Read-only access requires rollback-journal archives\.$",
         ):
             operation()
         assert snapshot(tmp_path) == before

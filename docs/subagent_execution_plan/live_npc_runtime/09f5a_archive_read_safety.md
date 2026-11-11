@@ -26,11 +26,12 @@
 
 ## Task 1: Shared read-only guard
 
-**Worker allowed files (seven; no others):**
+**Worker allowed files (eight; no others):**
 - Create `src/living_world/archives/sqlite_readonly.py`.
 - Modify `src/living_world/archives/store.py`: import and read-only `_connect` guard only.
 - Modify `src/living_world/archives/trace_analysis.py`: import and `_snapshot` guard extraction only.
 - Create `tests/test_archive_read_safety.py`.
+- Modify `tests/test_run_archive_store.py`: only `test_fork_point_uses_one_snapshot_during_source_append`, use the default writable reader handle for its deliberately external WAL snapshot test; retain all concurrent append and exact checkpoint/boundary assertions. Explain this is generic snapshot behavior on writable WAL, not supported read-only WAL.
 - Modify `tests/test_trace_analysis_reader.py`: only expected guard message in `test_unsupported_journal_modes_reject_before_sqlite_open`.
 - Modify `docs/trace_analysis.md`: document shared full-store read-only scope and limits.
 - Create `docs/subagent_execution_plan/live_npc_runtime/09f5a_archive_read_safety-report.md`.
@@ -43,12 +44,14 @@
 - `_snapshot`: replace duplicate header/sidecar checks with helper, retaining validate_ref/safe_path regular+singlelink, mode=ro, query_only, timeout, transaction and cleanup semantics.
 - Existing path-validation messages can remain; the shared guard's own failures use the fixed message above.
 
-- [ ] Write meaningful failing tests against actual AttemptArchive.open(read_only=True): real external WAL without sidecars; WAL/SHM present/dangling; invalid headers; missing/nonregular/symlink paths. A connect spy proves rejection before native SQLite; byte/mtime inventory proves preservation. Run RED before implementation.
-- [ ] Implement helper and two narrow integrations; update the existing trace assertion's message only.
-- [ ] Test an already opened read-only handle rejects newly added sidecar or subsequent WAL conversion. Verify normal full-store checkpoint/load/latest and trace reads, standalone refs and hardlink behavior retained, default writer creation remains usable. Include an actual rollback writer with a live journal and successful subsequent commit/read; avoid timing-only concurrency tests.
-- [ ] Run focused suite with task24 Python: `PYTHONPATH=src <venv>/bin/python -m pytest -q tests/test_archive_read_safety.py tests/test_run_archive_store.py tests/test_trace_analysis_reader.py tests/test_runtime_revision_source.py`. Run scoped style and whitespace.
-- [ ] Document scope honestly: supports product rollback databases, rejects external WAL; precheck is not a hostile filesystem race-proof snapshot and does not bound native SQLite parser memory. Source atime is not part of the preservation claim.
-- [ ] Self-review and write own report: RED/GREEN commands, counts, meaningful failures/warnings, files and limitations; freeze for independent review. No successful output dumps.
-- [ ] Root independent review, then full task gates (`make`, separate `make examples`, whitespace and existing compatibility/installed-wheel/browser gates). Root commits delivery only after passing; no-ff feature integration and repeated full gates before feature push.
+- [x] Write meaningful failing tests against actual AttemptArchive.open(read_only=True): real external WAL without sidecars; WAL/SHM present/dangling; invalid headers; missing/nonregular/symlink paths. A connect spy proves rejection before native SQLite; byte/mtime inventory proves preservation. Run RED before implementation.
+- [x] Implement helper and two narrow integrations; update the existing trace assertion's message only.
+- [x] Test an already opened read-only handle rejects newly added sidecar or subsequent WAL conversion. Verify normal full-store checkpoint/load/latest and trace reads, standalone refs and hardlink behavior retained, default writer creation remains usable. Include an actual rollback writer with a live journal and successful subsequent commit/read; avoid timing-only concurrency tests.
+- [x] Run focused suite with task24 Python: `PYTHONPATH=src <venv>/bin/python -m pytest -q tests/test_archive_read_safety.py tests/test_run_archive_store.py tests/test_trace_analysis_reader.py tests/test_runtime_revision_source.py`. Run scoped style and whitespace.
+- [x] Document scope honestly: supports product rollback databases, rejects external WAL; precheck is not a hostile filesystem race-proof snapshot and does not bound native SQLite parser memory. Source atime is not part of the preservation claim.
+- [x] Self-review and write own report: RED/GREEN commands, counts, meaningful failures/warnings, files and limitations; freeze for independent review. No successful output dumps.
+- [x] Root independent review, then full task gates (`make`, separate `make examples`, whitespace and existing compatibility/installed-wheel/browser gates). Root commits delivery only after passing; no-ff feature integration and repeated full gates before feature push.
 
 Root preflight: the helper consumes only Path, avoiding trace-reader catalog/singlelink assumptions in the full store. Shared fixed error requires one narrowly allowed existing-test assertion update. No other conflict found; all five review inputs map to tests above. This is a prerequisite within existing approved execution, not activation of a new milestone.
+
+Root boundary amendment November11: existing full-store snapshot test deliberately converts to WAL. Retain its substantive concurrent append/single-snapshot regression using `AttemptArchive.open(archive.ref)` (writable default). New read-only rejection and normal rollback concurrency tests stay in the new safety suite. No production behavior expansion. Eight worker paths.

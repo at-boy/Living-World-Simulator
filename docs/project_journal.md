@@ -1,5 +1,15 @@
 # Living World Simulator – Project Journal
 
+## LN09f5a integration — November11,2026
+
+Reviewed delivery f17dad9 integrated cleanly after6e5f96b. Independent review spec+quality PASS, no substantive findings. Repeated root `make` 2895 passed, 10 skipped in 678.57s (0:11:18); actualChrome/39examples, separateexamples39, whitespace and allcanonical26/priorhash/CLI7/Serve4/wheel14+Serve4/native9archives30calls/API8+actualChrome/CLI16+SIGINT/SIGTERM/custody/sourcepreservation checks PASS. Alljobs0 session87439/prefixln09f5a-merged. Reviewed304files/source0ef4c55c unchanged. Task COMPLETE. No new model calls or full runtime acceptance claim.
+
+
+## LN09f5a delivery — November11,2026
+
+Independent review: spec compliance PASS, quality PASS, NO SUBSTANTIVE FINDINGS. Root task gate session98204/prefixln09f5a-task all jobs0. `make VENV=<task24venv>` PASS2895/10 existing intentional skips in679.32s, including actualChrome and39examples; separate `make examples`39 and `git diff --check` PASS. Canonical26/priorhashes/read-only/CLI7/sourceServe4/wheel14+Serve4/native-reader9archives30calls/installedwheelAPI8+Chrome exactdownload/CLI16+SIGINT+SIGTERM/custody/sourcebytes+mtimes checks PASS. Reviewed304files/source0ef4c55c6e1cdda4158012490de4272efbfb26b0c1a1f407861d745fed1543fa unchanged before/after gates. No new model calls or full runtime acceptance claim. Feature integration/repeated gates remain pending.
+
+
 ## LN09f5a contract — November11,2026
 
 Activate the bounded shared rollback-database guard prerequisite under approved live-runtime execution. Seven worker paths, independent review and root task/integration gates; source unchanged from reviewed ac9987f (302 files), so existing complete baseline is retained. No model or world acceptance claim.

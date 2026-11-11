@@ -40,6 +40,7 @@ from living_world.archives.model import (
     text,
     validate_offered,
 )
+from living_world.archives.sqlite_readonly import require_rollback_database
 from living_world.repositories.world_snapshot import (
     WorldSnapshot,
     decode_world,
@@ -211,6 +212,8 @@ class AttemptArchive:
         if write and (self._read_only or self._owner != threading.get_ident()):
             raise ArchiveError("Archive writer ownership violation.")
         _path(self.ref)
+        if self._read_only:
+            require_rollback_database(self.database_path)
         connection: sqlite3.Connection | None = None
         try:
             mode = "ro" if self._read_only else "rw"
