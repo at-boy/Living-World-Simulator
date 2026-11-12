@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Record future worldbuilding ideas covering expandable maps, generational history, lore imports and a browser editor, separately from current release scope.
+
 - Integrate the validated native experiment helper and 40th example after repeated full checks, preserving honest unmet work-interruption evidence for both backends.
 
 - Add the reviewed bounded native experiment helper, model-free example040 and operator guide, with both-provider restart/browser/replay evidence and explicitly unmet work-interruption gates.

@@ -1,5 +1,15 @@
 # Living World Simulator – Project Journal
 
+## Future vision recorded — November 12, 2026
+
+At the owner’s request, preserve the discussion of multiple settings, expandable
+world maps, generations and family trees, historical navigation, imported canon
+and individual knowledge, and browser authoring. The vision note distinguishes
+owner wishes from unresolved assistant suggestions. Linked from backlog and
+continuation brief; future scope requires separate approval. Current development
+and release gates remain unchanged. Documentation links and whitespace checked;
+validated runtime source remains unchanged.
+
 ## LN09h integration — November12,2026
 
 Deliveryde0552e integrated cleanly aftere8bb265; taskbranch/worktree preserved.

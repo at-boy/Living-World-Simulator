@@ -93,3 +93,11 @@ milestone/v0.6 6bf4c63637584584a8dfce009d2d1d79987be570;
 tagv0.6.0rc1 1040fd2e3e4068d3f7dba77be37179299273aa41,
 peeled092715c11ed00b98255ae611fcef1bcfb8f1de9d.
 Never merge/push currentwork to main/milestone/tag under thisscope.
+
+## Owner-requested future ideas — November12
+
+The owner asked to preserve the later worldbuilding/generational discussion in
+[future_worldbuilding_vision.md](../future_worldbuilding_vision.md), linked from backlog.
+This is an ideas record, not implementation authorization or a current release gate.
+Resume the existing development path later. The owner separately authorized committing
+and pushing this documentation. Preserve the existing owner plan edit.

@@ -388,3 +388,12 @@ LN09f6a traceZIP reviewed and taskvalidated2989/10existing skips/all13gates and 
 LN09f6a exacttraceZIP COMPLETE after task+merged2989/10existing skips/all13checks and installedPython3.11 package proof. Next original native acceptance harness and six real-provider baseline/disturbance/control/restart/replay cases; portableworld closure/uncommittedforensics and finalwholebranchreview still pending.
 
 LN09h bounded native experiment harness/model-free040/focusedacceptance/guide task active after exporter9b88122. Real both-provider baseline/disturbance/browsercontrol/coldrestart/offlinereplay acceptance remains root-owned and pending; portableworld/forensics/finalreview remain.
+
+
+## Future worldbuilding and generational simulation vision
+
+See [the November 12 future-vision note](future_worldbuilding_vision.md): multiple
+settings, expandable maps, forward continuation of imported lore, individual knowledge,
+generations/family trees, historical navigation and a browser authoring editor.
+Ideas for later scope/design approval; not added to the current development path
+or current release gates.
