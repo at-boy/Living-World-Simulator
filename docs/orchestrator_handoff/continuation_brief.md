@@ -1,11 +1,35 @@
-# Continuation brief — November12 safe task boundary
+# Continuation brief — November 12, live trade fix integrated
 
 Feature checkout `.worktrees/live-npc-runtime`, branch `codex/live-npc-runtime`.
-LN09h deliveryde0552e integrated by current merge; taskbranch
+LN09h deliveryde0552e integrated by e454722; taskbranch
 `codex/live-npc-ln09h-native-acceptance` pushed and preserved, clean checkout
 `.worktrees/live-npc-ln09h`. Original live-runtime design/plan execution remains
 authorized. Stop BEFORE five-hour remaining falls below10%, with review/fix
 headroom; no resetcredits. Root owns architecture/task transitions/integration.
+
+## Latest task: live trade vocabulary
+
+LN09i delivery `073f7aa`, integrated by this merge; preserved task branch
+`codex/live-npc-ln09i-dispatch` and worktree `.worktrees/live-npc-ln09i`.
+The native Ollama tick-4 trade offer exposed an overly broad prose check.
+Live option and response validation now recognize only the existing public
+trade key in its structured field; ordinary offer checks, gateway, prose
+filters and recorded route stay intact. Independent review clean.
+Task and merged gates each passed 3041 tests, 10 existing skips,
+40 examples and 13 validation jobs. Reviewed 358-file source:
+eed875df105f8f4281c56b556a19fc071f06ccdffc88e766aab2241a79e8ef6e.
+Current offline-installed Python 3.11.2 wheel and real Chrome saved-world
+inspection passed. See the
+[native follow-up](live_npc_native_acceptance_followup_2026_11_12.md)
+for the actual unattended and work-interruption evidence.
+Ollama reaches the engine deadline at tick 13 (founding failure, 26 calls);
+exact offline replay. The checksum-pinned additional 7B llama.cpp model reached
+settlement stage and inbound food arrival by tick 10, then failed safely on an
+unoffered key, with exact offline replay. Work interruption remains unmet on
+both at the unchanged fixed tick-2 boundary. All 16 temporary servers from
+this resume are stopped; actual host evidence in W/ln09i-final-native-cleanup.json.
+Continue original acceptance only under its existing criteria. Whole-branch
+review and release closeout remain pending; no new task activated.
 
 ## Canonical completion
 

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Integrate the reviewed live founders trade fix after repeated full checks and an exact replay of the unattended Ollama founding deadline.
+
+- Fix live founders stopping when the public trade action becomes available. Preserve offered-target validation, the ordinary dispatch gateway, and strict NPC prose filtering.
+
 - Record future worldbuilding ideas covering expandable maps, generational history, lore imports and a browser editor, separately from current release scope.
 
 - Integrate the validated native experiment helper and 40th example after repeated full checks, preserving honest unmet work-interruption evidence for both backends.

@@ -1,5 +1,25 @@
 # Living World Simulator – Project Journal
 
+## LN09i integration — November 12, 2026
+
+Delivery `073f7aa` integrated after `53d48dd`; preserved task branch and
+worktree. Repeated merged validation: 3041 passed, 10 existing skips,
+759.34 s, 40 examples and all 13 jobs passed on unchanged reviewed source.
+The original Ollama trade boundary now prepares correctly; fresh Ollama runs
+to the founding deadline and replays exactly. See the native follow-up for
+remaining model-specific gates. No main, milestone or tag integration.
+
+## LN09i delivery — November 12, 2026
+
+Native acceptance exposed a tick-4 trade offer failure. The isolated fix
+recognizes the existing public key only in the structured action field; no
+recorded route, prose filter, provider contract or world behavior changed
+outside that correction. Independent review clean; 3041/10 full tests,
+40 examples, installed Python 3.11 and archive/browser/package checks passed.
+Ollama reached the founding deadline at tick 13, with exact offline replay;
+llama.cpp rejected an unoffered target at tick 4, also replayed exactly.
+Work interruption remains unmet. See the follow-up native report.
+
 ## Future vision recorded — November 12, 2026
 
 At the owner’s request, preserve the discussion of multiple settings, expandable

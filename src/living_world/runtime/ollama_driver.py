@@ -64,7 +64,7 @@ from .disturbances import (
     apply_boundary_disturbance,
     prepare_boundary_disturbance,
 )
-from .feedback import DecisionInput, FoundersFeedback, _inside
+from .feedback import DecisionInput, FoundersFeedback, _inside, validate_live_action_key
 from .inference_trace import (
     PreparedInference,
     empty_response_trace,
@@ -192,7 +192,8 @@ def _validated(
         prose.append(decision.spoken_text)
     request = decision.action_request
     if request is not None:
-        prose.extend((request.action_key, request.rationale))
+        validate_live_action_key(boundary, request.action_key)
+        prose.append(request.rationale)
         if request.target_label is not None:
             prose.append(request.target_label)
         prose.extend(request.arguments.keys())

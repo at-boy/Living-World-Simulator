@@ -21,6 +21,7 @@ from living_world.cognition.npc_context import NPCContext, NPCContextAssembler
 from living_world.cognition.retrieval import RetrievalQuery, RetrievedCognition
 from living_world.core.memory import CognitiveSalience, Memory
 from living_world.core.observation import Observation
+from living_world.external_world.dispatch_action import DISPATCH_ACTION_KEY
 from living_world.founders.model import canonical_policy
 from living_world.founders.runtime import FoundersLiveOfferProvider
 from living_world.founders.setup import FoundersSetupManager
@@ -29,6 +30,12 @@ from living_world.npc.identity import NPCIdentity
 from living_world.repositories.world_snapshot import decode_world, encode_world
 from living_world.simulation.simulation_engine import SimulationEngine
 from living_world.state.world_state import WorldState
+
+
+def validate_live_action_key(boundary: NPCInformationBoundary, key: str) -> None:
+    """Validate structured action vocabulary at the live information boundary."""
+    if key != DISPATCH_ACTION_KEY:
+        boundary.validate_conversation_prose(key)
 
 
 class RuntimePreparationError(ValueError):
@@ -555,7 +562,7 @@ class FoundersFeedback:
             NPCInformationBoundary(engine.state).validate_context(context)
             boundary = NPCInformationBoundary(engine.state)
             for option in options:
-                boundary.validate_conversation_prose(option.key)
+                validate_live_action_key(boundary, option.key)
                 boundary.validate_conversation_prose(option.description)
                 for label in option.target_labels:
                     boundary.validate_conversation_prose(label)
