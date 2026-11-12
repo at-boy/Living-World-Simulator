@@ -249,7 +249,7 @@ def advance(
 
     candidate = live.restore(base.snapshot)
     preparation = driver.prepare(candidate, base, archive)
-    assert ready(preparation) == "ready"
+    assert ready(preparation) == "ready", preparation.error_code
     preparation.install()
     candidate.step()
     commit = preparation.finish_tick()
@@ -262,6 +262,220 @@ def advance(
     )
     preparation.close()
     return checkpoint
+
+
+def test_public_trade_action_commits_and_replays_exactly(tmp_path: Path) -> None:
+    from living_world.archives import load_retained_inputs, retain_inputs
+    from living_world.cognition.npc_cognition_client import ActionRequest, NPCDecision
+    from living_world.external_world.dispatch_action import DISPATCH_ACTION_KEY
+    from living_world.repositories.world_snapshot import decode_world, encode_world
+    from living_world.runtime.journal_replay import (
+        JournalReplayComposition,
+        JournalReplayDriver,
+    )
+
+    class TradeBroker(ImmediateBroker):
+        def poll(self, job_id: str) -> BrokerResult:
+            assert self.current is not None
+            item = self.current[1]
+            for key, target in (
+                (DISPATCH_ACTION_KEY, "Request homeland supplies"),
+                ("establish_external_trade_connection", "Contact the homeland"),
+            ):
+                if key != DISPATCH_ACTION_KEY and item.actor_label != "ada":
+                    continue
+                if any(option.key == key for option in item.options):
+                    return BrokerResult(
+                        job_id,
+                        NPCDecision(
+                            None, ActionRequest(key, target, "We need supplies.")
+                        ),
+                        None,
+                        None,
+                        0.0,
+                    )
+            return super().poll(job_id)
+
+    catalog, lease, source, live = live_archive(tmp_path)
+    try:
+        broker = TradeBroker()
+        driver, base = initialized(source, live, broker)
+        checkpoints = []
+        for _ in range(8):
+            assert not decode_world(base.snapshot).external_dispatches
+            base = advance(driver, live, source, base)
+            checkpoints.append(base)
+            world = decode_world(base.snapshot)
+            if world.external_dispatches:
+                break
+        assert {
+            item.actor_label
+            for item in broker.calls
+            for option in item.options
+            if option.key == DISPATCH_ACTION_KEY
+            and option.target_labels == ("Request homeland supplies",)
+        } == {"ada", "bryn"}
+        (dispatch,) = world.external_dispatches.values()
+        assert dispatch.source_entity_id == world.scenario_entity_bindings["ada"]
+        (created,) = [
+            event
+            for event in world.events.values()
+            if event.kind == "external_dispatch_created"
+        ]
+        assert created.subject_id == dispatch.id
+        ada, bryn = [
+            entry.payload
+            for entry in source.entries()
+            if entry.kind == "action_resolved"
+            and entry.payload["source_tick"] == dispatch.created_tick
+        ]
+        assert ada["actor_label"] == "ada" and ada["outcome"] == "accepted"
+        assert created.id in ada["event_references"]
+        assert bryn["actor_label"] == "bryn" and bryn["outcome"] == "rejected"
+        assert not bryn["event_references"]
+
+        ref = catalog.reserve(
+            AttemptConfig(
+                "journal_replay",
+                source.config.scenario_key,
+                source.config.seed,
+                "replay-rev",
+                {
+                    "source_config_fingerprint": effective_config_fingerprint(
+                        source.config
+                    )
+                },
+            )
+        )
+        inputs = retain_inputs(
+            ref, load_retained_inputs(source.ref).scenario_path, tape_path=None
+        )
+        with (
+            AttemptLease(ref),
+            catalog.open_attempt(ref.attempt_id, read_only=False) as target,
+        ):
+            replay = JournalReplayComposition(source, FoundersLiveComposition(inputs))
+            replay_driver = JournalReplayDriver(
+                source, driver.feedback, source_point=replay.source_point
+            )
+            candidate = replay.initialize()
+            commit = replay_driver.initialize(candidate, target)
+            local = target.commit(
+                encode_world(candidate.state),
+                expected_revision=None,
+                driver_cursor=commit.driver_cursor,
+                feedback_cursor=commit.feedback_cursor,
+                entries=(),
+            )
+            for expected in checkpoints:
+                local = advance(replay_driver, replay, target, local)
+                assert local.snapshot == expected.snapshot
+                assert local.driver_cursor == expected.driver_cursor
+                assert local.feedback_cursor == expected.feedback_cursor
+            assert (
+                replay.terminal_condition(replay.restore(local.snapshot))
+                == "journal_replay_complete"
+            )
+            assert not any(e.kind == "request_started" for e in target.entries())
+    finally:
+        source.close()
+        lease.release()
+
+
+@pytest.mark.parametrize("field", ["description", "target_labels", "other_action_key"])
+def test_live_trade_option_only_exempts_the_exact_action_key(
+    tmp_path: Path, field: str
+) -> None:
+    from living_world.cognition.npc_cognition_client import ActionOption
+    from living_world.external_world.dispatch_action import DISPATCH_ACTION_KEY
+    from living_world.npc.identity import NPCIdentity
+
+    _catalog, lease, archive, live = live_archive(tmp_path)
+    try:
+        driver, base = initialized(archive, live, ImmediateBroker())
+        candidate = live.restore(base.snapshot)
+        item = driver.feedback.prepare(candidate, base)[0]
+        identity = NPCIdentity.from_attribute(
+            candidate.state.entities[item.actor_id].attributes["npc_identity"]
+        )
+        target = (
+            DISPATCH_ACTION_KEY
+            if field == "target_labels"
+            else "Request homeland supplies"
+        )
+        option = ActionOption(
+            "dispatch_other" if field == "other_action_key" else DISPATCH_ACTION_KEY,
+            DISPATCH_ACTION_KEY if field == "description" else "Propose an exchange.",
+            (target,),
+        )
+        with pytest.raises(
+            ValueError, match="cannot expose internal engine identifiers"
+        ):
+            driver.feedback._context(candidate, item.actor_id, identity, (), (option,))
+    finally:
+        archive.close()
+        lease.release()
+
+
+@pytest.mark.parametrize(
+    ("field", "reason"),
+    [
+        ("rationale", "cannot expose internal engine identifiers"),
+        ("target_label", "cannot expose internal engine identifiers"),
+        ("speech", "cannot expose internal engine identifiers"),
+        ("argument_key", "cannot expose internal engine identifiers"),
+        ("argument_value", "cannot expose internal engine identifiers"),
+        ("other_action_key", "cannot expose internal engine identifiers"),
+        ("unoffered_action_key", "outside offered vocabulary"),
+        ("unoffered_target", "outside offered vocabulary"),
+    ],
+)
+def test_live_trade_response_still_checks_prose_and_original_offer(
+    tmp_path: Path, field: str, reason: str
+) -> None:
+    from dataclasses import replace
+
+    from living_world.cognition.npc_cognition_client import (
+        ActionOption,
+        ActionRequest,
+        NPCDecision,
+    )
+    from living_world.external_world.dispatch_action import DISPATCH_ACTION_KEY
+    from living_world.runtime.ollama_driver import _validated
+
+    _catalog, lease, archive, live = live_archive(tmp_path)
+    try:
+        driver, base = initialized(archive, live, ImmediateBroker())
+        candidate = live.restore(base.snapshot)
+        item = driver.feedback.prepare(candidate, base)[0]
+        key = "dispatch_other" if field == "other_action_key" else DISPATCH_ACTION_KEY
+        target = (
+            DISPATCH_ACTION_KEY
+            if field == "target_label"
+            else "Request homeland supplies"
+        )
+        if field != "unoffered_action_key":
+            item = replace(
+                item, options=(ActionOption(key, "Propose an exchange.", (target,)),)
+            )
+        arguments = {
+            "argument_key": {DISPATCH_ACTION_KEY: "supplies"},
+            "argument_value": {"purpose": DISPATCH_ACTION_KEY},
+        }.get(field, {})
+        decision = NPCDecision(
+            DISPATCH_ACTION_KEY if field == "speech" else None,
+            ActionRequest(
+                key,
+                "Request different supplies" if field == "unoffered_target" else target,
+                DISPATCH_ACTION_KEY if field == "rationale" else "We need supplies.",
+                arguments,
+            ),
+        )
+        with pytest.raises(ValueError, match=reason):
+            _validated(candidate, item, decision)
+    finally:
+        archive.close()
+        lease.release()
 
 
 def test_real_gateway_and_discarded_candidate_gc(tmp_path: Path) -> None:

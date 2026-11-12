@@ -1,3 +1,8 @@
+LN09i live trade vocabulary defect fixed and task-validated; feature integration
+pending. Ollama unattended run reaches founding deadline and replays exactly.
+Both applied native work gates and an unattended llama.cpp deadline run remain
+open. See the native follow-up report; keep all unsuccessful evidence.
+
 LN09h bounded helper/040/guide deliveryde0552e integrated after repeated3029/10existing
 skips/40examples/allchecks; bothnativebaseline/resource/control/coldrestart/replay
 proven. Nativework interruption remainsUNMET forbothmodels: largeshelterlabor3 vs2

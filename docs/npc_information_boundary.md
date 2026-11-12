@@ -838,6 +838,14 @@ acknowledgement. Admin views remain follow-on work. Parent
 validation checks every returned prose field against the current information boundary
 before recording a validated response.
 
+Live preparation exposes `dispatch_external_trade` as a structured action key
+when the ordinary offer provider authorizes it. Live response validation and sealed
+replay recognize the exact key after checking the original offered key and target.
+Descriptions, target labels, speech, rationale, arguments and context retain the
+state-aware prose checks, which reject that key in those fields. The proposal phase
+still checks fresh offers and actor eligibility. Dispatch IDs, reference IDs,
+quantities and inventories stay engine-only and add no perception or memory.
+
 Inference produces proposals only. A private proposal-phase system revalidates
 staged decisions, fetches fresh offers and dispatches through `NPCActionResolver`
 and `SimulationEngine.resolve_npc_action`; ordinary managers retain mutation
