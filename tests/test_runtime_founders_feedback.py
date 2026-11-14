@@ -986,6 +986,126 @@ def test_destroyed_founder_preserves_historical_shelter_attachments(
     assert encode_world(restored.state) == snapshot
 
 
+def _mixed_shelters(engine: SimulationEngine) -> tuple[str, str]:
+    from living_world.systems.simulation_system import SimulationSystem
+
+    camp = engine.state.scenario_entity_bindings["camp"]
+    shelters: list[str] = []
+
+    class ConstructShelters(SimulationSystem):
+        def step(self, state: WorldState) -> None:
+            if state.tick in (0, 2):
+                shelter = engine.entities.create(
+                    definition_key="shelter",
+                    name="Modest shelter",
+                    attributes={"is_constructed": True},
+                )
+                engine.relationships.create(
+                    kind="owns", source_id=camp, target_id=shelter.id
+                )
+                shelters.append(shelter.id)
+
+    engine.register_system(ConstructShelters(), key="test_construction")
+    for _ in range(4):
+        engine.step()
+    destroyed, standing = shelters
+    assert engine.state.entities[destroyed].destroyed_tick == 3
+    assert engine.state.entities[standing].destroyed_tick is None
+    return destroyed, standing
+
+
+def test_live_restore_retains_destroyed_shelter_history(tmp_path: Path) -> None:
+    from living_world.needs.system import owned_capacity
+    from living_world.systems.resource_system import ResourceSystem
+
+    live = composition(tmp_path)
+    engine = live.initialize()
+    destroyed, standing = _mixed_shelters(engine)
+    snapshot = encode_world(engine.state)
+
+    restored = live.restore(snapshot)
+    assert encode_world(restored.state) == snapshot
+    state = restored.state
+    camp_id = state.scenario_entity_bindings["camp"]
+    assert owned_capacity(state, camp_id, "housing_capacity") == 2
+    policy_id = f"maintenance_founders_{destroyed}"
+    assert state.maintenance_states[policy_id].condition == 0
+    assert any(
+        event.kind == "capability_destroyed" and event.subject_id == policy_id
+        for event in state.events.values()
+    )
+    history = dict(state.events)
+    housing = {
+        edge.id: edge
+        for edge in state.relationships.values()
+        if edge.kind == "housed_in" and edge.target_id == destroyed
+    }
+    assert len(housing) == 2
+
+    ResourceSystem().set(state.entities[camp_id], "food", 10)
+    restored.step()
+    assert state.entities[standing].destroyed_tick is None
+    assert state.entities[destroyed].destroyed_tick == 3
+    assert state.maintenance_states[policy_id].condition == 0
+    assert {key: state.events[key] for key in history} == history
+    assert {key: state.relationships[key] for key in housing} == housing
+    assert [
+        event.subject_id
+        for key, event in state.events.items()
+        if key not in history and event.kind == "capability_upkeep_applied"
+    ] == [f"maintenance_founders_{standing}"]
+    assert owned_capacity(state, camp_id, "housing_capacity") == 2
+    advanced = encode_world(state)
+    assert encode_world(live.restore(advanced).state) == advanced
+
+
+@pytest.mark.parametrize(
+    "damage",
+    ["maintenance", "marker", "duplicate_marker", "housing", "lifecycle", "all"],
+)
+def test_live_composition_rejects_corrupt_destroyed_shelter_history(
+    tmp_path: Path, damage: str
+) -> None:
+    from dataclasses import replace
+
+    from living_world.founders import FoundersConfigurationError, FoundersSetupManager
+    from living_world.founders.model import canonical_policy
+
+    engine = composition(tmp_path).initialize()
+    destroyed, _ = _mixed_shelters(engine)
+    state = engine.state
+    policy_id = f"maintenance_founders_{destroyed}"
+    marker = next(
+        event
+        for event in state.events.values()
+        if event.kind == "founders_shelter_composed" and event.subject_id == destroyed
+    )
+    housing = [
+        edge.id
+        for edge in state.relationships.values()
+        if edge.kind == "housed_in" and edge.target_id == destroyed
+    ]
+    if damage in ("maintenance", "all"):
+        del state.maintenance_policies[policy_id]
+        del state.maintenance_states[policy_id]
+    if damage in ("marker", "all"):
+        del state.events[marker.id]
+    if damage in ("housing", "all"):
+        for edge_id in housing:
+            del state.relationships[edge_id]
+    if damage == "duplicate_marker":
+        state.events["event_999999"] = replace(marker, id="event_999999")
+    if damage == "lifecycle":
+        state.maintenance_states[policy_id] = replace(
+            state.maintenance_states[policy_id], condition=1
+        )
+    snapshot = encode_world(state)
+    manager = FoundersSetupManager(state, engine.definitions)
+    with pytest.raises(FoundersConfigurationError, match="setup_mismatch"):
+        manager.compose_live(canonical_policy())
+    assert encode_world(state) == snapshot
+
+
 def test_semantic_cursor_affects_fingerprint_but_revision_does_not(
     tmp_path: Path,
 ) -> None:

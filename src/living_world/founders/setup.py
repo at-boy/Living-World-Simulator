@@ -505,12 +505,12 @@ class FoundersSetupManager:
             GoalManager(state, events).validate_loaded_state()
             SettlementStageManager(state, events).validate_loaded_state()
             consequences.validate_loaded_state()
-            self._attachments(state, policy, create=False)
+            self._attachments(state, policy, live=live, create=False)
         except (TypeError, ValueError, KeyError):
             raise FoundersConfigurationError("setup_mismatch") from None
 
     def _attachments(
-        self, state: WorldState, policy: FoundersPolicy, *, create: bool
+        self, state: WorldState, policy: FoundersPolicy, *, live: bool, create: bool
     ) -> None:
         r = policy.rules
         camp = state.scenario_entity_bindings["camp"]
@@ -531,7 +531,6 @@ class FoundersSetupManager:
                 entity
                 for entity in state.entities.values()
                 if entity.id in owned
-                and entity.destroyed_tick is None
                 and entity.attributes.get("is_constructed") is True
             ),
             key=lambda entity: entity.id,
@@ -541,7 +540,8 @@ class FoundersSetupManager:
         maintenance_ids = set()
         shelter_ids = set()
         for entity in capabilities:
-            if entity.definition_key != "shelter":
+            destroyed = entity.destroyed_tick is not None
+            if entity.definition_key != "shelter" or (destroyed and not live):
                 continue
             shelter_ids.add(entity.id)
             pid = "maintenance_founders_" + entity.id
@@ -592,7 +592,7 @@ class FoundersSetupManager:
                     raise ValueError
                 maintenance_ids.add(pid)
             else:
-                if state.tick > entity.created_tick + 1:
+                if destroyed or state.tick > entity.created_tick + 1:
                     raise ValueError
                 if create:
                     for actor in occupants:
@@ -617,7 +617,9 @@ class FoundersSetupManager:
         ):
             raise ValueError
         storages = [
-            entity for entity in capabilities if entity.definition_key == "storage"
+            entity
+            for entity in capabilities
+            if entity.definition_key == "storage" and entity.destroyed_tick is None
         ]
         markers = [
             e for e in state.events.values() if e.kind == "founders_storage_composed"
@@ -669,7 +671,7 @@ class FoundersSetupManager:
         self._validate(policy, live=live)
         staged = _shadow(self._state)
         try:
-            self._attachments(staged, policy, create=True)
+            self._attachments(staged, policy, live=live, create=True)
             FoundersSetupManager(staged, self._definitions)._validate(policy, live=live)
         except (TypeError, ValueError, KeyError):
             raise FoundersConfigurationError("setup_mismatch") from None
