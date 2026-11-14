@@ -1,4 +1,4 @@
-# Continuation brief — November 14, offer-bound founders requests
+# Continuation brief — November 14, live shelter restore
 
 Feature checkout `.worktrees/live-npc-runtime`, branch `codex/live-npc-runtime`.
 LN09h deliveryde0552e integrated by e454722; taskbranch
@@ -7,7 +7,25 @@ LN09h deliveryde0552e integrated by e454722; taskbranch
 authorized. Stop BEFORE five-hour remaining falls below10%, with review/fix
 headroom; no resetcredits. Root owns architecture/task transitions/integration.
 
-## Latest task: offer-bound founders request contract
+## Latest task: live shelter restore
+
+Live founders now validate the historical maintenance, housing and
+composition records of collapsed shelters. Destroyed shelters remain
+excluded from active capacity. The recorded path and live decision
+contracts are unchanged. See the [task report](../subagent_execution_plan/live_npc_runtime/09k_shelter_restore-report.md).
+
+The original llama.cpp campaign now restores checkpoint 14 and replays
+all 15 checkpoints and 28 retained responses exactly. A fresh llama.cpp
+run ended at its tick-16 cap in settlement stage and replayed all 17
+checkpoints and 32 responses exactly. Both tick-2 work-interruption
+trials still found no eligible work. Full native acceptance remains open,
+including a named llama.cpp terminal outcome. All temporary servers are stopped.
+
+Task delivery `e2d20ac` is preserved on `codex/live-npc-ln09k-shelter-restore`.
+Task and merged gates each passed 3,080 tests, 10 existing skips, 40 examples
+and all 13 validation jobs. The merged suite took 780.17 seconds.
+
+## Prior task: offer-bound founders request contract
 
 LN09j adds the opt-in `founders_offer_bound_v1` contract for canonical live
 founders on Ollama and llama.cpp. Each provider receives a response schema
@@ -106,9 +124,8 @@ servers explicitlyauthorized onlywithfinallycleanup; stoponlyownedprocesses.
 
 ## Next and constraints
 
-First resolve the reproducible shelter destruction restore defect under an
-isolated, approved task. No repair is active. Remaining appliednativework
-acceptance needs genuineeligible nativechoice, never
+The shelter destruction restore defect is fixed. Remaining native work
+acceptance needs a genuinely eligible native choice, never
 syntheticreplacement or guaranteedvictory. Portableworld recursiveparentclosure /
 uncommittedspool forensic work andfinalwholebranchreview remain pending; no next
 implementationtask/branch activated. Before portabletask, reconcile approvedscope:

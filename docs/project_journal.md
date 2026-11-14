@@ -1,5 +1,19 @@
 # Living World Simulator – Project Journal
 
+## LN09k integration — November 14, 2026
+
+Merged task delivery `e2d20ac` into the live runtime branch. All 13 merged
+validation jobs passed, including 3,080 tests, 10 existing skips and 40
+examples. All 186 wheel entries match the validated task build.
+
+## LN09k shelter restore — November 14, 2026
+
+Live founders now validate the retained attachments of collapsed shelters.
+The original llama.cpp archive restores through checkpoint 14 and replays
+all 15 checkpoints and 28 responses exactly. A fresh campaign reached its
+tick-16 cap and replayed exactly. Both fixed tick-2 work checks still found
+no eligible work. See the [task report](subagent_execution_plan/live_npc_runtime/09k_shelter_restore-report.md).
+
 ## LN09j integration — November 14, 2026
 
 Integrated task delivery `c22248e` into `codex/live-npc-runtime` and
