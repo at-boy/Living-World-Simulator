@@ -1,5 +1,23 @@
 # Living World Simulator – Project Journal
 
+## LN09j integration — November 14, 2026
+
+Integrated task delivery `c22248e` into `codex/live-npc-runtime` and
+preserved its task branch. All 13 merged checks passed, with 3,073 tests,
+10 existing skips, and 40 examples. The separate examples and whitespace
+checks passed. All 186 wheel entries matched the task package.
+
+## LN09j offer-bound schema — November 14, 2026
+
+Added the opt-in `founders_offer_bound_v1` contract on both local backends.
+Existing request payloads, parser, gateway and acceptance criteria were
+preserved. Independent review found no substantive issues. The native
+Ollama campaign reached its founding deadline and replayed exactly. The new
+llama.cpp run reached settlement stage before exposing a pre-existing restore
+error following shelter destruction. Its checkpoint 13 replay was exact.
+Both native tick-2 work-interruption checks still reported no eligible work.
+See the [offer-bound implementation report](subagent_execution_plan/live_npc_runtime/09j_offer_bound_request_contract-report.md).
+
 ## LN09i integration — November 12, 2026
 
 Delivery `073f7aa` integrated after `53d48dd`; preserved task branch and

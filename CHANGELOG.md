@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add and validate the opt-in `founders_offer_bound_v1` contract for canonical live founders on Ollama and llama.cpp. Its response schema limits proposed actions to the public action and target combinations offered on each request.
+
 - Integrate the reviewed live founders trade fix after repeated full checks and an exact replay of the unattended Ollama founding deadline.
 
 - Fix live founders stopping when the public trade action becomes available. Preserve offered-target validation, the ordinary dispatch gateway, and strict NPC prose filtering.

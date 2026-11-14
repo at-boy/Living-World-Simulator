@@ -1,5 +1,6 @@
 """Canonical configuration, public flags and sealed selected-provider replay."""
 
+from contextlib import contextmanager
 from dataclasses import replace
 
 import pytest
@@ -15,6 +16,7 @@ from living_world.runtime.broker import (
 from living_world.runtime.ollama_driver import effective_config_fingerprint
 
 NEW = "founders_empty_arguments_v1"
+OFFER_BOUND = "founders_offer_bound_v1"
 
 
 def config(selector=NEW, *, mode="ollama", scenario="canonical_founders_v1"):
@@ -27,15 +29,18 @@ def config(selector=NEW, *, mode="ollama", scenario="canonical_founders_v1"):
     )
 
 
-def test_canonical_provider_and_factory_selection():
+@pytest.mark.parametrize("selector", [NEW, OFFER_BOUND])
+def test_canonical_provider_and_factory_selection(selector):
     legacy = ProviderConfig("tiny")
     assert legacy.request_contract == "legacy_v1"
     assert "request_contract" not in provider_document(legacy)
-    selected = ProviderConfig("tiny", request_contract=NEW)
-    assert provider_document(selected)["request_contract"] == NEW
+    selected = ProviderConfig("tiny", request_contract=selector)
+    assert provider_document(selected)["request_contract"] == selector
     assert "<argument name>" not in client_for(selected).SYSTEM_INSTRUCTIONS
-    assert provider_config(config()).request_contract == NEW
-    assert effective_config_fingerprint(config()) != effective_config_fingerprint(
+    assert provider_config(config(selector)).request_contract == selector
+    assert effective_config_fingerprint(
+        config(selector)
+    ) != effective_config_fingerprint(
         AttemptConfig(
             "ollama",
             "canonical_founders_v1",
@@ -60,9 +65,10 @@ def test_raw_noncanonical_selector_rejected(value):
         ("ollama", "other"),
     ],
 )
-def test_new_selector_requires_live_founders(mode, scenario):
+@pytest.mark.parametrize("selector", [NEW, OFFER_BOUND])
+def test_new_selector_requires_live_founders(mode, scenario, selector):
     with pytest.raises(ArchiveFormatError):
-        config(mode=mode, scenario=scenario)
+        config(selector, mode=mode, scenario=scenario)
 
 
 @pytest.mark.parametrize("value", ["unknown", None, True, 1])
@@ -72,7 +78,7 @@ def test_direct_provider_rejects_invalid_selector(value):
 
 
 @pytest.mark.parametrize("command", ["run", "serve"])
-@pytest.mark.parametrize("selector", [None, "legacy_v1", NEW])
+@pytest.mark.parametrize("selector", [None, "legacy_v1", NEW, OFFER_BOUND])
 def test_fresh_cli_selector_normalization(tmp_path, monkeypatch, command, selector):
     from living_world.archives import RunCatalog
     from living_world.runtime import RuntimeService
@@ -108,7 +114,9 @@ def test_fresh_cli_selector_normalization(tmp_path, monkeypatch, command, select
     )
     assert launch.launch(paused=True) == "captured"
     provider = seen[0].settings["provider"]
-    assert provider.get("request_contract") == (NEW if selector == NEW else None)
+    assert provider.get("request_contract") == (
+        selector if selector in (NEW, OFFER_BOUND) else None
+    )
 
 
 @pytest.mark.parametrize(
@@ -120,7 +128,7 @@ def test_fresh_cli_selector_normalization(tmp_path, monkeypatch, command, select
         ["analyze"],
     ],
 )
-@pytest.mark.parametrize("selector", ["legacy_v1", NEW])
+@pytest.mark.parametrize("selector", ["legacy_v1", NEW, OFFER_BOUND])
 def test_selector_is_never_ignored(tmp_path, flags, selector):
     from living_world.cli import main
 
@@ -175,9 +183,12 @@ def test_baseline_effective_provider_fingerprints(kind, expected):
     assert effective_config_fingerprint(selected) != expected
 
 
-@pytest.mark.parametrize("source_selector", [None, NEW])
+@pytest.mark.parametrize(
+    "source_selector,changed",
+    [(None, NEW), (NEW, "legacy_v1"), (OFFER_BOUND, NEW), (NEW, OFFER_BOUND)],
+)
 def test_resume_inherits_and_fork_changes_selector_without_allocation(
-    tmp_path, source_selector
+    tmp_path, source_selector, changed
 ):
     from test_runtime_llama_cpp import action_response, launch_llama, llama_server
 
@@ -205,7 +216,6 @@ def test_resume_inherits_and_fork_changes_selector_without_allocation(
     with catalog.open_attempt(source) as archive:
         original = archive.config
     same = source_selector or "legacy_v1"
-    changed = "legacy_v1" if source_selector else NEW
     assert requested("resume") == original
     assert requested("resume", same) == original
     with pytest.raises(RuntimeCLIError) as caught:
@@ -455,9 +465,17 @@ def test_untrusted_arguments_reach_ordinary_work_gateway_intact(arguments, accep
 
 
 @pytest.mark.parametrize("kind", ["ollama", "llama_cpp"])
-@pytest.mark.parametrize("arguments", [{}, {"target": "Plant the first crop"}])
+@pytest.mark.parametrize("selector", [NEW, OFFER_BOUND])
+@pytest.mark.parametrize(
+    "arguments,target",
+    [
+        ({}, "Plant the first crop"),
+        ({"target": "Plant the first crop"}, "Plant the first crop"),
+        ({}, "A target that was never offered"),
+    ],
+)
 def test_spawned_selected_broker_keeps_exact_prepared_body_and_untrusted_arguments(
-    tmp_path, kind, arguments
+    tmp_path, kind, selector, arguments, target
 ):
     import json
     import multiprocessing
@@ -479,7 +497,7 @@ def test_spawned_selected_broker_keeps_exact_prepared_body_and_untrusted_argumen
             "spoken_text": None,
             "action_request": {
                 "action_key": "produce_food",
-                "target_label": "Plant the first crop",
+                "target_label": target,
                 "rationale": "We need food.",
                 "arguments": arguments,
             },
@@ -519,7 +537,7 @@ def test_spawned_selected_broker_keeps_exact_prepared_body_and_untrusted_argumen
             model_file=str(tmp_path / "tiny.gguf") if kind == "llama_cpp" else None,
             base_url=f"http://127.0.0.1:{server.server_port}",
             timeout_seconds=3,
-            request_contract=NEW,
+            request_contract=selector,
         )
         prepared = prepare_inference(provider, context, handler.action_options)
         broker = DecisionBroker()
@@ -527,19 +545,24 @@ def test_spawned_selected_broker_keeps_exact_prepared_body_and_untrusted_argumen
             broker.bind_trace("1" * 32, prepared, spool_root=tmp_path / "spool")
             broker.start("1" * 32, provider, item)
             result = poll_broker(broker, "1" * 32)
-            assert result.error_code is None
             assert bodies == [prepared.body]
             assert json.loads(result.response_body) == (
                 {"response": response}
                 if kind == "ollama"
                 else {"choices": [{"message": {"content": response}}]}
             )
-            assert dict(result.decision.action_request.arguments) == arguments
-            resolved = NPCActionResolver(handler.action_options, (handler,)).resolve(
-                actor_id=actor, request=result.decision.action_request
-            )
-            assert resolved.accepted is (not arguments)
-            assert bool(engine.state.work_states) is (not arguments)
+            if target != "Plant the first crop":
+                assert result.error_code == "invalid_response"
+                assert result.decision is None
+                assert not engine.state.work_states
+            else:
+                assert result.error_code is None
+                assert dict(result.decision.action_request.arguments) == arguments
+                resolved = NPCActionResolver(
+                    handler.action_options, (handler,)
+                ).resolve(actor_id=actor, request=result.decision.action_request)
+                assert resolved.accepted is (not arguments)
+                assert bool(engine.state.work_states) is (not arguments)
             for private in (
                 actor,
                 settlement,
@@ -564,4 +587,288 @@ def test_public_help_exposes_contract_choices(command, capsys):
     assert caught.value.code == 0
     help_text = capsys.readouterr().out
     assert "--request-contract" in help_text
-    assert "legacy_v1" in help_text and NEW in help_text
+    assert all(selector in help_text for selector in ("legacy_v1", NEW, OFFER_BOUND))
+
+
+@contextmanager
+def offer_bound_ollama_server():
+    import json
+    import threading
+    from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+    from test_runtime_llama_cpp import action_response
+
+    received = []
+
+    class Handler(BaseHTTPRequestHandler):
+        def do_GET(self):
+            assert self.path == "/api/tags"
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(
+                json.dumps(
+                    {"models": [{"name": "tiny:latest", "digest": "a" * 64}]}
+                ).encode()
+            )
+
+        def do_POST(self):
+            assert self.path == "/api/generate"
+            body = self.rfile.read(int(self.headers["Content-Length"]))
+            received.append(body)
+            offer_prompt = json.loads(body)["prompt"]
+            result = action_response({"messages": [{}, {"content": offer_prompt}]})
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(
+                json.dumps(
+                    {"response": result["choices"][0]["message"]["content"]}
+                ).encode()
+            )
+
+        def log_message(self, *args):
+            pass
+
+    with ThreadingHTTPServer(("127.0.0.1", 0), Handler) as server:
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        try:
+            yield f"http://127.0.0.1:{server.server_port}", received
+        finally:
+            server.shutdown()
+            thread.join(2)
+
+
+@pytest.mark.parametrize("kind", ["ollama", "llama_cpp"])
+def test_offer_bound_stock_resume_and_offline_replay(tmp_path, monkeypatch, kind):
+    import hashlib
+    import json
+
+    from test_runtime_llama_cpp import action_response, llama_server, step_service
+    from test_runtime_service import wait_for
+
+    from living_world.archives import RunCatalog
+    from living_world.perception.local_llm_http import UrllibJsonHttpTransport
+    from living_world.runtime import RuntimeService, RuntimeState
+    from living_world.runtime.broker import encoded_body
+    from living_world.runtime.entrypoints import (
+        prepare_archived_launch,
+        validate_archived_options,
+    )
+
+    model = tmp_path / "tiny.gguf"
+    catalog = RunCatalog(tmp_path / "runs")
+    if kind == "llama_cpp":
+        model.write_bytes(b"GGUFfixture")
+        server = llama_server(model, response=action_response)
+        provider_flags = ["--driver", "llama.cpp", "--model-file", str(model)]
+    else:
+        provider_flags = ["--driver", "ollama"]
+
+    def start(base):
+        parser = build_parser()
+        args = parser.parse_args(
+            [
+                "run",
+                "--preset",
+                "founders",
+                "--model",
+                "tiny",
+                "--base-url",
+                base,
+                "--max-ticks",
+                "3",
+                "--request-contract",
+                OFFER_BOUND,
+                *provider_flags,
+            ]
+        )
+        validate_archived_options(args, parser)
+        launch = prepare_archived_launch(
+            args, catalog=catalog, on_reserved=lambda ref: None
+        )
+        try:
+            c = launch.launch(paused=True)
+            ref = c.status().attempt
+            step_service(launch.service, c, "one")
+        finally:
+            launch.service.shutdown()
+        resumed = RuntimeService(catalog)
+        try:
+            c = resumed.resume(ref.attempt_id, paused=True)
+            child = c.status().attempt
+            with catalog.open_attempt(ref.attempt_id) as parent:
+                point = parent.checkpoint()
+            with catalog.open_attempt(child.attempt_id) as archive:
+                assert archive.checkpoint(0).snapshot == point.snapshot
+                assert provider_config(archive.config).request_contract == OFFER_BOUND
+            step_service(resumed, c, "two")
+        finally:
+            resumed.shutdown()
+        return ref, child
+
+    if kind == "llama_cpp":
+        with server as (base, _, payloads):
+            ref, child = start(base)
+        model.unlink()
+        bodies = [encoded_body(payload).encode("ascii") for payload in payloads]
+    else:
+        with offer_bound_ollama_server() as (base, bodies):
+            ref, child = start(base)
+
+    def retained(archive, entry):
+        trace = entry.payload["request_trace"]
+        blob = archive.inference_blobs((trace["body_digest"],))[0].body
+        assert hashlib.sha256(blob).hexdigest() == trace["body_digest"]
+        assert trace["body_length"] == len(blob) <= 16000
+        payload = json.loads(blob)
+        if kind == "ollama":
+            schema = payload["format"]
+            prompt = payload["prompt"]
+        else:
+            schema = payload["response_format"]["schema"]
+            prompt = payload["messages"][1]["content"]
+        actions = json.loads(prompt)["actions"]
+        shape = schema["properties"]["action_request"]
+        if not actions:
+            assert shape == {"type": "null"}
+        else:
+            null, *branches = shape["anyOf"]
+            assert null == {"type": "null"}
+            assert [
+                branch["properties"]["action_key"]["enum"] for branch in branches
+            ] == [[action["key"]] for action in actions]
+            for branch, action in zip(branches, actions, strict=True):
+                targets = action["target_labels"]
+                assert branch["properties"]["target_label"] == (
+                    {"type": "string", "enum": targets} if targets else {"type": "null"}
+                )
+        for hidden in (str(model), "model_file", "model_digest", "WorldState"):
+            assert hidden not in blob.decode()
+        return blob
+
+    actual_bodies = []
+    for item in (ref, child):
+        with catalog.open_attempt(item.attempt_id) as archive:
+            assert provider_config(archive.config).request_contract == OFFER_BOUND
+            actual_bodies.extend(
+                retained(archive, entry)
+                for entry in archive.entries()
+                if entry.kind == "request_started"
+            )
+    assert len(actual_bodies) == len(bodies) == 4
+    assert actual_bodies == bodies
+
+    with catalog.open_attempt(child.attempt_id) as archive:
+        final = archive.checkpoint()
+        source = {
+            entry.payload["request_id"]: entry
+            for entry in archive.entries()
+            if entry.kind in ("request_started", "response_reused")
+        }
+        source_outcomes = [
+            entry.payload["event_references"]
+            for entry in archive.entries()
+            if entry.kind == "action_resolved"
+        ]
+    assert any(source_outcomes)
+
+    before = {
+        path: (path.read_bytes(), path.stat().st_mtime_ns)
+        for item in (ref, child)
+        for path in item.directory.rglob("*")
+        if path.is_file()
+    }
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("offline replay touched unavailable provider")
+
+    monkeypatch.setattr(UrllibJsonHttpTransport, "get_json", forbidden)
+    monkeypatch.setattr(UrllibJsonHttpTransport, "post_json", forbidden)
+    replay = RuntimeService(catalog)
+    try:
+        c = replay.replay(child.attempt_id, paused=False)
+        wait_for(c, lambda s: s.state is RuntimeState.COMPLETED, timeout=8)
+        with catalog.open_attempt(c.status().attempt.attempt_id) as archive:
+            actual = archive.checkpoint()
+            assert actual.snapshot == final.snapshot
+            assert actual.driver_cursor == final.driver_cursor
+            assert actual.feedback_cursor == final.feedback_cursor
+            entries = archive.entries()
+            assert not any(e.kind == "request_started" for e in entries)
+            replayed_outcomes = [
+                entry.payload["event_references"]
+                for entry in entries
+                if entry.kind == "action_resolved"
+            ]
+            assert replayed_outcomes == source_outcomes
+            reused = [entry for entry in entries if entry.kind == "response_reused"]
+            assert len(reused) == len(source) == 2
+            for entry in reused:
+                link = entry.payload["source"]
+                assert link["attempt_id"] == child.attempt_id
+                original = source[link["request_id"]]
+                assert (
+                    entry.payload["request_trace"] == original.payload["request_trace"]
+                )
+                assert retained(archive, entry) in actual_bodies
+    finally:
+        replay.shutdown()
+    assert {
+        path: (path.read_bytes(), path.stat().st_mtime_ns)
+        for item in (ref, child)
+        for path in item.directory.rglob("*")
+        if path.is_file()
+    } == before
+
+
+@pytest.mark.parametrize("kind", ["ollama", "llama_cpp"])
+def test_offer_bound_duplicated_labels_count_toward_spawned_request_cap(tmp_path, kind):
+    from test_runtime_llama_cpp import llama_server, poll_broker
+
+    from living_world.cognition.npc_cognition_client import ActionOption
+    from living_world.cognition.npc_context import NPCContext
+    from living_world.runtime.broker import DecisionBroker, encoded_body
+    from living_world.runtime.feedback import DecisionInput
+
+    context = NPCContext("Mara", (), (), (), ())
+    options = (ActionOption("gather", "Collect supplies.", ("Oak " + "é" * 1150,)),)
+    item = DecisionInput("actor", "founder", context, options, (), "a" * 64)
+    model = tmp_path / "tiny.gguf"
+
+    def check(base, bodies):
+        offer_bound = ProviderConfig(
+            "tiny",
+            kind=kind,
+            base_url=base,
+            timeout_seconds=3,
+            model_file=str(model) if kind == "llama_cpp" else None,
+            request_contract=OFFER_BOUND,
+        )
+        empty_arguments = replace(offer_bound, request_contract=NEW)
+        assert (
+            len(
+                encoded_body(
+                    client_for(empty_arguments).build_payload(context, options)
+                )
+            )
+            <= 16000
+        )
+        assert (
+            len(encoded_body(client_for(offer_bound).build_payload(context, options)))
+            > 16000
+        )
+        broker = DecisionBroker()
+        try:
+            broker.start("oversized", offer_bound, item)
+            result = poll_broker(broker, "oversized")
+            assert result.error_code == "invalid_response" and result.decision is None
+            assert bodies == []
+        finally:
+            broker.close()
+
+    if kind == "ollama":
+        with offer_bound_ollama_server() as (base, bodies):
+            check(base, bodies)
+    else:
+        with llama_server(model) as (base, _, bodies):
+            check(base, bodies)

@@ -22,6 +22,7 @@ from living_world.archives.trace_export import (
     TraceExportLimits,
     export_trace_bundle,
 )
+from living_world.cognition.local_llm_cognition_format import FOUNDERS_REQUEST_CONTRACTS
 from living_world.definitions.yaml_loader import YAMLWorldDefinitionLoader
 from living_world.founders import (
     FoundersConfigurationError,
@@ -118,7 +119,7 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--model")
     run.add_argument("--model-file")
     run.add_argument(
-        "--request-contract", choices=["legacy_v1", "founders_empty_arguments_v1"]
+        "--request-contract", choices=["legacy_v1", *FOUNDERS_REQUEST_CONTRACTS]
     )
     for option in ("resume-attempt", "fork-attempt", "replay-attempt"):
         run.add_argument("--" + option)
@@ -157,7 +158,7 @@ def build_parser() -> argparse.ArgumentParser:
     serve.add_argument("--model")
     serve.add_argument("--model-file")
     serve.add_argument(
-        "--request-contract", choices=["legacy_v1", "founders_empty_arguments_v1"]
+        "--request-contract", choices=["legacy_v1", *FOUNDERS_REQUEST_CONTRACTS]
     )
     for option in ("resume-attempt", "fork-attempt"):
         serve.add_argument("--" + option)

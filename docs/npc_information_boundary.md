@@ -915,6 +915,13 @@ private uncommitted forensic evidence; resume never silently recovers their prop
 Standalone/manual clients are outside automatic archive tracing. Raw bodies, source
 paths, backend metadata and timing evidence remain engine-only.
 
+The opt-in `founders_offer_bound_v1` response schema repeats the action keys and
+target labels already filtered for the current request. It leaves the prompt,
+perception, cognition records and retrieval unchanged. Model output remains an
+untrusted proposal subject to the existing parser and authoritative action
+gateway. The full request budget includes the repeated labels, and exact
+archived bodies remain privileged engine evidence.
+
 The engine-only trace analysis reader checks bounded local journal trace metadata
 and verifies only explicitly selected retained body bytes. Its
 `trace_metadata_checked` and `selected_body_verified` results never certify world,

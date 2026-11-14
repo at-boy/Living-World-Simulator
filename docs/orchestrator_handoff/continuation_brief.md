@@ -1,4 +1,4 @@
-# Continuation brief — November 12, live trade fix integrated
+# Continuation brief — November 14, offer-bound founders requests
 
 Feature checkout `.worktrees/live-npc-runtime`, branch `codex/live-npc-runtime`.
 LN09h deliveryde0552e integrated by e454722; taskbranch
@@ -7,7 +7,31 @@ LN09h deliveryde0552e integrated by e454722; taskbranch
 authorized. Stop BEFORE five-hour remaining falls below10%, with review/fix
 headroom; no resetcredits. Root owns architecture/task transitions/integration.
 
-## Latest task: live trade vocabulary
+## Latest task: offer-bound founders request contract
+
+LN09j adds the opt-in `founders_offer_bound_v1` contract for canonical live
+founders on Ollama and llama.cpp. Each provider receives a response schema
+using only the public action and target pairs already offered. The previous
+contracts, parser, gateway and native acceptance criteria are unchanged.
+The independent review found no substantive issues. The implementation and
+native evidence are in the [task report](../subagent_execution_plan/live_npc_runtime/09j_offer_bound_request_contract-report.md).
+
+Task delivery `c22248e` is preserved on
+`codex/live-npc-ln09j-offer-bound`. Both the task and merged runs passed
+3,073 tests, 10 existing skips, 40 examples, and all 13 validation jobs.
+The merged suite ran in 786.31 seconds. Both runs used the same reviewed
+358-file source. All 186 wheel entries match between the two builds.
+
+Ollama reached the founding deadline at tick 13 and reproduced the entire
+committed run offline. llama.cpp reached settlement stage and validated all
+28 responses, then failed after committing tick 14. Both the current code and
+the base restore validator reject that checkpoint after the engine destroyed
+two shelters while retaining their maintenance records. Explicit checkpoint
+13 replay reproduced every world and cursor through that boundary. Both
+tick-2 work-interruption attempts found no eligible work. The remaining
+native acceptance criteria are open. All four temporary servers are stopped.
+
+## Prior task: live trade vocabulary
 
 LN09i delivery `073f7aa`, integrated by this merge; preserved task branch
 `codex/live-npc-ln09i-dispatch` and worktree `.worktrees/live-npc-ln09i`.
@@ -29,7 +53,7 @@ unoffered key, with exact offline replay. Work interruption remains unmet on
 both at the unchanged fixed tick-2 boundary. All 16 temporary servers from
 this resume are stopped; actual host evidence in W/ln09i-final-native-cleanup.json.
 Continue original acceptance only under its existing criteria. Whole-branch
-review and release closeout remain pending; no new task activated.
+review and release closeout remain pending.
 
 ## Canonical completion
 
@@ -82,7 +106,9 @@ servers explicitlyauthorized onlywithfinallycleanup; stoponlyownedprocesses.
 
 ## Next and constraints
 
-Remaining appliednativework acceptance needs genuineeligible nativechoice, never
+First resolve the reproducible shelter destruction restore defect under an
+isolated, approved task. No repair is active. Remaining appliednativework
+acceptance needs genuineeligible nativechoice, never
 syntheticreplacement or guaranteedvictory. Portableworld recursiveparentclosure /
 uncommittedspool forensic work andfinalwholebranchreview remain pending; no next
 implementationtask/branch activated. Before portabletask, reconcile approvedscope:

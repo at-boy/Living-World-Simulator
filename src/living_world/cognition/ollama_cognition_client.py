@@ -6,6 +6,7 @@ from living_world.cognition.local_llm_cognition_format import (
     RESPONSE_SCHEMA,
     SYSTEM_INSTRUCTIONS,
     RequestContract,
+    offer_bound_response_schema,
     parse_decision_response,
     request_contract_format,
     serialize_decision_request,
@@ -46,6 +47,7 @@ class OllamaCognitionClient:
         if request_contract != "legacy_v1":
             self.SYSTEM_INSTRUCTIONS = instructions
             self.RESPONSE_SCHEMA = schema
+        self._offer_bound = request_contract == "founders_offer_bound_v1"
         if not isinstance(model, str):
             raise TypeError("Ollama model must be a string.")
         if not model.strip():
@@ -112,6 +114,10 @@ class OllamaCognitionClient:
             "prompt": serialize_decision_request(context, actions),
             "stream": False,
             "think": False,
-            "format": self.RESPONSE_SCHEMA,
+            "format": (
+                offer_bound_response_schema(self.RESPONSE_SCHEMA, actions)
+                if self._offer_bound
+                else self.RESPONSE_SCHEMA
+            ),
             "options": options,
         }
