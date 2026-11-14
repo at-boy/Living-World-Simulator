@@ -15,7 +15,10 @@ from typing import Literal
 from urllib.parse import urlsplit
 from uuid import UUID
 
-from living_world.cognition.local_llm_cognition_format import parse_decision_response
+from living_world.cognition.local_llm_cognition_format import (
+    FOUNDERS_REQUEST_CONTRACTS,
+    parse_decision_response,
+)
 from living_world.cognition.npc_cognition_client import (
     ActionOption,
     ActionRequest,
@@ -299,7 +302,7 @@ class AttemptConfig:
                 if key == "request_contract":
                     if (
                         not isinstance(value, str)
-                        or value != "founders_empty_arguments_v1"
+                        or value not in FOUNDERS_REQUEST_CONTRACTS
                         or self.mode != "ollama"
                         or self.scenario_key != "canonical_founders_v1"
                     ):

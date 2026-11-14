@@ -81,7 +81,13 @@ RESPONSE_SCHEMA: dict[str, object] = {
 }
 
 
-RequestContract = Literal["legacy_v1", "founders_empty_arguments_v1"]
+RequestContract = Literal[
+    "legacy_v1", "founders_empty_arguments_v1", "founders_offer_bound_v1"
+]
+FOUNDERS_REQUEST_CONTRACTS = (
+    "founders_empty_arguments_v1",
+    "founders_offer_bound_v1",
+)
 
 
 def request_contract_format(request_contract: str) -> tuple[str, dict[str, object]]:
@@ -90,7 +96,7 @@ def request_contract_format(request_contract: str) -> tuple[str, dict[str, objec
         raise TypeError("Request contract must be a string.")
     if request_contract == "legacy_v1":
         return SYSTEM_INSTRUCTIONS, RESPONSE_SCHEMA
-    if request_contract != "founders_empty_arguments_v1":
+    if request_contract not in FOUNDERS_REQUEST_CONTRACTS:
         raise ValueError("Unknown request contract.")
     schema = deepcopy(RESPONSE_SCHEMA)
     properties = cast(dict[str, object], schema["properties"])
@@ -110,6 +116,34 @@ Every offered action in this request accepts no named arguments.
 When proposing an action, arguments must be exactly {}. Put the chosen target
 only in target_label; never duplicate it in arguments."""
     return instructions, schema
+
+
+def offer_bound_response_schema(
+    schema: dict[str, object], actions: tuple[ActionOption, ...]
+) -> dict[str, object]:
+    """Constrain the response schema to this request's public action offers."""
+    _validate_actions(actions)
+    result = deepcopy(schema)
+    properties = cast(dict[str, object], result["properties"])
+    if not actions:
+        properties["action_request"] = {"type": "null"}
+        return result
+
+    template = cast(dict[str, object], properties["action_request"])
+    branches: list[dict[str, object]] = [{"type": "null"}]
+    for action in actions:
+        branch = deepcopy(template)
+        branch["type"] = "object"
+        fields = cast(dict[str, object], branch["properties"])
+        fields["action_key"] = {"type": "string", "enum": [action.key]}
+        fields["target_label"] = (
+            {"type": "string", "enum": list(action.target_labels)}
+            if action.target_labels
+            else {"type": "null"}
+        )
+        branches.append(branch)
+    properties["action_request"] = {"anyOf": branches}
+    return result
 
 
 def serialize_decision_request(

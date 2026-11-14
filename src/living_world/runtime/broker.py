@@ -21,6 +21,7 @@ from living_world.archives import AttemptConfig
 from living_world.archives.model import actions, canonical, validate_request
 from living_world.cognition.llama_cpp_cognition_client import LlamaCppCognitionClient
 from living_world.cognition.local_llm_cognition_format import (
+    FOUNDERS_REQUEST_CONTRACTS,
     RequestContract,
     parse_decision_response,
     request_contract_format,
@@ -156,7 +157,7 @@ def provider_config(config: AttemptConfig) -> ProviderConfig:
         raise ValueError("Request budget must be positive.")
     values = dict(cast(Mapping[str, object], config.settings.get("provider", {})))
     if "request_contract" in values and (
-        values["request_contract"] != "founders_empty_arguments_v1"
+        values["request_contract"] not in FOUNDERS_REQUEST_CONTRACTS
         or config.scenario_key != "canonical_founders_v1"
     ):
         raise ValueError("Request contract requires canonical live founders.")

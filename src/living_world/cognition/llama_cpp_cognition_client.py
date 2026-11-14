@@ -7,6 +7,7 @@ from living_world.cognition.local_llm_cognition_format import (
     RESPONSE_SCHEMA,
     SYSTEM_INSTRUCTIONS,
     RequestContract,
+    offer_bound_response_schema,
     parse_decision_response,
     request_contract_format,
     serialize_decision_request,
@@ -47,6 +48,7 @@ class LlamaCppCognitionClient:
         if request_contract != "legacy_v1":
             self.SYSTEM_INSTRUCTIONS = instructions
             self.RESPONSE_SCHEMA = schema
+        self._offer_bound = request_contract == "founders_offer_bound_v1"
         if not isinstance(model, str):
             raise TypeError("llama.cpp model must be a string.")
         if not model.strip():
@@ -113,7 +115,11 @@ class LlamaCppCognitionClient:
             "stream": False,
             "response_format": {
                 "type": "json_object",
-                "schema": self.RESPONSE_SCHEMA,
+                "schema": (
+                    offer_bound_response_schema(self.RESPONSE_SCHEMA, actions)
+                    if self._offer_bound
+                    else self.RESPONSE_SCHEMA
+                ),
             },
         }
         payload.update(

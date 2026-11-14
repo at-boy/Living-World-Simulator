@@ -45,6 +45,24 @@ Use `--disturbance none` for an explicitly undisturbed fresh run. Omit it to use
 the factory's defaults or inherit the saved policy. The production request contract
 is explicit above; the helper never injects a different contract or provider default.
 
+## Opt-in offer-bound responses
+
+For canonical live founders with either Ollama or llama.cpp, select
+`--request-contract founders_offer_bound_v1` in the production options after
+`--` (or directly on stock `living-world run` and `serve`). This replaces
+`founders_empty_arguments_v1` in the commands on this page. Both older
+contracts remain available and their request formats are unchanged.
+
+The provider receives a response schema allowing a null action or one of the
+already offered key/target pairs, with empty arguments. If there are no offers,
+only a null action is permitted. The runtime still checks each returned proposal
+and current world eligibility before applying effects. A provider can still
+fail, and a valid proposal can still be rejected or produce a stalled settlement.
+
+The choice is saved with the attempt. Resume and offline replay use that saved
+choice. To change it for an existing attempt, make an explicit fork with the
+new selector; this leaves the original attempt unchanged.
+
 ## Cold resume, fork, and offline replay
 
 Copy the saved attempt identifier from the JSON result or stderr announcement.

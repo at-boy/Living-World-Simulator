@@ -1,5 +1,16 @@
 # Living World Simulator – Project Journal
 
+## LN09j offer-bound schema — November 14, 2026
+
+Added the opt-in `founders_offer_bound_v1` contract on both local backends.
+Existing request payloads, parser, gateway and acceptance criteria were
+preserved. Independent review found no substantive issues. The native
+Ollama campaign reached its founding deadline and replayed exactly. The new
+llama.cpp run reached settlement stage before exposing a pre-existing restore
+error following shelter destruction. Its checkpoint 13 replay was exact.
+Both native tick-2 work-interruption checks still reported no eligible work.
+See the [offer-bound implementation report](subagent_execution_plan/live_npc_runtime/09j_offer_bound_request_contract-report.md).
+
 ## LN09i integration — November 12, 2026
 
 Delivery `073f7aa` integrated after `53d48dd`; preserved task branch and

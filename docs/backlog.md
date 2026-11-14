@@ -1,3 +1,12 @@
+The opt-in founders offer-bound schema sent correct action/target constraints
+on both native backends. The original fixed tick-2 work interruption is still
+unmet on both. The new llama.cpp campaign reached settlement, then exposed a
+pre-existing engine restore defect: destroying founders shelters leaves
+maintenance records that the restore validator rejects. Reproduce from
+checkpoints 13 and 14 of attempt `cfc9162a` before planning an isolated fix.
+Full native acceptance and the final release review remain open. See the
+[offer-bound implementation report](subagent_execution_plan/live_npc_runtime/09j_offer_bound_request_contract-report.md).
+
 LN09i live trade vocabulary defect fixed and integrated after repeated full
 validation. Ollama unattended run reaches founding deadline and replays exactly.
 The additional 7B llama.cpp run achieved settlement stage and an inbound food
